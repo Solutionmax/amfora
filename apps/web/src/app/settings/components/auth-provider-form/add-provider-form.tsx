@@ -183,12 +183,7 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
         </div>
         <p className="text-xs text-muted-foreground mt-1">
           {t("authProviders.info.officialProvidersRecommended")}{" "}
-          <a
-            href="https://solutionmax.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold"
-          >
+          <a href="https://solutionmax.net" target="_blank" rel="noopener noreferrer" className="font-semibold">
             {t("authProviders.info.github")}.
           </a>
         </p>
