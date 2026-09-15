@@ -20,12 +20,12 @@ export function TransparentFooter() {
         <Link
           target="_blank"
           className="flex items-center gap-1 text-white/80 hover:text-primary transition-colors"
-          href="https://kyantech.com.br"
+          href="https://solutionmax.net"
           title={t("footer.kyanHomepage")}
         >
           <span className="text-white/70 text-xs sm:text-sm">{t("footer.poweredBy")}</span>
           <p className="text-primary text-xs sm:text-sm font-medium cursor-pointer hover:text-primary/80">
-            Kyantech Solutions
+            SolutionMAX
           </p>
         </Link>
         {!shouldHideVersion && <span className="text-white text-[11px] mt-1">v{version}</span>}

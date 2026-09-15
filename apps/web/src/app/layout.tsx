@@ -5,6 +5,7 @@ import {
   Nunito,
   Open_Sans,
   Outfit,
+  Plus_Jakarta_Sans,
   Poppins,
   Raleway,
   Roboto,
@@ -24,6 +25,12 @@ import { AuthProvider } from "@/contexts/auth-context";
 import { ShareProvider } from "@/contexts/share-context";
 import { ThemeColorProvider } from "../providers/theme-color-provider";
 import { ThemeProvider } from "../providers/theme-provider";
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -113,7 +120,7 @@ export default async function RootLayout({
         <Favicon />
       </head>
       <body
-        className={`${outfit.variable} ${inter.variable} ${roboto.variable} ${openSans.variable} ${poppins.variable} ${nunito.variable} ${lato.variable} ${montserrat.variable} ${sourceSans.variable} ${raleway.variable} ${workSans.variable} font-sans antialiased`}
+        className={`${plusJakarta.variable} ${outfit.variable} ${inter.variable} ${roboto.variable} ${openSans.variable} ${poppins.variable} ${nunito.variable} ${lato.variable} ${montserrat.variable} ${sourceSans.variable} ${raleway.variable} ${workSans.variable} font-sans antialiased`}
       >
         <NextIntlClientProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

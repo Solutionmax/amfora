@@ -184,7 +184,7 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
         <p className="text-xs text-muted-foreground mt-1">
           {t("authProviders.info.officialProvidersRecommended")}{" "}
           <a
-            href="https://github.com/kyantech/Palmr/issues"
+            href="https://solutionmax.net"
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold"

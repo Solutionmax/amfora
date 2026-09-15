@@ -28,13 +28,13 @@ async function getAppInfo() {
     });
 
     if (!response.ok) {
-      return { appName: "Palmr", appDescription: "File sharing platform", appLogo: null };
+      return { appName: "Amfora", appDescription: "Veilig bestanden delen", appLogo: null };
     }
 
     return await response.json();
   } catch (error) {
     console.error("Error fetching app info:", error);
-    return { appName: "Palmr", appDescription: "File sharing platform", appLogo: null };
+    return { appName: "Amfora", appDescription: "Veilig bestanden delen", appLogo: null };
   }
 }
 
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
       title,
       description,
       url: shareUrl,
-      siteName: appInfo.appName || "Palmr",
+      siteName: appInfo.appName || "Amfora",
       type: "website",
       images: appInfo.appLogo
         ? [
@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
               url: appInfo.appLogo,
               width: 1200,
               height: 630,
-              alt: appInfo.appName || "Palmr",
+              alt: appInfo.appName || "Amfora",
             },
           ]
         : [],

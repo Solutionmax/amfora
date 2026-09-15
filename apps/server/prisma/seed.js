@@ -7,7 +7,7 @@ const defaultConfigs = [
   // General Configurations
   {
     key: "appName",
-    value: "Palmr. ",
+    value: "Amfora",
     type: "string",
     group: "general",
   },
@@ -25,13 +25,13 @@ const defaultConfigs = [
   },
   {
     key: "appDescription",
-    value: "Secure and simple file sharing - Your personal cloud",
+    value: "Veilig bestanden delen, zonder tracking",
     type: "string",
     group: "general",
   },
   {
     key: "appLogo",
-    value: "https://i.ibb.co/gMpk75bZ/Group.png",
+    value: "data:image/webp;base64,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",
     type: "string",
     group: "general",
   },
