@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "بدون عنوان",
       "created": "تم الإنشاء: {date}",
-      "expires": "تنتهي: {date}"
+      "expires": "تنتهي: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "لم يتم العثور على المشاركة",

@@ -18,6 +18,24 @@ const defaultConfigs = [
     group: "general",
   },
   {
+    key: "appPrimaryColor",
+    value: "oklch(0.5686 0.1630 250.47)",
+    type: "string",
+    group: "general",
+  },
+  {
+    key: "appFontFamily",
+    value: "var(--font-jakarta)",
+    type: "string",
+    group: "general",
+  },
+  {
+    key: "appRadius",
+    value: "1rem",
+    type: "string",
+    group: "general",
+  },
+  {
     key: "hideVersion",
     value: "false",
     type: "boolean",

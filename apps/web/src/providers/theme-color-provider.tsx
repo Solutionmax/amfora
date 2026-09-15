@@ -2,39 +2,31 @@
 
 import { useEffect } from "react";
 
-const COLOR_STORAGE_KEY = "palmr-custom-primary-color";
-const FONT_STORAGE_KEY = "palmr-custom-font-family";
-const RADIUS_STORAGE_KEY = "palmr-custom-radius";
+import { useAppInfo } from "@/contexts/app-info-context";
+import { applyAppearance } from "@/hooks/use-appearance";
+
 const BACKGROUND_STORAGE_KEY = "palmr-custom-background";
 
 export function ThemeColorProvider({ children }: { children: React.ReactNode }) {
+  const { appPrimaryColor, appFontFamily, appRadius } = useAppInfo();
+
   useEffect(() => {
-    const savedColor = localStorage.getItem(COLOR_STORAGE_KEY);
-    if (savedColor) {
-      document.documentElement.style.setProperty("--primary", savedColor);
-      document.documentElement.style.setProperty("--sidebar-primary", savedColor);
-      document.documentElement.style.setProperty("--ring", savedColor);
-      document.documentElement.style.setProperty("--sidebar-ring", savedColor);
-    }
+    applyAppearance("color", appPrimaryColor);
+    applyAppearance("font", appFontFamily);
+    applyAppearance("radius", appRadius);
+  }, [appPrimaryColor, appFontFamily, appRadius]);
 
-    const savedFont = localStorage.getItem(FONT_STORAGE_KEY);
-    if (savedFont) {
-      document.documentElement.style.setProperty("--custom-font-family", savedFont);
-      document.documentElement.style.setProperty("--font-sans", savedFont);
-      document.documentElement.style.setProperty("--font-serif", savedFont);
-      document.body.style.fontFamily = savedFont;
-    }
-
-    const savedRadius = localStorage.getItem(RADIUS_STORAGE_KEY);
-    if (savedRadius) {
-      document.documentElement.style.setProperty("--radius", savedRadius);
-    }
-
-    const savedBackground = localStorage.getItem(BACKGROUND_STORAGE_KEY);
-    if (savedBackground) {
-      const parsed = JSON.parse(savedBackground);
-      document.documentElement.style.setProperty("--custom-background-light", parsed.light);
-      document.documentElement.style.setProperty("--custom-background-dark", parsed.dark);
+  useEffect(() => {
+    // Background stays a per-browser preference; it is not part of the installation brand.
+    try {
+      const savedBackground = localStorage.getItem(BACKGROUND_STORAGE_KEY);
+      if (savedBackground) {
+        const parsed = JSON.parse(savedBackground);
+        document.documentElement.style.setProperty("--custom-background-light", parsed.light);
+        document.documentElement.style.setProperty("--custom-background-dark", parsed.dark);
+      }
+    } catch {
+      // corrupt or blocked storage: keep the installation defaults
     }
   }, []);
 

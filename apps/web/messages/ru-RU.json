@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Без названия",
       "created": "Создано: {date}",
-      "expires": "Истекает: {date}"
+      "expires": "Истекает: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "Общий доступ не найден",

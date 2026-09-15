@@ -28,6 +28,9 @@ export type GetDiskSpace200 = DiskSpaceInfo;
 export interface GetAppInfo200 {
   appName: string;
   appDescription: string;
+  appPrimaryColor?: string;
+  appFontFamily?: string;
+  appRadius?: string;
   appLogo: string;
   firstUserAccess: boolean;
 }

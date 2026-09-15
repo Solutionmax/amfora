@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useAppearance } from "@/hooks/use-appearance";
 
 const PREDEFINED_RADIUS = [
   { name: "None", value: "0rem", description: "Sharp corners" },
@@ -18,35 +19,34 @@ const PREDEFINED_RADIUS = [
   { name: "Maximum", value: "1.5rem", description: "Fully rounded" },
 ];
 
-const STORAGE_KEY = "palmr-custom-radius";
-
 export function RadiusPickerForm() {
   const t = useTranslations();
   const [selectedRadius, setSelectedRadius] = useState(PREDEFINED_RADIUS[2].value);
+  const appearance = useAppearance();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const applyRadius = useCallback((radiusValue: string) => {
     document.documentElement.style.setProperty("--radius", radiusValue);
   }, []);
 
   useEffect(() => {
-    const savedRadius = localStorage.getItem(STORAGE_KEY);
-    if (savedRadius) {
-      setSelectedRadius(savedRadius);
-      applyRadius(savedRadius);
+    if (appearance.radius) {
+      setSelectedRadius(appearance.radius);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appearance.radius]);
 
-  const handleRadiusSelect = (radiusValue: string) => {
+  const handleRadiusSelect = async (radiusValue: string) => {
     setSelectedRadius(radiusValue);
     applyRadius(radiusValue);
-    localStorage.setItem(STORAGE_KEY, radiusValue);
+    try {
+      await appearance.save("radius", radiusValue);
+    } catch (error) {
+      console.error("Failed to save appearance:", error);
+    }
   };
 
   const resetToDefault = () => {
     const defaultRadius = PREDEFINED_RADIUS[2].value;
     handleRadiusSelect(defaultRadius);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (

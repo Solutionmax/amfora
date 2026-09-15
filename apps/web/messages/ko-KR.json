@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "제목 없음",
       "created": "생성됨: {date}",
-      "expires": "만료됨: {date}"
+      "expires": "만료됨: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "공유를 찾을 수 없습니다",

@@ -382,8 +382,8 @@
       "delete": "Verwijderen"
     },
     "empty": {
-      "title": "Nog geen bestanden of mappen",
-      "description": "Upload uw eerste bestand of maak een map om te beginnen"
+      "title": "Hier staat nog niets",
+      "description": "Upload een bestand of maak een map om te beginnen."
     },
     "files": "bestanden",
     "folders": "mappen",
@@ -659,15 +659,15 @@
     "title": "Recente Uploads",
     "viewAll": "Alles Bekijken",
     "uploadFile": "Bestand Uploaden",
-    "noFiles": "Nog geen bestanden geüpload",
+    "noFiles": "Nog geen bestanden",
     "upload": "Uploaden"
   },
   "recentShares": {
     "title": "Recente Delingen",
     "viewAll": "Alles Bekijken",
     "createShare": "Delen Maken",
-    "noShares": "Nog geen delingen aangemaakt",
-    "createFirst": "Maak je eerste delen"
+    "noShares": "Nog geen delingen",
+    "createFirst": "Maak je eerste deling"
   },
   "recipientSelector": {
     "emailPlaceholder": "Voer ontvanger e-mail in",
@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Naamloos Delen",
       "created": "Aangemaakt: {date}",
-      "expires": "Verloopt: {date}"
+      "expires": "Verloopt: {date}",
+      "createdLabel": "Aangemaakt"
     },
     "notFound": {
       "title": "Delen Niet Gevonden",

@@ -62,9 +62,9 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   ];
 
   const manage = [
-    { href: "/customization", label: t("customization.pageTitle"), icon: IconPalette },
     ...(isAdmin
       ? [
+          { href: "/customization", label: t("customization.pageTitle"), icon: IconPalette },
           { href: "/settings", label: t("settings.pageTitle"), icon: IconSettings },
           { href: "/users-management", label: t("navbar.usersManagement"), icon: IconUsers },
         ]

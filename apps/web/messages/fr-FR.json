@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Partage sans titre",
       "created": "Créé le: {date}",
-      "expires": "Expire le: {date}"
+      "expires": "Expire le: {date}",
+      "createdLabel": "Créé"
     },
     "notFound": {
       "title": "Partage Non Trouvé",

@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "اشتراک بدون عنوان",
       "created": "ایجاد شده: {date}",
-      "expires": "منقضی می‌شود: {date}"
+      "expires": "منقضی می‌شود: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "دانلود همه",
     "notFound": {

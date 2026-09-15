@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Спільне використання без назви",
       "created": "Створено: {date}",
-      "expires": "Закінчується: {date}"
+      "expires": "Закінчується: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "Завантажити все",
     "notFound": {

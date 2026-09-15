@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "बिना शीर्षक के",
       "created": "बनाया गया: {date}",
-      "expires": "समाप्त होता है: {date}"
+      "expires": "समाप्त होता है: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "साझाकरण नहीं मिला",

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useAppearance } from "@/hooks/use-appearance";
 
 const PREDEFINED_FONTS = [
   { name: "Outfit", value: "var(--font-outfit), Outfit, sans-serif" },
@@ -23,11 +24,10 @@ const PREDEFINED_FONTS = [
   { name: "Work Sans", value: "var(--font-work-sans), 'Work Sans', sans-serif" },
 ];
 
-const STORAGE_KEY = "palmr-custom-font-family";
-
 export function FontPickerForm() {
   const t = useTranslations();
   const [selectedFont, setSelectedFont] = useState(PREDEFINED_FONTS[0].value);
+  const appearance = useAppearance();
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const applyFont = useCallback((fontValue: string) => {
@@ -39,24 +39,24 @@ export function FontPickerForm() {
   }, []);
 
   useEffect(() => {
-    const savedFont = localStorage.getItem(STORAGE_KEY);
-    if (savedFont) {
-      setSelectedFont(savedFont);
-      applyFont(savedFont);
+    if (appearance.font) {
+      setSelectedFont(appearance.font);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appearance.font]);
 
-  const handleFontSelect = (fontValue: string) => {
+  const handleFontSelect = async (fontValue: string) => {
     setSelectedFont(fontValue);
     applyFont(fontValue);
-    localStorage.setItem(STORAGE_KEY, fontValue);
+    try {
+      await appearance.save("font", fontValue);
+    } catch (error) {
+      console.error("Failed to save appearance:", error);
+    }
   };
 
   const resetToDefault = () => {
     const defaultFont = PREDEFINED_FONTS[0].value;
     handleFontSelect(defaultFont);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (

@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Condivisione Senza Titolo",
       "created": "Creata: {date}",
-      "expires": "Scade: {date}"
+      "expires": "Scade: {date}",
+      "createdLabel": "Creato"
     },
     "notFound": {
       "title": "Condivisione Non Trovata",
