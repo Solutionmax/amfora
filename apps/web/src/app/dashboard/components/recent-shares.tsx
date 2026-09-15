@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { IconPlus, IconShare } from "@tabler/icons-react";
+import { IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { SharesTable } from "@/components/tables/shares-table";
@@ -31,16 +31,6 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
               >
                 <IconShare className="h-4 w-4" />
                 {t("recentShares.viewAll")}
-              </Button>
-
-              <Button
-                className="font-semibold text-sm cursor-pointer"
-                variant="outline"
-                size="default"
-                onClick={onOpenCreateModal}
-              >
-                <IconPlus className="h-4 w-4" />
-                {t("recentShares.createShare")}
               </Button>
             </div>
           </div>

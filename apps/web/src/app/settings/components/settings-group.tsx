@@ -1,5 +1,5 @@
 import React from "react";
-import { IconChevronDown, IconChevronUp, IconDeviceFloppy } from "@tabler/icons-react";
+import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { SettingsGroupProps } from "../types";
 import { isFieldHidden, SettingsInput } from "./settings-input";
 import { SmtpTestButton } from "./smtp-test-button";
 
-export function SettingsGroup({ group, configs, form, isCollapsed, onToggleCollapse, onSubmit }: SettingsGroupProps) {
+export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupProps) {
   const t = useTranslations();
   const GROUP_METADATA = createGroupMetadata(t);
   const FIELD_DESCRIPTIONS = createFieldDescriptions(t);
@@ -25,28 +25,22 @@ export function SettingsGroup({ group, configs, form, isCollapsed, onToggleColla
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="p-6 gap-0">
-        <CardHeader
-          className="flex flex-row items-center justify-between cursor-pointer p-0"
-          onClick={onToggleCollapse}
-        >
+        <CardHeader className="flex flex-row items-center justify-between p-0">
           <div className="flex flex-row items-center gap-8">
             {metadata.icon && React.createElement(metadata.icon, { className: "text-xl text-muted-foreground" })}
             <div className="flex flex-col gap-1">
               <h2 className="text-xl font-semibold">
-                {t(`settings.groups.${group}.title`, { defaultValue: metadata.title })}
+                {t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {t(`settings.groups.${group}.description`, { defaultValue: metadata.description })}
+                {t.has(`settings.groups.${group}.description`)
+                  ? t(`settings.groups.${group}.description`)
+                  : metadata.description}
               </p>
             </div>
           </div>
-          {isCollapsed ? (
-            <IconChevronDown className="text-muted-foreground" />
-          ) : (
-            <IconChevronUp className="text-muted-foreground" />
-          )}
         </CardHeader>
-        <CardContent className={`${isCollapsed ? "hidden" : "block"} px-0`}>
+        <CardContent className="block px-0">
           <Separator className="my-6" />
           <div className="flex flex-col gap-4">
             {configs
