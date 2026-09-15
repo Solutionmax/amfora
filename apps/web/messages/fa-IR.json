@@ -496,7 +496,12 @@
       "fileSharing": "اشتراک‌گذاری فایل",
       "tagline": "ساده و رایگان شده"
     },
-    "pageTitle": "خانه"
+    "pageTitle": "خانه",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "انتخاب آیکون",

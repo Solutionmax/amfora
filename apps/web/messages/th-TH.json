@@ -496,7 +496,12 @@
       "fileSharing": "แชร์ไฟล์",
       "tagline": "ทำให้ง่ายและฟรี"
     },
-    "pageTitle": "หน้าแรก"
+    "pageTitle": "หน้าแรก",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "เลือกไอคอน",

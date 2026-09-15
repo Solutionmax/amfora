@@ -5,6 +5,7 @@ import { getAppInfo } from "@/http/endpoints";
 interface AppInfoStore {
   appName: string;
   appLogo: string;
+  appDescription: string;
   firstAccess: boolean | null;
   isLoading: boolean;
   setAppName: (name: string) => void;
@@ -20,6 +21,7 @@ export const useAppInfo = create<AppInfoStore>((set) => {
   const initialState = {
     appName: "",
     appLogo: "",
+    appDescription: "",
     firstAccess: null,
     isLoading: true,
   };
@@ -31,6 +33,7 @@ export const useAppInfo = create<AppInfoStore>((set) => {
         set({
           appName: response.data.appName,
           appLogo: response.data.appLogo,
+          appDescription: response.data.appDescription,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
         });
@@ -60,6 +63,7 @@ export const useAppInfo = create<AppInfoStore>((set) => {
         set({
           appName: response.data.appName,
           appLogo: response.data.appLogo,
+          appDescription: response.data.appDescription,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
         });

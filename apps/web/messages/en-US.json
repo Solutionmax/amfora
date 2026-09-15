@@ -488,15 +488,20 @@
     }
   },
   "home": {
-    "description": "The open-source alternative to WeTransfer. Share files securely, without tracking or limitations.",
+    "description": "Upload, share one link, and decide exactly how long it stays open. Runs on your own server, with nobody in between.",
     "documentation": "Documentation",
     "starOnGithub": "Star on GitHub",
-    "privacyMessage": "Built with privacy in mind. Your files are only accessible to those with the sharing link before upload. Forever free and open source.",
+    "privacyMessage": "Every share is sealed: set a password, an expiry date and a download limit. Once it expires the link is dead.",
     "header": {
-      "fileSharing": "File sharing",
-      "tagline": "made simple and free"
+      "fileSharing": "Send files",
+      "tagline": "that stay sealed"
     },
-    "pageTitle": "Home"
+    "pageTitle": "Home",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Select Icon",

@@ -496,7 +496,12 @@
       "fileSharing": "Fildelning",
       "tagline": "gjort enkelt och gratis"
     },
-    "pageTitle": "Hem"
+    "pageTitle": "Hem",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Välj ikon",

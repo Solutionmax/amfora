@@ -496,7 +496,12 @@
       "fileSharing": "Chia sẻ tệp",
       "tagline": "đơn giản và miễn phí"
     },
-    "pageTitle": "Trang chủ"
+    "pageTitle": "Trang chủ",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Chọn biểu tượng",

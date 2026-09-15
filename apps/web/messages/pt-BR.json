@@ -496,7 +496,12 @@
       "fileSharing": "Compartilhamento de arquivos",
       "tagline": "simples e gratuito"
     },
-    "pageTitle": "Início"
+    "pageTitle": "Início",
+    "visual": {
+      "expires": "Expira",
+      "downloads": "Downloads",
+      "password": "Senha"
+    }
   },
   "iconPicker": {
     "title": "Selecionar ícone",

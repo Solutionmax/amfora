@@ -492,7 +492,12 @@
       "fileSharing": "파일 공유",
       "tagline": "심플하고 무료"
     },
-    "pageTitle": "홈"
+    "pageTitle": "홈",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "아이콘 선택",

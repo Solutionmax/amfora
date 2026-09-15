@@ -484,15 +484,20 @@
     }
   },
   "home": {
-    "description": "Het open-source alternatief voor WeTransfer. Deel bestanden veilig, zonder tracking of beperkingen.",
+    "description": "Upload, deel een link en bepaal precies hoelang die open blijft. Draait op je eigen server, zonder partij ertussen.",
     "documentation": "Documentatie",
     "starOnGithub": "Star op GitHub",
-    "privacyMessage": "Gebouwd met privacy in gedachten. Je bestanden voor upload zijn alleen toegankelijk voor degenen met de deel link. Altijd gratis en open source.",
+    "privacyMessage": "Elke deling is verzegeld: zet een wachtwoord, een vervaldatum en een downloadlimiet. Verloopt de link, dan is hij dood.",
     "header": {
-      "fileSharing": "Bestanden delen",
-      "tagline": "eenvoudig en gratis"
+      "fileSharing": "Bestanden sturen",
+      "tagline": "die verzegeld blijven"
     },
-    "pageTitle": "Startpagina"
+    "pageTitle": "Startpagina",
+    "visual": {
+      "expires": "Verloopt",
+      "downloads": "Opgehaald",
+      "password": "Wachtwoord"
+    }
   },
   "iconPicker": {
     "title": "Selecteer Pictogram",

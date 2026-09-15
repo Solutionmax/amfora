@@ -3,19 +3,11 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   navItems: [
     {
-      label: "Login",
-      href: "/login",
-    },
-    {
       label: "Docs",
       href: "https://solutionmax.net",
     },
   ],
   navMenuItems: [
-    {
-      label: "Login",
-      href: "/login",
-    },
     {
       label: "Docs",
       href: "https://solutionmax.net",
