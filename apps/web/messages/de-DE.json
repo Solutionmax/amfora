@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "Für bessere Funktionalität empfehlen wir die Verwendung offizieller Anbieter. Bei Problemen mit einem benutzerdefinierten Anbieter können Sie ein Issue auf",
       "github": "GitHub",
       "officialProvider": "Offizieller Anbieter",
-      "officialProviderDescription": "Dieser Anbieter ist von Palmr optimiert. Nur Zugangsdaten und Konfiguration können geändert werden.",
+      "officialProviderDescription": "Dieser Anbieter ist von Amfora optimiert. Nur Zugangsdaten und Konfiguration können geändert werden.",
       "manualConfigTitle": "Manuelle Konfiguration",
       "manualConfigDescription": "Sie geben alle Endpunkte manuell an. Stellen Sie sicher, dass sie für Ihren Anbieter korrekt sind."
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Dateien senden - Palmr",
+        "title": "Dateien senden - Amfora",
         "description": "Senden Sie Dateien über den geteilten Link",
         "descriptionWithLimit": "Dateien hochladen (max. {limit} Dateien)"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "Server-URL",
-        "description": "Basis-URL des Palmr-Servers (z.B.: https://palmr.example.com)"
+        "description": "Basis-URL des Amfora-Servers (z.B.: https://amfora.example.com)"
       },
       "testSmtp": {
         "title": "SMTP-Verbindung testen",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "Version Ausblenden",
-        "description": "Die Palmr-Version in der Fußzeile aller Seiten ausblenden"
+        "description": "Die Amfora-Version in der Fußzeile aller Seiten ausblenden"
       }
     },
     "buttons": {

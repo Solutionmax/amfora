@@ -88,7 +88,7 @@ async function startServer() {
     host: "0.0.0.0",
   });
 
-  console.log(`🌴 Palmr server running on port 3333`);
+  console.log(`🌴 Amfora server running on port 3333`);
 
   // Cleanup on shutdown
   process.on("SIGINT", () => process.exit(0));

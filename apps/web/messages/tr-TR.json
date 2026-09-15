@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "Daha iyi işlevsellik için resmi sağlayıcıları kullanmayı düşünün. Özel bir sağlayıcıyla ilgili sorun yaşarsanız,",
       "github": "GitHub",
       "officialProvider": "Resmi Sağlayıcı",
-      "officialProviderDescription": "Bu sağlayıcı Palmr tarafından optimize edilmiştir. Sadece kimlik bilgileri ve yapılandırma değiştirilebilir.",
+      "officialProviderDescription": "Bu sağlayıcı Amfora tarafından optimize edilmiştir. Sadece kimlik bilgileri ve yapılandırma değiştirilebilir.",
       "manualConfigTitle": "Manuel Yapılandırma",
       "manualConfigDescription": "Tüm uç noktaları manuel olarak sağlıyorsunuz. Sağlayıcınız için doğru olduklarından emin olun."
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Dosya Gönder - Palmr",
+        "title": "Dosya Gönder - Amfora",
         "description": "Paylaşılan bağlantı üzerinden dosya gönderin",
         "descriptionWithLimit": "Dosya yükle (maks. {limit} dosya)"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "Sunucu URL'si",
-        "description": "Palmr sunucu temel URL'si (örn: https://palmr.ornek.com)"
+        "description": "Amfora sunucu temel URL'si (örn: https://palmr.ornek.com)"
       },
       "testSmtp": {
         "title": "SMTP Bağlantısını Test Et",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "Sürümü Gizle",
-        "description": "Tüm sayfaların alt bilgisinde Palmr sürümünü gizle"
+        "description": "Tüm sayfaların alt bilgisinde Amfora sürümünü gizle"
       }
     },
     "buttons": {

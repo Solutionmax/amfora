@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "Để có chức năng tốt hơn, hãy cân nhắc sử dụng các nhà cung cấp chính thức. Nếu bạn gặp sự cố với nhà cung cấp tùy chỉnh, hãy cân nhắc mở một vấn đề trên",
       "github": "GitHub",
       "officialProvider": "Nhà cung cấp chính thức",
-      "officialProviderDescription": "Nhà cung cấp này được tối ưu hóa bởi Palmr. Chỉ có thể sửa đổi thông tin đăng nhập và cấu hình.",
+      "officialProviderDescription": "Nhà cung cấp này được tối ưu hóa bởi Amfora. Chỉ có thể sửa đổi thông tin đăng nhập và cấu hình.",
       "manualConfigTitle": "Cấu hình thủ công",
       "manualConfigDescription": "Bạn đang cung cấp tất cả các điểm cuối theo cách thủ công. Đảm bảo chúng chính xác cho nhà cung cấp của bạn."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Gửi tệp - Palmr",
+        "title": "Gửi tệp - Amfora",
         "description": "Gửi tệp qua liên kết được chia sẻ",
         "descriptionWithLimit": "Tải lên tệp (tối đa {limit} tệp)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "Ẩn phiên bản",
-        "description": "Ẩn phiên bản Palmr khỏi chân trang trên tất cả các trang"
+        "description": "Ẩn phiên bản Amfora khỏi chân trang trên tất cả các trang"
       },
       "smtpEnabled": {
         "title": "Đã bật SMTP",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "URL máy chủ",
-        "description": "URL cơ sở của máy chủ Palmr (ví dụ: https://palmr.example.com)"
+        "description": "URL cơ sở của máy chủ Amfora (ví dụ: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "Xác thực bằng mật khẩu",

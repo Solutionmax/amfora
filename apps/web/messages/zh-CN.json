@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "为获得更好的功能，建议使用官方提供商。如果您在使用自定义提供商时遇到问题，请考虑在以下位置提出问题",
       "github": "GitHub",
       "officialProvider": "官方提供商",
-      "officialProviderDescription": "此提供商由 Palmr 优化。只能修改凭据和配置。",
+      "officialProviderDescription": "此提供商由 Amfora 优化。只能修改凭据和配置。",
       "manualConfigTitle": "手动配置",
       "manualConfigDescription": "您正在手动提供所有端点。请确保它们对您的提供商是正确的。"
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "上传文件 - Palmr",
+        "title": "上传文件 - Amfora",
         "description": "通过共享链接上传文件",
         "descriptionWithLimit": "上传文件（最多 {limit} 个文件）"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "URL do Servidor",
-        "description": "URL base do servidor Palmr (ex: https://palmr.exemplo.com)"
+        "description": "URL base do servidor Amfora (ex: https://palmr.exemplo.com)"
       },
       "testSmtp": {
         "title": "测试SMTP连接",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "隐藏版本",
-        "description": "在所有页面的页脚中隐藏Palmr版本"
+        "description": "在所有页面的页脚中隐藏Amfora版本"
       }
     },
     "buttons": {

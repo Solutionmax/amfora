@@ -29,7 +29,7 @@ async function resetUserPassword() {
   const rl = createReadlineInterface();
 
   try {
-    console.log("\n🔐 Palmr Password Reset Tool");
+    console.log("\n🔐 Amfora Password Reset Tool");
     console.log("===============================");
     console.log("This script allows you to reset a user's password directly from the Docker terminal.");
     console.log("⚠️  WARNING: This bypasses normal security checks. Use only when necessary!\n");
@@ -189,7 +189,7 @@ async function main() {
   const args = process.argv.slice(2);
 
   if (args.includes("--help") || args.includes("-h")) {
-    console.log("\n🔐 Palmr Password Reset Tool");
+    console.log("\n🔐 Amfora Password Reset Tool");
     console.log("=============================");
     console.log("Interactive password reset tool for Docker terminal access");
     console.log("\nUsage:");

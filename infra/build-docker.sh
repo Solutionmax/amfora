@@ -9,7 +9,7 @@ if [ -z "$TAG" ]; then
     exit 1
 fi
 
-echo "🚀 Building Palmr Unified Image for AMD64 and ARM..."
+echo "🚀 Building Amfora Unified Image for AMD64 and ARM..."
 echo "📦 Building tags: latest and $TAG"
 
 docker buildx create --name palmr-builder --use 2>/dev/null || docker buildx use palmr-builder

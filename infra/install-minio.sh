@@ -18,7 +18,7 @@ case "$ARCH" in
         ;;
     *)
         echo "[BUILD] Unsupported architecture: $ARCH"
-        echo "[BUILD] Palmr will fallback to external S3"
+        echo "[BUILD] Amfora will fallback to external S3"
         exit 0
         ;;
 esac
@@ -44,7 +44,7 @@ done
 
 if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
     echo "[BUILD] ✗ Failed to download storage system after $MAX_RETRIES attempts"
-    echo "[BUILD] Palmr will fallback to external S3"
+    echo "[BUILD] Amfora will fallback to external S3"
     exit 0
 fi
 

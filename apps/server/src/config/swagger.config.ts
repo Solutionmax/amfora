@@ -5,8 +5,8 @@ export function registerSwagger(app: any) {
   app.register(fastifySwagger, {
     openapi: {
       info: {
-        title: "🌴 Palmr. API",
-        description: "API documentation for Palmr file sharing system",
+        title: "🌴 Amfora. API",
+        description: "API documentation for Amfora file sharing system",
         version: "1.0.0",
       },
       tags: [

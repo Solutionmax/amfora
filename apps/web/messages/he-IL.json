@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "לתפקוד טוב יותר, שקול שימוש בספקים רשמיים. אם יש לך בעיות עם ספק מותאם אישית, שקול לפתוח issue ב-",
       "github": "GitHub",
       "officialProvider": "ספק רשמי",
-      "officialProviderDescription": "הספק הזה מותאם על ידי Palmr. ניתן לערוך רק אישורי כניסה והגדרות.",
+      "officialProviderDescription": "הספק הזה מותאם על ידי Amfora. ניתן לערוך רק אישורי כניסה והגדרות.",
       "manualConfigTitle": "הגדרה ידנית",
       "manualConfigDescription": "אתה מספק את כל ה-endpoints ידנית. ודא שהם נכונים עבור הספק שלך."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "שלח קבצים - Palmr",
+        "title": "שלח קבצים - Amfora",
         "description": "שלח קבצים דרך הקישור המשותף",
         "descriptionWithLimit": "העלה קבצים (מקסימום {limit} קבצים)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "הסתר גרסה",
-        "description": "הסתר את גרסת Palmr מהכותרת התחתונה בכל העמודים"
+        "description": "הסתר את גרסת Amfora מהכותרת התחתונה בכל העמודים"
       },
       "smtpEnabled": {
         "title": "SMTP מופעל",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "כתובת URL של שרת",
-        "description": "כתובת URL בסיסית של שרת Palmr (למשל: https://palmr.example.com)"
+        "description": "כתובת URL בסיסית של שרת Amfora (למשל: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "אימות סיסמה",

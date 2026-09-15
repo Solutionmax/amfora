@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "Για καλύτερη λειτουργικότητα, προτιμήστε επίσημους παρόχους. Αν έχετε προβλήματα με προσαρμοσμένο πάροχο, ανοίξτε ένα θέμα στο",
       "github": "GitHub",
       "officialProvider": "Επίσημος πάροχος",
-      "officialProviderDescription": "Αυτός ο πάροχος είναι βελτιστοποιημένος από το Palmr. Μόνο τα διαπιστευτήρια και οι ρυθμίσεις μπορούν να τροποποιηθούν.",
+      "officialProviderDescription": "Αυτός ο πάροχος είναι βελτιστοποιημένος από το Amfora. Μόνο τα διαπιστευτήρια και οι ρυθμίσεις μπορούν να τροποποιηθούν.",
       "manualConfigTitle": "Χειροκίνητη ρύθμιση",
       "manualConfigDescription": "Παρέχετε όλα τα endpoints χειροκίνητα. Βεβαιωθείτε ότι είναι σωστά για τον πάροχό σας."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Αποστολή αρχείων - Palmr",
+        "title": "Αποστολή αρχείων - Amfora",
         "description": "Στείλτε αρχεία μέσω του κοινόχρηστου συνδέσμου",
         "descriptionWithLimit": "Μεταφόρτωση αρχείων (μέγιστο {limit} αρχεία)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "Απόκρυψη έκδοσης",
-        "description": "Απόκρυψη της έκδοσης Palmr από το υποσέλιδο σε όλες τις σελίδες"
+        "description": "Απόκρυψη της έκδοσης Amfora από το υποσέλιδο σε όλες τις σελίδες"
       },
       "smtpEnabled": {
         "title": "Ενεργοποίηση SMTP",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "URL διακομιστή",
-        "description": "Βασικό URL του διακομιστή Palmr (π.χ.: https://palmr.example.com)"
+        "description": "Βασικό URL του διακομιστή Amfora (π.χ.: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "Έλεγχος με κωδικό πρόσβασης",

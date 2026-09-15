@@ -106,7 +106,7 @@ export const isInternalStorage = s3Client !== null && env.ENABLE_S3 !== "true";
 
 /**
  * Creates a public S3 client for presigned URL generation.
- * - Internal storage (ENABLE_S3=false): Uses STORAGE_URL (e.g., https://syrg.palmr.com)
+ * - Internal storage (ENABLE_S3=false): Uses STORAGE_URL (e.g., https://syrg.amfora.com)
  * - External S3 (ENABLE_S3=true): Uses the original S3 endpoint configuration
  *
  * @returns S3Client configured with public endpoint, or null if S3 is disabled
@@ -123,7 +123,7 @@ export function createPublicS3Client(): S3Client | null {
     if (!env.STORAGE_URL) {
       throw new Error(
         "[STORAGE] STORAGE_URL environment variable is required when using internal storage (ENABLE_S3=false). " +
-          "Set STORAGE_URL to your public storage URL with protocol (e.g., https://syrg.palmr.com or http://192.168.1.100:9379)"
+          "Set STORAGE_URL to your public storage URL with protocol (e.g., https://syrg.amfora.com or http://192.168.1.100:9379)"
       );
     }
     publicEndpoint = env.STORAGE_URL;

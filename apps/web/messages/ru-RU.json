@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "Для лучшей функциональности рекомендуется использовать официальных провайдеров. Если у вас возникли проблемы с пользовательским провайдером, рассмотрите возможность создания issue на",
       "github": "GitHub",
       "officialProvider": "Официальный провайдер",
-      "officialProviderDescription": "Этот провайдер оптимизирован Palmr. Можно изменять только учетные данные и конфигурацию.",
+      "officialProviderDescription": "Этот провайдер оптимизирован Amfora. Можно изменять только учетные данные и конфигурацию.",
       "manualConfigTitle": "Ручная настройка",
       "manualConfigDescription": "Вы предоставляете все конечные точки вручную. Убедитесь, что они правильны для вашего провайдера."
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Отправка файлов - Palmr",
+        "title": "Отправка файлов - Amfora",
         "description": "Отправка файлов через общую ссылку",
         "descriptionWithLimit": "Загрузить файлы (макс. {limit} файлов)"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "URL do Servidor",
-        "description": "URL base do servidor Palmr (ex: https://palmr.exemplo.com)"
+        "description": "URL base do servidor Amfora (ex: https://palmr.exemplo.com)"
       },
       "testSmtp": {
         "title": "Проверить SMTP-соединение",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "Скрыть Версию",
-        "description": "Скрыть версию Palmr в нижнем колонтитуле всех страниц"
+        "description": "Скрыть версию Amfora в нижнем колонтитуле всех страниц"
       }
     },
     "buttons": {

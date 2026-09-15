@@ -84,7 +84,7 @@ fi
 echo "[STORAGE-SYSTEM-SETUP] Setting bucket policy..."
 run_as_target mc anonymous set none "palmr-local/$MINIO_BUCKET" 2>/dev/null || true
 
-# Save credentials for Palmr to use
+# Save credentials for Amfora to use
 echo "[STORAGE-SYSTEM-SETUP] Saving credentials to $MINIO_CREDENTIALS..."
 
 # Create credentials file
@@ -112,7 +112,7 @@ echo "[STORAGE-SYSTEM-SETUP] ✓ Credentials file created and readable"
 echo "[STORAGE-SYSTEM-SETUP] ✓✓✓ Storage system configured successfully!"
 echo "[STORAGE-SYSTEM-SETUP]   Bucket: $MINIO_BUCKET"
 echo "[STORAGE-SYSTEM-SETUP]   Credentials: saved to .minio-credentials"
-echo "[STORAGE-SYSTEM-SETUP]   Palmr will use storage system"
+echo "[STORAGE-SYSTEM-SETUP]   Amfora will use storage system"
 
 exit 0
 

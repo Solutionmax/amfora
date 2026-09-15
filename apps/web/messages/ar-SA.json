@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "للحصول على وظائف أفضل، نوصي باستخدام المزودين الرسميين. إذا واجهت مشاكل مع مزود مخصص، فكر في فتح مشكلة على",
       "github": "GitHub",
       "officialProvider": "مزود رسمي",
-      "officialProviderDescription": "هذا المزود محسن من قبل Palmr. يمكن تعديل بيانات الاعتماد والتكوين فقط.",
+      "officialProviderDescription": "هذا المزود محسن من قبل Amfora. يمكن تعديل بيانات الاعتماد والتكوين فقط.",
       "manualConfigTitle": "التكوين اليدوي",
       "manualConfigDescription": "أنت تقوم بتوفير جميع نقاط النهاية يدوياً. تأكد من صحتها لمزودك."
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "رفع الملفات - Palmr",
+        "title": "رفع الملفات - Amfora",
         "description": "رفع الملفات عبر الرابط المشترك",
         "descriptionWithLimit": "تحميل الملفات (الحد الأقصى {limit} ملفات)"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "رابط الخادم",
-        "description": "الرابط الأساسي لخادم Palmr (مثال: https://palmr.example.com)"
+        "description": "الرابط الأساسي لخادم Amfora (مثال: https://amfora.example.com)"
       },
       "testSmtp": {
         "title": "اختبار اتصال SMTP",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "إخفاء الإصدار",
-        "description": "إخفاء إصدار Palmr في تذييل جميع الصفحات"
+        "description": "إخفاء إصدار Amfora في تذييل جميع الصفحات"
       }
     },
     "buttons": {

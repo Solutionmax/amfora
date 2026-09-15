@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "För bättre funktionalitet, överväg att använda officiella leverantörer. Om du har problem med en anpassad leverantör, överväg att öppna ett problem på",
       "github": "GitHub",
       "officialProvider": "Officiell leverantör",
-      "officialProviderDescription": "Denna leverantör är optimerad av Palmr. Endast inloggningsuppgifter och konfiguration kan ändras.",
+      "officialProviderDescription": "Denna leverantör är optimerad av Amfora. Endast inloggningsuppgifter och konfiguration kan ändras.",
       "manualConfigTitle": "Manuell konfiguration",
       "manualConfigDescription": "Du tillhandahåller alla slutpunkter manuellt. Se till att de är korrekta för din leverantör."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Skicka filer - Palmr",
+        "title": "Skicka filer - Amfora",
         "description": "Skicka filer via den delade länken",
         "descriptionWithLimit": "Ladda upp filer (max {limit} filer)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "Dölj version",
-        "description": "Dölj Palmr-versionen från sidfoten på alla sidor"
+        "description": "Dölj Amfora-versionen från sidfoten på alla sidor"
       },
       "smtpEnabled": {
         "title": "SMTP aktiverad",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "Server URL",
-        "description": "Bas-URL för Palmr-servern (t.ex.: https://palmr.example.com)"
+        "description": "Bas-URL för Amfora-servern (t.ex.: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "Lösenordsautentisering",

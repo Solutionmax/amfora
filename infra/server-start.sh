@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-echo "🚀 Starting Palmr Server..."
+echo "🚀 Starting Amfora Server..."
 
 # Wait for storage system credentials to be ready (if using internal storage)
 if [ "${ENABLE_S3}" != "true" ]; then
@@ -137,7 +137,7 @@ else
     fi
 fi
 
-echo "🚀 Starting Palmr server..."
+echo "🚀 Starting Amfora server..."
 
 if [ "$(id -u)" = "0" ]; then
     echo "🔽 Dropping privileges to UID:GID $TARGET_UID:$TARGET_GID"

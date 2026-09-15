@@ -146,7 +146,7 @@ COPY <<EOF /app/start.sh
 #!/bin/sh
 set -e
 
-echo "Starting Palmr Application..."
+echo "Starting Amfora Application..."
 echo "Storage Mode: \${ENABLE_S3:-false}"
 echo "Secure Site: \${SECURE_SITE:-false}"
 echo "Encryption: \${DISABLE_FILESYSTEM_ENCRYPTION:-true}"

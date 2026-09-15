@@ -50,7 +50,7 @@ export class TwoFactorController {
         return reply.status(404).send({ error: "User not found" });
       }
 
-      const appName = body?.appName || (await this.configService.getValue("appName")) || "Palmr";
+      const appName = body?.appName || (await this.configService.getValue("appName")) || "Amfora";
 
       const setupData = await this.twoFactorService.generateSetup(userId, user.email, appName);
 
