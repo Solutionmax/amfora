@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "برای عملکرد بهتر، استفاده از ارائه‌دهندگان رسمی را در نظر بگیرید. اگر با ارائه‌دهنده سفارشی مشکلی دارید، یک Issue در",
       "github": "GitHub",
       "officialProvider": "ارائه‌دهنده رسمی",
-      "officialProviderDescription": "این ارائه‌دهنده توسط Palmr بهینه شده است. فقط می‌توانید اعتبارنامه‌ها و پیکربندی را تغییر دهید.",
+      "officialProviderDescription": "این ارائه‌دهنده توسط Amfora بهینه شده است. فقط می‌توانید اعتبارنامه‌ها و پیکربندی را تغییر دهید.",
       "manualConfigTitle": "پیکربندی دستی",
       "manualConfigDescription": "شما همه نقاط پایانی را به‌صورت دستی وارد می‌کنید. مطمئن شوید برای ارائه‌دهنده شما صحیح هستند."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "ارسال فایل‌ها - Palmr",
+        "title": "ارسال فایل‌ها - Amfora",
         "description": "ارسال فایل از طریق لینک اشتراکی",
         "descriptionWithLimit": "بارگذاری فایل‌ها (حداکثر {limit} فایل)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "مخفی کردن نسخه",
-        "description": "مخفی کردن نسخه Palmr از فوتر در تمام صفحات"
+        "description": "مخفی کردن نسخه Amfora از فوتر در تمام صفحات"
       },
       "smtpEnabled": {
         "title": "فعال‌سازی SMTP",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "URL سرور",
-        "description": "URL پایه سرور Palmr (مثلاً: https://palmr.example.com)"
+        "description": "URL پایه سرور Amfora (مثلاً: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "احراز هویت با گذرواژه",

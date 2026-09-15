@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "Для кращої функціональності розгляньте використання офіційних постачальників. Якщо у вас є проблеми з користувацьким постачальником, розгляньте відкриття питання на",
       "github": "GitHub",
       "officialProvider": "Офіційний постачальник",
-      "officialProviderDescription": "Цей постачальник оптимізований Palmr. Можна змінювати лише облікові дані та конфігурацію.",
+      "officialProviderDescription": "Цей постачальник оптимізований Amfora. Можна змінювати лише облікові дані та конфігурацію.",
       "manualConfigTitle": "Ручна конфігурація",
       "manualConfigDescription": "Ви надаєте всі кінцеві точки вручну. Переконайтеся, що вони правильні для вашого постачальника."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Надіслати файли - Palmr",
+        "title": "Надіслати файли - Amfora",
         "description": "Надішліть файли через спільне посилання",
         "descriptionWithLimit": "Завантажити файли (макс {limit} файлів)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "Сховати версію",
-        "description": "Сховати версію Palmr з підвалу на всіх сторінках"
+        "description": "Сховати версію Amfora з підвалу на всіх сторінках"
       },
       "smtpEnabled": {
         "title": "SMTP увімкнено",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "URL сервера",
-        "description": "Базовий URL сервера Palmr (наприклад: https://palmr.example.com)"
+        "description": "Базовий URL сервера Amfora (наприклад: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "Автентифікація за паролем",

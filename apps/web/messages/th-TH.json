@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "เพื่อการทำงานที่ดีขึ้น ให้พิจารณาใช้ผู้ให้บริการอย่างเป็นทางการ หากคุณมีปัญหากับผู้ให้บริการที่กำหนดเอง ให้พิจารณาเปิด issue บน",
       "github": "GitHub",
       "officialProvider": "ผู้ให้บริการอย่างเป็นทางการ",
-      "officialProviderDescription": "ผู้ให้บริการนี้ได้รับการปรับปรุงโดย Palmr สามารถแก้ไขได้เฉพาะข้อมูลประจำตัวและการกำหนดค่า",
+      "officialProviderDescription": "ผู้ให้บริการนี้ได้รับการปรับปรุงโดย Amfora สามารถแก้ไขได้เฉพาะข้อมูลประจำตัวและการกำหนดค่า",
       "manualConfigTitle": "การกำหนดค่าด้วยตนเอง",
       "manualConfigDescription": "คุณกำลังให้ endpoints ทั้งหมดด้วยตนเอง ตรวจสอบให้แน่ใจว่าถูกต้องสำหรับผู้ให้บริการของคุณ"
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "ส่งไฟล์ - Palmr",
+        "title": "ส่งไฟล์ - Amfora",
         "description": "ส่งไฟล์ผ่านลิงค์ที่แชร์",
         "descriptionWithLimit": "อัปโหลดไฟล์ (ไฟล์สูงสุด {limit} ไฟล์)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "ซ่อนเวอร์ชัน",
-        "description": "ซ่อนเวอร์ชัน Palmr จากท้ายเพจ"
+        "description": "ซ่อนเวอร์ชัน Amfora จากท้ายเพจ"
       },
       "smtpEnabled": {
         "title": "เปิดใช้งาน SMTP",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "URL เซิร์ฟเวอร์",
-        "description": "URL ฐานของเซิร์ฟเวอร์ Palmr (เช่น https://palmr.example.com)"
+        "description": "URL ฐานของเซิร์ฟเวอร์ Amfora (เช่น https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "การยืนยันตัวตนด้วยรหัสผ่าน",

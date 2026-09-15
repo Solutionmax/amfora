@@ -1,6 +1,6 @@
 ## 🚀 Quick Start
 
-Palmr. includes a convenient Makefile to simplify development and deployment tasks:
+Amfora. includes a convenient Makefile to simplify development and deployment tasks:
 
 ```bash
 # Show all available commands

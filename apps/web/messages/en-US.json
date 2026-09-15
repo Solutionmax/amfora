@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "For better functionality, consider using official providers. If you have issues with a custom provider, consider opening an issue on",
       "github": "GitHub",
       "officialProvider": "Official Provider",
-      "officialProviderDescription": "This provider is optimized by Palmr. Only credentials and configuration can be modified.",
+      "officialProviderDescription": "This provider is optimized by Amfora. Only credentials and configuration can be modified.",
       "manualConfigTitle": "Manual Configuration",
       "manualConfigDescription": "You're providing all endpoints manually. Make sure they're correct for your provider."
     },
@@ -1124,7 +1124,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Send Files - Palmr",
+        "title": "Send Files - Amfora",
         "description": "Send files through the shared link",
         "descriptionWithLimit": "Upload files (max {limit} files)"
       },
@@ -1282,7 +1282,7 @@
       },
       "hideVersion": {
         "title": "Hide Version",
-        "description": "Hide the Palmr version from the footer on all pages"
+        "description": "Hide the Amfora version from the footer on all pages"
       },
       "smtpEnabled": {
         "title": "SMTP Enabled",
@@ -1364,7 +1364,7 @@
       },
       "serverUrl": {
         "title": "Server URL",
-        "description": "Base URL of the Palmr server (e.g.: https://palmr.example.com)"
+        "description": "Base URL of the Amfora server (e.g.: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "Password Authentication",

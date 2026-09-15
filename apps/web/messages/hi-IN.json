@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "बेहतर कार्यक्षमता के लिए, आधिकारिक प्रदाताओं का उपयोग करने पर विचार करें। यदि आपको किसी कस्टम प्रदाता के साथ समस्या है, तो इस पर एक मुद्दा खोलने पर विचार करें",
       "github": "GitHub",
       "officialProvider": "आधिकारिक प्रदाता",
-      "officialProviderDescription": "यह प्रदाता Palmr द्वारा अनुकूलित है। केवल क्रेडेंशियल्स और कॉन्फ़िगरेशन को संशोधित किया जा सकता है।",
+      "officialProviderDescription": "यह प्रदाता Amfora द्वारा अनुकूलित है। केवल क्रेडेंशियल्स और कॉन्फ़िगरेशन को संशोधित किया जा सकता है।",
       "manualConfigTitle": "मैनुअल कॉन्फ़िगरेशन",
       "manualConfigDescription": "आप सभी एंडपॉइंट्स मैनुअल रूप से प्रदान कर रहे हैं। सुनिश्चित करें कि वे आपके प्रदाता के लिए सही हैं।"
     },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "सर्वर URL",
-        "description": "Palmr सर्वर का आधार URL (उदाहरण: https://palmr.example.com)"
+        "description": "Amfora सर्वर का आधार URL (उदाहरण: https://amfora.example.com)"
       },
       "testSmtp": {
         "title": "SMTP कनेक्शन का परीक्षण करें",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "संस्करण छुपाएं",
-        "description": "सभी पृष्ठों के फुटर में Palmr संस्करण छुपाएं"
+        "description": "सभी पृष्ठों के फुटर में Amfora संस्करण छुपाएं"
       }
     },
     "buttons": {

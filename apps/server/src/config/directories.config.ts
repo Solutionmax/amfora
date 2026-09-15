@@ -3,7 +3,7 @@ import * as path from "path";
 import { IS_RUNNING_IN_CONTAINER } from "../utils/container-detection";
 
 /**
- * Directory Configuration for Palmr Server
+ * Directory Configuration for Amfora Server
  *
  * This configuration manages all directory paths used by the server,
  * including temporary directories for uploads.

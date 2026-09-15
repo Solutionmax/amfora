@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "더 나은 기능을 위해 공식 제공자 사용을 고려하세요. 사용자 지정 제공자에 문제가 있는 경우 다음에서 이슈를 열어주세요",
       "github": "GitHub",
       "officialProvider": "공식 제공자",
-      "officialProviderDescription": "이 제공자는 Palmr에 의해 최적화되었습니다. 자격 증명과 구성만 수정할 수 있습니다.",
+      "officialProviderDescription": "이 제공자는 Amfora에 의해 최적화되었습니다. 자격 증명과 구성만 수정할 수 있습니다.",
       "manualConfigTitle": "수동 구성",
       "manualConfigDescription": "모든 엔드포인트를 수동으로 제공하고 있습니다. 제공자에 맞게 올바르게 설정되었는지 확인하세요."
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "파일 보내기 - Palmr",
+        "title": "파일 보내기 - Amfora",
         "description": "공유된 링크를 통해 파일 보내기",
         "descriptionWithLimit": "파일 업로드 (최대 {limit}개 파일)"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "서버 URL",
-        "description": "Palmr 서버의 기본 URL (예: https://palmr.example.com)"
+        "description": "Amfora 서버의 기본 URL (예: https://amfora.example.com)"
       },
       "testSmtp": {
         "title": "SMTP 연결 테스트",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "버전 숨기기",
-        "description": "모든 페이지의 바닥글에서 Palmr 버전 숨기기"
+        "description": "모든 페이지의 바닥글에서 Amfora 버전 숨기기"
       }
     },
     "buttons": {

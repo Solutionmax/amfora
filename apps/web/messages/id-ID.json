@@ -113,7 +113,7 @@
       "officialProvidersRecommended": "Untuk fungsionalitas lebih baik, disarankan menggunakan penyedia resmi. Jika Anda mengalami masalah dengan penyedia kustom, pertimbangkan untuk membuka isu di",
       "github": "GitHub",
       "officialProvider": "Penyedia Resmi",
-      "officialProviderDescription": "Penyedia ini dioptimalkan oleh Palmr. Hanya kredensial dan konfigurasi yang dapat diubah.",
+      "officialProviderDescription": "Penyedia ini dioptimalkan oleh Amfora. Hanya kredensial dan konfigurasi yang dapat diubah.",
       "manualConfigTitle": "Konfigurasi Manual",
       "manualConfigDescription": "Anda memasukkan semua endpoint secara manual. Pastikan semua sudah benar untuk penyedia Anda."
     },
@@ -1081,7 +1081,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "Kirim File - Palmr",
+        "title": "Kirim File - Amfora",
         "description": "Kirim file melalui tautan yang dibagikan",
         "descriptionWithLimit": "Unggah file (maks {limit} file)"
       },
@@ -1239,7 +1239,7 @@
       },
       "hideVersion": {
         "title": "Sembunyikan Versi",
-        "description": "Sembunyikan versi Palmr dari footer di semua halaman"
+        "description": "Sembunyikan versi Amfora dari footer di semua halaman"
       },
       "smtpEnabled": {
         "title": "SMTP Diaktifkan",
@@ -1321,7 +1321,7 @@
       },
       "serverUrl": {
         "title": "URL Server",
-        "description": "URL dasar server Palmr (misal: https://palmr.example.com)"
+        "description": "URL dasar server Amfora (misal: https://amfora.example.com)"
       },
       "passwordAuthEnabled": {
         "title": "Autentikasi Kata Sandi",

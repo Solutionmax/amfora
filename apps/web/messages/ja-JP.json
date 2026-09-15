@@ -109,7 +109,7 @@
       "officialProvidersRecommended": "より良い機能のために、公式プロバイダーの使用を検討してください。カスタムプロバイダーで問題が発生した場合は、以下で問題を報告することを検討してください：",
       "github": "GitHub",
       "officialProvider": "公式プロバイダー",
-      "officialProviderDescription": "このプロバイダーはPalmrによって最適化されています。認証情報と設定のみ変更可能です。",
+      "officialProviderDescription": "このプロバイダーはAmforaによって最適化されています。認証情報と設定のみ変更可能です。",
       "manualConfigTitle": "手動設定",
       "manualConfigDescription": "すべてのエンドポイントを手動で提供しています。プロバイダーに対して正しいことを確認してください。"
     },
@@ -1076,7 +1076,7 @@
     },
     "upload": {
       "metadata": {
-        "title": "ファイルを送信 - Palmr",
+        "title": "ファイルを送信 - Amfora",
         "description": "共有リンクを通じてファイルを送信",
         "descriptionWithLimit": "ファイルをアップロード（最大{limit}ファイル）"
       },
@@ -1291,7 +1291,7 @@
       },
       "serverUrl": {
         "title": "サーバーURL",
-        "description": "PalmrサーバーのベースURL（例: https://palmr.example.com）"
+        "description": "AmforaサーバーのベースURL（例: https://amfora.example.com）"
       },
       "testSmtp": {
         "title": "SMTP接続テスト",
@@ -1321,7 +1321,7 @@
       },
       "hideVersion": {
         "title": "バージョンを非表示",
-        "description": "すべてのページのフッターにあるPalmrバージョンを非表示にする"
+        "description": "すべてのページのフッターにあるAmforaバージョンを非表示にする"
       }
     },
     "buttons": {
