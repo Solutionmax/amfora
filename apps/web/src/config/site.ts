@@ -8,7 +8,7 @@ export const siteConfig = {
     },
     {
       label: "Docs",
-      href: "https://palmr.kyantech.com.br",
+      href: "https://solutionmax.net",
     },
   ],
   navMenuItems: [
@@ -18,12 +18,12 @@ export const siteConfig = {
     },
     {
       label: "Docs",
-      href: "https://palmr.kyantech.com.br",
+      href: "https://solutionmax.net",
     },
   ],
   links: {
-    github: "https://github.com/kyantech/Palmr",
-    docs: "https://palmr.kyantech.com.br",
-    sponsor: "https://github.com/sponsors/kyantech",
+    github: "https://solutionmax.net",
+    docs: "https://solutionmax.net",
+    sponsor: "https://solutionmax.net",
   },
 };

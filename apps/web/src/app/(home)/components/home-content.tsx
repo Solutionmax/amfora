@@ -50,7 +50,7 @@ export function HomeContent({ isLoading }: HomeContentProps) {
     <div className="container mx-auto max-w-7xl px-6 flex-grow">
       <BackgroundLights />
       <section className="relative flex flex-col items-center justify-center gap-6 m-auto h-full">
-        <HomeHeader title="Palmr." />
+        <HomeHeader title="Amfora" />
         <motion.div
           {...fadeInAnimation}
           className="w-full text-lg lg:text-xl text-default-600 mt-4 text-center whitespace-normal"
