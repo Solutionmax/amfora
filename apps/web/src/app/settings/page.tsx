@@ -85,11 +85,9 @@ export default function SettingsPage() {
     <ProtectedRoute requireAdmin>
       <FileManagerLayout title={t("settings.pageTitle")}>
         <SettingsForm
-          collapsedGroups={settings.collapsedGroups}
           groupForms={settings.groupForms}
           groupedConfigs={settings.groupedConfigs}
           onGroupSubmit={settings.onGroupSubmit}
-          onToggleCollapse={settings.toggleCollapse}
         />
       </FileManagerLayout>
     </ProtectedRoute>

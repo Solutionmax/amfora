@@ -31,16 +31,6 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
               <IconFolderOpen className="h-4 w-4" />
               {t("recentFiles.viewAll")}
             </Button>
-
-            <Button
-              className="font-semibold text-sm cursor-pointer"
-              variant="outline"
-              size="default"
-              onClick={onOpenUploadModal}
-            >
-              <IconCloudUpload className="h-4 w-4" />
-              {t("recentFiles.upload")}
-            </Button>
           </div>
         </div>
       </CardHeader>

@@ -1,13 +1,13 @@
 "use client";
 
-import { IconLayoutDashboardFilled } from "@tabler/icons-react";
+import { IconCloudUpload, IconPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { GlobalDropZone } from "@/components/general/global-drop-zone";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { QuickAccessCards } from "./components/quick-access-cards";
+import { Button } from "@/components/ui/button";
 import { RecentFiles } from "./components/recent-files";
 import { RecentShares } from "./components/recent-shares";
 import { useDashboard } from "./hooks/use-dashboard";
@@ -36,13 +36,20 @@ export default function DashboardPage() {
     <ProtectedRoute>
       <GlobalDropZone onSuccess={loadDashboardData}>
         <FileManagerLayout
-          breadcrumbLabel={t("dashboard.breadcrumb")}
-          icon={<IconLayoutDashboardFilled className="text-xl" />}
-          showBreadcrumb={false}
           title={t("dashboard.pageTitle")}
+          actions={
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={modals.onOpenUploadModal}>
+                <IconCloudUpload className="size-4" />
+                {t("recentFiles.upload")}
+              </Button>
+              <Button onClick={modals.onOpenCreateModal}>
+                <IconPlus className="size-4" />
+                {t("recentShares.createShare")}
+              </Button>
+            </div>
+          }
         >
-          <QuickAccessCards />
-
           <div className="flex flex-col gap-6">
             <RecentFiles
               fileManager={fileManager}

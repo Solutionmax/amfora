@@ -4,10 +4,8 @@ export type ValidGroup = "security" | "email" | "general" | "storage";
 
 export interface SettingsFormProps {
   groupedConfigs: Record<string, Config[]>;
-  collapsedGroups: Record<string, boolean>;
   groupForms: Record<ValidGroup, UseFormReturn<any>>;
   onGroupSubmit: (group: ValidGroup, data: any) => Promise<void>;
-  onToggleCollapse: (group: ValidGroup) => void;
 }
 
 export interface SettingsGroupProps {
@@ -16,8 +14,6 @@ export interface SettingsGroupProps {
   form: UseFormReturn<{
     configs: Record<string, string>;
   }>;
-  isCollapsed: boolean;
-  onToggleCollapse: () => void;
   onSubmit: (data: any) => Promise<void>;
 }
 
