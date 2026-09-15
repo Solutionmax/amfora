@@ -492,7 +492,12 @@
       "fileSharing": "Udostępnianie plików",
       "tagline": "proste i darmowe"
     },
-    "pageTitle": "Strona główna"
+    "pageTitle": "Strona główna",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Wybierz ikonę",

@@ -496,7 +496,12 @@
       "fileSharing": "Berbagi file",
       "tagline": "dibuat sederhana dan gratis"
     },
-    "pageTitle": "Beranda"
+    "pageTitle": "Beranda",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Pilih Ikon",

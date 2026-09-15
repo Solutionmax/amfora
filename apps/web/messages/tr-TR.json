@@ -492,7 +492,12 @@
       "fileSharing": "Dosya Paylaşımı",
       "tagline": "Basit ve Ücretsiz"
     },
-    "pageTitle": "Ana Sayfa"
+    "pageTitle": "Ana Sayfa",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Simge Seç",

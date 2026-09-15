@@ -496,7 +496,12 @@
       "fileSharing": "שיתוף קבצים",
       "tagline": "נעשה פשוט וחינם"
     },
-    "pageTitle": "בית"
+    "pageTitle": "בית",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "בחר אייקון",

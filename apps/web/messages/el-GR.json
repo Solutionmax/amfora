@@ -496,7 +496,12 @@
       "fileSharing": "Κοινή χρήση αρχείων",
       "tagline": "απλή και δωρεάν"
     },
-    "pageTitle": "Αρχική"
+    "pageTitle": "Αρχική",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Επιλογή εικονιδίου",

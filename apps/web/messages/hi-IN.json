@@ -492,7 +492,12 @@
       "fileSharing": "फाइल साझा करें",
       "tagline": "सरल और मुफ्त"
     },
-    "pageTitle": "होम"
+    "pageTitle": "होम",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "आइकन चुनें",

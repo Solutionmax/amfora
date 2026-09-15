@@ -496,7 +496,12 @@
       "fileSharing": "Обмін файлами",
       "tagline": "зроблено простим і безкоштовним"
     },
-    "pageTitle": "Головна"
+    "pageTitle": "Головна",
+    "visual": {
+      "expires": "Expires",
+      "downloads": "Downloads",
+      "password": "Password"
+    }
   },
   "iconPicker": {
     "title": "Вибрати іконку",
