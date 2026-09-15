@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useAppearance } from "@/hooks/use-appearance";
 
 const PREDEFINED_COLORS = [
   // Row 1: Standard vibrant colors
@@ -51,11 +52,10 @@ const PREDEFINED_COLORS = [
   { name: "Steel", value: "oklch(0.55 0.04 230)" },
 ];
 
-const STORAGE_KEY = "palmr-custom-primary-color";
-
 export function ColorPickerForm() {
   const t = useTranslations();
   const [selectedColor, setSelectedColor] = useState(PREDEFINED_COLORS[0].value);
+  const appearance = useAppearance();
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const applyColor = useCallback((colorValue: string) => {
@@ -66,24 +66,24 @@ export function ColorPickerForm() {
   }, []);
 
   useEffect(() => {
-    const savedColor = localStorage.getItem(STORAGE_KEY);
-    if (savedColor) {
-      setSelectedColor(savedColor);
-      applyColor(savedColor);
+    if (appearance.color) {
+      setSelectedColor(appearance.color);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appearance.color]);
 
-  const handlePresetColorSelect = (colorValue: string) => {
+  const handlePresetColorSelect = async (colorValue: string) => {
     setSelectedColor(colorValue);
     applyColor(colorValue);
-    localStorage.setItem(STORAGE_KEY, colorValue);
+    try {
+      await appearance.save("color", colorValue);
+    } catch (error) {
+      console.error("Failed to save appearance:", error);
+    }
   };
 
   const resetToDefault = () => {
     const defaultColor = PREDEFINED_COLORS[0].value;
     handlePresetColorSelect(defaultColor);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (

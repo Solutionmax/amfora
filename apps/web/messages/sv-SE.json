@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Namnlös dela",
       "created": "Skapad: {date}",
-      "expires": "Upphör: {date}"
+      "expires": "Upphör: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "Ladda ner alla",
     "notFound": {

@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Compartilhamento sem título",
       "created": "Criado em: {date}",
-      "expires": "Expira em: {date}"
+      "expires": "Expira em: {date}",
+      "createdLabel": "Criado"
     },
     "notFound": {
       "title": "Compartilhamento não Encontrado",

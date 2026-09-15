@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 
 import { FilesViewManager } from "@/app/files/components/files-view-manager";
+import { Seal } from "@/components/brand/seal";
 import { FilePreviewModal } from "@/components/modals/file-preview-modal";
 import {
   Breadcrumb,
@@ -90,34 +91,43 @@ export function ShareDetails({
       <Card>
         <CardContent>
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <IconShare className="w-6 h-6 text-muted-foreground" />
-                  <h1 className="text-2xl font-semibold">{share.name || t("share.details.untitled")}</h1>
+            <div className="flex flex-col gap-5">
+              <div className="flex items-start justify-between gap-6">
+                <div className="flex min-w-0 flex-col gap-2">
+                  <h1 className="font-display text-3xl font-extrabold tracking-tight">
+                    {share.name || t("share.details.untitled")}
+                  </h1>
+                  {share.description && <p className="text-muted-foreground">{share.description}</p>}
                 </div>
-                {shareHasItems && hasMultipleFiles && (
-                  <Button onClick={onBulkDownload} className="flex items-center gap-2 w-full sm:w-auto">
-                    <IconDownload className="w-4 h-4" />
-                    {t("share.downloadAll")}
-                  </Button>
-                )}
+                <Seal className="hidden shrink-0 sm:inline-flex" />
               </div>
-              {share.description && <p className="text-muted-foreground">{share.description}</p>}
-              <div className="flex gap-4 text-sm text-muted-foreground">
-                <span>
-                  {t("share.details.created", {
-                    date: format(new Date(share.createdAt), "MM/dd/yyyy HH:mm"),
-                  })}
-                </span>
+
+              <dl className="flex flex-wrap items-center gap-x-8 gap-y-2 border-t pt-4 font-mono text-xs">
+                <div className="flex items-center gap-2">
+                  <dt className="text-muted-foreground">{t("share.details.createdLabel")}</dt>
+                  <dd>{format(new Date(share.createdAt), "dd-MM-yyyy")}</dd>
+                </div>
                 {share.expiration && (
-                  <span>
-                    {t("share.details.expires", {
-                      date: format(new Date(share.expiration), "MM/dd/yyyy HH:mm"),
-                    })}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <dt className="text-muted-foreground">{t("home.visual.expires")}</dt>
+                    <dd>{format(new Date(share.expiration), "dd-MM-yyyy")}</dd>
+                  </div>
                 )}
-              </div>
+                <div className="flex items-center gap-2">
+                  <dt className="text-muted-foreground">{t("home.visual.downloads")}</dt>
+                  <dd>
+                    {share.views}
+                    {share.security?.maxViews ? ` / ${share.security.maxViews}` : ""}
+                  </dd>
+                </div>
+              </dl>
+
+              {shareHasItems && hasMultipleFiles && (
+                <Button onClick={onBulkDownload} className="w-full sm:w-auto sm:self-start">
+                  <IconDownload className="h-4 w-4" />
+                  {t("share.downloadAll")}
+                </Button>
+              )}
             </div>
 
             <FilesViewManager

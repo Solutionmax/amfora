@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Unbenannte Freigabe",
       "created": "Erstellt: {date}",
-      "expires": "Läuft ab: {date}"
+      "expires": "Läuft ab: {date}",
+      "createdLabel": "Erstellt"
     },
     "notFound": {
       "title": "Freigabe nicht gefunden",

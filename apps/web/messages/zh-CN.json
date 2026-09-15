@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "未命名",
       "created": "创建于：{date}",
-      "expires": "过期于：{date}"
+      "expires": "过期于：{date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "未找到共享",

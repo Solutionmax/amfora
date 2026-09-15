@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Udostępnienie bez tytułu",
       "created": "Utworzono: {date}",
-      "expires": "Wygasa: {date}"
+      "expires": "Wygasa: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "Udostępnienie nie znaleziono",

@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Chia sẻ không có tiêu đề",
       "created": "Đã tạo: {date}",
-      "expires": "Hết hạn: {date}"
+      "expires": "Hết hạn: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "Tải xuống tất cả",
     "notFound": {

@@ -6,6 +6,9 @@ interface AppInfoStore {
   appName: string;
   appLogo: string;
   appDescription: string;
+  appPrimaryColor: string;
+  appFontFamily: string;
+  appRadius: string;
   firstAccess: boolean | null;
   isLoading: boolean;
   setAppName: (name: string) => void;
@@ -22,6 +25,9 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     appName: "",
     appLogo: "",
     appDescription: "",
+    appPrimaryColor: "",
+    appFontFamily: "",
+    appRadius: "",
     firstAccess: null,
     isLoading: true,
   };
@@ -34,6 +40,9 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appName: response.data.appName,
           appLogo: response.data.appLogo,
           appDescription: response.data.appDescription,
+          appPrimaryColor: response.data.appPrimaryColor ?? "",
+          appFontFamily: response.data.appFontFamily ?? "",
+          appRadius: response.data.appRadius ?? "",
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
         });
@@ -64,6 +73,9 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appName: response.data.appName,
           appLogo: response.data.appLogo,
           appDescription: response.data.appDescription,
+          appPrimaryColor: response.data.appPrimaryColor ?? "",
+          appFontFamily: response.data.appFontFamily ?? "",
+          appRadius: response.data.appRadius ?? "",
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
         });

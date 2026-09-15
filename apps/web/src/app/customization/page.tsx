@@ -1,6 +1,5 @@
 "use client";
 
-import { IconPalette } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
@@ -15,12 +14,8 @@ export default function CustomizationPage() {
   const t = useTranslations();
 
   return (
-    <ProtectedRoute>
-      <FileManagerLayout
-        breadcrumbLabel={t("customization.breadcrumb")}
-        icon={<IconPalette size={20} />}
-        title={t("customization.pageTitle")}
-      >
+    <ProtectedRoute requireAdmin>
+      <FileManagerLayout title={t("customization.pageTitle")}>
         <div className="flex flex-col gap-6">
           <ThemePickerForm />
           <ColorPickerForm />

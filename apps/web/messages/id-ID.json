@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Berbagi Tanpa Judul",
       "created": "Dibuat: {date}",
-      "expires": "Kedaluwarsa: {date}"
+      "expires": "Kedaluwarsa: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "Unduh Semua",
     "notFound": {

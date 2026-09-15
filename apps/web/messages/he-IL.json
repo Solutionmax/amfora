@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "שיתוף ללא כותרת",
       "created": "נוצר: {date}",
-      "expires": "תפוגה: {date}"
+      "expires": "תפוגה: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "הורד הכל",
     "notFound": {

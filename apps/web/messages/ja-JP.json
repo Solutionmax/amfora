@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "無題",
       "created": "作成日: {date}",
-      "expires": "有効期限: {date}"
+      "expires": "有効期限: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "共有が見つかりません",

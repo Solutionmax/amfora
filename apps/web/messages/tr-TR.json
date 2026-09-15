@@ -1381,7 +1381,8 @@
     "details": {
       "untitled": "Adsız",
       "created": "Oluşturulma: {date}",
-      "expires": "Son Kullanma: {date}"
+      "expires": "Son Kullanma: {date}",
+      "createdLabel": "Created"
     },
     "notFound": {
       "title": "Paylaşım Bulunamadı",

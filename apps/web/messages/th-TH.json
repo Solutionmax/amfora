@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "แชร์ที่ไม่มีชื่อ",
       "created": "สร้างเมื่อ: {date}",
-      "expires": "หมดอายุ: {date}"
+      "expires": "หมดอายุ: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "ดาวน์โหลดทั้งหมด",
     "notFound": {

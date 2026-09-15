@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Compartición sin título",
       "created": "Creada: {date}",
-      "expires": "Expira: {date}"
+      "expires": "Expira: {date}",
+      "createdLabel": "Creado"
     },
     "notFound": {
       "title": "Compartición no encontrada",

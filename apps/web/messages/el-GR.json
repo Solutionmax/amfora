@@ -1385,7 +1385,8 @@
     "details": {
       "untitled": "Κοινή χρήση χωρίς τίτλο",
       "created": "Δημιουργία: {date}",
-      "expires": "Λήξη: {date}"
+      "expires": "Λήξη: {date}",
+      "createdLabel": "Created"
     },
     "downloadAll": "Λήψη όλων",
     "notFound": {
