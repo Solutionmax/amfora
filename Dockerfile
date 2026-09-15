@@ -1,3 +1,8 @@
+# ponytail: MinIO haalde zijn publieke binaries offline (dl.min.io geeft 410 Gone),
+# dus minio + mc komen uit de laatste gepubliceerde upstream image. Exact de versies
+# waar de app op getest is. Upgradepad: github.com/minio/{minio,mc} releases.
+FROM kyantech/palmr:v3.3.2-beta AS vendor
+
 FROM node:24-alpine AS base
 
 # Install system dependencies
@@ -12,13 +17,10 @@ RUN apk add --no-cache \
 # Enable pnpm
 RUN corepack enable pnpm
 
-# Install storage system for S3-compatible storage
-COPY infra/install-minio.sh /tmp/install-minio.sh
-RUN chmod +x /tmp/install-minio.sh && /tmp/install-minio.sh
-
-# Install storage client (mc) for appropriate architecture
-COPY infra/install-mc.sh /tmp/install-mc.sh
-RUN chmod +x /tmp/install-mc.sh && /tmp/install-mc.sh
+# Install storage system (minio) and client (mc), vendored from the upstream image
+COPY --from=vendor /usr/local/bin/minio /usr/local/bin/minio
+COPY --from=vendor /usr/local/bin/mc /usr/local/bin/mc
+RUN chmod +x /usr/local/bin/minio /usr/local/bin/mc && minio --version && mc --version
 
 # Set working directory
 WORKDIR /app
