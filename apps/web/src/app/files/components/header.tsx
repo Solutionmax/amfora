@@ -8,8 +8,7 @@ export function Header({ onUpload, onCreateFolder }: HeaderProps) {
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-      <h2 className="text-xl font-semibold">{t("files.title")}</h2>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
         {onCreateFolder && (
           <Button variant="outline" onClick={onCreateFolder} className="w-full sm:w-auto">

@@ -10,7 +10,6 @@ import { LoadingScreen } from "@/components/layout/loading-screen";
 import { QuickAccessCards } from "./components/quick-access-cards";
 import { RecentFiles } from "./components/recent-files";
 import { RecentShares } from "./components/recent-shares";
-import { StorageUsage } from "./components/storage-usage";
 import { useDashboard } from "./hooks/use-dashboard";
 import { DashboardModals } from "./modals/dashboard-modals";
 
@@ -19,8 +18,7 @@ export default function DashboardPage() {
 
   const {
     isLoading,
-    diskSpace,
-    diskSpaceError,
+
     recentFiles,
     recentShares,
     modals,
@@ -34,10 +32,6 @@ export default function DashboardPage() {
     return <LoadingScreen />;
   }
 
-  const handleRetryDiskSpace = async () => {
-    await loadDashboardData();
-  };
-
   return (
     <ProtectedRoute>
       <GlobalDropZone onSuccess={loadDashboardData}>
@@ -47,7 +41,6 @@ export default function DashboardPage() {
           showBreadcrumb={false}
           title={t("dashboard.pageTitle")}
         >
-          <StorageUsage diskSpace={diskSpace} diskSpaceError={diskSpaceError} onRetry={handleRetryDiskSpace} />
           <QuickAccessCards />
 
           <div className="flex flex-col gap-6">

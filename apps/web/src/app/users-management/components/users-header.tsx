@@ -21,7 +21,6 @@ export function UsersHeader({ onCreateUser, onGenerateInvite }: UsersHeaderProps
       <div className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <IconUsers className="text-2xl" />
-          <h1 className="text-2xl font-bold">{t("users.header.title")}</h1>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="font-semibold" onClick={onGenerateInvite}>
