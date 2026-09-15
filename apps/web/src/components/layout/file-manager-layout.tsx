@@ -1,73 +1,55 @@
-import { ReactNode } from "react";
-import Link from "next/link";
-import { IconLayoutDashboard } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+"use client";
 
-import { Navbar } from "@/components/layout/navbar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { DefaultFooter } from "@/components/ui/default-footer";
-import { Separator } from "@/components/ui/separator";
+import { ReactNode, useState } from "react";
+import { IconMenu2 } from "@tabler/icons-react";
+
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 interface FileManagerLayoutProps {
   children: ReactNode;
   title: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   breadcrumbLabel?: string;
   showBreadcrumb?: boolean;
+  actions?: ReactNode;
 }
 
-export function FileManagerLayout({
-  children,
-  title,
-  icon,
-  breadcrumbLabel,
-  showBreadcrumb = true,
-}: FileManagerLayoutProps) {
-  const t = useTranslations();
+export function FileManagerLayout({ children, title, actions }: FileManagerLayoutProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-1 max-w-7xl mx-auto w-full p-6 py-8">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row items-center gap-2">
-              {icon}
-              <h1 className="text-2xl font-bold">{title}</h1>
-            </div>
-            <Separator />
-            {showBreadcrumb && breadcrumbLabel && (
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="/dashboard" className="flex items-center">
-                        <IconLayoutDashboard size={20} className="mr-2" />
-                        {t("navigation.dashboard")}
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <span className="flex items-center gap-2">
-                      {icon} {breadcrumbLabel}
-                    </span>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            )}
-          </div>
+    <div className="flex min-h-screen w-full">
+      <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 lg:block">
+        <AppSidebar />
+      </aside>
 
-          {children}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex items-center gap-3 border-b px-4 py-3 lg:hidden">
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <IconMenu2 className="size-5" />
+                <span className="sr-only">Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[280px] p-0">
+              <SheetTitle className="sr-only">{title}</SheetTitle>
+              <AppSidebar onNavigate={() => setIsMenuOpen(false)} />
+            </SheetContent>
+          </Sheet>
+          <h1 className="font-display text-lg font-bold tracking-tight">{title}</h1>
         </div>
+
+        <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-6 lg:px-10 lg:py-10">
+          <div className="mb-8 hidden items-end justify-between gap-4 lg:flex">
+            <h1 className="font-display text-3xl font-extrabold tracking-tight">{title}</h1>
+            {actions}
+          </div>
+          <div className="flex flex-col gap-6">{children}</div>
+        </main>
       </div>
-      <DefaultFooter />
     </div>
   );
 }

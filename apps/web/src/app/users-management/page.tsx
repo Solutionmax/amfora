@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
+import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { Navbar } from "@/components/layout/navbar";
-import { DefaultFooter } from "@/components/ui/default-footer";
 import { GenerateInviteLinkModal } from "./components/generate-invite-link-modal";
 import { UserManagementModals } from "./components/user-management-modals";
 import { UsersHeader } from "./components/users-header";
@@ -13,6 +13,7 @@ import { UsersTable } from "./components/users-table";
 import { useUserManagement } from "./hooks/use-user-management";
 
 export default function AdminAreaPage() {
+  const t = useTranslations();
   const {
     users,
     isLoading,
@@ -37,28 +38,23 @@ export default function AdminAreaPage() {
 
   return (
     <ProtectedRoute requireAdmin>
-      <div className="w-full h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-1 max-w-7xl mx-auto w-full py-8 px-6">
-          <div className="flex flex-col gap-8">
-            <UsersHeader onCreateUser={handleCreateUser} onGenerateInvite={() => setIsInviteModalOpen(true)} />
-
-            <UsersTable
-              currentUser={currentUser}
-              users={users}
-              onDelete={(user) => {
-                modals.setDeleteModalUser(user);
-                modals.onDeleteModalOpen();
-              }}
-              onEdit={handleEditUser}
-              onToggleStatus={(user) => {
-                modals.setStatusModalUser(user);
-                modals.onStatusModalOpen();
-              }}
-            />
-          </div>
-        </div>
-        <DefaultFooter />
+      <FileManagerLayout
+        title={t("users.header.title")}
+        actions={<UsersHeader onCreateUser={handleCreateUser} onGenerateInvite={() => setIsInviteModalOpen(true)} />}
+      >
+        <UsersTable
+          currentUser={currentUser}
+          users={users}
+          onDelete={(user) => {
+            modals.setDeleteModalUser(user);
+            modals.onDeleteModalOpen();
+          }}
+          onEdit={handleEditUser}
+          onToggleStatus={(user) => {
+            modals.setStatusModalUser(user);
+            modals.onStatusModalOpen();
+          }}
+        />
 
         <UserManagementModals
           deleteModalUser={deleteModalUser}
@@ -72,7 +68,7 @@ export default function AdminAreaPage() {
         />
 
         <GenerateInviteLinkModal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} />
-      </div>
+      </FileManagerLayout>
     </ProtectedRoute>
   );
 }
