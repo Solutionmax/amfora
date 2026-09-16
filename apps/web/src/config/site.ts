@@ -1,5 +1,6 @@
 export type SiteConfig = typeof siteConfig;
 
+/** One place for the outward links. Point these at the real repo before the public release. */
 export const siteConfig = {
   navItems: [
     {
@@ -14,8 +15,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://solutionmax.net",
+    github: "https://github.com/raym0nz82/amfora",
     docs: "https://solutionmax.net",
-    sponsor: "https://solutionmax.net",
   },
 };

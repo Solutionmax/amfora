@@ -6,6 +6,7 @@ import { IconMenu2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { GithubStar } from "@/components/brand/github-star";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="relative text-sm font-medium text-muted-foreground transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-foreground after:transition-all hover:text-foreground hover:after:w-full"
               >
                 {item.label}
               </Link>
@@ -47,10 +48,12 @@ export function Navbar() {
           </nav>
         </div>
 
-        <div className="hidden items-center gap-1 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
+          <GithubStar />
+          <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
           <LanguageSwitcher />
           <ModeToggle />
-          <Button asChild className="ml-2">
+          <Button asChild className="ml-1">
             <Link href="/login">{t("login.signIn")}</Link>
           </Button>
         </div>
@@ -77,6 +80,7 @@ export function Navbar() {
                     {item.label}
                   </Link>
                 ))}
+                <GithubStar className="self-start" />
                 <Button asChild className="mt-2">
                   <Link href="/login" onClick={() => setIsMenuOpen(false)}>
                     {t("login.signIn")}

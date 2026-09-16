@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { GithubStar } from "@/components/brand/github-star";
 import { Maxim } from "@/components/brand/maxim";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
@@ -66,7 +67,8 @@ export default function PublicSharePage() {
             )}
             <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
           </Link>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            <GithubStar tone="light" className="hidden bg-foreground/20 backdrop-blur-sm sm:inline-flex" />
             <LanguageSwitcher />
             <ModeToggle />
           </div>
