@@ -5,6 +5,7 @@ import { IconDownload, IconFolder } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 
+import { Stage } from "@/components/brand/stage";
 import { Vessel } from "@/components/brand/vessel";
 import { Button } from "@/components/ui/button";
 import { getFileIcon } from "@/utils/file-icons";
@@ -75,15 +76,10 @@ export function ShareStage({
   };
 
   return (
-    <div className="grid w-full max-w-5xl items-center gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-20">
-      <div className="mx-auto w-full max-w-[280px]">
-        <Vessel level={level} strata={itemCount} sealed={!opened} className="h-[340px] w-full text-foreground" />
-        {/* The shelf the vessel stands on, and its label. */}
-        <div className="mt-2 border-t pt-3 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          {opened ? t("share.opened") : t("share.sealed")}
-        </div>
-      </div>
-
+    <Stage
+      object={<Vessel level={level} strata={itemCount} sealed={!opened} className="w-full" />}
+      caption={opened ? t("share.opened") : t("share.sealed")}
+    >
       <div>
         <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">{name}</h1>
         {description && <p className="mt-3 max-w-md text-muted-foreground">{description}</p>}
@@ -152,6 +148,6 @@ export function ShareStage({
           </ul>
         )}
       </div>
-    </div>
+    </Stage>
   );
 }

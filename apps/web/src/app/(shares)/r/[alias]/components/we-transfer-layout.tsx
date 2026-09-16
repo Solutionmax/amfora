@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { GithubStar } from "@/components/brand/github-star";
 import { Maxim } from "@/components/brand/maxim";
+import { Stage } from "@/components/brand/stage";
 import { Vessel } from "@/components/brand/vessel";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
@@ -134,31 +135,20 @@ export function WeTransferLayout({
         </div>
       </header>
 
-      <main className="relative flex flex-1 items-center justify-center px-6 py-10 lg:px-16">
-        <div className="grid w-full max-w-5xl items-center gap-12 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-20">
-          <div className="mx-auto w-full max-w-[260px]">
-            <Vessel
-              level={level}
-              strata={filled.count}
-              sealed={hasUploadedSuccessfully}
-              className="h-[320px] w-full text-foreground"
-            />
-            <div className="mt-2 border-t pt-3 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-              {hasUploadedSuccessfully ? t("share.sealed") : t("share.itemCount", { count: filled.count })}
-            </div>
-          </div>
+      <main className="relative flex-1 px-4 pb-6 lg:px-6">
+        <Stage
+          object={<Vessel level={level} strata={filled.count} sealed={hasUploadedSuccessfully} className="w-full" />}
+          caption={hasUploadedSuccessfully ? t("share.sealed") : t("share.itemCount", { count: filled.count })}
+        >
+          <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+            {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
+          </h1>
+          {reverseShare?.description && (
+            <p className="mt-3 max-w-md text-muted-foreground">{reverseShare.description}</p>
+          )}
 
-          <div>
-            <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-              {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
-            </h1>
-            {reverseShare?.description && (
-              <p className="mt-3 max-w-md text-muted-foreground">{reverseShare.description}</p>
-            )}
-
-            <div className="mt-8 max-w-md">{uploadSection()}</div>
-          </div>
-        </div>
+          <div className="mt-8">{uploadSection()}</div>
+        </Stage>
       </main>
 
       <footer className="relative px-6 pb-8 lg:px-16">
