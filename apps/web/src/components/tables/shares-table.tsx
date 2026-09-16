@@ -256,10 +256,10 @@ export function SharesTable({
               <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
                 {t("sharesTable.columns.name")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden 2xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
                 {t("sharesTable.columns.description")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden 2xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
                 {t("sharesTable.columns.createdAt")}
               </TableHead>
               <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
@@ -271,10 +271,10 @@ export function SharesTable({
               <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
                 {t("sharesTable.columns.security")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
                 {t("sharesTable.columns.files")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
                 {t("sharesTable.columns.recipients")}
               </TableHead>
               <TableHead className="h-10 w-[70px] text-xs font-bold text-muted-foreground bg-muted/50 px-4 rounded-tr-lg">
@@ -368,7 +368,7 @@ export function SharesTable({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="hidden 2xl:table-cell h-12 px-4">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "description" })}
@@ -435,7 +435,9 @@ export function SharesTable({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">{format(new Date(share.createdAt), "MM/dd/yyyy HH:mm")}</TableCell>
+                  <TableCell className="hidden 2xl:table-cell h-12 px-4">
+                    {format(new Date(share.createdAt), "MM/dd/yyyy HH:mm")}
+                  </TableCell>
                   <TableCell className="h-12 px-4">
                     <div
                       className="flex items-center gap-1 min-w-0"
@@ -520,7 +522,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="hidden xl:table-cell h-12 px-4">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "files" })}
@@ -547,7 +549,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="hidden xl:table-cell h-12 px-4">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "recipients" })}

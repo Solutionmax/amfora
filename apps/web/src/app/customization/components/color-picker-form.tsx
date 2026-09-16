@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { IconChevronDown, IconChevronUp, IconPalette } from "@tabler/icons-react";
+import { IconPalette } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,6 @@ export function ColorPickerForm() {
   const t = useTranslations();
   const [selectedColor, setSelectedColor] = useState(PREDEFINED_COLORS[0].value);
   const appearance = useAppearance();
-  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const applyColor = useCallback((colorValue: string) => {
     document.documentElement.style.setProperty("--primary", colorValue);
@@ -87,11 +86,8 @@ export function ColorPickerForm() {
   };
 
   return (
-    <Card className="p-6 gap-0">
-      <CardHeader
-        className="flex flex-row items-center justify-between cursor-pointer p-0"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
+    <Card className="gap-0 p-6">
+      <CardHeader className="flex flex-row items-center justify-between p-0">
         <div className="flex flex-row items-center gap-8">
           <IconPalette className="text-xl text-muted-foreground" />
           <div className="flex flex-col gap-1">
@@ -99,13 +95,8 @@ export function ColorPickerForm() {
             <p className="text-sm text-muted-foreground">{t("customization.colors.description")}</p>
           </div>
         </div>
-        {isCollapsed ? (
-          <IconChevronDown className="text-muted-foreground" />
-        ) : (
-          <IconChevronUp className="text-muted-foreground" />
-        )}
       </CardHeader>
-      <CardContent className={`${isCollapsed ? "hidden" : "block"} px-0`}>
+      <CardContent className="px-0">
         <Separator className="my-6" />
         <div className="flex flex-col gap-4">
           <div className="space-y-2 mb-3">

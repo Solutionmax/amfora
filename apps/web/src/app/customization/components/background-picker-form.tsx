@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { IconChevronDown, IconChevronUp, IconDeviceLaptop } from "@tabler/icons-react";
+import { IconDeviceLaptop } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,6 @@ export function BackgroundPickerForm() {
     light: BACKGROUND_OPTIONS.light[0].background,
     dark: BACKGROUND_OPTIONS.dark[0].background,
   });
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const applyBackground = useCallback((backgroundValues: { light: string; dark: string }) => {
     document.documentElement.style.setProperty("--custom-background-light", backgroundValues.light);
     document.documentElement.style.setProperty("--custom-background-dark", backgroundValues.dark);
@@ -67,11 +66,8 @@ export function BackgroundPickerForm() {
   };
 
   return (
-    <Card className="p-6 gap-0">
-      <CardHeader
-        className="flex flex-row items-center justify-between cursor-pointer p-0"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
+    <Card className="gap-0 p-6">
+      <CardHeader className="flex flex-row items-center justify-between p-0">
         <div className="flex flex-row items-center gap-8">
           <IconDeviceLaptop className="text-xl text-muted-foreground" />
           <div className="flex flex-col gap-1">
@@ -79,13 +75,8 @@ export function BackgroundPickerForm() {
             <p className="text-sm text-muted-foreground">{t("customization.background.description")}</p>
           </div>
         </div>
-        {isCollapsed ? (
-          <IconChevronDown className="text-muted-foreground" />
-        ) : (
-          <IconChevronUp className="text-muted-foreground" />
-        )}
       </CardHeader>
-      <CardContent className={`${isCollapsed ? "hidden" : "block"} px-0`}>
+      <CardContent className="px-0">
         <Separator className="my-6" />
         <div className="flex flex-col gap-6">
           <div className="space-y-2 mb-3">

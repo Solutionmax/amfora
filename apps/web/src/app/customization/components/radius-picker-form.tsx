@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { IconBorderRadius, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { IconBorderRadius } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,6 @@ export function RadiusPickerForm() {
   const t = useTranslations();
   const [selectedRadius, setSelectedRadius] = useState(PREDEFINED_RADIUS[2].value);
   const appearance = useAppearance();
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const applyRadius = useCallback((radiusValue: string) => {
     document.documentElement.style.setProperty("--radius", radiusValue);
   }, []);
@@ -50,11 +49,8 @@ export function RadiusPickerForm() {
   };
 
   return (
-    <Card className="p-6 gap-0">
-      <CardHeader
-        className="flex flex-row items-center justify-between cursor-pointer p-0"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
+    <Card className="gap-0 p-6">
+      <CardHeader className="flex flex-row items-center justify-between p-0">
         <div className="flex flex-row items-center gap-8">
           <IconBorderRadius className="text-xl text-muted-foreground" />
           <div className="flex flex-col gap-1">
@@ -62,13 +58,8 @@ export function RadiusPickerForm() {
             <p className="text-sm text-muted-foreground">{t("customization.radius.description")}</p>
           </div>
         </div>
-        {isCollapsed ? (
-          <IconChevronDown className="text-muted-foreground" />
-        ) : (
-          <IconChevronUp className="text-muted-foreground" />
-        )}
       </CardHeader>
-      <CardContent className={`${isCollapsed ? "hidden" : "block"} px-0`}>
+      <CardContent className="px-0">
         <Separator className="my-6" />
         <div className="flex flex-col gap-4">
           <div className="space-y-2 mb-3">

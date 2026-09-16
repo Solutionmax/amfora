@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { cn } from "@/lib/utils";
+import { SectionLayout } from "@/components/ui/section-layout";
 import { createGroupMetadata } from "../constants";
 import { SettingsFormProps, ValidGroup } from "../types";
 import { AuthProvidersSettings } from "./auth-provider-form/auth-providers-settings";
@@ -49,40 +49,22 @@ export function SettingsForm({ groupedConfigs, groupForms, onGroupSubmit }: Sett
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-      <nav
-        className="flex flex-row gap-1 overflow-x-auto lg:flex-col lg:overflow-visible"
-        aria-label={t("settings.pageTitle")}
-      >
-        {sortedGroups.map(([group]) => {
-          const metadata = GROUP_METADATA[group as keyof typeof GROUP_METADATA];
-          const active = group === activeGroup;
-
-          return (
-            <button
-              key={group}
-              type="button"
-              onClick={() => setActiveGroup(group)}
-              aria-current={active ? "true" : undefined}
-              className={cn(
-                "flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors",
-                active
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-card/60 hover:text-foreground"
-              )}
-            >
-              {metadata?.icon && React.createElement(metadata.icon, { className: "size-[18px]" })}
-              {t.has(`settings.groups.${group}.title`)
-                ? t(`settings.groups.${group}.title`)
-                : (metadata?.title ?? group)}
-            </button>
-          );
-        })}
-      </nav>
-
-      <div>
-        {sortedGroups.filter(([group]) => group === activeGroup).map(([group, configs]) => renderPanel(group, configs))}
-      </div>
-    </div>
+    <SectionLayout
+      sections={sortedGroups.map(([group]) => {
+        const metadata = GROUP_METADATA[group as keyof typeof GROUP_METADATA];
+        return {
+          id: group,
+          label: t.has(`settings.groups.${group}.title`)
+            ? t(`settings.groups.${group}.title`)
+            : (metadata?.title ?? group),
+          icon: metadata?.icon,
+        };
+      })}
+      activeId={activeGroup}
+      onSelect={setActiveGroup}
+      label={t("settings.pageTitle")}
+    >
+      {sortedGroups.filter(([group]) => group === activeGroup).map(([group, configs]) => renderPanel(group, configs))}
+    </SectionLayout>
   );
 }
