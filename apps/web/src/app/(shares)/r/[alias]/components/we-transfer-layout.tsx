@@ -1,73 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
+import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { GithubStar } from "@/components/brand/github-star";
+import { Maxim } from "@/components/brand/maxim";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
+import { useAppInfo } from "@/contexts/app-info-context";
 import { BACKGROUND_IMAGES, MESSAGE_TYPES } from "../constants";
 import { WeTransferLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
 import { WeTransferStatusMessage } from "./shared/status-message";
-import { TransparentFooter } from "./transparent-footer";
 
-const getRandomBackgroundImage = (): string => {
-  const randomIndex = Math.floor(Math.random() * BACKGROUND_IMAGES.length);
-  return BACKGROUND_IMAGES[randomIndex];
-};
-
-const useBackgroundImage = () => {
-  const [selectedImage, setSelectedImage] = useState<string>("");
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    setSelectedImage(getRandomBackgroundImage());
-  }, []);
-
-  useEffect(() => {
-    if (!selectedImage) return;
-
-    const img = new Image();
-    img.onload = () => setImageLoaded(true);
-    img.onerror = () => {
-      console.error("Error loading background image:", selectedImage);
-      setImageLoaded(true);
-    };
-    img.src = selectedImage;
-  }, [selectedImage]);
-
-  return { selectedImage, imageLoaded };
-};
-
-const HeaderControls = () => (
-  <div className="absolute top-4 right-4 md:top-6 md:right-6 z-40 flex items-center gap-2">
-    <div className="bg-white/10 dark:bg-black/20 backdrop-blur-xs border border-white/20 dark:border-white/10 rounded-lg p-1">
-      <LanguageSwitcher />
-    </div>
-    <div className="bg-white/10 dark:bg-black/20 backdrop-blur-xs border border-white/20 dark:border-white/10 rounded-lg p-1">
-      <ModeToggle />
-    </div>
-  </div>
-);
-
-const BackgroundLayer = ({ selectedImage, imageLoaded }: { selectedImage: string; imageLoaded: boolean }) => (
-  <>
-    <div className="absolute inset-0 z-0 bg-background" />
-    {imageLoaded && selectedImage && (
-      <div
-        className="absolute inset-0 z-10"
-        style={{
-          backgroundImage: `url(${selectedImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-    )}
-    <div className="absolute inset-0 bg-black/40 z-20" />
-  </>
-);
+/** Same artwork rotation as the download page, picked from the alias so a link keeps its look. */
+function artworkFor(alias: string) {
+  let sum = 0;
+  for (const char of alias ?? "") sum += char.charCodeAt(0);
+  return BACKGROUND_IMAGES[sum % BACKGROUND_IMAGES.length];
+}
 
 export function WeTransferLayout({
   reverseShare,
@@ -80,10 +34,15 @@ export function WeTransferLayout({
   isLinkNotFound,
   isLinkExpired,
 }: WeTransferLayoutProps) {
-  const { selectedImage, imageLoaded } = useBackgroundImage();
   const t = useTranslations();
+  const { appName, appLogo } = useAppInfo();
+  const [artwork, setArtwork] = useState<string>(BACKGROUND_IMAGES[0]);
 
-  const getUploadSectionContent = () => {
+  useEffect(() => {
+    setArtwork(artworkFor(alias));
+  }, [alias]);
+
+  const uploadSection = () => {
     if (hasUploadedSuccessfully) {
       return (
         <WeTransferStatusMessage
@@ -154,34 +113,47 @@ export function WeTransferLayout({
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <BackgroundLayer selectedImage={selectedImage} imageLoaded={imageLoaded} />
-      <HeaderControls />
+    <div className="relative min-h-screen">
+      <div className="fixed inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${artwork})` }} aria-hidden />
+      <div
+        className="fixed inset-0 bg-gradient-to-br from-background/80 via-background/40 to-transparent"
+        aria-hidden
+      />
 
-      {!imageLoaded && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center">
-          <div className="animate-pulse text-white/70 text-sm">{t("reverseShares.upload.layout.loading")}</div>
-        </div>
-      )}
-
-      <div className="relative z-30 min-h-screen flex items-center justify-start p-4 md:p-8 lg:p-12 xl:p-16">
-        <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl">
-          <div className="bg-white dark:bg-black rounded-2xl shadow-2xl p-6 md:p-8 backdrop-blur-sm border border-white/20">
-            <div className="text-left mb-6 md:mb-8">
-              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
-              </h1>
-              {reverseShare?.description && (
-                <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">{reverseShare.description}</p>
-              )}
-            </div>
-
-            {getUploadSectionContent()}
+      <div className="relative flex min-h-screen flex-col">
+        <header className="flex items-center justify-between px-6 py-5">
+          <Link href="/" className="flex items-center gap-2.5">
+            {appLogo ? (
+              <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
+            ) : (
+              <AmphoraMark className="h-8 w-8 text-primary" />
+            )}
+            <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <GithubStar tone="light" className="hidden bg-foreground/20 backdrop-blur-sm sm:inline-flex" />
+            <LanguageSwitcher />
+            <ModeToggle />
           </div>
-        </div>
-      </div>
+        </header>
 
-      <TransparentFooter />
+        <main className="flex flex-1 items-center px-6 pb-16 lg:px-16">
+          <div className="w-full max-w-[460px] rounded-[1.75rem] border bg-card p-7 shadow-[0_30px_80px_-40px_rgba(14,32,54,0.6)]">
+            <h1 className="font-display text-2xl font-extrabold leading-tight tracking-tight">
+              {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
+            </h1>
+            {reverseShare?.description && (
+              <p className="mt-1 text-sm text-muted-foreground">{reverseShare.description}</p>
+            )}
+
+            <div className="mt-6">{uploadSection()}</div>
+          </div>
+        </main>
+
+        <footer className="px-6 pb-8 lg:px-16">
+          <Maxim seed={alias ?? "amfora"} />
+        </footer>
+      </div>
     </div>
   );
 }

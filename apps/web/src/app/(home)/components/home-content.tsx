@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { IconClock, IconDownload, IconLock } from "@tabler/icons-react";
+import { IconArrowDown, IconClock, IconDownload, IconLock } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -11,15 +11,14 @@ import { Seal } from "@/components/brand/seal";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { HomeContentProps } from "../types";
-import { HomeHeader } from "./home-header";
 
 // A different view of the same world on every visit.
-const ARTWORK = ["/art/sea.jpg", "/art/terrace.jpg", "/art/wall.jpg", "/art/vault.jpg"];
+const ARTWORK = ["/art/sea.jpg", "/art/vault.jpg", "/art/terrace.jpg", "/art/wall.jpg"];
 
 const rise = (delay: number) => ({
   animate: { opacity: 1, y: 0 },
-  initial: { opacity: 0, y: 16 },
-  transition: { delay, duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+  initial: { opacity: 0, y: 20 },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
 });
 
 export function HomeContent({ isLoading }: HomeContentProps) {
@@ -35,46 +34,91 @@ export function HomeContent({ isLoading }: HomeContentProps) {
     return null;
   }
 
-  const points = [t("home.points.selfHosted"), t("home.points.expiry"), t("home.points.noTracking")];
+  const points = [
+    { label: t("home.points.selfHosted"), icon: IconLock },
+    { label: t("home.points.expiry"), icon: IconClock },
+    { label: t("home.points.noTracking"), icon: IconDownload },
+  ];
 
   return (
-    <main className="flex-grow">
-      {/* Hero: text on sand, artwork bleeding off the right edge, the share card straddling the seam. */}
-      <section className="relative overflow-hidden lg:min-h-[calc(100vh-4rem)]">
-        <div className="absolute inset-y-0 right-0 hidden w-[44%] lg:block">
-          <motion.img
-            key={artwork}
-            src={artwork}
-            alt=""
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/20 to-transparent" />
+    <main className="-mt-16 flex-grow">
+      {/* The artwork is the whole first screen. Everything else waits below the fold. */}
+      <section className="relative flex min-h-screen flex-col justify-end overflow-hidden">
+        <motion.img
+          key={artwork}
+          src={artwork}
+          alt=""
+          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 1.04 }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B1626]/95 via-[#0B1626]/55 to-[#0B1626]/25" />
+
+        <div className="container relative mx-auto max-w-6xl px-6 pb-20 pt-32 text-background">
+          <motion.p {...rise(0)} className="font-mono text-xs uppercase tracking-[0.3em] opacity-70">
+            Amfora
+          </motion.p>
+
+          <h1 className="mt-5 font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+            <motion.span {...rise(0.08)} className="block">
+              {t("home.header.fileSharing")}
+            </motion.span>
+            <motion.span {...rise(0.16)} className="block opacity-60">
+              {t("home.header.tagline")}
+            </motion.span>
+          </h1>
+
+          <motion.p {...rise(0.24)} className="mt-7 max-w-lg text-lg leading-relaxed opacity-85">
+            {t("home.description")}
+          </motion.p>
+
+          <motion.div {...rise(0.32)} className="mt-9 flex flex-wrap items-center gap-3">
+            <Button asChild size="lg" className="px-8">
+              <Link href="/login">{t("login.signIn")}</Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-background/40 bg-transparent text-background hover:bg-background/10 hover:text-background"
+            >
+              <Link href={siteConfig.links.docs} target="_blank" rel="noopener noreferrer">
+                {t("home.documentation")}
+              </Link>
+            </Button>
+          </motion.div>
         </div>
 
-        <div className="container relative mx-auto flex max-w-6xl flex-col justify-center gap-12 px-6 py-16 lg:min-h-[calc(100vh-4rem)] lg:py-20">
-          <div className="max-w-2xl">
-            <HomeHeader title="Amfora" />
+        <motion.div {...rise(0.5)} className="relative pb-8 text-center text-background/60">
+          <IconArrowDown className="mx-auto size-5 animate-bounce" aria-hidden="true" />
+        </motion.div>
+      </section>
 
-            <motion.p {...rise(0.18)} className="mt-7 max-w-lg text-lg leading-relaxed text-muted-foreground">
-              {t("home.description")}
-            </motion.p>
+      {/* What you actually get, next to the thing the recipient sees. */}
+      <section className="border-b bg-background">
+        <div className="container mx-auto grid max-w-6xl items-center gap-14 px-6 py-24 lg:grid-cols-[1fr_360px]">
+          <div>
+            <h2 className="max-w-lg font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+              {t("home.privacyMessage")}
+            </h2>
 
-            <motion.div {...rise(0.24)} className="mt-9 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="px-8">
-                <Link href="/login">{t("login.signIn")}</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href={siteConfig.links.docs} target="_blank" rel="noopener noreferrer">
-                  {t("home.documentation")}
-                </Link>
-              </Button>
-            </motion.div>
+            <ul className="mt-10 grid gap-8 sm:grid-cols-3">
+              {points.map(({ label, icon: Icon }, index) => (
+                <li key={label} className="flex flex-col gap-3">
+                  <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-primary">
+                    <Icon className="size-4" aria-hidden="true" />
+                  </span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-sm leading-relaxed">{label}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <motion.div {...rise(0.34)} className="relative w-full max-w-[330px] lg:ml-auto lg:mr-6">
+          <div className="relative mx-auto w-full max-w-[330px]">
             <div className="rounded-[1.5rem] border bg-card p-6 shadow-[0_30px_70px_-35px_rgba(14,32,54,0.55)]">
               <p className="font-display text-base font-bold tracking-tight">offerte-2026.pdf</p>
               <p className="mt-1 font-mono text-[11px] text-muted-foreground">4,2 MB &middot; PDF</p>
@@ -104,25 +148,16 @@ export function HomeContent({ isLoading }: HomeContentProps) {
               </dl>
             </div>
             <Seal className="absolute -right-5 -top-5 h-16 w-16" />
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      <section className="border-t bg-secondary/50">
-        <div className="container mx-auto max-w-6xl px-6 py-12">
-          <ul className="grid gap-6 font-mono text-xs text-muted-foreground sm:grid-cols-3">
-            {points.map((point) => (
-              <li key={point} className="flex items-start gap-3">
-                <span className="mt-1.5 block size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                {point}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-10 flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-end sm:justify-between">
-            <Maxim seed="amfora-home" />
-            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{t("home.privacyMessage")}</p>
-          </div>
+      <section className="bg-secondary/40">
+        <div className="container mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12 sm:flex-row sm:items-end sm:justify-between">
+          <Maxim seed="amfora-home" />
+          <Button asChild size="lg" className="px-8">
+            <Link href="/login">{t("login.signIn")}</Link>
+          </Button>
         </div>
       </section>
     </main>
