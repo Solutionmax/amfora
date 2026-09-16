@@ -8,17 +8,21 @@ const MAXIMS = [
   { greek: "Ἀκούσας νόει", english: "Having heard, understand" },
 ];
 
-export function Maxim({ seed }: { seed: string }) {
+export function Maxim({ seed, tone = "dark" }: { seed: string; tone?: "dark" | "light" }) {
   let sum = 0;
   for (const char of seed) sum += char.charCodeAt(0);
   const maxim = MAXIMS[sum % MAXIMS.length];
 
   return (
     <figure className="max-w-xs">
-      <blockquote className="font-display text-lg font-bold tracking-tight text-foreground/80">
+      <blockquote
+        className={`font-display text-lg font-bold tracking-tight ${tone === "light" ? "" : "text-foreground/80"}`}
+      >
         {maxim.greek}
       </blockquote>
-      <figcaption className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+      <figcaption
+        className={`mt-1 font-mono text-[11px] uppercase tracking-[0.18em] ${tone === "light" ? "opacity-70" : "text-muted-foreground"}`}
+      >
         {maxim.english}
       </figcaption>
     </figure>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { Maxim } from "@/components/brand/maxim";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -23,19 +24,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_min(50%,640px)]">
-      <aside className="relative hidden flex-col justify-between bg-secondary p-12 lg:flex">
-        <div className="flex items-center gap-3">
-          <AmphoraMark className="h-9 w-9 text-primary" />
-          <span className="font-display text-2xl font-bold tracking-tight">{appName}</span>
+    <div className="grid min-h-screen lg:grid-cols-[1.1fr_minmax(0,520px)]">
+      {/* The artwork carries the left half; the form keeps the right half quiet. */}
+      <aside className="relative hidden overflow-hidden lg:block">
+        <img src="/art/terrace.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/55 to-foreground/30" />
+
+        <div className="relative flex h-full flex-col justify-between p-12 text-background">
+          <div className="flex items-center gap-3">
+            <AmphoraMark className="h-9 w-9" />
+            <span className="font-display text-2xl font-bold tracking-tight">{appName}</span>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <p className="max-w-md font-display text-5xl font-extrabold leading-[1.02] tracking-tight">
+              {t("home.header.fileSharing")}
+              <span className="block text-background/75">{t("home.header.tagline")}</span>
+            </p>
+            <p className="max-w-sm text-sm leading-relaxed opacity-80">{t("home.privacyMessage")}</p>
+          </div>
+
+          <div className="opacity-90">
+            <Maxim seed="amfora-login" tone="light" />
+          </div>
         </div>
-        <p className="max-w-sm font-display text-4xl font-extrabold leading-[1.05] tracking-tight">
-          {t("home.header.fileSharing")}
-          <span className="block text-primary">{t("home.header.tagline")}</span>
-        </p>
-        <p className="max-w-sm border-l-2 border-primary/30 pl-4 text-sm leading-relaxed text-muted-foreground">
-          {t("home.privacyMessage")}
-        </p>
       </aside>
 
       <div className="relative flex flex-col">
@@ -45,7 +57,7 @@ export default function LoginPage() {
         <div className="flex flex-1 items-center justify-center px-6 py-16">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="flex w-full max-w-sm flex-col gap-6"
+            className="flex w-full max-w-sm flex-col gap-7"
             initial={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
