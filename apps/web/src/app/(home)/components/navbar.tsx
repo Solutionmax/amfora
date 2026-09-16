@@ -13,9 +13,19 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
 import { useAppInfo } from "@/contexts/app-info-context";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const t = useTranslations();
+  const [scrolled, setScrolled] = useState(false);
+
+  // Transparent over the artwork, solid once the sand sections come up.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const { appName, appLogo, refreshAppInfo } = useAppInfo();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -24,14 +34,26 @@ export function Navbar() {
   }, [refreshAppInfo]);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 px-6 backdrop-blur-sm">
+    <header
+      className={cn(
+        "fixed top-0 z-40 w-full px-6 transition-colors duration-300",
+        scrolled ? "border-b bg-background/90 backdrop-blur-sm" : "text-background"
+      )}
+    >
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5">
             {appLogo ? (
-              <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
+              <img
+                alt=""
+                className={cn(
+                  "h-8 w-8 rounded object-contain transition-colors",
+                  scrolled ? "" : "bg-background/90 p-0.5"
+                )}
+                src={appLogo}
+              />
             ) : (
-              <AmphoraMark className="h-8 w-8 text-primary" />
+              <AmphoraMark className={cn("h-8 w-8", scrolled ? "text-primary" : "text-background")} />
             )}
             <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
           </Link>
@@ -40,7 +62,12 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative text-sm font-medium text-muted-foreground transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-foreground after:transition-all hover:text-foreground hover:after:w-full"
+                className={cn(
+                  "relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:transition-all hover:after:w-full",
+                  scrolled
+                    ? "text-muted-foreground after:bg-foreground hover:text-foreground"
+                    : "text-background/80 after:bg-background hover:text-background"
+                )}
               >
                 {item.label}
               </Link>
@@ -49,7 +76,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <GithubStar />
+          <GithubStar tone={scrolled ? "default" : "light"} />
           <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
           <LanguageSwitcher />
           <ModeToggle />

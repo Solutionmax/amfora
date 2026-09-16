@@ -14,7 +14,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="relative flex flex-col h-screen">
+    <div className="relative flex min-h-screen flex-col">
       <Navbar />
       <HomeContent isLoading={isLoading} />
       <DefaultFooter />
