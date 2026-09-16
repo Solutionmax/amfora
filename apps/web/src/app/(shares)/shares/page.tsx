@@ -1,11 +1,12 @@
 "use client";
 
+import { IconPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { useEnhancedFileManager } from "@/hooks/use-enhanced-file-manager";
 import { useShareManager } from "@/hooks/use-share-manager";
@@ -39,27 +40,29 @@ export default function SharesPage() {
 
   return (
     <ProtectedRoute>
-      <FileManagerLayout title={t("shares.pageTitle")}>
-        <Card>
-          <CardContent>
-            <div className="flex flex-col gap-6">
-              <SharesSearch
-                filteredCount={filteredShares.length}
-                searchQuery={searchQuery}
-                totalShares={shares.length}
-                onCreateShare={onOpenCreateModal}
-                onSearchChange={setSearchQuery}
-              />
+      <FileManagerLayout
+        title={t("shares.pageTitle")}
+        actions={
+          <Button onClick={onOpenCreateModal}>
+            <IconPlus className="size-4" />
+            {t("shares.search.createButton")}
+          </Button>
+        }
+      >
+        <SharesSearch
+          filteredCount={filteredShares.length}
+          searchQuery={searchQuery}
+          totalShares={shares.length}
+          onCreateShare={onOpenCreateModal}
+          onSearchChange={setSearchQuery}
+        />
 
-              <SharesTableContainer
-                shareManager={shareManager}
-                shares={filteredShares}
-                onCopyLink={handleCopyLink}
-                onCreateShare={onOpenCreateModal}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <SharesTableContainer
+          shareManager={shareManager}
+          shares={filteredShares}
+          onCopyLink={handleCopyLink}
+          onCreateShare={onOpenCreateModal}
+        />
 
         <SharesModals
           isCreateModalOpen={isCreateModalOpen}

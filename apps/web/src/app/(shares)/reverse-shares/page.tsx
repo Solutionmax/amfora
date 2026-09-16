@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { Card, CardContent } from "@/components/ui/card";
 import { ReverseSharesCardsContainer } from "./components/reverse-shares-cards-container";
 import { ReverseSharesModals } from "./components/reverse-shares-modals";
 import { ReverseSharesSearch } from "./components/reverse-shares-search";
@@ -55,36 +54,30 @@ export default function ReverseSharesPage() {
   return (
     <ProtectedRoute>
       <FileManagerLayout title={t("reverseShares.pageTitle")}>
-        <Card>
-          <CardContent>
-            <div className="flex flex-col gap-6">
-              <ReverseSharesSearch
-                filteredCount={filteredReverseShares.length}
-                searchQuery={searchQuery}
-                totalReverseShares={reverseShares.length}
-                onCreateReverseShare={() => setIsCreateModalOpen(true)}
-                onSearchChange={setSearchQuery}
-                onRefresh={loadReverseShares}
-                isRefreshing={isLoading}
-              />
+        <ReverseSharesSearch
+          filteredCount={filteredReverseShares.length}
+          searchQuery={searchQuery}
+          totalReverseShares={reverseShares.length}
+          onCreateReverseShare={() => setIsCreateModalOpen(true)}
+          onSearchChange={setSearchQuery}
+          onRefresh={loadReverseShares}
+          isRefreshing={isLoading}
+        />
 
-              <ReverseSharesCardsContainer
-                reverseShares={filteredReverseShares}
-                onCopyLink={handleCopyLink}
-                onDelete={setReverseShareToDelete}
-                onEdit={setReverseShareToEdit}
-                onGenerateLink={setReverseShareToGenerateLink}
-                onViewDetails={setReverseShareToViewDetails}
-                onViewFiles={setReverseShareToViewFiles}
-                onViewQrCode={setReverseShareToViewQrCode}
-                onCreateReverseShare={() => setIsCreateModalOpen(true)}
-                onUpdateReverseShare={handleUpdateReverseShareData}
-                onToggleActive={handleToggleActive}
-                onUpdatePassword={handleUpdatePassword}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <ReverseSharesCardsContainer
+          reverseShares={filteredReverseShares}
+          onCopyLink={handleCopyLink}
+          onDelete={setReverseShareToDelete}
+          onEdit={setReverseShareToEdit}
+          onGenerateLink={setReverseShareToGenerateLink}
+          onViewDetails={setReverseShareToViewDetails}
+          onViewFiles={setReverseShareToViewFiles}
+          onViewQrCode={setReverseShareToViewQrCode}
+          onCreateReverseShare={() => setIsCreateModalOpen(true)}
+          onUpdateReverseShare={handleUpdateReverseShareData}
+          onToggleActive={handleToggleActive}
+          onUpdatePassword={handleUpdatePassword}
+        />
 
         <ReverseSharesModals
           isCreateModalOpen={isCreateModalOpen}
