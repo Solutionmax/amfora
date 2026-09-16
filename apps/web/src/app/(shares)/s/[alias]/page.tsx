@@ -58,7 +58,7 @@ export default function PublicSharePage() {
         </div>
       </header>
 
-      <main className="relative flex flex-1 items-center justify-center px-6 py-10 lg:px-16">
+      <main className="relative flex-1 px-4 pb-6 lg:px-6">
         {!isPasswordModalOpen && !share && <ShareNotFound />}
         {share && (
           <ShareStage
