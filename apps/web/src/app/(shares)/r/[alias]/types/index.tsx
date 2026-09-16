@@ -21,6 +21,7 @@ export interface FileUploadSectionProps {
   password: string;
   alias: string;
   onUploadSuccess?: () => void;
+  onFilesChange?: (count: number, bytes: number) => void;
 }
 
 export interface FileWithProgress {

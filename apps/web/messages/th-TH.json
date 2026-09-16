@@ -1404,7 +1404,10 @@
       "filesShared": "{count, plural, =1 {แชร์ 1 ไฟล์} other {แชร์ # ไฟล์}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "fileTitle": "แชร์ไฟล์",

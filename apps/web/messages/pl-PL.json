@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 plik udostępniony} other {# plików udostępnionych}}"
     },
     "download": "Pobierz",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "deleteTitle": "Usuń udostępnienie",

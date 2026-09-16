@@ -11,17 +11,8 @@ import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { PasswordModal } from "./components/password-modal";
 import { ShareNotFound } from "./components/share-not-found";
-import { SharePanel } from "./components/share-panel";
+import { ShareStage } from "./components/share-stage";
 import { usePublicShare } from "./hooks/use-public-share";
-
-// Every share gets one of these, picked from its alias so the same link always looks the same.
-const ARTWORK = ["/art/sea.jpg", "/art/terrace.jpg", "/art/wall.jpg", "/art/vault.jpg"];
-
-function artworkFor(alias: string) {
-  let sum = 0;
-  for (const char of alias) sum += char.charCodeAt(0);
-  return ARTWORK[sum % ARTWORK.length];
-}
 
 export default function PublicSharePage() {
   const { appName, appLogo } = useAppInfo();
@@ -43,59 +34,51 @@ export default function PublicSharePage() {
     return <LoadingScreen />;
   }
 
-  const artwork = artworkFor(share?.id ?? "amfora");
-
   return (
-    <div className="relative min-h-screen">
+    <div className="relative flex min-h-screen flex-col bg-background">
+      {/* No photo wallpaper here: the vessel is the picture. */}
       <div
-        className="fixed inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${artwork})` }}
-        aria-hidden="true"
-      />
-      <div
-        className="fixed inset-0 bg-gradient-to-br from-background/80 via-background/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[70vh] bg-[radial-gradient(60%_60%_at_50%_0%,var(--secondary)_0%,transparent_70%)]"
         aria-hidden="true"
       />
 
-      <div className="relative flex min-h-screen flex-col">
-        <header className="flex items-center justify-between px-6 py-5">
-          <Link href="/" className="flex items-center gap-2.5">
-            {appLogo ? (
-              <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
-            ) : (
-              <AmphoraMark className="h-8 w-8 text-primary" />
-            )}
-            <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <GithubStar tone="light" className="hidden bg-foreground/20 backdrop-blur-sm sm:inline-flex" />
-            <LanguageSwitcher />
-            <ModeToggle />
-          </div>
-        </header>
-
-        <main className="flex flex-1 items-center px-6 pb-16 lg:px-16">
-          {!isPasswordModalOpen && !share && <ShareNotFound />}
-          {share && (
-            <SharePanel
-              name={share.name || appName}
-              description={share.description}
-              expiration={share.expiration}
-              views={share.views}
-              maxViews={share.security?.maxViews}
-              files={files}
-              folders={folders}
-              onDownload={handleDownload}
-              onDownloadFolder={(folderId, folderName) => handleDownload(`folder:${folderId}`, folderName)}
-              onBulkDownload={handleBulkDownload}
-            />
+      <header className="relative flex items-center justify-between px-6 py-5">
+        <Link href="/" className="flex items-center gap-2.5">
+          {appLogo ? (
+            <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
+          ) : (
+            <AmphoraMark className="h-8 w-8 text-primary" />
           )}
-        </main>
+          <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <GithubStar className="hidden sm:inline-flex" />
+          <LanguageSwitcher />
+          <ModeToggle />
+        </div>
+      </header>
 
-        <footer className="px-6 pb-8 lg:px-16">
-          <Maxim seed={share?.id ?? "amfora"} />
-        </footer>
-      </div>
+      <main className="relative flex flex-1 items-center justify-center px-6 py-10 lg:px-16">
+        {!isPasswordModalOpen && !share && <ShareNotFound />}
+        {share && (
+          <ShareStage
+            name={share.name || appName}
+            description={share.description}
+            expiration={share.expiration}
+            views={share.views}
+            maxViews={share.security?.maxViews}
+            files={files}
+            folders={folders}
+            onDownload={handleDownload}
+            onDownloadFolder={(folderId, folderName) => handleDownload(`folder:${folderId}`, folderName)}
+            onBulkDownload={handleBulkDownload}
+          />
+        )}
+      </main>
+
+      <footer className="relative flex items-end justify-between gap-6 px-6 pb-8 lg:px-16">
+        <Maxim seed={share?.id ?? "amfora"} />
+      </footer>
 
       <PasswordModal
         isError={isPasswordError}

@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 Datei geteilt} other {# Dateien geteilt}}"
     },
     "download": "Herunterladen",
-    "itemCount": "{count, plural, =1 {# Datei} other {# Dateien}}"
+    "itemCount": "{count, plural, =1 {# Datei} other {# Dateien}}",
+    "breakSeal": "Siegel brechen",
+    "sealed": "Versiegelt",
+    "opened": "Geöffnet"
   },
   "shareActions": {
     "deleteTitle": "Freigabe Löschen",

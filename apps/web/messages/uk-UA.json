@@ -1404,7 +1404,10 @@
       "filesShared": "{count, plural, =1 {1 файл спільно використовується} few {# файли спільно використовуються} many {# файлів спільно використовується} other {# файлів спільно використовується}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "fileTitle": "Поділитися файлом",
