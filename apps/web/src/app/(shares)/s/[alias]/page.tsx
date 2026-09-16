@@ -3,11 +3,11 @@
 import Link from "next/link";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { Maxim } from "@/components/brand/maxim";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
-import { Maxim } from "./components/maxim";
 import { PasswordModal } from "./components/password-modal";
 import { ShareNotFound } from "./components/share-not-found";
 import { SharePanel } from "./components/share-panel";
