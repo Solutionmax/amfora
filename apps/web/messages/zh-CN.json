@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "安全共享文件",
       "filesShared": "{count, plural, =1 {已共享 1 个文件} other {已共享 # 个文件}}"
-    }
+    },
+    "download": "下载",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "删除共享",

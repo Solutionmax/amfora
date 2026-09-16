@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "파일을 안전하게 공유",
       "filesShared": "{count, plural, =1 {1개 파일 공유됨} other {#개 파일 공유됨}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "공유 삭제",

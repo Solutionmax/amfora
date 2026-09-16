@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "फाइलों को सुरक्षित रूप से साझा करें",
       "filesShared": "{count, plural, =1 {1 फ़ाइल साझा की गई} other {# फ़ाइलें साझा की गईं}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "साझाकरण हटाएं",

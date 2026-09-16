@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "Compartir archivos de forma segura",
       "filesShared": "{count, plural, =1 {1 archivo compartido} other {# archivos compartidos}}"
-    }
+    },
+    "download": "Descargar",
+    "itemCount": "{count, plural, =1 {# archivo} other {# archivos}}"
   },
   "shareActions": {
     "deleteTitle": "Eliminar Compartir",

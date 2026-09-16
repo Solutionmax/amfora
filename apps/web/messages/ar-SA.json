@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "مشاركة الملفات بشكل آمن",
       "filesShared": "{count, plural, =1 {ملف واحد تمت مشاركته} other {# ملفات تمت مشاركتها}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "حذف المشاركة",

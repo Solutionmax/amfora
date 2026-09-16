@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
-import { Amphora } from "@/components/brand/amphora";
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -26,7 +26,7 @@ export default function LoginPage() {
     <div className="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_min(50%,640px)]">
       <aside className="relative hidden flex-col justify-between bg-secondary p-12 lg:flex">
         <div className="flex items-center gap-3">
-          <Amphora className="h-9 w-9 text-primary" fill={0.62} />
+          <AmphoraMark className="h-9 w-9 text-primary" />
           <span className="font-display text-2xl font-bold tracking-tight">{appName}</span>
         </div>
         <p className="max-w-sm font-display text-4xl font-extrabold leading-[1.05] tracking-tight">{appDescription}</p>

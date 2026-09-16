@@ -1,0 +1,19 @@
+import { cn } from "@/lib/utils";
+
+/** Solid brand mark. Reads down to 24px, unlike the line version used for the storage meter. */
+export function AmphoraMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 100 100" className={cn("shrink-0", className)} aria-hidden="true" focusable="false">
+      <g fill="none" stroke="currentColor" strokeWidth="6.5" strokeLinecap="round">
+        <path d="M45 21 C30 25 22 38 32 52" />
+        <path d="M55 21 C70 25 78 38 68 52" />
+      </g>
+      <g fill="currentColor">
+        <rect x="35" y="9" width="30" height="8" rx="4" />
+        <path d="M44 17 H56 L55 30 H45 Z" />
+        <path d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z" />
+        <rect x="41" y="83" width="18" height="7" rx="3.5" />
+      </g>
+    </svg>
+  );
+}

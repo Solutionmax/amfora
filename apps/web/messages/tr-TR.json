@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "Dosyaları güvenli bir şekilde paylaşın",
       "filesShared": "{count, plural, =1 {1 dosya paylaşıldı} other {# dosya paylaşıldı}}"
-    }
+    },
+    "download": "İndir",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "Paylaşımı Sil",

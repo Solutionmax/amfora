@@ -1440,7 +1440,9 @@
     "metadata": {
       "defaultDescription": "Share files securely",
       "filesShared": "{count, plural, =1 {1 file shared} other {# files shared}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "Share File",

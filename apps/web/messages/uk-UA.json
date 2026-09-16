@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "Безпечно ділитися файлами",
       "filesShared": "{count, plural, =1 {1 файл спільно використовується} few {# файли спільно використовуються} many {# файлів спільно використовується} other {# файлів спільно використовується}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "Поділитися файлом",

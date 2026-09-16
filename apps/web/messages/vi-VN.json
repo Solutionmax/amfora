@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "Chia sẻ tệp một cách an toàn",
       "filesShared": "{count, plural, =1 {1 tệp đã được chia sẻ} other {# tệp đã được chia sẻ}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "Chia sẻ tệp",
