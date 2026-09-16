@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "Dateien sicher teilen",
       "filesShared": "{count, plural, =1 {1 Datei geteilt} other {# Dateien geteilt}}"
-    }
+    },
+    "download": "Herunterladen",
+    "itemCount": "{count, plural, =1 {# Datei} other {# Dateien}}"
   },
   "shareActions": {
     "deleteTitle": "Freigabe Löschen",

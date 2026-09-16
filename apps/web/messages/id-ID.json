@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "Bagikan file secara aman",
       "filesShared": "{count, plural, =1 {1 file dibagikan} other {# file dibagikan}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "Bagikan File",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
-import { Amphora } from "@/components/brand/amphora";
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { useAppInfo } from "@/contexts/app-info-context";
 
 export function LoginHeader({ firstAccess }: { firstAccess: boolean }) {
@@ -18,7 +18,7 @@ export function LoginHeader({ firstAccess }: { firstAccess: boolean }) {
         {appLogo ? (
           <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
         ) : (
-          <Amphora className="h-8 w-8 text-primary" />
+          <AmphoraMark className="h-8 w-8 text-primary" />
         )}
         <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
       </div>

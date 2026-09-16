@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "Κοινή χρήση αρχείων με ασφάλεια",
       "filesShared": "{count, plural, =1 {1 αρχείο σε κοινή χρήση} other {# αρχεία σε κοινή χρήση}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "Κοινή χρήση αρχείου",

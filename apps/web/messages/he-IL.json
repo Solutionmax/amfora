@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "שתף קבצים בצורה מאובטחת",
       "filesShared": "{count, plural, =1 {קובץ אחד משותף} other {# קבצים משותפים}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "שתף קובץ",

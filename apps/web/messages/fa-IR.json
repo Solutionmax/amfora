@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "اشتراک‌گذاری فایل‌ها به صورت امن",
       "filesShared": "{count, plural, =1 {۱ فایل به اشتراک گذاشته شد} other {# فایل به اشتراک گذاشته شد}}"
-    }
+    },
+    "download": "Download",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "اشتراک‌گذاری فایل",

@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "Bezpiecznie udostępniaj pliki",
       "filesShared": "{count, plural, =1 {1 plik udostępniony} other {# plików udostępnionych}}"
-    }
+    },
+    "download": "Pobierz",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "Usuń udostępnienie",

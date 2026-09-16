@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "Condividi file in modo sicuro",
       "filesShared": "{count, plural, =1 {1 file condiviso} other {# file condivisi}}"
-    }
+    },
+    "download": "Scarica",
+    "itemCount": "{count, plural, =1 {# file} other {# file}}"
   },
   "shareActions": {
     "deleteTitle": "Elimina Condivisione",

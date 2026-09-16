@@ -5,7 +5,7 @@ import Link from "next/link";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Amphora } from "@/components/brand/amphora";
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ export function Navbar() {
             {appLogo ? (
               <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
             ) : (
-              <Amphora className="h-8 w-8 text-primary" />
+              <AmphoraMark className="h-8 w-8 text-primary" />
             )}
             <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
           </Link>

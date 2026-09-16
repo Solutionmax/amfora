@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "ファイルを安全に共有",
       "filesShared": "{count, plural, =1 {1 ファイルが共有されました} other {# ファイルが共有されました}}"
-    }
+    },
+    "download": "ダウンロード",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "deleteTitle": "共有を削除",

@@ -1397,7 +1397,9 @@
     "metadata": {
       "defaultDescription": "Dela filer säkert",
       "filesShared": "{count, plural, =1 {1 fil delad} other {# filer delade}}"
-    }
+    },
+    "download": "Ladda ner",
+    "itemCount": "{count, plural, =1 {# file} other {# files}}"
   },
   "shareActions": {
     "fileTitle": "Dela fil",

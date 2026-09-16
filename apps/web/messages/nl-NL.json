@@ -1393,7 +1393,9 @@
     "metadata": {
       "defaultDescription": "Bestanden veilig delen",
       "filesShared": "{count, plural, =1 {1 bestand gedeeld} other {# bestanden gedeeld}}"
-    }
+    },
+    "download": "Downloaden",
+    "itemCount": "{count, plural, =1 {# bestand} other {# bestanden}}"
   },
   "shareActions": {
     "deleteTitle": "Delen Verwijderen",

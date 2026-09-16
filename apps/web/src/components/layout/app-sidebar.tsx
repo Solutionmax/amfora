@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 
 import { formatStorageSize } from "@/app/dashboard/utils/format-storage-size";
 import { Amphora } from "@/components/brand/amphora";
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -99,7 +100,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         {appLogo ? (
           <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
         ) : (
-          <Amphora className="h-8 w-8 text-primary" />
+          <AmphoraMark className="h-8 w-8 text-primary" />
         )}
         <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
       </Link>
