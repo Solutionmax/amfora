@@ -497,6 +497,11 @@
       "expires": "Expire",
       "downloads": "Téléchargements",
       "password": "Mot de passe"
+    },
+    "points": {
+      "selfHosted": "Fonctionne sur votre serveur",
+      "expiry": "Les liens expirent d'eux-mêmes",
+      "noTracking": "Sans suivi, sans limites"
     }
   },
   "iconPicker": {

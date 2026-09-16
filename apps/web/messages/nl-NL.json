@@ -497,6 +497,11 @@
       "expires": "Verloopt",
       "downloads": "Opgehaald",
       "password": "Wachtwoord"
+    },
+    "points": {
+      "selfHosted": "Draait op je eigen server",
+      "expiry": "Links verlopen vanzelf",
+      "noTracking": "Geen tracking, geen limieten"
     }
   },
   "iconPicker": {

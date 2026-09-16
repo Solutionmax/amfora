@@ -28,13 +28,13 @@ async function getAppInfo() {
     });
 
     if (!response.ok) {
-      return { appName: "Amfora", appDescription: "Veilig bestanden delen", appLogo: null };
+      return { appName: "Amfora", appDescription: "Secure file sharing", appLogo: null };
     }
 
     return await response.json();
   } catch (error) {
     console.error("Error fetching app info:", error);
-    return { appName: "Amfora", appDescription: "Veilig bestanden delen", appLogo: null };
+    return { appName: "Amfora", appDescription: "Secure file sharing", appLogo: null };
   }
 }
 

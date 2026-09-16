@@ -501,6 +501,11 @@
       "expires": "Caduca",
       "downloads": "Descargas",
       "password": "Contraseña"
+    },
+    "points": {
+      "selfHosted": "Funciona en tu propio servidor",
+      "expiry": "Los enlaces caducan solos",
+      "noTracking": "Sin rastreo, sin límites"
     }
   },
   "iconPicker": {
