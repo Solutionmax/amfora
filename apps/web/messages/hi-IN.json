@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 फ़ाइल साझा की गई} other {# फ़ाइलें साझा की गईं}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "deleteTitle": "साझाकरण हटाएं",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -8,20 +8,14 @@ import { useTranslations } from "next-intl";
 import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { GithubStar } from "@/components/brand/github-star";
 import { Maxim } from "@/components/brand/maxim";
+import { Vessel } from "@/components/brand/vessel";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
-import { BACKGROUND_IMAGES, MESSAGE_TYPES } from "../constants";
+import { MESSAGE_TYPES } from "../constants";
 import { WeTransferLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
 import { WeTransferStatusMessage } from "./shared/status-message";
-
-/** Same artwork rotation as the download page, picked from the alias so a link keeps its look. */
-function artworkFor(alias: string) {
-  let sum = 0;
-  for (const char of alias ?? "") sum += char.charCodeAt(0);
-  return BACKGROUND_IMAGES[sum % BACKGROUND_IMAGES.length];
-}
 
 export function WeTransferLayout({
   reverseShare,
@@ -36,11 +30,12 @@ export function WeTransferLayout({
 }: WeTransferLayoutProps) {
   const t = useTranslations();
   const { appName, appLogo } = useAppInfo();
-  const [artwork, setArtwork] = useState<string>(BACKGROUND_IMAGES[0]);
+  const [filled, setFilled] = useState({ count: 0, bytes: 0 });
 
-  useEffect(() => {
-    setArtwork(artworkFor(alias));
-  }, [alias]);
+  // Every file you add raises the level in the vessel next to the form.
+  const handleFilesChange = useCallback((count: number, bytes: number) => {
+    setFilled({ count, bytes });
+  }, []);
 
   const uploadSection = () => {
     if (hasUploadedSuccessfully) {
@@ -108,52 +103,67 @@ export function WeTransferLayout({
         password={password}
         alias={alias}
         onUploadSuccess={onUploadSuccess}
+        onFilesChange={handleFilesChange}
       />
     );
   };
 
+  const maxFiles = reverseShare?.maxFiles ?? 0;
+  const level = hasUploadedSuccessfully ? 1 : Math.min(filled.count / (maxFiles > 0 ? maxFiles : 6), 1);
+
   return (
-    <div className="relative min-h-screen">
-      <div className="fixed inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${artwork})` }} aria-hidden />
+    <div className="relative flex min-h-screen flex-col bg-background">
       <div
-        className="fixed inset-0 bg-gradient-to-br from-background/80 via-background/40 to-transparent"
-        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[70vh] bg-[radial-gradient(60%_60%_at_50%_0%,var(--secondary)_0%,transparent_70%)]"
+        aria-hidden="true"
       />
 
-      <div className="relative flex min-h-screen flex-col">
-        <header className="flex items-center justify-between px-6 py-5">
-          <Link href="/" className="flex items-center gap-2.5">
-            {appLogo ? (
-              <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
-            ) : (
-              <AmphoraMark className="h-8 w-8 text-primary" />
-            )}
-            <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <GithubStar tone="light" className="hidden bg-foreground/20 backdrop-blur-sm sm:inline-flex" />
-            <LanguageSwitcher />
-            <ModeToggle />
-          </div>
-        </header>
+      <header className="relative flex items-center justify-between px-6 py-5">
+        <Link href="/" className="flex items-center gap-2.5">
+          {appLogo ? (
+            <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
+          ) : (
+            <AmphoraMark className="h-8 w-8 text-primary" />
+          )}
+          <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <GithubStar className="hidden sm:inline-flex" />
+          <LanguageSwitcher />
+          <ModeToggle />
+        </div>
+      </header>
 
-        <main className="flex flex-1 items-center px-6 pb-16 lg:px-16">
-          <div className="w-full max-w-[460px] rounded-[1.75rem] border bg-card p-7 shadow-[0_30px_80px_-40px_rgba(14,32,54,0.6)]">
-            <h1 className="font-display text-2xl font-extrabold leading-tight tracking-tight">
+      <main className="relative flex flex-1 items-center justify-center px-6 py-10 lg:px-16">
+        <div className="grid w-full max-w-5xl items-center gap-12 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-20">
+          <div className="mx-auto w-full max-w-[260px]">
+            <Vessel
+              level={level}
+              strata={filled.count}
+              sealed={hasUploadedSuccessfully}
+              className="h-[320px] w-full text-foreground"
+            />
+            <div className="mt-2 border-t pt-3 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              {hasUploadedSuccessfully ? t("share.sealed") : t("share.itemCount", { count: filled.count })}
+            </div>
+          </div>
+
+          <div>
+            <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
               {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
             </h1>
             {reverseShare?.description && (
-              <p className="mt-1 text-sm text-muted-foreground">{reverseShare.description}</p>
+              <p className="mt-3 max-w-md text-muted-foreground">{reverseShare.description}</p>
             )}
 
-            <div className="mt-6">{uploadSection()}</div>
+            <div className="mt-8 max-w-md">{uploadSection()}</div>
           </div>
-        </main>
+        </div>
+      </main>
 
-        <footer className="px-6 pb-8 lg:px-16">
-          <Maxim seed={alias ?? "amfora"} />
-        </footer>
-      </div>
+      <footer className="relative px-6 pb-8 lg:px-16">
+        <Maxim seed={alias ?? "amfora"} />
+      </footer>
     </div>
   );
 }

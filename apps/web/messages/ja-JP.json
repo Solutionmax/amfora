@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 ファイルが共有されました} other {# ファイルが共有されました}}"
     },
     "download": "ダウンロード",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "deleteTitle": "共有を削除",

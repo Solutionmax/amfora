@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 bestand gedeeld} other {# bestanden gedeeld}}"
     },
     "download": "Downloaden",
-    "itemCount": "{count, plural, =1 {# bestand} other {# bestanden}}"
+    "itemCount": "{count, plural, =1 {# bestand} other {# bestanden}}",
+    "breakSeal": "Verbreek het zegel",
+    "sealed": "Verzegeld",
+    "opened": "Geopend"
   },
   "shareActions": {
     "deleteTitle": "Delen Verwijderen",

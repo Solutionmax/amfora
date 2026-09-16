@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 dosya paylaşıldı} other {# dosya paylaşıldı}}"
     },
     "download": "İndir",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "deleteTitle": "Paylaşımı Sil",

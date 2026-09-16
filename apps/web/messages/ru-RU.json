@@ -1400,7 +1400,10 @@
       "filesShared": "{count, plural, =1 {1 файл отправлен} other {# файлов отправлено}}"
     },
     "download": "Скачать",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}"
+    "itemCount": "{count, plural, =1 {# file} other {# files}}",
+    "breakSeal": "Break the seal",
+    "sealed": "Sealed",
+    "opened": "Opened"
   },
   "shareActions": {
     "deleteTitle": "Удалить Общий Доступ",

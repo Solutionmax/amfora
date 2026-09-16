@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IconCheck, IconFile, IconMail, IconUpload, IconUser, IconX } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useDropzone } from "react-dropzone";
@@ -25,7 +25,13 @@ import { formatFileSize } from "@/utils/format-file-size";
 import { UPLOAD_CONFIG } from "../constants";
 import { FileUploadSectionProps } from "../types";
 
-export function FileUploadSection({ reverseShare, password, alias, onUploadSuccess }: FileUploadSectionProps) {
+export function FileUploadSection({
+  reverseShare,
+  password,
+  alias,
+  onUploadSuccess,
+  onFilesChange,
+}: FileUploadSectionProps) {
   const [uploaderName, setUploaderName] = useState("");
   const [uploaderEmail, setUploaderEmail] = useState("");
   const [description, setDescription] = useState("");
@@ -145,6 +151,14 @@ export function FileUploadSection({ reverseShare, password, alias, onUploadSucce
       },
     },
   });
+
+  // Lets the page draw how full the vessel is while you add files.
+  useEffect(() => {
+    onFilesChange?.(
+      fileUploads.length,
+      fileUploads.reduce((sum, item) => sum + (item.file?.size ?? 0), 0)
+    );
+  }, [fileUploads, onFilesChange]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

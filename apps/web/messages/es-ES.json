@@ -1404,7 +1404,10 @@
       "filesShared": "{count, plural, =1 {1 archivo compartido} other {# archivos compartidos}}"
     },
     "download": "Descargar",
-    "itemCount": "{count, plural, =1 {# archivo} other {# archivos}}"
+    "itemCount": "{count, plural, =1 {# archivo} other {# archivos}}",
+    "breakSeal": "Romper el sello",
+    "sealed": "Sellado",
+    "opened": "Abierto"
   },
   "shareActions": {
     "deleteTitle": "Eliminar Compartir",
