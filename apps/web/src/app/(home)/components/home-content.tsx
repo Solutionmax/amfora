@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IconClock, IconDownload, IconLock } from "@tabler/icons-react";
 import { motion } from "framer-motion";
@@ -12,6 +13,9 @@ import { siteConfig } from "@/config/site";
 import { HomeContentProps } from "../types";
 import { HomeHeader } from "./home-header";
 
+// A different view of the same world on every visit.
+const ARTWORK = ["/art/sea.jpg", "/art/terrace.jpg", "/art/wall.jpg", "/art/vault.jpg"];
+
 const rise = (delay: number) => ({
   animate: { opacity: 1, y: 0 },
   initial: { opacity: 0, y: 16 },
@@ -20,6 +24,12 @@ const rise = (delay: number) => ({
 
 export function HomeContent({ isLoading }: HomeContentProps) {
   const t = useTranslations();
+  const [artwork, setArtwork] = useState(ARTWORK[0]);
+
+  // Picked after mount so the server and the client agree on the first paint.
+  useEffect(() => {
+    setArtwork(ARTWORK[Math.floor(Math.random() * ARTWORK.length)]);
+  }, []);
 
   if (isLoading) {
     return null;
@@ -32,7 +42,15 @@ export function HomeContent({ isLoading }: HomeContentProps) {
       {/* Hero: text on sand, artwork bleeding off the right edge, the share card straddling the seam. */}
       <section className="relative overflow-hidden lg:min-h-[calc(100vh-4rem)]">
         <div className="absolute inset-y-0 right-0 hidden w-[44%] lg:block">
-          <img src="/art/sea.jpg" alt="" className="h-full w-full object-cover" />
+          <motion.img
+            key={artwork}
+            src={artwork}
+            alt=""
+            animate={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="h-full w-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/20 to-transparent" />
         </div>
 
