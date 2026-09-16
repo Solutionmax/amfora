@@ -7,13 +7,14 @@ import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
+import { Maxim } from "./components/maxim";
 import { PasswordModal } from "./components/password-modal";
 import { ShareNotFound } from "./components/share-not-found";
 import { SharePanel } from "./components/share-panel";
 import { usePublicShare } from "./hooks/use-public-share";
 
 // Every share gets one of these, picked from its alias so the same link always looks the same.
-const ARTWORK = ["/art/cellar.jpg", "/art/terrace.jpg", "/art/pattern.jpg", "/art/clay.jpg"];
+const ARTWORK = ["/art/sea.jpg", "/art/terrace.jpg", "/art/wall.jpg", "/art/vault.jpg"];
 
 function artworkFor(alias: string) {
   let sum = 0;
@@ -88,6 +89,10 @@ export default function PublicSharePage() {
             />
           )}
         </main>
+
+        <footer className="px-6 pb-8 lg:px-16">
+          <Maxim seed={share?.id ?? "amfora"} />
+        </footer>
       </div>
 
       <PasswordModal

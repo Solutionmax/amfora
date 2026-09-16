@@ -16,7 +16,7 @@ import { useLogin } from "./hooks/use-login";
 export default function LoginPage() {
   const t = useTranslations();
   const login = useLogin();
-  const { appName, appDescription, firstAccess } = useAppInfo();
+  const { appName, firstAccess } = useAppInfo();
 
   if (login.isAuthenticated === null || login.isAuthenticated === true) {
     return <LoadingScreen />;
@@ -29,8 +29,11 @@ export default function LoginPage() {
           <AmphoraMark className="h-9 w-9 text-primary" />
           <span className="font-display text-2xl font-bold tracking-tight">{appName}</span>
         </div>
-        <p className="max-w-sm font-display text-4xl font-extrabold leading-[1.05] tracking-tight">{appDescription}</p>
-        <p className="max-w-sm border-l-2 border-seal/50 pl-4 text-sm leading-relaxed text-muted-foreground">
+        <p className="max-w-sm font-display text-4xl font-extrabold leading-[1.05] tracking-tight">
+          {t("home.header.fileSharing")}
+          <span className="block text-primary">{t("home.header.tagline")}</span>
+        </p>
+        <p className="max-w-sm border-l-2 border-primary/30 pl-4 text-sm leading-relaxed text-muted-foreground">
           {t("home.privacyMessage")}
         </p>
       </aside>

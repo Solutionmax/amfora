@@ -49,8 +49,8 @@
 
 :root {
   --radius: 1rem;
-  --seal: oklch(0.6095 0.1312 44.84);
-  --seal-foreground: oklch(0.985 0.01 80);
+  --seal: oklch(0.2407 0.0487 254.49);
+  --seal-foreground: oklch(0.9771 0.0074 80.72);
   --background: var(--custom-background-light, oklch(0.9771 0.0074 80.72));
   --foreground: oklch(0.2407 0.0487 254.49);
   --card: oklch(1 0 0);
@@ -94,8 +94,8 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.5686 0.1630 250.47);
   --primary-foreground: oklch(0.985 0.010 250.00);
-  --seal: oklch(0.6800 0.1312 44.84);
-  --seal-foreground: oklch(0.985 0.01 80);
+  --seal: oklch(0.9771 0.0074 80.72);
+  --seal-foreground: oklch(0.2407 0.0487 254.49);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);

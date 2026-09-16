@@ -497,6 +497,11 @@
       "expires": "Läuft ab",
       "downloads": "Downloads",
       "password": "Passwort"
+    },
+    "points": {
+      "selfHosted": "Läuft auf deinem eigenen Server",
+      "expiry": "Links laufen von selbst ab",
+      "noTracking": "Kein Tracking, keine Limits"
     }
   },
   "iconPicker": {

@@ -43,7 +43,7 @@ const defaultConfigs = [
   },
   {
     key: "appDescription",
-    value: "Veilig bestanden delen, zonder tracking",
+    value: "Secure file sharing, without tracking",
     type: "string",
     group: "general",
   },

@@ -24,10 +24,12 @@ export function HomeContent({ isLoading }: HomeContentProps) {
     return null;
   }
 
+  const points = [t("home.points.selfHosted"), t("home.points.expiry"), t("home.points.noTracking")];
+
   return (
     <main className="flex-grow">
-      <div className="container mx-auto flex max-w-6xl flex-col justify-center px-6 py-16 lg:min-h-[calc(100vh-10rem)] lg:py-24">
-        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-20">
+      <div className="container mx-auto max-w-6xl px-6 py-14 lg:py-20">
+        <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           <div className="flex flex-col gap-8">
             <HomeHeader title="Amfora" />
 
@@ -45,53 +47,66 @@ export function HomeContent({ isLoading }: HomeContentProps) {
                 </Link>
               </Button>
             </motion.div>
-
-            <motion.p
-              {...rise(0.3)}
-              className="max-w-md border-l-2 border-seal/40 pl-4 text-sm leading-relaxed text-muted-foreground"
-            >
-              {t("home.privacyMessage")}
-            </motion.p>
           </div>
 
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 24 }}
             transition={{ delay: 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="relative mx-auto w-full max-w-[360px]"
+            className="relative"
           >
-            <div className="absolute inset-0 -rotate-2 rounded-[1.75rem] bg-secondary" aria-hidden="true" />
-            <div className="relative rounded-[1.75rem] border bg-card p-7 shadow-[0_24px_60px_-30px_rgba(14,32,54,0.45)]">
-              <p className="font-display text-lg font-bold tracking-tight">offerte-2026.pdf</p>
-              <p className="mt-1 font-mono text-xs text-muted-foreground">4,2 MB &middot; PDF</p>
+            <img
+              src="/art/terrace.jpg"
+              alt=""
+              width={1920}
+              height={1071}
+              className="h-[380px] w-full rounded-[2rem] object-cover shadow-[0_30px_70px_-40px_rgba(14,32,54,0.6)]"
+            />
 
-              <dl className="mt-6 space-y-3 border-t pt-5 font-mono text-xs">
+            <div className="relative -mt-24 ml-4 w-[300px] rounded-[1.5rem] border bg-card p-6 shadow-[0_24px_60px_-30px_rgba(14,32,54,0.5)] sm:ml-10">
+              <p className="font-display text-base font-bold tracking-tight">offerte-2026.pdf</p>
+              <p className="mt-1 font-mono text-[11px] text-muted-foreground">4,2 MB &middot; PDF</p>
+
+              <dl className="mt-4 space-y-2.5 border-t pt-4 font-mono text-[11px]">
                 <div className="flex items-center justify-between gap-4">
                   <dt className="flex items-center gap-2 text-muted-foreground">
-                    <IconClock className="size-4" aria-hidden="true" />
+                    <IconClock className="size-3.5" aria-hidden="true" />
                     {t("home.visual.expires")}
                   </dt>
                   <dd>18-09-2026</dd>
                 </div>
                 <div className="flex items-center justify-between gap-4">
                   <dt className="flex items-center gap-2 text-muted-foreground">
-                    <IconDownload className="size-4" aria-hidden="true" />
+                    <IconDownload className="size-3.5" aria-hidden="true" />
                     {t("home.visual.downloads")}
                   </dt>
                   <dd>12 / 25</dd>
                 </div>
                 <div className="flex items-center justify-between gap-4">
                   <dt className="flex items-center gap-2 text-muted-foreground">
-                    <IconLock className="size-4" aria-hidden="true" />
+                    <IconLock className="size-3.5" aria-hidden="true" />
                     {t("home.visual.password")}
                   </dt>
                   <dd>&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</dd>
                 </div>
               </dl>
+
+              <Seal className="absolute -right-5 -top-5 h-16 w-16" />
             </div>
-            <Seal className="absolute -bottom-7 -right-7" />
           </motion.div>
         </div>
+
+        <motion.ul
+          {...rise(0.34)}
+          className="mt-16 grid gap-6 border-t pt-8 font-mono text-xs text-muted-foreground sm:grid-cols-3"
+        >
+          {points.map((point) => (
+            <li key={point} className="flex items-start gap-3">
+              <span className="mt-1.5 block size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+              {point}
+            </li>
+          ))}
+        </motion.ul>
       </div>
     </main>
   );

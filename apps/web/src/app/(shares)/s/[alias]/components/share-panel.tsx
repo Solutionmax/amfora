@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { IconDownload, IconFolder } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 
+import { Amphora } from "@/components/brand/amphora";
 import { Seal } from "@/components/brand/seal";
 import { Button } from "@/components/ui/button";
 import { getFileIcon } from "@/utils/file-icons";
@@ -47,12 +49,32 @@ export function SharePanel({
   onBulkDownload?: () => Promise<void>;
 }) {
   const t = useTranslations();
+  const [pourLevel, setPourLevel] = useState<number | null>(null);
+  const frame = useRef<number | null>(null);
+
+  /** The vessel empties while the browser takes over. Purely a signal that the click landed. */
+  const pour = () => {
+    if (frame.current) cancelAnimationFrame(frame.current);
+    const start = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / 1400, 1);
+      setPourLevel(1 - progress);
+      if (progress < 1) {
+        frame.current = requestAnimationFrame(step);
+      } else {
+        frame.current = null;
+        setPourLevel(null);
+      }
+    };
+    frame.current = requestAnimationFrame(step);
+  };
 
   const itemCount = files.length + folders.length;
   const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
   const single = itemCount === 1 && files.length === 1;
 
   const download = () => {
+    pour();
     if (single) {
       return onDownload(files[0].objectName, files[0].name);
     }
@@ -66,14 +88,18 @@ export function SharePanel({
           <h1 className="font-display text-2xl font-extrabold leading-tight tracking-tight">{name}</h1>
           {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
-        <Seal className="h-14 w-14 shrink-0" />
+        {pourLevel === null ? (
+          <Seal className="h-14 w-14 shrink-0" />
+        ) : (
+          <Amphora className="h-14 w-14 shrink-0 text-primary" fill={pourLevel} fillClassName="fill-primary/30" />
+        )}
       </div>
 
       <p className="mt-4 font-mono text-xs text-muted-foreground">
         {t("share.itemCount", { count: itemCount })} · {formatFileSize(totalBytes)}
       </p>
 
-      <Button size="lg" className="mt-5 w-full" onClick={download}>
+      <Button size="lg" className="mt-5 w-full" onClick={download} disabled={pourLevel !== null}>
         <IconDownload className="size-5" />
         {single ? t("share.download") : t("share.downloadAll")}
       </Button>

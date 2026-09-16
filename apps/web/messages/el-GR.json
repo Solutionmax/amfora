@@ -501,6 +501,11 @@
       "expires": "Expires",
       "downloads": "Downloads",
       "password": "Password"
+    },
+    "points": {
+      "selfHosted": "Runs on your own server",
+      "expiry": "Links expire on their own",
+      "noTracking": "No tracking, no limits"
     }
   },
   "iconPicker": {
