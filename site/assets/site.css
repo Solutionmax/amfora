@@ -2636,12 +2636,6 @@ details a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.install-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 30px;
-  margin: 24px 0;
-}
 
 .hero-install {
   margin-top: 24px;
@@ -2662,10 +2656,6 @@ details a {
   line-height: 1.65;
   margin: 0;
 }
-.hero-install .install-links {
-  margin: 12px 0 0;
-  gap: 20px;
-}
 .product-hero-grid {
   padding-block: 48px;
 }
@@ -2683,4 +2673,22 @@ details a {
   .product-hero-grid {
     padding-block: 36px 48px;
   }
+}
+
+.site-header .nav-github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-height: 40px;
+  padding: 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.site-header .nav-github:hover {
+  background: #edf3ff;
+  color: var(--blue);
+}
+.nav-github svg {
+  display: block;
 }

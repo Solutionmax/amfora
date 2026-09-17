@@ -1,9 +1,22 @@
-<p align="center"><img src="docs/images/amfora-banner.svg" alt="Amfora — File sharing. On your terms. Self-hosted by SolutionMAX." width="100%" /></p>
+<p align="center">
+  <a href="https://amfora.solutionmax.net"><img src="docs/images/amfora-logo.svg" alt="Amfora — self-hosted file sharing" width="300"></a>
+</p>
 
 <p align="center">
-  <a href="https://amfora.solutionmax.net/#install"><img src="https://img.shields.io/badge/Install-Amfora-1757e8?style=for-the-badge" alt="Install Amfora" /></a>
-  <a href="https://amfora.solutionmax.net/docs/"><img src="https://img.shields.io/badge/Read-the_docs-112638?style=for-the-badge" alt="Read the documentation" /></a>
-  <a href="https://buymeacoffee.com/solutionmax"><img src="https://img.shields.io/badge/Buy_me_a_coffee-SolutionMAX-ffdd00?style=for-the-badge" alt="Buy Me a Coffee" /></a>
+  <a href="https://github.com/raym0nz82/amfora/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/badge/CI-GitHub_Actions-2088ff?logo=githubactions&amp;logoColor=white"></a>
+  <a href="LICENSE"><img alt="Licence: Apache-2.0" src="https://img.shields.io/badge/licence-Apache--2.0-0079d2"></a>
+  <img alt="Node.js 24" src="https://img.shields.io/badge/Node.js-24-339933">
+  <img alt="SQLite" src="https://img.shields.io/badge/database-SQLite-0079d2">
+  <img alt="S3-compatible storage" src="https://img.shields.io/badge/storage-S3--compatible-0e1726">
+  <img alt="Runs on Docker" src="https://img.shields.io/badge/runs%20on-Docker-475467">
+  <a href="https://buymeacoffee.com/solutionmax"><img alt="Buy me a coffee" src="https://img.shields.io/badge/Buy%20me%20a%20coffee-ffdd00?logo=buymeacoffee&amp;logoColor=000"></a>
+</p>
+
+<p align="center">
+  <a href="https://amfora.solutionmax.net">Website</a> ·
+  <a href="https://amfora.solutionmax.net/docs/">Documentation</a> ·
+  <a href="https://amfora.solutionmax.net/#install">Install</a> ·
+  <a href="LICENSE">Licence</a>
 </p>
 
 # Amfora
@@ -15,10 +28,6 @@ browser link where they can send files back without creating an account.
 <p align="center">
   <img src="site/assets/screenshots/dashboard.webp" alt="Amfora workspace dashboard" width="100%" />
 </p>
-
-[Product website](https://amfora.solutionmax.net) ·
-[Documentation](https://amfora.solutionmax.net/docs/) ·
-[Buy Me a Coffee](https://buymeacoffee.com/solutionmax)
 
 Amfora is a maintained fork of [Palmr](https://github.com/kyantech/Palmr).
 See [NOTICE](NOTICE) for attribution and bundled MinIO licensing information.
