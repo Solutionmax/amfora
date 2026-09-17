@@ -23,7 +23,7 @@
     />
     <meta
       property="og:image"
-      content="https://amfora.solutionmax.net/assets/screenshots/download.webp"
+      content="https://amfora.solutionmax.net/assets/screenshots/download.webp?v=unified-20260917"
     />
     <link
       rel="preload"
@@ -174,7 +174,15 @@
             </p>
             <pre><code>git clone --branch amfora https://github.com/raym0nz82/amfora.git
 cd amfora
-docker compose up -d --build</code></pre>
+bash infra/build-docker.sh local
+docker compose up -d --no-build</code></pre>
+            <p>
+              The build script reuses layers in a dedicated Amfora builder and
+              reclaims unused cache above a 4 GB target. Active builds can
+              temporarily exceed that target. <code>make clean</code> only
+              reclaims build cache; application data and images are retained.
+              Keep the running image and a tested rollback image when upgrading.
+            </p>
             <p>
               Open <code>http://localhost:5487</code>. The first start creates
               the SQLite database, seeds configuration, and makes the first

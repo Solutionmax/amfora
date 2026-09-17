@@ -87,7 +87,8 @@ with Compose and BuildKit; public release downloads are not yet available.
 ```bash
 git clone --branch amfora https://github.com/raym0nz82/amfora.git
 cd amfora
-docker compose up -d --build
+bash infra/build-docker.sh local
+docker compose up -d --no-build
 ```
 
 Open <http://localhost:5487>. On a new database, the first account created
@@ -102,9 +103,14 @@ container and is not published by the sample Compose file.
 To build the image separately:
 
 ```bash
-docker buildx build --load -t amfora:local .
-docker compose up -d
+make build TAG=local
+docker compose up -d --no-build
 ```
+
+The dedicated builder reuses layers and bounds unused cache to a 4 GB target.
+`make clean` reclaims only build cache, preserving images and application data.
+See [build and cache management](docs/deployment/build-cache.md). Keep the running
+image and a tested rollback image when upgrading.
 
 ## Storage and deployment
 
