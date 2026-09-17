@@ -9,7 +9,8 @@ browser link where they can send files back without creating an account.
 </p>
 
 [Product website](https://amfora.solutionmax.net) ·
-[Documentation](https://amfora.solutionmax.net/docs/)
+[Documentation](https://amfora.solutionmax.net/docs/) ·
+[Buy Me a Coffee](https://buymeacoffee.com/solutionmax)
 
 Amfora is a maintained fork of [Palmr](https://github.com/kyantech/Palmr).
 See [NOTICE](NOTICE) for attribution and bundled MinIO licensing information.
