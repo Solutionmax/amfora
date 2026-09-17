@@ -1346,7 +1346,8 @@ details a {
   padding: 2px 4px;
   border-radius: 3px;
 }
-.docs-content pre {
+.docs-content pre,
+.install-command {
   background: #112638;
   color: #e1eef7;
   padding: 48px 23px 23px;
@@ -1357,7 +1358,8 @@ details a {
   line-height: 1.9;
   margin: 23px 0;
 }
-.docs-content pre code {
+.docs-content pre code,
+.install-command code {
   background: none;
   white-space: pre;
   font-size: inherit;
@@ -2016,7 +2018,8 @@ details a {
   .docs-content dd {
     font-size: 12px;
   }
-  .docs-content pre {
+  .docs-content pre,
+  .install-command {
     font-size: 10px;
     padding-inline: 17px;
   }
@@ -2612,4 +2615,36 @@ details a {
   .product-site .footer-bottom {
     gap: 15px;
   }
+}
+
+.install-section {
+  background: #f0f5ff;
+}
+.install-panel {
+  min-width: 0;
+}
+.install-command {
+  max-width: 100%;
+  border-radius: 14px;
+}
+.install-command code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.install-requirements {
+  max-width: 880px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.install-requirements a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.install-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 30px;
+  margin: 24px 0;
 }

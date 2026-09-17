@@ -103,30 +103,32 @@
       }
     }),
   );
-  document.querySelectorAll(".docs-content pre").forEach((pre) => {
-    const code = pre.querySelector("code");
-    if (!code) return;
-    const button = document.createElement("button");
-    button.className = "copy-code";
-    button.textContent = "Copy";
-    button.setAttribute("aria-label", "Copy code block");
-    button.addEventListener("click", async () => {
-      try {
-        await copy(code.textContent);
-        button.textContent = "Copied";
-        notify("Copied to clipboard");
-        setTimeout(() => (button.textContent = "Copy"), 2200);
-      } catch {
-        const range = document.createRange();
-        range.selectNodeContents(code);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-        notify("Code selected. Press Ctrl+C or Command+C to copy.");
-      }
+  document
+    .querySelectorAll(".docs-content pre, .install-command")
+    .forEach((pre) => {
+      const code = pre.querySelector("code");
+      if (!code) return;
+      const button = document.createElement("button");
+      button.className = "copy-code";
+      button.textContent = "Copy";
+      button.setAttribute("aria-label", "Copy code block");
+      button.addEventListener("click", async () => {
+        try {
+          await copy(code.textContent);
+          button.textContent = "Copied";
+          notify("Copied to clipboard");
+          setTimeout(() => (button.textContent = "Copy"), 2200);
+        } catch {
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          notify("Code selected. Press Ctrl+C or Command+C to copy.");
+        }
+      });
+      pre.append(button);
     });
-    pre.append(button);
-  });
   const sections = [...document.querySelectorAll(".docs-content section[id]")];
   const search = document.querySelector("#docs-search");
   const filterDocs = () => {

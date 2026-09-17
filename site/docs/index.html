@@ -32,8 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=polish-20260917-1" />
-    <script src="/assets/site.js?v=polish-20260917-1" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=install-20260917-1" />
+    <script src="/assets/site.js?v=install-20260917-1" defer></script>
   </head>
   <body class="docs-page">
     <a class="skip" href="#main">Skip to content</a>
@@ -71,6 +71,11 @@
           Menu <span aria-hidden="true">＋</span>
         </button>
         <nav id="navigation" aria-label="Main navigation">
+          <a
+            href="https://github.com/raym0nz82/amfora"
+            aria-label="Amfora on GitHub (private repository)"
+            >GitHub ↗</a
+          >
           <a href="/#how-it-works">How it works</a
           ><a href="/#features">Features</a><a href="/docs/">Documentation</a
           ><a
@@ -170,13 +175,14 @@
             <h2>Start with Docker Compose</h2>
             <p>
               You need access to the private repository, Git, and Docker with
-              Compose and BuildKit. Clone the maintained branch, build the
-              application, and open the local web interface:
+              Compose and Buildx 0.30 or later, plus Bash and a running Docker
+              engine. Authenticate Git with an account that has repository
+              access first. Run the one-line command in Bash from a directory
+              without an existing <code>amfora</code> folder. Clone the
+              maintained branch, build the application, and open the local web
+              interface:
             </p>
-            <pre><code>git clone --branch amfora https://github.com/raym0nz82/amfora.git
-cd amfora
-bash infra/build-docker.sh local
-docker compose up -d --no-build</code></pre>
+            <pre><code>(git clone --branch amfora https://github.com/raym0nz82/amfora.git amfora &amp;&amp; cd amfora &amp;&amp; bash infra/build-docker.sh local &amp;&amp; docker compose up -d --no-build)</code></pre>
             <p>
               The build script reuses layers in a dedicated Amfora builder and
               reclaims unused cache above a 4 GB target. Active builds can
@@ -536,6 +542,9 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
           </p>
         </div>
         <div class="footer-links">
+          <a href="/#install">Install Amfora</a>
+          <a href="https://github.com/raym0nz82/amfora">GitHub (private) ↗</a>
+          <a href="https://buymeacoffee.com/solutionmax">Buy Me a Coffee ↗</a>
           <a href="/#how-it-works">How it works</a
           ><a href="/docs/">Documentation</a
           ><a href="https://solutionmax.net/#start">Discuss your setup ↗</a>
