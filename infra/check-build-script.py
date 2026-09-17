@@ -15,4 +15,8 @@ with tempfile.TemporaryDirectory() as d:
   assert '--push' not in calls if mode=='local' else True
  for tag,mode in [('../bad','local'),('ok','wrong'),('','local')]:
   log.write_text('');r=subprocess.run(['bash',script,tag,mode],env=env,capture_output=True);assert r.returncode==2 and not log.read_text()
-print('Build wrapper: local, explicit publish, failure cleanup, invalid input PASS')
+ (p/'git').write_text('#!/bin/sh\nexit 1\n'); (p/'git').chmod(0o755)
+ log.write_text('')
+ r=subprocess.run(['bash',script,'archive','local'],env=env,capture_output=True)
+ assert r.returncode==0 and 'org.opencontainers.image.revision=unknown' in log.read_text()
+print('Build wrapper: local, explicit publish, failure cleanup, invalid input, source archive PASS')

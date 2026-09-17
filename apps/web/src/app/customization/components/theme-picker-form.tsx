@@ -51,14 +51,22 @@ export function ThemePickerForm() {
                 type="button"
               >
                 <div
-                  className={`mb-3 flex h-14 gap-2 overflow-hidden rounded-lg border p-2 ${themeOption.value === "dark" ? "border-sidebar-border bg-sidebar" : "border-border bg-secondary"}`}
+                  className="mb-3 flex h-14 gap-2 overflow-hidden rounded-lg border p-2"
+                  style={{
+                    backgroundColor: themeOption.value === "dark" ? "#0b151e" : "#f5f6f2",
+                    borderColor: themeOption.value === "dark" ? "#33434e" : "#dce1dd",
+                  }}
                   aria-hidden="true"
                 >
-                  <div className="w-1/4 rounded bg-sidebar" />
+                  <div
+                    className="w-1/4 rounded"
+                    style={{ backgroundColor: themeOption.value === "dark" ? "#16232d" : "#ffffff" }}
+                  />
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="h-2 w-2/3 rounded bg-primary" />
                     <div
-                      className={`flex-1 rounded ${themeOption.value === "dark" ? "bg-muted" : "bg-card shadow-sm"}`}
+                      className="flex-1 rounded shadow-sm"
+                      style={{ backgroundColor: themeOption.value === "dark" ? "#23313c" : "#ffffff" }}
                     />
                   </div>
                 </div>
