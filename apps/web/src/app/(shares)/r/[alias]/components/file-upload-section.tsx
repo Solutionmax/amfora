@@ -229,7 +229,8 @@ export function FileUploadSection({
   };
 
   const getDropzoneStyles = () => {
-    const baseStyles = "cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-colors";
+    const baseStyles =
+      "cursor-pointer rounded-2xl border-2 border-dashed bg-background p-5 text-left transition-colors sm:p-7";
     const dragStyles = getDragActiveStyles();
     const disabledStyles = isUploading ? "opacity-50 cursor-not-allowed" : "";
 
@@ -247,7 +248,7 @@ export function FileUploadSection({
     const remainingFiles = calculateRemainingFiles();
 
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-xs leading-5 text-muted-foreground sm:text-sm">
         {reverseShare.allowedFileTypes && (
           <>
             {t("reverseShares.upload.fileDropzone.acceptedTypes", { types: reverseShare.allowedFileTypes })}
@@ -290,7 +291,10 @@ export function FileUploadSection({
   };
 
   const renderFileItem = (upload: any) => (
-    <div key={upload.id} className="flex items-center gap-3 rounded-xl border bg-background p-3">
+    <div
+      key={upload.id}
+      className="flex min-w-0 flex-wrap items-center gap-3 rounded-xl border bg-background p-3 sm:flex-nowrap"
+    >
       <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
         <IconFile className="size-4" />
       </span>
@@ -300,10 +304,18 @@ export function FileUploadSection({
         {upload.status === "uploading" && <Progress value={upload.progress} className="mt-2 h-2" />}
         {upload.status === "error" && upload.error && <p className="mt-1 text-xs text-destructive">{upload.error}</p>}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="ml-auto flex shrink-0 items-center gap-2">
         {renderFileStatusBadge(upload.status)}
         {upload.status === "pending" && (
-          <Button size="sm" variant="ghost" onClick={() => removeFile(upload.id)} disabled={isUploading}>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => removeFile(upload.id)}
+            disabled={isUploading}
+            aria-label={t("reverseShares.card.delete")}
+            title={t("reverseShares.card.delete")}
+          >
             <IconX className="h-4 w-4" />
           </Button>
         )}
@@ -314,11 +326,20 @@ export function FileUploadSection({
               variant="ghost"
               onClick={() => retryUpload(upload.id)}
               disabled={isUploading}
+              aria-label={t("reverseShares.upload.fileList.retry")}
               title={t("reverseShares.upload.errors.retry")}
             >
               <IconUpload className="h-4 w-4" />
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => removeFile(upload.id)} disabled={isUploading}>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => removeFile(upload.id)}
+              disabled={isUploading}
+              aria-label={t("reverseShares.card.delete")}
+              title={t("reverseShares.card.delete")}
+            >
               <IconX className="h-4 w-4" />
             </Button>
           </div>
@@ -331,15 +352,19 @@ export function FileUploadSection({
     <div className="space-y-6">
       <div {...getRootProps()} className={getDropzoneStyles()}>
         <input {...getInputProps()} />
-        <span className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <IconUpload className="size-6" />
-        </span>
-        <h3 className="mb-2 text-lg font-semibold">
-          {isDragActive
-            ? t("reverseShares.upload.fileDropzone.dragActive")
-            : t("reverseShares.upload.fileDropzone.dragInactive")}
-        </h3>
-        {renderFileRestrictions()}
+        <div className="flex items-start gap-4">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <IconUpload className="size-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-base font-semibold sm:text-lg">
+              {isDragActive
+                ? t("reverseShares.upload.fileDropzone.dragActive")
+                : t("reverseShares.upload.fileDropzone.dragInactive")}
+            </h3>
+            <div className="mt-2">{renderFileRestrictions()}</div>
+          </div>
+        </div>
       </div>
 
       {fileUploads.length > 0 && (
@@ -350,7 +375,7 @@ export function FileUploadSection({
       )}
 
       <div className="space-y-4">
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {reverseShare.nameFieldRequired !== "HIDDEN" && (
             <div className="space-y-2">
               <Label htmlFor="name">
@@ -405,6 +430,7 @@ export function FileUploadSection({
       </div>
 
       <Button
+        type="button"
         onClick={handleUpload}
         disabled={!canUpload}
         className="h-12 w-full rounded-lg"

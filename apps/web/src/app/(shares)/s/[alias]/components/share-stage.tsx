@@ -80,81 +80,109 @@ export function ShareStage({
       object={<Vessel level={level} strata={itemCount} sealed={!opened} className="h-10 w-9 opacity-90" />}
       caption={opened ? t("share.opened") : t("share.sealed")}
     >
-      <div>
-        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-          <IconShieldCheck className="size-4" /> {t("share.pageTitle")}
-        </div>
-        <h1 className="mt-4 break-words font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-          {name}
-        </h1>
-        {description && <p className="mt-4 max-w-md break-words leading-7 text-muted-foreground">{description}</p>}
+      <div className="space-y-8">
+        <header className="space-y-5">
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+            <IconShieldCheck className="size-4" />
+            <span>{t("share.pageTitle")}</span>
+          </div>
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="min-w-0 max-w-2xl">
+              <h1 className="break-words font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+                {name}
+              </h1>
+              {description && (
+                <p className="mt-4 max-w-xl break-words leading-7 text-muted-foreground">{description}</p>
+              )}
+            </div>
+            <Button size="lg" className="h-12 shrink-0 rounded-lg px-6 sm:px-8" onClick={download}>
+              <IconDownload className="size-5" />
+              {opened ? (single ? t("share.download") : t("share.downloadAll")) : t("share.breakSeal")}
+            </Button>
+          </div>
+        </header>
 
-        <dl className="mt-8 max-w-md divide-y border-y font-mono text-xs">
-          <div className="flex items-center justify-between gap-4 py-3">
+        <dl
+          className={`grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border font-mono text-xs ${
+            expiration ? "sm:grid-cols-3" : "sm:grid-cols-2"
+          }`}
+        >
+          <div className="bg-background px-4 py-3">
             <dt className="text-muted-foreground">{t("share.itemCount", { count: itemCount })}</dt>
-            <dd>{formatFileSize(totalBytes)}</dd>
+            <dd className="mt-1 text-sm text-foreground">{formatFileSize(totalBytes)}</dd>
           </div>
           {expiration && (
-            <div className="flex items-center justify-between gap-4 py-3">
+            <div className="bg-background px-4 py-3">
               <dt className="text-muted-foreground">{t("home.visual.expires")}</dt>
-              <dd>{format(new Date(expiration), "dd-MM-yyyy")}</dd>
+              <dd className="mt-1 text-sm text-foreground">{format(new Date(expiration), "dd-MM-yyyy")}</dd>
             </div>
           )}
-          <div className="flex items-center justify-between gap-4 py-3">
+          <div className="bg-background px-4 py-3">
             <dt className="text-muted-foreground">{t("home.visual.downloads")}</dt>
-            <dd>
+            <dd className="mt-1 text-sm text-foreground">
               {views}
               {maxViews ? ` / ${maxViews}` : ""}
             </dd>
           </div>
         </dl>
 
-        <Button size="lg" className="mt-8 h-12 rounded-full px-8" onClick={download}>
-          <IconDownload className="size-5" />
-          {opened ? (single ? t("share.download") : t("share.downloadAll")) : t("share.breakSeal")}
-        </Button>
-
         {itemCount > 0 && (
-          <ul className="mt-8 max-w-md divide-y rounded-xl border bg-background px-4">
-            {folders.map((folder) => (
-              <li key={folder.id} className="flex items-center gap-3 py-3">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-                  <IconFolder className="size-4 text-primary" />
-                </span>
-                <span className="min-w-0 flex-1 truncate text-sm">{folder.name}</span>
-                <button
-                  type="button"
-                  onClick={() => onDownloadFolder(folder.id, folder.name)}
-                  aria-label={`${t("share.download")} ${folder.name}`}
-                  className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                >
+          <section className="overflow-hidden rounded-2xl border bg-background" aria-labelledby="share-files-heading">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b bg-secondary/30 px-4 py-4 sm:px-5">
+              <div>
+                <h2 id="share-files-heading" className="font-display text-lg font-bold">
+                  {t("share.itemCount", { count: itemCount })}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">{formatFileSize(totalBytes)}</p>
+              </div>
+              {itemCount > 1 && (
+                <Button variant="outline" size="sm" className="rounded-lg" onClick={download}>
                   <IconDownload className="size-4" />
-                </button>
-              </li>
-            ))}
-            {files.map((file) => {
-              const { icon: Icon, color } = getFileIcon(file.name);
-              return (
-                <li key={file.id} className="flex items-center gap-3 py-3">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-                    <Icon className={`size-4 ${color}`} />
+                  {t("share.downloadAll")}
+                </Button>
+              )}
+            </div>
+            <ul className="divide-y">
+              {folders.map((folder) => (
+                <li key={folder.id} className="flex min-w-0 items-center gap-3 px-4 py-3.5 sm:px-5">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                    <IconFolder className="size-4 text-primary" />
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-sm">{file.name}</span>
-                  <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
-                    {formatFileSize(Number(file.size || 0))}
-                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium">{folder.name}</span>
                   <button
                     type="button"
-                    onClick={() => onDownload(file.objectName, file.name)}
-                    aria-label={`${t("share.download")} ${file.name}`}
-                    className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                    onClick={() => onDownloadFolder(folder.id, folder.name)}
+                    aria-label={`${t("share.download")} ${folder.name}`}
+                    className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <IconDownload className="size-4" />
                   </button>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+              {files.map((file) => {
+                const { icon: Icon, color } = getFileIcon(file.name);
+                return (
+                  <li key={file.id} className="flex min-w-0 items-center gap-3 px-4 py-3.5 sm:px-5">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                      <Icon className={`size-4 ${color}`} />
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{file.name}</span>
+                    <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                      {formatFileSize(Number(file.size || 0))}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onDownload(file.objectName, file.name)}
+                      aria-label={`${t("share.download")} ${file.name}`}
+                      className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <IconDownload className="size-4" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         )}
       </div>
     </Stage>

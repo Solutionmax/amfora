@@ -13,6 +13,7 @@ import { Vessel } from "@/components/brand/vessel";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
+import { formatFileSize } from "@/utils/format-file-size";
 import { MESSAGE_TYPES } from "../constants";
 import { VesselLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
@@ -113,29 +114,31 @@ export function VesselLayout({
   const level = hasUploadedSuccessfully ? 1 : Math.min(filled.count / (maxFiles > 0 ? maxFiles : 6), 1);
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen flex-col bg-muted/20">
       <div
         className="pointer-events-none absolute right-0 top-0 size-[30rem] rounded-full bg-primary/[0.05] blur-3xl"
         aria-hidden="true"
       />
 
-      <header className="relative flex items-center justify-between gap-4 border-b px-6 py-4">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5">
-          {appLogo ? (
-            <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
-          ) : (
-            <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
-          )}
-          <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
-        </Link>
-        <div className="flex shrink-0 items-center gap-2">
-          <GithubStar className="hidden sm:inline-flex" />
-          <LanguageSwitcher />
-          <ModeToggle />
+      <header className="relative border-b bg-background/80 px-4 py-3 backdrop-blur sm:px-6 sm:py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+          <Link href="/" className="flex min-w-0 items-center gap-2.5">
+            {appLogo ? (
+              <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
+            ) : (
+              <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
+            )}
+            <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
+          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            <GithubStar className="hidden sm:inline-flex" />
+            <LanguageSwitcher />
+            <ModeToggle />
+          </div>
         </div>
       </header>
 
-      <main className="relative mx-auto flex w-full max-w-6xl flex-1 items-start px-4 py-8 lg:px-6 lg:py-12">
+      <main className="relative mx-auto flex w-full max-w-4xl flex-1 items-start px-4 py-6 sm:py-8 lg:py-10">
         <Stage
           object={
             <Vessel
@@ -147,21 +150,46 @@ export function VesselLayout({
           }
           caption={hasUploadedSuccessfully ? t("share.sealed") : t("share.itemCount", { count: filled.count })}
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-            {t("reverseShares.pageTitle")}
-          </p>
-          <h1 className="mt-4 break-words font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-            {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
-          </h1>
-          {reverseShare?.description && (
-            <p className="mt-3 max-w-md break-words text-muted-foreground">{reverseShare.description}</p>
-          )}
+          <div className="sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-8">
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                <IconInfoCircle className="size-4" />
+                {t("reverseShares.pageTitle")}
+              </p>
+              <h1 className="mt-3 break-words font-display text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl">
+                {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
+              </h1>
+              {reverseShare?.description && (
+                <p className="mt-3 max-w-2xl break-words leading-7 text-muted-foreground">{reverseShare.description}</p>
+              )}
+            </div>
 
-          <div className="mt-8">{uploadSection()}</div>
+            {!hasUploadedSuccessfully && reverseShare && (
+              <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border font-mono text-xs sm:mt-0 sm:w-56">
+                <div className="bg-background px-3 py-2.5">
+                  <dt className="text-muted-foreground">{t("reverseShares.labels.filesReceived")}</dt>
+                  <dd className="mt-1 text-sm text-foreground">
+                    {reverseShare.currentFileCount}
+                    {maxFiles ? ` / ${maxFiles}` : ""}
+                  </dd>
+                </div>
+                <div className="bg-background px-3 py-2.5">
+                  <dt className="text-muted-foreground">{t("reverseShares.labels.maxFileSize")}</dt>
+                  <dd className="mt-1 text-sm text-foreground">
+                    {reverseShare.maxFileSize
+                      ? formatFileSize(reverseShare.maxFileSize)
+                      : t("reverseShares.labels.noSizeLimit")}
+                  </dd>
+                </div>
+              </dl>
+            )}
+          </div>
+
+          <div className="mt-7">{uploadSection()}</div>
         </Stage>
       </main>
 
-      <footer className="relative px-6 pb-8 lg:px-16">
+      <footer className="relative mx-auto w-full max-w-4xl px-6 pb-8">
         <Maxim seed={alias ?? "amfora"} />
       </footer>
     </div>

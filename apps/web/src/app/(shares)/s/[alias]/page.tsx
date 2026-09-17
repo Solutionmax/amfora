@@ -35,28 +35,30 @@ export default function PublicSharePage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen flex-col bg-muted/20">
       <div
         className="pointer-events-none absolute right-0 top-0 size-[30rem] rounded-full bg-primary/[0.05] blur-3xl"
         aria-hidden="true"
       />
-      <header className="relative flex items-center justify-between gap-4 border-b px-6 py-4">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5">
-          {appLogo ? (
-            <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
-          ) : (
-            <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
-          )}
-          <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
-        </Link>
-        <div className="flex shrink-0 items-center gap-2">
-          <GithubStar className="hidden sm:inline-flex" />
-          <LanguageSwitcher />
-          <ModeToggle />
+      <header className="relative border-b bg-background/80 px-4 py-3 backdrop-blur sm:px-6 sm:py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+          <Link href="/" className="flex min-w-0 items-center gap-2.5">
+            {appLogo ? (
+              <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
+            ) : (
+              <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
+            )}
+            <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
+          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            <GithubStar className="hidden sm:inline-flex" />
+            <LanguageSwitcher />
+            <ModeToggle />
+          </div>
         </div>
       </header>
 
-      <main className="relative mx-auto flex w-full max-w-6xl flex-1 items-start px-4 py-8 lg:px-6 lg:py-12">
+      <main className="relative mx-auto flex w-full max-w-4xl flex-1 items-start px-4 py-6 sm:py-8 lg:py-10">
         {!isPasswordModalOpen && !share && <ShareNotFound />}
         {share && (
           <ShareStage
@@ -74,7 +76,7 @@ export default function PublicSharePage() {
         )}
       </main>
 
-      <footer className="relative mx-auto flex w-full max-w-6xl items-end justify-between gap-6 px-6 pb-8">
+      <footer className="relative mx-auto flex w-full max-w-4xl items-end justify-between gap-6 px-6 pb-8">
         <Maxim seed={share?.id ?? "amfora"} />
       </footer>
 
