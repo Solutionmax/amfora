@@ -5,19 +5,15 @@ import { useAppInfo } from "@/contexts/app-info-context";
 
 export function LoginHeader({ firstAccess }: { firstAccess: boolean }) {
   const t = useTranslations();
-  const { appName, refreshAppInfo } = useAppInfo();
+  const { refreshAppInfo } = useAppInfo();
 
   useEffect(() => {
     refreshAppInfo();
   }, [refreshAppInfo]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">{t("login.pageTitle")}</p>
-      <h1 className="max-w-sm break-words font-display text-3xl font-extrabold leading-[1.02] tracking-tight sm:text-4xl">
-        {t("login.welcome")} {appName}
-      </h1>
-      {!firstAccess && <p className="text-sm text-muted-foreground">{t("login.signInToContinue")}</p>}
-    </div>
+    <h2 className="break-words font-display text-3xl font-extrabold leading-tight tracking-tight">
+      {firstAccess ? t("register.buttons.createAdmin") : t("login.signIn")}
+    </h2>
   );
 }

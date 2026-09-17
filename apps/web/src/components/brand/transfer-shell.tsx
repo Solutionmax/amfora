@@ -10,7 +10,7 @@ import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
 import styles from "./transfer-shell.module.css";
 
-/** A blue envelope for sending; an opened letter for receiving. */
+/** Shared postal identity for public transfers and sign-in. */
 export function TransferShell({
   direction,
   title,
@@ -18,7 +18,7 @@ export function TransferShell({
   aside,
   children,
 }: {
-  direction: "upload" | "download";
+  direction: "upload" | "download" | "login";
   title: string;
   label: string;
   aside?: ReactNode;
@@ -80,7 +80,7 @@ export function TransferShell({
             <IconFileZip strokeWidth={1.3} />
           </div>
           <div className={styles.workspace}>
-            {direction === "download" && (
+            {direction !== "upload" && (
               <div className={styles.stamp} aria-hidden="true">
                 <AmphoraMark />
                 <svg className={styles.postmark} viewBox="0 0 120 44" fill="none">
