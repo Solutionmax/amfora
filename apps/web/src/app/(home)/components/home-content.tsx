@@ -8,7 +8,6 @@ import { useTranslations } from "next-intl";
 import { Maxim } from "@/components/brand/maxim";
 import { Seal } from "@/components/brand/seal";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
 import { HomeContentProps } from "../types";
 
 const rise = (delay: number) => ({
@@ -32,38 +31,41 @@ export function HomeContent({ isLoading }: HomeContentProps) {
 
   return (
     <main className="flex-grow">
-      <section className="relative overflow-hidden border-b bg-background">
-        <div className="pointer-events-none absolute -right-40 -top-44 size-[34rem] rounded-full bg-primary/[0.06] blur-3xl" />
+      <section className="relative overflow-hidden border-b border-white/10 bg-[#071827] text-[#f4f1eb]">
+        <div className="pointer-events-none absolute -right-40 -top-44 size-[34rem] rounded-full bg-primary/[0.18] blur-3xl" />
         <div className="container relative mx-auto grid max-w-6xl items-center gap-14 px-6 pb-20 pt-28 lg:grid-cols-[1.08fr_0.92fr] lg:pb-28 lg:pt-36">
           <div>
-            <motion.p {...rise(0)} className="font-mono text-xs uppercase tracking-[0.28em] text-primary">
+            <motion.p {...rise(0)} className="font-mono text-xs uppercase tracking-[0.28em] text-sky-200/80">
               {t("home.pageTitle")}
             </motion.p>
             <h1 className="mt-5 max-w-3xl font-display text-5xl font-extrabold leading-[0.94] tracking-[-0.04em] sm:text-6xl lg:text-8xl">
               <motion.span {...rise(0.08)} className="block">
                 {t("home.header.fileSharing")}
               </motion.span>
-              <motion.span {...rise(0.16)} className="block text-primary">
+              <motion.span {...rise(0.16)} className="block text-sky-200">
                 {t("home.header.tagline")}
               </motion.span>
             </h1>
-            <motion.p {...rise(0.24)} className="mt-7 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+            <motion.p {...rise(0.24)} className="mt-7 max-w-xl text-base leading-7 text-white/70 sm:text-lg">
               {t("home.description")}
             </motion.p>
             <motion.div {...rise(0.32)} className="mt-9 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="h-12 rounded-full px-7">
+              <Button asChild size="lg" className="h-12 rounded-xl px-7">
                 <Link href="/login">
                   {t("login.signIn")} <IconArrowUpRight className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="h-12 rounded-full px-7">
-                <Link href={siteConfig.links.docs} target="_blank" rel="noopener noreferrer">
-                  {t("home.documentation")}
-                </Link>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-12 rounded-xl border-white/25 bg-white/[0.04] px-7 text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="#privacy">{t("home.points.noTracking")}</Link>
               </Button>
             </motion.div>
-            <div className="mt-12 flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-primary">
+            <div className="mt-12 flex items-center gap-3 text-xs text-white/60">
+              <span className="flex size-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sky-200">
                 <IconLock className="size-4" />
               </span>
               <span>
@@ -73,53 +75,39 @@ export function HomeContent({ isLoading }: HomeContentProps) {
           </div>
 
           <motion.div {...rise(0.2)} className="relative mx-auto w-full max-w-[440px]">
-            <div className="absolute -inset-5 rounded-[2rem] bg-secondary/70 blur-2xl" />
-            <div className="relative overflow-hidden rounded-[1.75rem] border bg-card shadow-[0_30px_80px_-42px_rgba(14,32,54,0.55)]">
-              <div className="flex items-center justify-between border-b px-6 py-5">
-                <div>
-                  <p className="font-display text-lg font-bold tracking-tight">{t("home.header.fileSharing")}</p>
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    {t("share.sealed")}
-                  </p>
-                </div>
-                <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-primary">
-                  <IconSparkles className="size-4" />
-                </span>
-              </div>
-              <div className="space-y-3 p-6">
-                <div className="flex items-center gap-4 rounded-xl border bg-background p-4">
-                  <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <IconDownload className="size-5" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">project-files.zip</p>
-                    <p className="font-mono text-[11px] text-muted-foreground">4.2 MB · {t("share.sealed")}</p>
-                  </div>
-                  <span className="size-2 rounded-full bg-emerald-500" />
-                </div>
-                <div className="grid grid-cols-3 gap-2 border-t pt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                  <span>
-                    <strong className="block text-sm font-medium tracking-normal text-foreground">01</strong>
-                    {t("share.itemCount", { count: 1 })}
-                  </span>
-                  <span>
-                    <strong className="block text-sm font-medium tracking-normal text-foreground">7 days</strong>
-                    {t("home.visual.expires")}
-                  </span>
-                  <span>
-                    <strong className="block text-sm font-medium tracking-normal text-foreground">
+            <div className="absolute -inset-5 rounded-[2rem] bg-primary/20 blur-2xl" />
+            <div className="relative overflow-hidden rounded-[1.75rem] border border-white/15 bg-[#102a43] shadow-[0_30px_80px_-42px_rgba(0,0,0,0.7)]">
+              <div className="relative h-[28rem] overflow-hidden">
+                <img
+                  src="/art/amfora-glass.webp"
+                  alt=""
+                  aria-hidden="true"
+                  fetchPriority="high"
+                  className="absolute inset-0 size-full object-cover object-[50%_42%] opacity-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#071827] via-transparent to-[#071827]/20" />
+                <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="font-display text-2xl font-bold tracking-tight">{t("home.header.fileSharing")}</p>
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-sky-200/80">
                       {t("share.sealed")}
-                    </strong>
-                    {t("home.visual.password")}
+                    </p>
+                  </div>
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sky-200">
+                    <IconSparkles className="size-4" />
                   </span>
                 </div>
+              </div>
+              <div className="flex items-center justify-between border-t border-white/10 px-6 py-4 text-white/70">
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em]">{t("home.points.selfHosted")}</span>
+                <IconArrowUpRight className="size-4 text-sky-200" />
               </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      <section className="border-b bg-background">
+      <section id="privacy" className="border-b bg-background">
         <div className="container mx-auto grid max-w-6xl items-center gap-14 px-6 py-20 lg:grid-cols-[1fr_360px] lg:py-24">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-primary">{t("home.pageTitle")}</p>

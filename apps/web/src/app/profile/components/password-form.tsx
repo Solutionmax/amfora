@@ -37,14 +37,16 @@ export function PasswordForm({
               id="profile-new-password"
               {...register("newPassword")}
               type={isNewPasswordVisible ? "text" : "password"}
-              className="h-11 rounded-lg bg-background pr-10"
+              className="h-11 rounded-lg bg-background pe-10"
               placeholder={t("profile.password.newPassword")}
               aria-invalid={!!errors.newPassword}
             />
             <button
               type="button"
               onClick={onToggleNewPassword}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              aria-label={t("profile.password.newPassword")}
+              aria-pressed={isNewPasswordVisible}
+              className="absolute end-3 top-9 text-muted-foreground hover:text-foreground"
             >
               {isNewPasswordVisible ? <IconEye className="h-5 w-5" /> : <IconEyeClosed className="h-5 w-5" />}
             </button>
@@ -57,14 +59,16 @@ export function PasswordForm({
               id="profile-confirm-password"
               {...register("confirmPassword")}
               type={isConfirmPasswordVisible ? "text" : "password"}
-              className="h-11 rounded-lg bg-background pr-10"
+              className="h-11 rounded-lg bg-background pe-10"
               placeholder={t("profile.password.confirmPassword")}
               aria-invalid={!!errors.confirmPassword}
             />
             <button
               type="button"
               onClick={onToggleConfirmPassword}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              aria-label={t("profile.password.confirmPassword")}
+              aria-pressed={isConfirmPasswordVisible}
+              className="absolute end-3 top-9 text-muted-foreground hover:text-foreground"
             >
               {isConfirmPasswordVisible ? <IconEye className="h-5 w-5" /> : <IconEyeClosed className="h-5 w-5" />}
             </button>

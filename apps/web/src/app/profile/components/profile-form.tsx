@@ -32,10 +32,14 @@ export function ProfileForm({ form, onSubmit }: ProfileFormProps) {
                 {...register("firstName")}
                 className={`h-11 rounded-lg bg-background ${errors.firstName ? "border-destructive" : ""}`}
                 aria-invalid={!!errors.firstName}
-                aria-errormessage={errors.firstName?.message}
+                aria-errormessage={errors.firstName ? "profile-firstName-error" : undefined}
                 placeholder={t("profile.form.firstName")}
               />
-              {errors.firstName && <span className="text-sm text-destructive">{errors.firstName.message}</span>}
+              {errors.firstName && (
+                <span id="profile-firstName-error" className="text-sm text-destructive">
+                  {errors.firstName.message}
+                </span>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="profile-last-name">{t("profile.form.lastName")}</Label>
@@ -44,10 +48,14 @@ export function ProfileForm({ form, onSubmit }: ProfileFormProps) {
                 {...register("lastName")}
                 className={`h-11 rounded-lg bg-background ${errors.lastName ? "border-destructive" : ""}`}
                 aria-invalid={!!errors.lastName}
-                aria-errormessage={errors.lastName?.message}
+                aria-errormessage={errors.lastName ? "profile-lastName-error" : undefined}
                 placeholder={t("profile.form.lastName")}
               />
-              {errors.lastName && <span className="text-sm text-destructive">{errors.lastName.message}</span>}
+              {errors.lastName && (
+                <span id="profile-lastName-error" className="text-sm text-destructive">
+                  {errors.lastName.message}
+                </span>
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-2">
@@ -57,10 +65,14 @@ export function ProfileForm({ form, onSubmit }: ProfileFormProps) {
               {...register("username")}
               className={`h-11 rounded-lg bg-background ${errors.username ? "border-destructive" : ""}`}
               aria-invalid={!!errors.username}
-              aria-errormessage={errors.username?.message}
+              aria-errormessage={errors.username ? "profile-username-error" : undefined}
               placeholder={t("profile.form.username")}
             />
-            {errors.username && <span className="text-sm text-destructive">{errors.username.message}</span>}
+            {errors.username && (
+              <span id="profile-username-error" className="text-sm text-destructive">
+                {errors.username.message}
+              </span>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-email">{t("profile.form.email")}</Label>
@@ -70,10 +82,14 @@ export function ProfileForm({ form, onSubmit }: ProfileFormProps) {
               type="email"
               className={`h-11 rounded-lg bg-background ${errors.email ? "border-destructive" : ""}`}
               aria-invalid={!!errors.email}
-              aria-errormessage={errors.email?.message}
+              aria-errormessage={errors.email ? "profile-email-error" : undefined}
               placeholder={t("profile.form.email")}
             />
-            {errors.email && <span className="text-sm text-destructive">{errors.email.message}</span>}
+            {errors.email && (
+              <span id="profile-email-error" className="text-sm text-destructive">
+                {errors.email.message}
+              </span>
+            )}
           </div>
           <div className="flex justify-end">
             <Button className="mt-4 h-11 rounded-lg font-semibold" disabled={isSubmitting} type="submit">

@@ -17,6 +17,7 @@ import type {
   ListUserReverseSharesResult,
   UpdateReverseShareBody,
 } from "@/http/endpoints/reverse-shares/types";
+import { copyText } from "@/lib/clipboard";
 
 export type ReverseShare = ListUserReverseSharesResult["data"]["reverseShares"][0];
 
@@ -260,13 +261,17 @@ export function useReverseShares() {
     (reverseShare) => reverseShare.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
   );
 
-  const handleCopyLink = (reverseShare: ReverseShare) => {
+  const handleCopyLink = async (reverseShare: ReverseShare) => {
     if (!reverseShare.alias?.alias) return;
 
     const link = `${window.location.origin}/r/${reverseShare.alias.alias}`;
 
-    navigator.clipboard.writeText(link);
-    toast.success(t("reverseShares.messages.linkCopied"));
+    try {
+      await copyText(link);
+      toast.success(t("reverseShares.messages.linkCopied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
   };
 
   return {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -170,8 +171,16 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
           )}
         />
 
-        <Button className="mt-4 h-12 w-full cursor-pointer rounded-full" variant="default" size="lg" type="submit">
-          {form.formState.isSubmitting ? t("register.buttons.creating") : t("register.buttons.createAdmin")}
+        <Button
+          className="mt-4 h-12 w-full cursor-pointer justify-between rounded-xl px-4"
+          variant="default"
+          size="lg"
+          type="submit"
+        >
+          <span>
+            {form.formState.isSubmitting ? t("register.buttons.creating") : t("register.buttons.createAdmin")}
+          </span>
+          <IconArrowUpRight className="size-5" />
         </Button>
       </form>
     </Form>

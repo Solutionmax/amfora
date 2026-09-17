@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { copyText } from "@/lib/clipboard";
 
 interface CallbackUrlDisplayProps {
   providerName: string;
@@ -23,12 +24,13 @@ export function CallbackUrlDisplay({ providerName }: CallbackUrlDisplayProps) {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(callbackUrl);
+      await copyText(callbackUrl);
       setCopied(true);
       toast.success(t("authProviders.form.callbackUrlCopied"));
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
+      toast.error(t("common.unexpectedError"));
     }
   };
 

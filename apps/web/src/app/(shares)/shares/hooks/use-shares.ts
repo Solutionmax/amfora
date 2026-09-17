@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useSecureConfigValue } from "@/hooks/use-secure-configs";
 import { listUserShares, notifyRecipients } from "@/http/endpoints";
 import { Share } from "@/http/endpoints/shares/types";
+import { copyText } from "@/lib/clipboard";
 
 export function useShares() {
   const t = useTranslations();
@@ -41,13 +42,17 @@ export function useShares() {
     (share) => share.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
   );
 
-  const handleCopyLink = (share: Share) => {
+  const handleCopyLink = async (share: Share) => {
     if (!share.alias?.alias) return;
 
     const link = `${window.location.origin}/s/${share.alias.alias}`;
 
-    navigator.clipboard.writeText(link);
-    toast.success(t("shares.messages.linkCopied"));
+    try {
+      await copyText(link);
+      toast.success(t("shares.messages.linkCopied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
   };
 
   const handleNotifyRecipients = async (share: Share) => {

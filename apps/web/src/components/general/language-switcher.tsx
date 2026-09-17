@@ -85,7 +85,7 @@ export function LanguageSwitcher() {
                 svg
                 countryCode={code.split("-")[1]}
                 style={{
-                  marginRight: "8px",
+                  marginInlineEnd: "8px",
                   width: "1em",
                   height: "1em",
                 }}

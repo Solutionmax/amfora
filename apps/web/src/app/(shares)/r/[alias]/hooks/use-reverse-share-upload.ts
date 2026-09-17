@@ -92,7 +92,7 @@ export function useReverseShareUpload({ alias }: UseReverseShareUploadProps) {
   );
 
   const handlePasswordSubmit = (passwordValue: string) => {
-    loadReverseShare(passwordValue);
+    return loadReverseShare(passwordValue);
   };
 
   const handlePasswordModalClose = () => {

@@ -13,7 +13,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const apiRes = await fetch(url, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json",
       ...(sharePassword ? { [SHARE_PASSWORD_HEADER]: sharePassword } : {}),
       ...clientAddressHeaders(req.headers),
       cookie: cookieHeader || "",

@@ -13,6 +13,7 @@ import {
   verifyTwoFactorSetup,
 } from "@/http/endpoints/auth/two-factor";
 import type { TwoFactorSetupResponse, TwoFactorStatus } from "@/http/endpoints/auth/two-factor/types";
+import { copyText } from "@/lib/clipboard";
 
 export function useTwoFactor() {
   const t = useTranslations();
@@ -160,7 +161,7 @@ export function useTwoFactor() {
 
   const copyBackupCodes = async () => {
     try {
-      await navigator.clipboard.writeText(backupCodes.join("\n"));
+      await copyText(backupCodes.join("\n"));
       toast.success(t("twoFactor.messages.backupCodesCopied"));
     } catch {
       toast.error(t("twoFactor.messages.backupCodesCopyFailed"));

@@ -45,22 +45,24 @@ export function TwoFactorVerification({
   };
 
   return (
-    <Card className="w-full max-w-md rounded-2xl border bg-card shadow-sm">
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-4">
+    <Card className="w-full rounded-2xl border border-border/80 bg-card shadow-[0_24px_80px_-40px_rgba(7,24,39,0.55)]">
+      <CardHeader className="gap-3 border-b px-6 pb-5 pt-6 text-left sm:px-7">
+        <div className="flex items-center gap-3">
           <div className="rounded-xl bg-primary/10 p-3">
-            <IconShield className="h-8 w-8 text-primary" />
+            <IconShield className="size-5 text-primary" />
+          </div>
+          <div>
+            <CardTitle className="font-display text-xl">{t("twoFactor.verification.title")}</CardTitle>
+            <CardDescription className="mt-1">
+              {showBackupCode ? t("twoFactor.verification.backupDescription") : t("twoFactor.verification.description")}
+            </CardDescription>
           </div>
         </div>
-        <CardTitle>{t("twoFactor.verification.title")}</CardTitle>
-        <CardDescription>
-          {showBackupCode ? t("twoFactor.verification.backupDescription") : t("twoFactor.verification.description")}
-        </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-6 pb-6 pt-5 sm:px-7">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="twoFactorCode" className="mb-2">
+            <Label htmlFor="twoFactorCode" className="mb-2 block">
               {showBackupCode ? t("twoFactor.verification.backupCode") : t("twoFactor.verification.verificationCode")}
             </Label>
             {showBackupCode ? (
@@ -92,7 +94,7 @@ export function TwoFactorVerification({
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <Checkbox
               id="rememberDevice"
               checked={rememberDevice}
@@ -105,14 +107,14 @@ export function TwoFactorVerification({
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-full"
+            className="h-12 w-full rounded-xl"
             disabled={isSubmitting || twoFactorCode.length < (showBackupCode ? 8 : 6)}
           >
             {isSubmitting ? t("twoFactor.verification.verifying") : t("twoFactor.verification.verify")}
           </Button>
 
           {error && (
-            <div className="text-sm text-destructive text-center bg-destructive/10 p-3 rounded-md">{error}</div>
+            <div className="rounded-xl bg-destructive/10 p-3 text-center text-sm text-destructive">{error}</div>
           )}
 
           <div className="text-center">

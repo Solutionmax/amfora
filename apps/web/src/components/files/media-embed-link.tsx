@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { copyText } from "@/lib/clipboard";
 
 interface MediaEmbedLinkProps {
   fileId: string;
@@ -27,11 +29,12 @@ export function MediaEmbedLink({ fileId }: MediaEmbedLinkProps) {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(embedUrl);
+      await copyText(embedUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error("Failed to copy:", error);
+      toast.error(t("common.unexpectedError"));
     }
   };
 

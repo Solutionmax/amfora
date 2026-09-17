@@ -18,6 +18,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { copyText } from "@/lib/clipboard";
 import { useTrustedDevices } from "../hooks/use-trusted-devices";
 import { useTwoFactor } from "../hooks/use-two-factor";
 
@@ -61,6 +63,15 @@ export function TwoFactorForm() {
     downloadBackupCodes,
     copyBackupCodes,
   } = useTwoFactor();
+
+  const handleCopyManualKey = async (key: string) => {
+    try {
+      await copyText(key);
+      toast.success(t("common.copied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
+  };
 
   const {
     isLoading: devicesLoading,
@@ -326,7 +337,8 @@ export function TwoFactorForm() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => navigator.clipboard.writeText(setupData.manualEntryKey)}
+                    aria-label={t("twoFactor.backupCodes.copyToClipboard")}
+                    onClick={() => void handleCopyManualKey(setupData.manualEntryKey)}
                   >
                     <IconCopy className="h-4 w-4" />
                   </Button>

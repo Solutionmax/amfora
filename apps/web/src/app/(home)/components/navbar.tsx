@@ -6,14 +6,11 @@ import { IconMenu2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
-import { GithubStar } from "@/components/brand/github-star";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { siteConfig } from "@/config/site";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAppInfo } from "@/contexts/app-info-context";
-import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const t = useTranslations();
@@ -25,38 +22,24 @@ export function Navbar() {
   }, [refreshAppInfo]);
 
   return (
-    <header className="relative z-40 w-full border-b bg-background/95 px-6 backdrop-blur-sm">
+    <header className="relative z-40 w-full border-b border-white/10 bg-[#071827] px-6 text-white backdrop-blur-sm">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-8">
           <Link href="/" className="flex min-w-0 items-center gap-2.5">
             {appLogo ? (
-              <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
+              <img alt="" className="h-8 w-8 shrink-0 rounded-lg bg-white/95 p-1 object-contain" src={appLogo} />
             ) : (
-              <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
+              <AmphoraMark className="h-8 w-8 shrink-0 text-sky-300" />
             )}
-            <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
+            <span className="truncate font-display text-xl font-bold tracking-tight text-white">{appName}</span>
           </Link>
-          <nav className="hidden gap-6 md:flex">
-            {siteConfig.navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:transition-all hover:after:w-full",
-                  "text-muted-foreground after:bg-foreground hover:text-foreground"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
         </div>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <GithubStar />
-          <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
-          <LanguageSwitcher />
-          <ModeToggle />
+        <div className="hidden items-center gap-1 lg:flex">
+          <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] p-1 text-white [&_button]:text-white [&_button:hover]:bg-white/10">
+            <LanguageSwitcher />
+            <ModeToggle />
+          </div>
           <Button asChild className="ml-1">
             <Link href="/login">{t("login.signIn")}</Link>
           </Button>
@@ -72,19 +55,12 @@ export function Navbar() {
                 <span className="sr-only">Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="border-white/10 bg-[#071827] text-white">
+              <SheetTitle className="sr-only">{t("home.pageTitle")}</SheetTitle>
               <div className="flex flex-col gap-5 pt-10">
-                {siteConfig.navMenuItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="text-lg font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <GithubStar className="self-start" />
+                <Link href="#privacy" className="text-lg font-medium" onClick={() => setIsMenuOpen(false)}>
+                  {t("home.points.noTracking")}
+                </Link>
                 <Button asChild className="mt-2">
                   <Link href="/login" onClick={() => setIsMenuOpen(false)}>
                     {t("login.signIn")}
