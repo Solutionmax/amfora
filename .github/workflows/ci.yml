@@ -74,3 +74,7 @@ jobs:
             exit 1
           fi
           echo "Clean."
+      - name: Installer control flow
+        run: |
+          sh -n site/get
+          python3 tests/test-installer.py

@@ -1,0 +1,43 @@
+#!/bin/sh
+# Amfora source installer. Usage: curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker
+# Keep execution inside main so a partial download cannot run a partial body.
+main() {
+    set -eu
+    case "${1:---docker}" in
+        --help|-h)
+            printf '%s\n' 'Amfora installer: sh get --docker' 'Creates ./amfora and builds with Docker. Requires Git, Bash, Docker Compose, Buildx 0.30+ and repository access.'
+            return 0 ;;
+        --docker) ;;
+        *) printf '%s\n' 'Unsupported option. Amfora uses Docker; use --docker or --help.' >&2; return 2 ;;
+    esac
+    if [ "$#" -gt 1 ]; then
+        printf '%s\n' 'Unexpected arguments. Use --docker or --help.' >&2
+        return 2
+    fi
+    fail() { printf 'Amfora: %s\n' "$1" >&2; exit 1; }
+    for tool in git bash docker; do
+        command -v "$tool" >/dev/null 2>&1 || fail "Install $tool first, then run this command again."
+    done
+    [ ! -e amfora ] && [ ! -L amfora ] || fail './amfora already exists. No files were changed. Use a new directory for a fresh installation.'
+    docker info >/dev/null 2>&1 || fail 'Docker is not running or your account cannot access it.'
+    docker compose version >/dev/null 2>&1 || fail 'Docker Compose v2 is required.'
+    prune_help=$(docker buildx prune --help 2>/dev/null) || fail 'Docker Buildx 0.30 or later is required.'
+    for option in --max-used-space --reserved-space --min-free-space; do
+        case "$prune_help" in *"$option"*) ;; *) fail 'Upgrade Docker Buildx to 0.30 or later.' ;; esac
+    done
+    if docker inspect amfora >/dev/null 2>&1 || docker volume inspect amfora_amfora_data >/dev/null 2>&1; then
+        fail 'An Amfora container or data volume already exists. This installer only handles fresh installations.'
+    fi
+    export GIT_TERMINAL_PROMPT=0
+    repo=https://github.com/raym0nz82/amfora.git
+    printf '%s\n' 'Checking source access...'
+    git ls-remote --exit-code "$repo" refs/heads/amfora </dev/null >/dev/null 2>&1 || fail 'Source access failed. The repository is private: arrange access at https://solutionmax.net/#start and authenticate Git on this host. Also check your network connection.'
+    printf '%s\n' 'Downloading Amfora into ./amfora...'
+    git clone --branch amfora --single-branch "$repo" amfora </dev/null || fail 'Clone failed. Check Git access and disk space; inspect any partial ./amfora directory before retrying.'
+    cd amfora || fail 'Cannot enter the installation directory.'
+    printf '%s\n' 'Building Amfora. The first build can take several minutes...'
+    bash infra/build-docker.sh local </dev/null || fail 'Build failed; the application was not started. Source files remain in ./amfora. Review the build output before retrying.'
+    docker compose up -d --no-build </dev/null || fail 'Startup failed. Review docker compose logs inside the amfora directory. No data was removed.'
+    printf '%s\n' 'Installation complete; services are starting.' 'Open http://localhost:5487 on this Docker host once startup finishes.' 'For remote/public access, configure the storage URL and HTTPS: https://amfora.solutionmax.net/docs/#deployment' 'Check startup with: cd amfora && docker compose logs --tail=100'
+}
+main "$@"

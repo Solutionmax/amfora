@@ -32,8 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=hero-install-20260917-1" />
-    <script src="/assets/site.js?v=hero-install-20260917-1" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=get-20260917-1" />
+    <script src="/assets/site.js?v=get-20260917-1" defer></script>
   </head>
   <body class="docs-page">
     <a class="skip" href="#main">Skip to content</a>
@@ -174,15 +174,27 @@
             <p class="section-kicker">02 / Install</p>
             <h2>Start with Docker Compose</h2>
             <p>
-              You need access to the private repository, Git, and Docker with
-              Compose and Buildx 0.30 or later, plus Bash and a running Docker
-              engine. Authenticate Git with an account that has repository
-              access first. Run the one-line command in Bash from a directory
+              You need curl, access to the private repository, Git, and Docker
+              with Compose and Buildx 0.30 or later, plus Bash and a running
+              Docker engine. Authenticate Git with an account that has
+              repository access first. Run the one-line command from a directory
               without an existing <code>amfora</code> folder. Clone the
               maintained branch, build the application, and open the local web
               interface:
             </p>
-            <pre><code>(git clone --branch amfora https://github.com/raym0nz82/amfora.git amfora &amp;&amp; cd amfora &amp;&amp; bash infra/build-docker.sh local &amp;&amp; docker compose up -d --no-build)</code></pre>
+            <pre><code>curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker</code></pre>
+            <p>
+              The <a href="/get">installer script</a> checks Docker, Compose,
+              Buildx and source access before downloading anything. It creates
+              an <code>amfora</code> directory, builds the image and starts
+              Compose. Existing Amfora directories, containers or data volumes
+              are refused. It does not install Docker, configure HTTPS, create
+              backups or enable automatic updates.
+            </p>
+            <p>To inspect the script before running it:</p>
+            <pre><code>curl -fsSL https://amfora.solutionmax.net/get -o amfora-get.sh
+less amfora-get.sh
+sh amfora-get.sh --docker</code></pre>
             <p>
               The build script reuses layers in a dedicated Amfora builder and
               reclaims unused cache above a 4 GB target. Active builds can

@@ -32,8 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=hero-install-20260917-1" />
-    <script src="/assets/site.js?v=hero-install-20260917-1" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=get-20260917-1" />
+    <script src="/assets/site.js?v=get-20260917-1" defer></script>
   </head>
   <body class="product-site">
     <a class="skip" href="#main">Skip to content</a>
@@ -112,12 +112,12 @@
               <li>Your storage</li>
             </ul>
             <div class="hero-install" id="install">
-              <p class="eyebrow">INSTALL FROM SOURCE</p>
+              <p class="eyebrow">INSTALL WITH DOCKER</p>
               <pre
                 class="install-command"
-              ><code>(git clone --branch amfora https://github.com/raym0nz82/amfora.git amfora &amp;&amp; cd amfora &amp;&amp; bash infra/build-docker.sh local &amp;&amp; docker compose up -d --no-build)</code></pre>
+              ><code>curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker</code></pre>
               <p class="install-requirements">
-                Requires Docker, Compose, Buildx, Git and Bash. Private
+                Requires curl, Docker, Compose, Buildx, Git and Bash. Private
                 repository: authenticate Git first.
                 <a href="/docs/#getting-started">Requirements &amp; setup ↗</a>
               </p>
