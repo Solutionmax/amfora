@@ -32,8 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=install-20260917-1" />
-    <script src="/assets/site.js?v=install-20260917-1" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=hero-install-20260917-1" />
+    <script src="/assets/site.js?v=hero-install-20260917-1" defer></script>
   </head>
   <body class="product-site">
     <a class="skip" href="#main">Skip to content</a>
@@ -78,10 +78,8 @@
           >
           <a href="/#how-it-works">How it works</a
           ><a href="/#features">Features</a><a href="/docs/">Documentation</a
-          ><a
-            class="nav-source nav-contact"
-            href="https://solutionmax.net/#start"
-            >Let’s talk <span aria-hidden="true">↗</span></a
+          ><a class="nav-source nav-contact" href="#install"
+            >Install Amfora <span aria-hidden="true">↓</span></a
           >
         </nav>
       </div>
@@ -98,13 +96,12 @@
               Send files beautifully.<br />Get what you need back.
             </p>
             <p class="product-description">
-              Share a download link. Collect files from a client. Keep
-              everything in a workspace on your own infrastructure. Amfora makes
-              the handoff feel as considered as the work.
+              Send a download link. Collect client files. Manage it all in a
+              workspace on your own infrastructure.
             </p>
             <div class="actions">
-              <a class="button primary" href="https://solutionmax.net/#start"
-                >Discuss your setup <span aria-hidden="true">↗</span></a
+              <a class="button primary" href="#install"
+                >Install Amfora <span aria-hidden="true">↓</span></a
               ><a class="button secondary" href="#features"
                 >See the product <span aria-hidden="true">↓</span></a
               >
@@ -114,6 +111,26 @@
               <li>Your brand</li>
               <li>Your storage</li>
             </ul>
+            <div class="hero-install" id="install">
+              <p class="eyebrow">INSTALL FROM SOURCE</p>
+              <pre
+                class="install-command"
+              ><code>(git clone --branch amfora https://github.com/raym0nz82/amfora.git amfora &amp;&amp; cd amfora &amp;&amp; bash infra/build-docker.sh local &amp;&amp; docker compose up -d --no-build)</code></pre>
+              <p class="install-requirements">
+                Requires Docker, Compose, Buildx, Git and Bash. Private
+                repository: authenticate Git first.
+                <a href="/docs/#getting-started">Requirements &amp; setup ↗</a>
+              </p>
+              <div class="install-links">
+                <a class="text-link" href="https://github.com/raym0nz82/amfora"
+                  >GitHub ↗</a
+                ><a
+                  class="text-link"
+                  href="https://buymeacoffee.com/solutionmax"
+                  >Buy Me a Coffee ↗</a
+                >
+              </div>
+            </div>
           </div>
           <figure class="product-visual">
             <div class="visual-topline">
@@ -411,43 +428,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </section>
-      <section class="section install-section" id="install">
-        <div class="wrap install-panel">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">MAKE IT YOURS</p>
-              <h2>One command.<br /><em>Your own Amfora.</em></h2>
-            </div>
-            <p>
-              Build and start Amfora from source with Docker. Run this in Bash
-              from a folder where you want a new <code>amfora</code> directory.
-            </p>
-          </div>
-          <pre
-            class="install-command"
-          ><code>(git clone --branch amfora https://github.com/raym0nz82/amfora.git amfora &amp;&amp; cd amfora &amp;&amp; bash infra/build-docker.sh local &amp;&amp; docker compose up -d --no-build)</code></pre>
-          <p class="install-requirements">
-            Requires Git, Bash, Docker Compose and Buildx 0.30 or later, a
-            running Docker engine, and authenticated Git access to the private
-            repository. The first build takes several minutes.
-          </p>
-          <div class="install-links">
-            <a class="text-link" href="/docs/#getting-started"
-              >Installation &amp; requirements ↗</a
-            ><a class="text-link" href="https://github.com/raym0nz82/amfora"
-              >View on GitHub (private) ↗</a
-            ><a class="text-link" href="https://buymeacoffee.com/solutionmax"
-              >Buy Me a Coffee ↗</a
-            >
-          </div>
-          <p class="install-requirements">
-            Open <code>http://localhost:5487</code> on the Docker host after
-            startup. For a remote server, configure the storage address and
-            HTTPS using the guide. Need repository access?
-            <a href="https://solutionmax.net/#start">Contact SolutionMAX</a>.
-          </p>
         </div>
       </section>
       <section class="section walkthrough-section" id="walkthrough-guide">
