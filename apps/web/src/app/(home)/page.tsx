@@ -1,23 +1,9 @@
 "use client";
 
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { DefaultFooter } from "@/components/ui/default-footer";
-import { HomeContent } from "./components/home-content";
-import { Navbar } from "./components/navbar";
 import { useHome } from "./hooks/use-home";
 
 export default function HomePage() {
-  const { isLoading, shouldShowHomePage } = useHome();
-
-  if (isLoading || !shouldShowHomePage) {
-    return <LoadingScreen />;
-  }
-
-  return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-      <HomeContent isLoading={isLoading} />
-      <DefaultFooter />
-    </div>
-  );
+  useHome();
+  return <LoadingScreen />;
 }
