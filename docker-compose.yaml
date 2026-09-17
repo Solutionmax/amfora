@@ -39,6 +39,7 @@ services:
       # - CORS_ORIGINS=https://app.example.com   # only if a browser calls the API directly
       #
       # Required for internal storage: the URL the browser uses to reach storage.
+      APP_URL: "http://localhost:5487" # replace with your actual HTTPS app origin in production
       STORAGE_URL: "http://127.0.0.1:9379"
     ports:
       - "5487:5487" # Web interface

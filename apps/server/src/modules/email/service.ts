@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+import { getCanonicalOrigin } from "../../shared/canonical-origin";
+import { escapeHtml } from "../../shared/escape-html";
 import { ConfigService } from "../config/service";
 
 interface SmtpConfig {
@@ -142,7 +144,8 @@ export class EmailService {
     }
   }
 
-  async sendPasswordResetEmail(to: string, resetToken: string, origin: string) {
+  async sendPasswordResetEmail(to: string, resetToken: string, _origin?: string) {
+    const canonicalOrigin = getCanonicalOrigin();
     const transporter = await this.createTransporter();
     if (!transporter) {
       throw new Error("SMTP is not enabled");
@@ -153,13 +156,13 @@ export class EmailService {
     const appName = await this.configService.getValue("appName");
 
     await transporter.sendMail({
-      from: `"${fromName}" <${fromEmail}>`,
+      from: { name: fromName, address: fromEmail },
       to,
       subject: `${appName} - Password Reset Request`,
       html: `
-        <h1>${appName} - Password Reset Request</h1>
+        <h1>${escapeHtml(appName)} - Password Reset Request</h1>
         <p>Click the link below to reset your password:</p>
-        <a href="${origin}/reset-password?token=${resetToken}">
+        <a href="${canonicalOrigin}/reset-password?token=${encodeURIComponent(resetToken)}">
           Reset Password
         </a>
         <p>This link will expire in 1 hour.</p>
@@ -181,7 +184,7 @@ export class EmailService {
     const sender = senderName || "Someone";
 
     await transporter.sendMail({
-      from: `"${fromName}" <${fromEmail}>`,
+      from: { name: fromName, address: fromEmail },
       to,
       subject: `${appName} - ${shareTitle} shared with you`,
       html: `
@@ -190,13 +193,13 @@ export class EmailService {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${appName} - Shared Files</title>
+          <title>${escapeHtml(appName)} - Shared Files</title>
         </head>
         <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; color: #333333;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden; margin-top: 40px; margin-bottom: 40px;">
             <!-- Header -->
             <div style="background-color: #22B14C; padding: 30px 20px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">${appName}</h1>
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">${escapeHtml(appName)}</h1>
               <p style="margin: 2px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.9;">Shared Files</p>
             </div>
             
@@ -205,13 +208,13 @@ export class EmailService {
               <div style="text-align: center; margin-bottom: 32px;">
                 <h2 style="margin: 0 0 12px 0; color: #1f2937; font-size: 24px; font-weight: 600;">Files Shared With You</h2>
                 <p style="margin: 0; color: #6b7280; font-size: 16px; line-height: 1.6;">
-                  <strong style="color: #374151;">${sender}</strong> has shared <strong style="color: #374151;">"${shareTitle}"</strong> with you.
+                  <strong style="color: #374151;">${escapeHtml(sender)}</strong> has shared <strong style="color: #374151;">"${escapeHtml(shareTitle)}"</strong> with you.
                 </p>
               </div>
               
               <!-- CTA Button -->
               <div style="text-align: center; margin: 32px 0;">
-                <a href="${shareLink}" style="display: inline-block; background-color: #22B14C; color: #ffffff; text-decoration: none; padding: 12px 24px; font-weight: 600; font-size: 16px; border: 2px solid #22B14C; border-radius: 8px; transition: all 0.3s ease;">
+                <a href="${escapeHtml(shareLink)}" style="display: inline-block; background-color: #22B14C; color: #ffffff; text-decoration: none; padding: 12px 24px; font-weight: 600; font-size: 16px; border: 2px solid #22B14C; border-radius: 8px; transition: all 0.3s ease;">
                   Access Shared Files
                 </a>
               </div>
@@ -227,7 +230,7 @@ export class EmailService {
             <!-- Footer -->
             <div style="background-color: #f9fafb; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #6b7280; font-size: 14px;">
-                This email was sent by <strong>${appName}</strong>
+                This email was sent by <strong>${escapeHtml(appName)}</strong>
               </p>
               <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 12px;">
                 If you didn't expect this email, you can safely ignore it.
@@ -260,7 +263,7 @@ export class EmailService {
     const appName = await this.configService.getValue("appName");
 
     await transporter.sendMail({
-      from: `"${fromName}" <${fromEmail}>`,
+      from: { name: fromName, address: fromEmail },
       to: recipientEmail,
       subject: `${appName} - ${fileCount} file${fileCount > 1 ? "s" : ""} uploaded to "${reverseShareName}"`,
       html: `
@@ -269,13 +272,13 @@ export class EmailService {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${appName} - File Upload Notification</title>
+          <title>${escapeHtml(appName)} - File Upload Notification</title>
         </head>
         <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; color: #333333;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden; margin-top: 40px; margin-bottom: 40px;">
             <!-- Header -->
             <div style="background-color: #22B14C; padding: 30px 20px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">${appName}</h1>
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">${escapeHtml(appName)}</h1>
               <p style="margin: 2px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.9;">File Upload Notification</p>
             </div>
             
@@ -284,7 +287,7 @@ export class EmailService {
               <div style="text-align: center; margin-bottom: 32px;">
                 <h2 style="margin: 0 0 12px 0; color: #1f2937; font-size: 24px; font-weight: 600;">New File Uploaded</h2>
                 <p style="margin: 0; color: #6b7280; font-size: 16px; line-height: 1.6;">
-                  <strong style="color: #374151;">${uploaderName}</strong> has uploaded <strong style="color: #374151;">${fileCount} file${fileCount > 1 ? "s" : ""}</strong> to your reverse share <strong style="color: #374151;">"${reverseShareName}"</strong>.
+                  <strong style="color: #374151;">${escapeHtml(uploaderName)}</strong> has uploaded <strong style="color: #374151;">${fileCount} file${fileCount > 1 ? "s" : ""}</strong> to your reverse share <strong style="color: #374151;">"${escapeHtml(reverseShareName)}"</strong>.
                 </p>
               </div>
               
@@ -294,7 +297,7 @@ export class EmailService {
                 <ul style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 14px; line-height: 1.5;">
                    ${fileList
                      .split(", ")
-                     .map((file) => `<li style="margin: 4px 0;">${file}</li>`)
+                     .map((file) => `<li style="margin: 4px 0;">${escapeHtml(file)}</li>`)
                      .join("")}
                  </ul>
               </div>
@@ -311,7 +314,7 @@ export class EmailService {
             <!-- Footer -->
             <div style="background-color: #f9fafb; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #6b7280; font-size: 14px;">
-                This email was sent by <strong>${appName}</strong>
+                This email was sent by <strong>${escapeHtml(appName)}</strong>
               </p>
               <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 12px;">
                 If you didn't expect this email, you can safely ignore it.

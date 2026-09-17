@@ -1,7 +1,7 @@
-import bcrypt from "bcryptjs";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { env } from "../../env";
+import { verifyCapability } from "../../shared/capability";
 import { prisma } from "../../shared/prisma";
 import {
   generateUniqueFileName,
@@ -10,6 +10,7 @@ import {
 } from "../../utils/file-name-generator";
 import { getContentType } from "../../utils/mime-types";
 import { ConfigService } from "../config/service";
+import { canDownloadFromShares } from "./download-access";
 import {
   CheckFileInput,
   CheckFileSchema,
@@ -23,11 +24,36 @@ import {
   UpdateFileSchema,
 } from "./dto";
 import { isPubliclyEmbeddable } from "./embed-access";
+import { isOwnedMultipartObject } from "./multipart-access";
 import { FileService } from "./service";
+import { folderAndAncestorIds } from "./share-access";
+import { shareGrantSubject } from "./share-download-grant";
 
 export class FileController {
   private fileService = new FileService();
   private configService = new ConfigService();
+
+  private async getSharesForFile(fileRecord: { id: string; folderId: string | null; userId: string }) {
+    const ownerFolders = fileRecord.folderId
+      ? await prisma.folder.findMany({
+          where: { userId: fileRecord.userId },
+          select: { id: true, parentId: true },
+        })
+      : [];
+    const folderIds = folderAndAncestorIds(fileRecord.folderId, ownerFolders);
+
+    return prisma.share.findMany({
+      where: {
+        OR: [
+          { files: { some: { id: fileRecord.id } } },
+          ...(folderIds.length > 0
+            ? [{ folders: { some: { id: { in: folderIds }, userId: fileRecord.userId } } }]
+            : []),
+        ],
+      },
+      include: { security: true },
+    });
+  }
 
   async getPresignedUrl(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     const { filename, extension } = request.query as { filename: string; extension: string };
@@ -218,31 +244,21 @@ export class FileController {
 
       let hasAccess = false;
 
-      const shares = await prisma.share.findMany({
-        where: {
-          files: {
-            some: {
-              id: fileRecord.id,
-            },
-          },
-        },
-        include: {
-          security: true,
-        },
-      });
+      const shares = await this.getSharesForFile(fileRecord);
 
+      const admittedViews = new Set<string>();
       for (const share of shares) {
-        if (!share.security.password) {
-          hasAccess = true;
-          break;
-        } else if (password) {
-          const isPasswordValid = await bcrypt.compare(password, share.security.password);
-          if (isPasswordValid) {
-            hasAccess = true;
-            break;
-          }
+        if (
+          await verifyCapability(
+            request.cookies[`share-access-${share.id}`],
+            "share-download",
+            shareGrantSubject(share)
+          )
+        ) {
+          admittedViews.add(share.id);
         }
       }
+      hasAccess = await canDownloadFromShares(shares, password, admittedViews);
 
       if (!hasAccess) {
         try {
@@ -324,31 +340,21 @@ export class FileController {
 
       let hasAccess = false;
 
-      const shares = await prisma.share.findMany({
-        where: {
-          files: {
-            some: {
-              id: fileRecord.id,
-            },
-          },
-        },
-        include: {
-          security: true,
-        },
-      });
+      const shares = await this.getSharesForFile(fileRecord);
 
+      const admittedViews = new Set<string>();
       for (const share of shares) {
-        if (!share.security.password) {
-          hasAccess = true;
-          break;
-        } else if (password) {
-          const isPasswordValid = await bcrypt.compare(password, share.security.password);
-          if (isPasswordValid) {
-            hasAccess = true;
-            break;
-          }
+        if (
+          await verifyCapability(
+            request.cookies[`share-access-${share.id}`],
+            "share-download",
+            shareGrantSubject(share)
+          )
+        ) {
+          admittedViews.add(share.id);
         }
       }
+      hasAccess = await canDownloadFromShares(shares, password, admittedViews);
 
       if (!hasAccess) {
         try {
@@ -712,6 +718,10 @@ export class FileController {
         return reply.status(400).send({ error: "uploadId, objectName, and partNumber are required" });
       }
 
+      if (!isOwnedMultipartObject(userId, objectName)) {
+        return reply.status(403).send({ error: "Upload does not belong to this user" });
+      }
+
       const partNum = parseInt(partNumber);
       if (isNaN(partNum) || partNum < 1 || partNum > 10000) {
         return reply.status(400).send({ error: "partNumber must be between 1 and 10000" });
@@ -745,6 +755,10 @@ export class FileController {
         return reply.status(400).send({ error: "uploadId, objectName, and parts are required" });
       }
 
+      if (!isOwnedMultipartObject(userId, objectName)) {
+        return reply.status(403).send({ error: "Upload does not belong to this user" });
+      }
+
       await this.fileService.completeMultipartUpload(objectName, uploadId, parts);
 
       return reply.status(200).send({
@@ -771,6 +785,10 @@ export class FileController {
 
       if (!uploadId || !objectName) {
         return reply.status(400).send({ error: "uploadId and objectName are required" });
+      }
+
+      if (!isOwnedMultipartObject(userId, objectName)) {
+        return reply.status(403).send({ error: "Upload does not belong to this user" });
       }
 
       await this.fileService.abortMultipartUpload(objectName, uploadId);

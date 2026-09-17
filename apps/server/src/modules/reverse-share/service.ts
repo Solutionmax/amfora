@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 
 import { env } from "../../env";
@@ -11,6 +12,7 @@ import {
   UploadToReverseShareInput,
 } from "./dto";
 import { ReverseShareRepository } from "./repository";
+import { assertUploadedFile, assertUploadGrant } from "./upload-policy";
 
 interface ReverseShareData {
   id: string;
@@ -203,7 +205,11 @@ export class ReverseShareService {
     return ReverseShareResponseSchema.parse(this.formatReverseShareResponse(deletedReverseShare));
   }
 
-  async getPresignedUrl(id: string, objectName: string, password?: string) {
+  async getPresignedUrl(
+    id: string,
+    metadata: { filename: string; extension: string; size: number },
+    password?: string
+  ) {
     const reverseShare = await this.reverseShareRepository.findById(id);
     if (!reverseShare) {
       throw new Error("Reverse share not found");
@@ -227,25 +233,14 @@ export class ReverseShareService {
       }
     }
 
-    const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
-
-    // Import storage config to check if using internal or external S3
-    const { isInternalStorage } = await import("../../config/storage.config.js");
-
-    if (isInternalStorage) {
-      // Internal storage: Use backend proxy for uploads (127.0.0.1 not accessible from client)
-      // Note: This would need request context, but reverse-shares are typically used by external users
-      // For now, we'll use presigned URLs and handle the error on the client side
-      const url = await this.fileService.getPresignedPutUrl(objectName, expires);
-      return { url, expiresIn: expires };
-    } else {
-      // External S3: Use presigned URLs directly (more efficient)
-      const url = await this.fileService.getPresignedPutUrl(objectName, expires);
-      return { url, expiresIn: expires };
-    }
+    return this.issueUpload(reverseShare, metadata);
   }
 
-  async getPresignedUrlByAlias(alias: string, objectName: string, password?: string) {
+  async getPresignedUrlByAlias(
+    alias: string,
+    metadata: { filename: string; extension: string; size: number },
+    password?: string
+  ) {
     const reverseShare = await this.reverseShareRepository.findByAlias(alias);
     if (!reverseShare) {
       throw new Error("Reverse share not found");
@@ -269,21 +264,57 @@ export class ReverseShareService {
       }
     }
 
-    const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
+    return this.issueUpload(reverseShare, metadata);
+  }
 
-    // Import storage config to check if using internal or external S3
-    const { isInternalStorage } = await import("../../config/storage.config.js");
+  private async issueUpload(
+    reverseShare: ReverseShareData,
+    metadata: { filename: string; extension: string; size: number }
+  ) {
+    await this.validateUploadMetadata(reverseShare, metadata);
+    const objectName = `pending-reverse/${reverseShare.id}/${randomUUID()}`;
+    const expires = 900;
+    await prisma.reverseUpload.create({
+      data: {
+        objectName,
+        filename: metadata.filename,
+        size: BigInt(metadata.size),
+        reverseShareId: reverseShare.id,
+        expiresAt: new Date(Date.now() + expires * 1000),
+      },
+    });
+    const url = await this.fileService.getPresignedPutUrl(objectName, expires, metadata.size);
+    return { url, expiresIn: expires, objectName };
+  }
 
-    if (isInternalStorage) {
-      // Internal storage: Use backend proxy for uploads (127.0.0.1 not accessible from client)
-      // Note: This would need request context, but reverse-shares are typically used by external users
-      // For now, we'll use presigned URLs and handle the error on the client side
-      const url = await this.fileService.getPresignedPutUrl(objectName, expires);
-      return { url, expiresIn: expires };
-    } else {
-      // External S3: Use presigned URLs directly (more efficient)
-      const url = await this.fileService.getPresignedPutUrl(objectName, expires);
-      return { url, expiresIn: expires };
+  private async validateUploadMetadata(
+    share: ReverseShareData,
+    metadata: { filename: string; extension: string; size: number }
+  ) {
+    assertUploadedFile(
+      { ...share, nameFieldRequired: "OPTIONAL", emailFieldRequired: "OPTIONAL" },
+      { name: metadata.filename, extension: metadata.extension, size: metadata.size },
+      metadata.size
+    );
+    if (
+      share.maxFiles &&
+      (await prisma.reverseShareFile.count({ where: { reverseShareId: share.id } })) >= share.maxFiles
+    )
+      throw new Error("Maximum number of files reached");
+    // Clean a bounded batch of abandoned uploads when this receive link is used again.
+    const expired = await prisma.reverseUpload.findMany({
+      where: { reverseShareId: share.id, expiresAt: { lte: new Date() } },
+      take: 20,
+    });
+    for (const grant of expired) {
+      try {
+        if (grant.uploadId)
+          await this.fileService.abortMultipartUpload(grant.objectName, grant.uploadId).catch(() => undefined);
+        await this.fileService.deleteObject(grant.objectName);
+        await prisma.reverseUpload.delete({ where: { objectName: grant.objectName } });
+      } catch {
+        /* Retry cleanup on the next upload; never delete unrelated objects. */
+      }
     }
   }
 
@@ -311,32 +342,7 @@ export class ReverseShareService {
       }
     }
 
-    if (reverseShare.maxFiles) {
-      const currentFileCount = await this.reverseShareRepository.countFilesByReverseShareId(reverseShareId);
-      if (currentFileCount >= reverseShare.maxFiles) {
-        throw new Error("Maximum number of files reached");
-      }
-    }
-
-    if (reverseShare.maxFileSize && BigInt(fileData.size) > reverseShare.maxFileSize) {
-      throw new Error("File size exceeds limit");
-    }
-
-    if (reverseShare.allowedFileTypes) {
-      const allowedTypes = reverseShare.allowedFileTypes.split(",").map((type) => type.trim().toLowerCase());
-      if (!allowedTypes.includes(fileData.extension.toLowerCase())) {
-        throw new Error("File type not allowed");
-      }
-    }
-
-    const file = await this.reverseShareRepository.createFile(reverseShareId, {
-      ...fileData,
-      size: BigInt(fileData.size),
-    });
-
-    this.addFileToUploadSession(reverseShare, fileData);
-
-    return this.formatFileResponse(file);
+    return this.finishUpload(reverseShare, fileData);
   }
 
   async registerFileUploadByAlias(alias: string, fileData: UploadToReverseShareInput, password?: string) {
@@ -363,32 +369,58 @@ export class ReverseShareService {
       }
     }
 
-    if (reverseShare.maxFiles) {
-      const currentFileCount = await this.reverseShareRepository.countFilesByReverseShareId(reverseShare.id);
-      if (currentFileCount >= reverseShare.maxFiles) {
-        throw new Error("Maximum number of files reached");
-      }
+    return this.finishUpload(reverseShare, fileData);
+  }
+
+  private async finishUpload(reverseShare: ReverseShareData, fileData: UploadToReverseShareInput) {
+    const grant = await prisma.reverseUpload.findUnique({ where: { objectName: fileData.objectName } });
+    assertUploadGrant(grant, reverseShare.id);
+    if (grant!.filename !== fileData.name || grant!.size !== BigInt(fileData.size))
+      throw new Error("Upload metadata does not match authorization");
+    const actualSize = await this.fileService.getObjectSize(fileData.objectName);
+    assertUploadedFile(reverseShare, fileData, actualSize);
+    // A signed PUT can be replayed until expiry. Commit a private copy so replays never overwrite accepted files.
+    const finalKey = `reverse-shares/${reverseShare.id}/${randomUUID()}`;
+    await this.fileService.copyObject(fileData.objectName, finalKey);
+    try {
+      const committedSize = await this.fileService.getObjectSize(finalKey);
+      assertUploadedFile(reverseShare, fileData, committedSize);
+      const file = await prisma.$transaction(async (tx) => {
+        const consumed = await tx.reverseUpload.updateMany({
+          where: {
+            objectName: fileData.objectName,
+            reverseShareId: reverseShare.id,
+            consumed: false,
+            expiresAt: { gt: new Date() },
+          },
+          data: { consumed: true },
+        });
+        if (consumed.count !== 1) throw new Error("Upload already registered or expired");
+        const current = await tx.reverseShare.findUnique({ where: { id: reverseShare.id } });
+        if (
+          !current ||
+          !current.isActive ||
+          (current.expiration && current.expiration <= new Date()) ||
+          current.password !== reverseShare.password
+        )
+          throw new Error("Reverse share access changed");
+        assertUploadedFile(current, fileData, committedSize);
+        if (
+          current.maxFiles &&
+          (await tx.reverseShareFile.count({ where: { reverseShareId: reverseShare.id } })) >= current.maxFiles
+        )
+          throw new Error("Maximum number of files reached");
+        return tx.reverseShareFile.create({
+          data: { ...fileData, objectName: finalKey, size: BigInt(committedSize), reverseShareId: reverseShare.id },
+        });
+      });
+      await this.fileService.deleteObject(fileData.objectName).catch(() => undefined);
+      this.addFileToUploadSession(reverseShare, fileData);
+      return this.formatFileResponse(file);
+    } catch (error) {
+      await this.fileService.deleteObject(finalKey).catch(() => undefined);
+      throw error;
     }
-
-    if (reverseShare.maxFileSize && BigInt(fileData.size) > reverseShare.maxFileSize) {
-      throw new Error("File size exceeds limit");
-    }
-
-    if (reverseShare.allowedFileTypes) {
-      const allowedTypes = reverseShare.allowedFileTypes.split(",").map((type) => type.trim().toLowerCase());
-      if (!allowedTypes.includes(fileData.extension.toLowerCase())) {
-        throw new Error("File type not allowed");
-      }
-    }
-
-    const file = await this.reverseShareRepository.createFile(reverseShare.id, {
-      ...fileData,
-      size: BigInt(fileData.size),
-    });
-
-    this.addFileToUploadSession(reverseShare, fileData);
-
-    return this.formatFileResponse(file);
   }
 
   async getFileInfo(fileId: string, creatorId: string) {
@@ -813,14 +845,25 @@ export class ReverseShareService {
     alias: string,
     filename: string,
     extension: string,
-    password?: string
+    password?: string,
+    size?: number
   ): Promise<{ uploadId: string; objectName: string }> {
-    await this.validateReverseShareAccessByAlias(alias, password);
-
-    // Generate unique object name using timestamp and random suffix
-    const objectName = `reverse-shares/${alias}/${Date.now()}-${Math.random().toString(36).substring(7)}-${filename}.${extension}`;
-
+    const share = await this.validateReverseShareAccessByAlias(alias, password);
+    const fullName = `${filename}.${extension}`;
+    if (size === undefined) throw new Error("File size is required");
+    await this.validateUploadMetadata(share, { filename: fullName, extension, size });
+    const objectName = `pending-reverse/${share.id}/${randomUUID()}`;
     const uploadId = await this.fileService.createMultipartUpload(objectName);
+    await prisma.reverseUpload.create({
+      data: {
+        objectName,
+        filename: fullName,
+        size: BigInt(size),
+        reverseShareId: share.id,
+        uploadId,
+        expiresAt: new Date(Date.now() + 3600000),
+      },
+    });
 
     return {
       uploadId,
@@ -835,7 +878,8 @@ export class ReverseShareService {
     partNumber: number,
     password?: string
   ): Promise<{ url: string }> {
-    await this.validateReverseShareAccessByAlias(alias, password);
+    const share = await this.validateReverseShareAccessByAlias(alias, password);
+    assertUploadGrant(await prisma.reverseUpload.findUnique({ where: { objectName } }), share.id, uploadId);
 
     const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
     const url = await this.fileService.getPresignedPartUrl(objectName, uploadId, partNumber, expires);
@@ -850,7 +894,8 @@ export class ReverseShareService {
     parts: Array<{ PartNumber: number; ETag: string }>,
     password?: string
   ): Promise<{ message: string; objectName: string }> {
-    await this.validateReverseShareAccessByAlias(alias, password);
+    const share = await this.validateReverseShareAccessByAlias(alias, password);
+    assertUploadGrant(await prisma.reverseUpload.findUnique({ where: { objectName } }), share.id, uploadId);
 
     await this.fileService.completeMultipartUpload(objectName, uploadId, parts);
 
@@ -866,9 +911,11 @@ export class ReverseShareService {
     objectName: string,
     password?: string
   ): Promise<{ message: string }> {
-    await this.validateReverseShareAccessByAlias(alias, password);
+    const share = await this.validateReverseShareAccessByAlias(alias, password);
+    assertUploadGrant(await prisma.reverseUpload.findUnique({ where: { objectName } }), share.id, uploadId);
 
     await this.fileService.abortMultipartUpload(objectName, uploadId);
+    await prisma.reverseUpload.update({ where: { objectName }, data: { consumed: true } });
 
     return {
       message: "Multipart upload aborted successfully",

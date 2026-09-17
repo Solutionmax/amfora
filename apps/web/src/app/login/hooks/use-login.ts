@@ -29,6 +29,7 @@ export function useLogin() {
   const [error, setError] = useState<string | undefined>();
   const [requiresTwoFactor, setRequiresTwoFactor] = useState(false);
   const [twoFactorUserId, setTwoFactorUserId] = useState<string | null>(null);
+  const [challengeId, setChallengeId] = useState<string | null>(null);
   const [twoFactorCode, setTwoFactorCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordAuthEnabled, setPasswordAuthEnabled] = useState(true);
@@ -99,7 +100,8 @@ export function useLogin() {
       const response = await login(data as any);
       const loginData = response.data as LoginResponse;
 
-      if (loginData.requiresTwoFactor && loginData.userId) {
+      if (loginData.requiresTwoFactor && loginData.userId && loginData.challengeId) {
+        setChallengeId(loginData.challengeId);
         setRequiresTwoFactor(true);
         setTwoFactorUserId(loginData.userId);
         return;
@@ -141,7 +143,7 @@ export function useLogin() {
   };
 
   const onTwoFactorSubmit = async (rememberDevice: boolean = false) => {
-    if (!twoFactorUserId || !twoFactorCode) {
+    if (!twoFactorUserId || !twoFactorCode || !challengeId) {
       setError(t("twoFactor.messages.enterVerificationCode"));
       return;
     }
@@ -151,6 +153,7 @@ export function useLogin() {
 
     try {
       const response = await completeTwoFactorLogin({
+        challengeId,
         userId: twoFactorUserId,
         token: twoFactorCode,
         rememberDevice: rememberDevice,

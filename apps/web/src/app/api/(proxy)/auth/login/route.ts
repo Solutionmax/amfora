@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   const setCookie = apiRes.headers.getSetCookie?.() || [];
   if (setCookie.length > 0) {
-    res.headers.set("Set-Cookie", setCookie.join(","));
+    for (const cookie of setCookie) res.headers.append("Set-Cookie", cookie);
   }
 
   return res;

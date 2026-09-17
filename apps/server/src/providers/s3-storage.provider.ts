@@ -1,12 +1,14 @@
 import {
   AbortMultipartUploadCommand,
   CompleteMultipartUploadCommand,
+  CopyObjectCommand,
   CreateMultipartUploadCommand,
   DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
   UploadPartCommand,
+  UploadPartCopyCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -78,7 +80,7 @@ export class S3StorageProvider implements StorageProvider {
     }
   }
 
-  async getPresignedPutUrl(objectName: string, expires: number): Promise<string> {
+  async getPresignedPutUrl(objectName: string, expires: number, size?: number): Promise<string> {
     // Always use public S3 client for presigned URLs (uses SERVER_IP)
     const client = createPublicS3Client();
     if (!client) {
@@ -86,6 +88,7 @@ export class S3StorageProvider implements StorageProvider {
     }
 
     const command = new PutObjectCommand({
+      ...(size !== undefined ? { ContentLength: size } : {}),
       Bucket: bucketName,
       Key: objectName,
     });
@@ -134,6 +137,55 @@ export class S3StorageProvider implements StorageProvider {
     });
 
     await client.send(command);
+  }
+
+  async getObjectSize(objectName: string): Promise<number> {
+    const response = await this.ensureClient().send(new HeadObjectCommand({ Bucket: bucketName, Key: objectName }));
+    if (response.ContentLength === undefined) throw new Error("Stored file size unavailable");
+    return response.ContentLength;
+  }
+
+  async copyObject(source: string, destination: string): Promise<void> {
+    const client = this.ensureClient();
+    const metadata = await client.send(new HeadObjectCommand({ Bucket: bucketName, Key: source }));
+    const copySource = `${bucketName}/${source.split("/").map(encodeURIComponent).join("/")}`;
+    const size = metadata.ContentLength ?? 0;
+    if (size <= 5 * 1024 ** 3) {
+      await client.send(
+        new CopyObjectCommand({
+          Bucket: bucketName,
+          Key: destination,
+          CopySource: copySource,
+          CopySourceIfMatch: metadata.ETag,
+        })
+      );
+      return;
+    }
+    const uploadId = await this.createMultipartUpload(destination);
+    try {
+      const parts: Array<{ PartNumber: number; ETag: string }> = [];
+      const partSize = Math.max(512 * 1024 ** 2, Math.ceil(size / 10000));
+      for (let start = 0; start < size; start += partSize) {
+        const partNumber = parts.length + 1;
+        const result = await client.send(
+          new UploadPartCopyCommand({
+            Bucket: bucketName,
+            Key: destination,
+            UploadId: uploadId,
+            PartNumber: partNumber,
+            CopySource: copySource,
+            CopySourceIfMatch: metadata.ETag,
+            CopySourceRange: `bytes=${start}-${Math.min(start + partSize, size) - 1}`,
+          })
+        );
+        if (!result.CopyPartResult?.ETag) throw new Error("Storage copy did not return an ETag");
+        parts.push({ PartNumber: partNumber, ETag: result.CopyPartResult.ETag });
+      }
+      await this.completeMultipartUpload(destination, uploadId, parts);
+    } catch (error) {
+      await this.abortMultipartUpload(destination, uploadId).catch(() => undefined);
+      throw error;
+    }
   }
 
   async fileExists(objectName: string): Promise<boolean> {

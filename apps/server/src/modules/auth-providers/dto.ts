@@ -74,7 +74,7 @@ export const UpdateAuthProviderSchema = z
     scope: z.string().optional(),
     adminEmailDomains: z.string().optional(),
     clientId: z.string().min(1).optional(),
-    clientSecret: z.string().min(1).optional(),
+    clientSecret: z.string().optional(),
     issuerUrl: z.string().url().optional(),
     authorizationEndpoint: z.string().optional(),
     tokenEndpoint: z.string().optional(),

@@ -128,7 +128,7 @@ export class ShareService {
       throw new Error("Share has expired");
     }
 
-    if (share.security?.maxViews && share.views >= share.security.maxViews) {
+    if (share.security?.maxViews != null && share.views >= share.security.maxViews) {
       throw new Error("Share has reached maximum views");
     }
 
@@ -143,7 +143,11 @@ export class ShareService {
       }
     }
 
-    await this.shareRepository.incrementViews(shareId);
+    const admitted = await prisma.share.updateMany({
+      where: { id: shareId, ...(share.security?.maxViews != null ? { views: { lt: share.security.maxViews } } : {}) },
+      data: { views: { increment: 1 } },
+    });
+    if (admitted.count !== 1) throw new Error("Share has reached maximum views");
 
     const updatedShare = await this.shareRepository.findShareById(shareId);
     return ShareResponseSchema.parse(await this.formatShareResponse(updatedShare));

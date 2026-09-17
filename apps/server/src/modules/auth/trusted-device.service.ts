@@ -3,52 +3,30 @@ import crypto from "node:crypto";
 import { prisma } from "../../shared/prisma";
 
 export class TrustedDeviceService {
-  private generateDeviceHash(userAgent: string, ipAddress: string): string {
-    const deviceInfo = `${userAgent}-${ipAddress}`;
-    return crypto.createHash("sha256").update(deviceInfo).digest("hex");
-  }
-
-  async isDeviceTrusted(userId: string, userAgent: string, ipAddress: string): Promise<boolean> {
-    const deviceHash = this.generateDeviceHash(userAgent, ipAddress);
-
-    const trustedDevice = await prisma.trustedDevice.findFirst({
-      where: {
-        userId,
-        deviceHash,
-        expiresAt: {
-          gt: new Date(),
-        },
-      },
+  async isDeviceTrusted(userId: string, token: string): Promise<boolean> {
+    if (!/^[a-f0-9]{64}$/.test(token)) return false;
+    const deviceHash = crypto.createHash("sha256").update(token).digest("hex");
+    const device = await prisma.trustedDevice.findFirst({
+      where: { userId, deviceHash, expiresAt: { gt: new Date() } },
     });
-
-    return !!trustedDevice;
+    if (!device) return false;
+    await prisma.trustedDevice.update({ where: { id: device.id }, data: { lastUsedAt: new Date() } });
+    return true;
   }
 
-  async addTrustedDevice(userId: string, userAgent: string, ipAddress: string, deviceName?: string): Promise<void> {
-    const deviceHash = this.generateDeviceHash(userAgent, ipAddress);
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30); // 30 dias
-
-    await prisma.trustedDevice.upsert({
-      where: {
-        deviceHash,
-      },
-      create: {
+  async addTrustedDevice(userId: string, userAgent: string, ipAddress: string): Promise<string> {
+    const token = crypto.randomBytes(32).toString("hex");
+    await prisma.trustedDevice.create({
+      data: {
         userId,
-        deviceHash,
-        deviceName,
+        deviceHash: crypto.createHash("sha256").update(token).digest("hex"),
         userAgent,
         ipAddress,
-        expiresAt,
-        lastUsedAt: new Date(),
-      },
-      update: {
-        expiresAt,
-        userAgent,
-        ipAddress,
+        expiresAt: new Date(Date.now() + 30 * 86400000),
         lastUsedAt: new Date(),
       },
     });
+    return token;
   }
 
   async cleanupExpiredDevices(): Promise<void> {
@@ -91,19 +69,5 @@ export class TrustedDeviceService {
       },
     });
     return { count: result.count };
-  }
-
-  async updateLastUsed(userId: string, userAgent: string, ipAddress: string): Promise<void> {
-    const deviceHash = this.generateDeviceHash(userAgent, ipAddress);
-
-    await prisma.trustedDevice.updateMany({
-      where: {
-        userId,
-        deviceHash,
-      },
-      data: {
-        lastUsedAt: new Date(),
-      },
-    });
   }
 }

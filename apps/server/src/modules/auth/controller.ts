@@ -9,6 +9,7 @@ import {
   RequestPasswordResetSchema,
 } from "./dto";
 import { AuthService } from "./service";
+import { TrustedDeviceService } from "./trusted-device.service";
 
 export class AuthController {
   private authService = new AuthService();
@@ -28,7 +29,7 @@ export class AuthController {
     try {
       const input = LoginSchema.parse(request.body);
       const { userAgent, ipAddress } = this.getClientInfo(request);
-      const result = await this.authService.login(input, userAgent, ipAddress);
+      const result = await this.authService.login(input, userAgent, ipAddress, request.cookies["trusted-device"]);
 
       if ("requiresTwoFactor" in result) {
         return reply.send(result);
@@ -62,9 +63,20 @@ export class AuthController {
         input.token,
         input.rememberDevice,
         userAgent,
-        ipAddress
+        ipAddress,
+        input.challengeId
       );
 
+      if (input.rememberDevice) {
+        const deviceToken = await new TrustedDeviceService().addTrustedDevice(user.id, userAgent, ipAddress);
+        reply.setCookie("trusted-device", deviceToken, {
+          httpOnly: true,
+          secure: env.SECURE_SITE === "true",
+          sameSite: "strict",
+          path: "/",
+          maxAge: 30 * 86400,
+        });
+      }
       const token = await request.jwtSign({
         userId: user.id,
         isAdmin: user.isAdmin,
@@ -90,8 +102,8 @@ export class AuthController {
 
   async requestPasswordReset(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { email, origin } = RequestPasswordResetSchema.parse(request.body);
-      await this.authService.requestPasswordReset(email, origin);
+      const { email } = RequestPasswordResetSchema.parse(request.body);
+      await this.authService.requestPasswordReset(email);
       return reply.send({
         message: "If an account exists with this email, a password reset link will be sent.",
       });

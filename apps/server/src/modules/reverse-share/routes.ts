@@ -245,6 +245,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           200: z.object({
             url: z.string().describe("Presigned URL for file upload"),
             expiresIn: z.number().describe("URL expiration time in seconds"),
+            objectName: z.string(),
           }),
           401: z.object({ error: z.string() }),
           403: z.object({ error: z.string() }),
@@ -274,6 +275,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           200: z.object({
             url: z.string().describe("Presigned URL for file upload"),
             expiresIn: z.number().describe("URL expiration time in seconds"),
+            objectName: z.string(),
           }),
           401: z.object({ error: z.string() }),
           403: z.object({ error: z.string() }),
@@ -599,7 +601,8 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           alias: z.string().describe("Alias of the reverse share"),
         }),
         body: z.object({
-          filename: z.string().min(1).describe("The filename without extension"),
+          filename: z.string().min(1).max(255).describe("The filename without extension"),
+          size: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
           extension: z.string().min(1).describe("The file extension"),
         }),
         response: {

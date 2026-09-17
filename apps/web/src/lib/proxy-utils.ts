@@ -6,6 +6,7 @@ import { NextRequest } from "next/server";
  * @returns The real client IP address
  */
 export function getClientIP(req: NextRequest): string {
+  if (process.env.TRUST_CLIENT_IP_HEADERS !== "true") return "unknown";
   const forwardedFor = req.headers.get("x-forwarded-for");
   const realIP = req.headers.get("x-real-ip");
   const cfConnectingIP = req.headers.get("cf-connecting-ip");

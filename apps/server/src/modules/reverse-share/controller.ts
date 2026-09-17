@@ -192,9 +192,9 @@ export class ReverseShareController {
     try {
       const { id } = request.params as { id: string };
       const password = getSharePassword(request);
-      const { objectName } = request.body as { objectName: string };
+      const metadata = request.body as { filename: string; extension: string; size: number };
 
-      const result = await this.reverseShareService.getPresignedUrl(id, objectName, password);
+      const result = await this.reverseShareService.getPresignedUrl(id, metadata, password);
       return reply.send(result);
     } catch (error: any) {
       console.error("Get Presigned URL Error:", error);
@@ -218,9 +218,9 @@ export class ReverseShareController {
     try {
       const { alias } = request.params as { alias: string };
       const password = getSharePassword(request);
-      const { objectName } = request.body as { objectName: string };
+      const metadata = request.body as { filename: string; extension: string; size: number };
 
-      const result = await this.reverseShareService.getPresignedUrlByAlias(alias, objectName, password);
+      const result = await this.reverseShareService.getPresignedUrlByAlias(alias, metadata, password);
       return reply.send(result);
     } catch (error: any) {
       console.error("Get Presigned URL by Alias Error:", error);
@@ -492,13 +492,19 @@ export class ReverseShareController {
     try {
       const { alias } = request.params as { alias: string };
       const password = getSharePassword(request);
-      const { filename, extension } = request.body as { filename: string; extension: string };
+      const { filename, extension, size } = request.body as { filename: string; extension: string; size: number };
 
       if (!filename || !extension) {
         return reply.status(400).send({ error: "filename and extension are required" });
       }
 
-      const result = await this.reverseShareService.createMultipartUploadByAlias(alias, filename, extension, password);
+      const result = await this.reverseShareService.createMultipartUploadByAlias(
+        alias,
+        filename,
+        extension,
+        password,
+        size
+      );
       return reply.status(200).send({
         uploadId: result.uploadId,
         objectName: result.objectName,

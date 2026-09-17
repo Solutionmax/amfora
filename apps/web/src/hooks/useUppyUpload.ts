@@ -16,7 +16,11 @@ import {
  * Custom multipart upload functions for non-authenticated uploads (e.g., reverse shares)
  */
 export interface CustomMultipartFunctions {
-  createMultipartUpload: (filename: string, extension: string) => Promise<{ uploadId: string; objectName: string }>;
+  createMultipartUpload: (
+    filename: string,
+    extension: string,
+    size: number
+  ) => Promise<{ uploadId: string; objectName: string }>;
   getMultipartPartUrl: (uploadId: string, objectName: string, partNumber: string) => Promise<{ url: string }>;
   completeMultipartUpload: (
     uploadId: string,
@@ -51,7 +55,8 @@ export interface UseUppyUploadOptions {
    */
   getPresignedUrl: (
     objectName: string,
-    extension: string
+    extension: string,
+    file: File
   ) => Promise<{ url: string; method: string; actualObjectName?: string }>;
 
   /**
@@ -164,7 +169,7 @@ export function useUppyUpload(options: UseUppyUploadOptions) {
 
           // 3. Get presigned URL
           const extension = (file.name || "").split(".").pop() || "";
-          const result = await getPresignedUrlRef.current(objectName, extension);
+          const result = await getPresignedUrlRef.current(objectName, extension, file.data as File);
 
           // Use actualObjectName from backend if provided
           const finalObjectName = result.actualObjectName || objectName;
@@ -208,7 +213,7 @@ export function useUppyUpload(options: UseUppyUploadOptions) {
           let response;
           if (customMultipartRef.current) {
             // Use custom multipart functions (e.g., for reverse shares)
-            response = await customMultipartRef.current.createMultipartUpload(filename, extension);
+            response = await customMultipartRef.current.createMultipartUpload(filename, extension, file.size || 0);
           } else {
             // Use default authenticated multipart upload
             response = (

@@ -35,7 +35,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ shar
   const res = new NextResponse(apiRes.body, {
     status: apiRes.status,
     headers: {
-      "Content-Type": apiRes.headers.get("Content-Type") || "application/zip",
+      "Content-Type": apiRes.headers.get("Content-Type") || "application/json",
       "Content-Length": apiRes.headers.get("Content-Length") || "",
       "Content-Disposition": apiRes.headers.get("Content-Disposition") || "",
       "Accept-Ranges": apiRes.headers.get("Accept-Ranges") || "",

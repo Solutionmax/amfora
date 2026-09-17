@@ -9,8 +9,8 @@ export class FileService {
     this.storageProvider = new S3StorageProvider();
   }
 
-  async getPresignedPutUrl(objectName: string, expires: number = 3600): Promise<string> {
-    return await this.storageProvider.getPresignedPutUrl(objectName, expires);
+  async getPresignedPutUrl(objectName: string, expires: number = 3600, size?: number): Promise<string> {
+    return await this.storageProvider.getPresignedPutUrl(objectName, expires, size);
   }
 
   async getPresignedGetUrl(objectName: string, expires: number = 3600, fileName?: string): Promise<string> {
@@ -24,6 +24,14 @@ export class FileService {
       console.error("Erro no removeObject:", err);
       throw err;
     }
+  }
+
+  async getObjectSize(objectName: string): Promise<number> {
+    return this.storageProvider.getObjectSize(objectName);
+  }
+
+  async copyObject(source: string, destination: string): Promise<void> {
+    return this.storageProvider.copyObject(source, destination);
   }
 
   async getObjectStream(objectName: string): Promise<NodeJS.ReadableStream> {

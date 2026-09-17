@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { getSharePassword } from "../../shared/share-password";
+import { grantShareDownload } from "../file/share-download-grant";
 import {
   CreateShareSchema,
   UpdateShareItemsSchema,
@@ -62,6 +63,7 @@ export class ShareController {
       }
 
       const share = await this.shareService.getShare(shareId, password, userId);
+      await grantShareDownload(reply, share.id);
       return reply.send({ share });
     } catch (error: any) {
       if (error.message === "Share not found") {
@@ -261,6 +263,7 @@ export class ShareController {
       const password = getSharePassword(request);
 
       const share = await this.shareService.getShareByAlias(alias, password);
+      await grantShareDownload(reply, share.id);
       return reply.send({ share });
     } catch (error: any) {
       if (error.message === "Share not found") {

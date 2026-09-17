@@ -10,15 +10,30 @@ export async function authProvidersRoutes(fastify: FastifyInstance) {
 
   const adminPreValidation = async (request: any, reply: any) => {
     try {
-      const usersCount = await prisma.user.count();
+      await request.jwtVerify();
+    } catch (err) {
+      console.error("Admin authentication error:", err);
+      return reply.status(401).send({
+        success: false,
+        error: "Unauthorized: a valid token is required to access this resource.",
+      });
+    }
 
-      if (usersCount <= 1) {
-        return;
+    try {
+      const userId = request.user?.userId;
+      if (!userId) {
+        return reply.status(401).send({
+          success: false,
+          error: "Unauthorized: a valid token is required to access this resource.",
+        });
       }
 
-      await request.jwtVerify();
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { isAdmin: true, isActive: true },
+      });
 
-      if (!request.user.isAdmin) {
+      if (!user?.isActive || !user.isAdmin) {
         return reply.status(403).send({
           success: false,
           error: "Access restricted to administrators",
@@ -26,9 +41,9 @@ export async function authProvidersRoutes(fastify: FastifyInstance) {
       }
     } catch (err) {
       console.error("Admin validation error:", err);
-      return reply.status(401).send({
+      return reply.status(500).send({
         success: false,
-        error: "Unauthorized: a valid token is required to access this resource.",
+        error: "Unable to validate administrator access",
       });
     }
   };

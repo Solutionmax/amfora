@@ -44,7 +44,12 @@ export async function buildApp() {
     connectionTimeout: 0,
     keepAliveTimeout: envTimeoutOverrides.keepAliveTimeout,
     requestTimeout: envTimeoutOverrides.requestTimeout,
-    trustProxy: process.env.TRUST_PROXY !== "false",
+    trustProxy:
+      process.env.TRUST_PROXY && !["true", "false"].includes(process.env.TRUST_PROXY)
+        ? process.env.TRUST_PROXY.split(",")
+            .map((value) => value.trim())
+            .filter(Boolean)
+        : false,
     maxParamLength: 500,
     onProtoPoisoning: "error",
     onConstructorPoisoning: "error",

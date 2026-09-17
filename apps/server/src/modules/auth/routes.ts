@@ -49,6 +49,7 @@ export async function authRoutes(app: FastifyInstance) {
               }),
             }),
             z.object({
+              challengeId: z.string(),
               requiresTwoFactor: z.boolean().describe("Whether 2FA is required"),
               userId: z.string().describe("User ID for 2FA verification"),
               message: z.string().describe("2FA required message"),

@@ -20,6 +20,7 @@ const envSchema = z.object({
 
   // Application configuration
   PRESIGNED_URL_EXPIRATION: z.string().optional().default("3600"),
+  APP_URL: z.string().url().optional(),
   SECURE_SITE: z.union([z.literal("true"), z.literal("false")]).default("false"),
   STORAGE_URL: z.string().optional(), // Storage URL for internal storage presigned URLs (required when ENABLE_S3=false, e.g., https://syrg.amfora.com or http://192.168.1.100:9379)
   DATABASE_URL: z.string().optional().default("file:/app/server/prisma/amfora.db"),

@@ -54,7 +54,6 @@ export interface LoginBody {
 
 export interface RequestPasswordResetBody {
   email: string;
-  origin: string;
 }
 
 export interface ResetPasswordBody {
@@ -71,7 +70,7 @@ export interface AuthProvider {
   enabled: boolean;
   issuerUrl?: string;
   clientId?: string;
-  clientSecret?: string;
+  hasClientSecret: boolean;
   scope?: string;
   autoRegister: boolean;
   adminEmailDomains?: string;

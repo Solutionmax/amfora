@@ -21,7 +21,7 @@ export interface AuthProvider {
   enabled: boolean;
   issuerUrl?: string;
   clientId?: string;
-  clientSecret?: string;
+  hasClientSecret: boolean;
   scope?: string;
   autoRegister: boolean;
   adminEmailDomains?: string;
@@ -58,7 +58,7 @@ export function EditProviderForm({
     icon: savedData.icon || provider.icon || "FaCog",
     issuerUrl: savedData.issuerUrl || provider.issuerUrl || "",
     clientId: savedData.clientId || provider.clientId || "",
-    clientSecret: savedData.clientSecret || provider.clientSecret || "",
+    clientSecret: savedData.clientSecret || "",
     scope: savedData.scope || provider.scope || "",
     autoRegister: savedData.autoRegister !== undefined ? savedData.autoRegister : provider.autoRegister,
     adminEmailDomains: savedData.adminEmailDomains || provider.adminEmailDomains || "",
@@ -363,7 +363,7 @@ export function EditProviderForm({
           />
         </div>
         <div>
-          <Label className="mb-2 block">{t("authProviders.form.clientSecret")} *</Label>
+          <Label className="mb-2 block">{t("authProviders.form.clientSecret")}</Label>
           <div className="relative">
             <Input
               type={showClientSecret ? "text" : "password"}
