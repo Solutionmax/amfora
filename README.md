@@ -84,7 +84,7 @@ A share presents its files and delivery rules in a focused download view.
 A receive link gives outside collaborators a simple upload form with the limits
 set by its owner.
 
-![Amfora sign-in](site/assets/screenshots/login.webp?v=blue-post-details-20260917)
+![Amfora sign-in](site/assets/screenshots/login.webp?v=login-post-20260917)
 
 The sign-in screen supports password authentication, password recovery, and
 two-factor authentication when it is enabled for the account.
