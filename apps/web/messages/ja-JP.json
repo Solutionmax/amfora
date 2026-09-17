@@ -665,6 +665,12 @@
     },
     "pageTitle": "プロフィール"
   },
+  "publicTransfer": {
+    "downloadTitle": "素敵なものを、\nあなたへ。",
+    "uploadTitle": "アイデアが\n広がる場所。",
+    "downloadCaption": "あの人の世界から、あなたの世界へ。",
+    "uploadCaption": "素晴らしいアイデアは、分かち合うことから。"
+  },
   "qrCodeModal": {
     "title": "QRコードを共有",
     "description": "このQRコードをスキャンしてリンクにアクセスしてください。",

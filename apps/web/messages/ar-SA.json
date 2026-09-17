@@ -665,6 +665,12 @@
     },
     "pageTitle": "الملف الشخصي"
   },
+  "publicTransfer": {
+    "downloadTitle": "أشياء جميلة،\nمن أجلك.",
+    "uploadTitle": "مساحة\nلأفكارك.",
+    "downloadCaption": "من عالمهم إلى عالمك.",
+    "uploadCaption": "كل فكرة عظيمة تبدأ بالمشاركة."
+  },
   "qrCodeModal": {
     "title": "مشاركة رمز QR",
     "description": "امسح رمز QR هذا للوصول إلى الرابط.",

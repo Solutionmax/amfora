@@ -665,6 +665,12 @@
     },
     "pageTitle": "Profil"
   },
+  "publicTransfer": {
+    "downloadTitle": "Dobre rzeczy,\ndla Ciebie.",
+    "uploadTitle": "Miejsce na\nTwoje pomysły.",
+    "downloadCaption": "Z ich świata do Twojego.",
+    "uploadCaption": "Każdy wielki pomysł zaczyna się od dzielenia."
+  },
   "qrCodeModal": {
     "title": "Udostępnij kod QR",
     "description": "Skanuj ten kod QR, aby uzyskać dostęp do linku.",

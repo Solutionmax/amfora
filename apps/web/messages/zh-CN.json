@@ -665,6 +665,12 @@
     },
     "pageTitle": "个人资料"
   },
+  "publicTransfer": {
+    "downloadTitle": "美好事物，\n为你送达。",
+    "uploadTitle": "给创意\n留点空间。",
+    "downloadCaption": "从他们的世界，来到你的世界。",
+    "uploadCaption": "每个好想法，都从分享开始。"
+  },
   "qrCodeModal": {
     "title": "分享QR Code",
     "description": "扫描此QR Code以访问链接。",

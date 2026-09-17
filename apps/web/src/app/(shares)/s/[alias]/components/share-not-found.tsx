@@ -8,8 +8,8 @@ export function ShareNotFound() {
   const t = useTranslations();
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-1 items-center justify-center py-12">
-      <div className="w-full rounded-[1.75rem] border bg-card p-8 text-center shadow-sm sm:p-12">
+    <div className="flex w-full items-center justify-center py-6">
+      <div className="w-full text-center">
         <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
           <IconLock className="size-7 text-destructive" />
         </div>

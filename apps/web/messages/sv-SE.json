@@ -665,6 +665,12 @@
     },
     "pageTitle": "Profil"
   },
+  "publicTransfer": {
+    "downloadTitle": "Fina saker,\ntill dig.",
+    "uploadTitle": "Plats för\ndina idéer.",
+    "downloadCaption": "Från deras värld till din.",
+    "uploadCaption": "Varje stor idé börjar med att dela."
+  },
   "qrCodeModal": {
     "title": "Dela QR-kod",
     "description": "Skanna den här QR-koden för att komma åt länken.",

@@ -1,7 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { IconCheck, IconFile, IconMail, IconUpload, IconUser, IconX } from "@tabler/icons-react";
+import {
+  IconArrowUpRight,
+  IconCheck,
+  IconFile,
+  IconFileText,
+  IconFileTypePdf,
+  IconMail,
+  IconUpload,
+  IconUser,
+  IconX,
+} from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
@@ -12,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
-import { useUppyUpload } from "@/hooks/useUppyUpload";
+import { useUppyUpload, type FileUploadState } from "@/hooks/useUppyUpload";
 import {
   abortMultipartUploadByAlias,
   completeMultipartUploadByAlias,
@@ -21,6 +31,7 @@ import {
   getPresignedUrlForUploadByAlias,
   registerFileUploadByAlias,
 } from "@/http/endpoints";
+import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/utils/format-file-size";
 import { UPLOAD_CONFIG } from "../constants";
 import { FileUploadSectionProps } from "../types";
@@ -276,8 +287,8 @@ export function FileUploadSection({
   const renderFileStatusBadge = (fileStatus: string) => {
     if (fileStatus === "success") {
       return (
-        <Badge variant="default" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
-          <IconCheck className="h-3 w-3 mr-1" />
+        <Badge variant="default" className="gap-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+          <IconCheck className="size-3" />
           {t("reverseShares.upload.fileList.statusUploaded")}
         </Badge>
       );
@@ -290,74 +301,104 @@ export function FileUploadSection({
     return null;
   };
 
-  const renderFileItem = (upload: any) => (
-    <div
-      key={upload.id}
-      className="flex min-w-0 flex-wrap items-center gap-3 rounded-xl border bg-background p-3 sm:flex-nowrap"
-    >
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
-        <IconFile className="size-4" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium">{upload.file.name}</p>
-        <p className="text-xs text-muted-foreground">{formatFileSize(upload.file.size)}</p>
-        {upload.status === "uploading" && <Progress value={upload.progress} className="mt-2 h-2" />}
-        {upload.status === "error" && upload.error && <p className="mt-1 text-xs text-destructive">{upload.error}</p>}
-      </div>
-      <div className="ml-auto flex shrink-0 items-center gap-2">
-        {renderFileStatusBadge(upload.status)}
-        {upload.status === "pending" && (
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            onClick={() => removeFile(upload.id)}
-            disabled={isUploading}
-            aria-label={t("reverseShares.card.delete")}
-            title={t("reverseShares.card.delete")}
-          >
-            <IconX className="h-4 w-4" />
-          </Button>
-        )}
-        {upload.status === "error" && (
-          <div className="flex gap-1">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => retryUpload(upload.id)}
-              disabled={isUploading}
-              aria-label={t("reverseShares.upload.fileList.retry")}
-              title={t("reverseShares.upload.errors.retry")}
-            >
-              <IconUpload className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              onClick={() => removeFile(upload.id)}
-              disabled={isUploading}
-              aria-label={t("reverseShares.card.delete")}
-              title={t("reverseShares.card.delete")}
-            >
-              <IconX className="h-4 w-4" />
-            </Button>
+  const getFileIcon = (fileName: string) => {
+    if (fileName.toLowerCase().endsWith(".pdf")) return IconFileTypePdf;
+    if (fileName.includes(".")) return IconFileText;
+    return IconFile;
+  };
+
+  const renderFileItem = (upload: FileUploadState) => {
+    const FileIcon = getFileIcon(upload.file.name);
+
+    return (
+      <div
+        key={upload.id}
+        className="group min-w-0 rounded-xl border border-border/80 bg-background/80 p-3 transition-colors hover:border-primary/35"
+      >
+        <div className="flex min-w-0 items-start gap-3">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <FileIcon className="size-4" />
+          </span>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <p className="truncate text-sm font-semibold">{upload.file.name}</p>
+            <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">{formatFileSize(upload.file.size)}</p>
+            {upload.status === "uploading" && (
+              <Progress aria-label={upload.file.name} value={upload.progress} className="mt-2 h-1.5" />
+            )}
+            {upload.status === "error" && upload.error && (
+              <p className="mt-1 break-words text-xs text-destructive">{upload.error}</p>
+            )}
           </div>
-        )}
+          <div className="flex shrink-0 items-center gap-1">
+            {renderFileStatusBadge(upload.status)}
+            {upload.status === "pending" && (
+              <Button
+                size="sm"
+                variant="ghost"
+                type="button"
+                onClick={() => removeFile(upload.id)}
+                disabled={isUploading}
+                aria-label={t("reverseShares.card.delete")}
+                title={t("reverseShares.card.delete")}
+              >
+                <IconX className="size-4" />
+              </Button>
+            )}
+            {upload.status === "error" && (
+              <>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  type="button"
+                  onClick={() => retryUpload(upload.id)}
+                  disabled={isUploading}
+                  aria-label={t("reverseShares.upload.fileList.retry")}
+                  title={t("reverseShares.upload.errors.retry")}
+                >
+                  <IconUpload className="size-4" />
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => removeFile(upload.id)}
+                  disabled={isUploading}
+                  aria-label={t("reverseShares.card.delete")}
+                  title={t("reverseShares.card.delete")}
+                >
+                  <IconX className="size-4" />
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
-    <div className="space-y-6">
-      <div {...getRootProps()} className={getDropzoneStyles()}>
-        <input {...getInputProps()} />
-        <div className="flex items-start gap-4">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <IconUpload className="size-5" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold sm:text-lg">
+    <div className="w-full">
+      <div className="space-y-5">
+        <div
+          {...getRootProps()}
+          className={cn(
+            getDropzoneStyles(),
+            "group relative overflow-hidden border-primary/25 bg-primary/[0.035] p-5 text-center hover:border-primary hover:bg-primary/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:p-6"
+          )}
+        >
+          <input {...getInputProps()} />
+          <div className="pointer-events-none mx-auto flex max-w-xs flex-col items-center">
+            <span className="relative mb-4 flex h-16 w-20 items-center justify-center text-primary">
+              <span className="absolute left-1 top-3 h-11 w-9 -rotate-12 rounded-lg border border-primary/25 bg-primary/10" />
+              <span className="absolute right-1 top-3 h-11 w-9 rotate-12 rounded-lg border border-primary/35 bg-primary/15" />
+              <span className="relative flex h-12 w-10 items-center justify-center rounded-lg border-2 border-primary bg-card shadow-sm transition-transform group-hover:-translate-y-1 motion-reduce:transform-none">
+                <IconFileText className="size-5" />
+                <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <IconUpload className="size-2.5" />
+                </span>
+              </span>
+            </span>
+            <h3 className="text-base font-semibold leading-6">
               {isDragActive
                 ? t("reverseShares.upload.fileDropzone.dragActive")
                 : t("reverseShares.upload.fileDropzone.dragInactive")}
@@ -365,93 +406,109 @@ export function FileUploadSection({
             <div className="mt-2">{renderFileRestrictions()}</div>
           </div>
         </div>
-      </div>
 
-      {fileUploads.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="font-display font-bold">{t("reverseShares.upload.fileList.title")}</h4>
-          {fileUploads.map(renderFileItem)}
-        </div>
-      )}
-
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {reverseShare.nameFieldRequired !== "HIDDEN" && (
-            <div className="space-y-2">
-              <Label htmlFor="name">
-                <IconUser className="mr-1 inline size-4 text-primary" />
-                {reverseShare.nameFieldRequired === "OPTIONAL"
-                  ? t("reverseShares.upload.form.nameLabelOptional")
-                  : t("reverseShares.upload.form.nameLabel")}
-                {reverseShare.nameFieldRequired === "REQUIRED" && <span className="ml-1 text-destructive">*</span>}
-              </Label>
-              <Input
-                id="name"
-                placeholder={t("reverseShares.upload.form.namePlaceholder")}
-                value={uploaderName}
-                onChange={(e) => setUploaderName(e.target.value)}
-                disabled={isUploading}
-                required={reverseShare.nameFieldRequired === "REQUIRED"}
-              />
+        {fileUploads.length > 0 && (
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between gap-3">
+              <h4 className="font-display text-sm font-bold">{t("reverseShares.upload.fileList.title")}</h4>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                {fileUploads.length}
+              </span>
             </div>
-          )}
-          {reverseShare.emailFieldRequired !== "HIDDEN" && (
-            <div className="space-y-2">
-              <Label htmlFor="email">
-                <IconMail className="mr-1 inline size-4 text-primary" />
-                {reverseShare.emailFieldRequired === "OPTIONAL"
-                  ? t("reverseShares.upload.form.emailLabelOptional")
-                  : t("reverseShares.upload.form.emailLabel")}
-                {reverseShare.emailFieldRequired === "REQUIRED" && <span className="ml-1 text-destructive">*</span>}
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder={t("reverseShares.upload.form.emailPlaceholder")}
-                value={uploaderEmail}
-                onChange={(e) => setUploaderEmail(e.target.value)}
-                disabled={isUploading}
-                required={reverseShare.emailFieldRequired === "REQUIRED"}
-              />
+            <div className="space-y-2">{fileUploads.map(renderFileItem)}</div>
+          </div>
+        )}
+
+        <div className="space-y-4 border-t border-border/70 pt-5">
+          <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2">
+            {reverseShare.nameFieldRequired !== "HIDDEN" && (
+              <div className="space-y-1.5">
+                <Label className="text-xs" htmlFor="name">
+                  <IconUser className="mr-1 inline size-3.5 text-primary" />
+                  {reverseShare.nameFieldRequired === "OPTIONAL"
+                    ? t("reverseShares.upload.form.nameLabelOptional")
+                    : t("reverseShares.upload.form.nameLabel")}
+                  {reverseShare.nameFieldRequired === "REQUIRED" && <span className="ml-1 text-destructive">*</span>}
+                </Label>
+                <Input
+                  id="name"
+                  placeholder={t("reverseShares.upload.form.namePlaceholder")}
+                  value={uploaderName}
+                  onChange={(e) => setUploaderName(e.target.value)}
+                  disabled={isUploading}
+                  required={reverseShare.nameFieldRequired === "REQUIRED"}
+                />
+              </div>
+            )}
+            {reverseShare.emailFieldRequired !== "HIDDEN" && (
+              <div className="space-y-1.5">
+                <Label className="text-xs" htmlFor="email">
+                  <IconMail className="mr-1 inline size-3.5 text-primary" />
+                  {reverseShare.emailFieldRequired === "OPTIONAL"
+                    ? t("reverseShares.upload.form.emailLabelOptional")
+                    : t("reverseShares.upload.form.emailLabel")}
+                  {reverseShare.emailFieldRequired === "REQUIRED" && <span className="ml-1 text-destructive">*</span>}
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder={t("reverseShares.upload.form.emailPlaceholder")}
+                  value={uploaderEmail}
+                  onChange={(e) => setUploaderEmail(e.target.value)}
+                  disabled={isUploading}
+                  required={reverseShare.emailFieldRequired === "REQUIRED"}
+                />
+              </div>
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs" htmlFor="description">
+              {t("reverseShares.upload.form.descriptionLabel")}
+            </Label>
+            <Textarea
+              id="description"
+              placeholder={t("reverseShares.upload.form.descriptionPlaceholder")}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              disabled={isUploading}
+              rows={UPLOAD_CONFIG.TEXTAREA_ROWS}
+              className="min-h-0 resize-y"
+            />
+          </div>
+        </div>
+
+        <Button
+          type="button"
+          onClick={handleUpload}
+          disabled={!canUpload}
+          className="h-12 w-full justify-between rounded-xl px-4"
+          size="lg"
+          variant="default"
+        >
+          <span>
+            {isUploading
+              ? t("reverseShares.upload.form.uploading")
+              : t("reverseShares.upload.form.uploadButton", { count: fileUploads.length })}
+          </span>
+          <IconArrowUpRight className="size-5" />
+        </Button>
+
+        {allFilesProcessed && hasSuccessfulUploads && (
+          <div className="flex items-start gap-3 rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-3.5 text-left">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+              <IconCheck className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                {t("reverseShares.upload.success.title")}
+              </p>
+              <p className="mt-0.5 text-xs leading-5 text-emerald-700/80 dark:text-emerald-300/80">
+                {t("reverseShares.upload.success.description")}
+              </p>
             </div>
-          )}
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="description">{t("reverseShares.upload.form.descriptionLabel")}</Label>
-          <Textarea
-            id="description"
-            placeholder={t("reverseShares.upload.form.descriptionPlaceholder")}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={isUploading}
-            rows={UPLOAD_CONFIG.TEXTAREA_ROWS}
-          />
-        </div>
+          </div>
+        )}
       </div>
-
-      <Button
-        type="button"
-        onClick={handleUpload}
-        disabled={!canUpload}
-        className="h-12 w-full rounded-lg"
-        size="lg"
-        variant="default"
-      >
-        {isUploading
-          ? t("reverseShares.upload.form.uploading")
-          : t("reverseShares.upload.form.uploadButton", { count: fileUploads.length })}
-      </Button>
-
-      {allFilesProcessed && hasSuccessfulUploads && (
-        <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-center">
-          <p className="font-medium text-emerald-700 dark:text-emerald-300">
-            {t("reverseShares.upload.success.title")}
-          </p>
-          <p className="mt-1 text-sm text-emerald-700/80 dark:text-emerald-300/80">
-            {t("reverseShares.upload.success.description")}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

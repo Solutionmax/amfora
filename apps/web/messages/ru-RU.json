@@ -665,6 +665,12 @@
     },
     "pageTitle": "Профиль"
   },
+  "publicTransfer": {
+    "downloadTitle": "Хорошие вещи,\nдля вас.",
+    "uploadTitle": "Место для\nваших идей.",
+    "downloadCaption": "Из их мира в ваш.",
+    "uploadCaption": "Великие идеи рождаются, когда ими делятся."
+  },
   "qrCodeModal": {
     "title": "Поделиться QR-кодом",
     "description": "Отсканируйте этот QR-код, чтобы получить доступ к ссылке.",

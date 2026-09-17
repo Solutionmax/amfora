@@ -665,6 +665,12 @@
     },
     "pageTitle": "प्रोफ़ाइल"
   },
+  "publicTransfer": {
+    "downloadTitle": "अच्छी चीज़ें,\nआपके लिए।",
+    "uploadTitle": "आपके विचारों\nके लिए जगह।",
+    "downloadCaption": "उनकी दुनिया से आपकी दुनिया तक।",
+    "uploadCaption": "हर बेहतरीन विचार की शुरुआत साझा करने से होती है।"
+  },
   "qrCodeModal": {
     "title": "QR कोड साझा करें",
     "description": "इस QR कोड को स्कैन करके लिंक तक पहुंच सकते हैं।",
