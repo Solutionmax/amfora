@@ -2,10 +2,7 @@ import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-/**
- * A compact identity strip above the transfer details. The file action stays
- * the visual focus; the amphora is supporting context.
- */
+/** Shared illustrated frame for public transfers, with a compact mobile cover. */
 export function Stage({
   object,
   caption,
@@ -18,24 +15,31 @@ export function Stage({
   className?: string;
 }) {
   return (
-    <div className={cn("mx-auto w-full max-w-4xl overflow-hidden rounded-[1.75rem] border bg-card", className)}>
-      <div className="relative flex items-center gap-4 border-b bg-secondary/35 px-5 py-3.5 text-foreground sm:px-6">
-        <div
-          className="pointer-events-none absolute -right-12 -top-16 size-40 rounded-full bg-primary/[0.08] blur-2xl"
+    <div
+      className={cn(
+        "mx-auto w-full max-w-4xl overflow-hidden rounded-[1.75rem] border bg-card shadow-[0_24px_80px_-36px_rgba(15,35,60,0.25)]",
+        className
+      )}
+    >
+      <div className="relative flex h-36 items-end overflow-hidden p-5 sm:h-48 sm:p-8">
+        <img
+          alt=""
           aria-hidden="true"
+          className="pointer-events-none absolute inset-0 size-full object-cover object-[center_65%]"
+          fetchPriority="high"
+          src="/art/terrace.jpg"
         />
-        <div className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-background">
-          {object}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+        <div className="relative flex items-center gap-3 rounded-2xl border border-white/25 bg-background/95 py-2 pl-2 pr-4 shadow-lg backdrop-blur-sm">
+          <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#12334d] text-white">
+            {object}
+          </div>
+          {caption && (
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-foreground">{caption}</p>
+          )}
         </div>
-
-        {caption && (
-          <p className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{caption}</p>
-        )}
       </div>
-
-      <div className="px-6 py-6 sm:px-10 sm:py-10">
-        <div className="w-full">{children}</div>
-      </div>
+      <div className="px-5 py-6 sm:px-10 sm:py-8">{children}</div>
     </div>
   );
 }
