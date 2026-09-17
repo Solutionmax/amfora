@@ -90,14 +90,13 @@ two-factor authentication when it is enabled for the account.
 
 ## Run the private source branch
 
-The repository is currently private. You need GitHub access, Git, and Docker
-with Compose and BuildKit; public release downloads are not yet available.
+The repository is currently private. You need authenticated GitHub access, curl, Git, Bash, and Docker
+with Compose and Buildx 0.30 or later. The installer checks these requirements,
+builds from source, and starts Amfora in a new `amfora` directory. It refuses
+existing installations; it does not install Docker or enable automatic updates.
 
 ```bash
-git clone --branch amfora https://github.com/raym0nz82/amfora.git
-cd amfora
-bash infra/build-docker.sh local
-docker compose up -d --no-build
+curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker
 ```
 
 Open <http://localhost:5487>. On a new database, the first account created
