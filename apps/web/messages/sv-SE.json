@@ -10,10 +10,6 @@
       "auth_failed": "Autentiseringen misslyckades. Försök igen."
     }
   },
-  "contextMenu": {
-    "newFolder": "Ny mapp",
-    "uploadFile": "Ladda upp fil"
-  },
   "authProviders": {
     "title": "Autentiseringsleverantörer",
     "description": "Konfigurera externa autentiseringsleverantörer för SSO",
@@ -158,7 +154,13 @@
     "share": "Dela",
     "search": "Söka",
     "copy": "Kopiera",
-    "copied": "Kopierade"
+    "copied": "Kopierade",
+    "invalidDate": "Ogiltigt datum",
+    "notAvailable": "Ej tillgängligt"
+  },
+  "contextMenu": {
+    "newFolder": "Ny mapp",
+    "uploadFile": "Ladda upp fil"
   },
   "createShare": {
     "title": "Skapa Share",
@@ -278,6 +280,18 @@
       "refresh": "Uppdatera kö"
     }
   },
+  "embedCode": {
+    "title": "Bädda in media",
+    "description": "Använd dessa koder för att bädda in detta media i forum, webbplatser eller andra plattformar",
+    "tabs": {
+      "directLink": "Direktlänk",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Direkt URL till mediafilen",
+    "htmlDescription": "Använd den här koden för att bädda in media i HTML-sidor",
+    "bbcodeDescription": "Använd den här koden för att bädda in media i forum som stöder BBCode"
+  },
   "emptyState": {
     "noFiles": "Inga filer har laddats upp ännu",
     "uploadFile": "Ladda upp fil"
@@ -294,7 +308,8 @@
     "Password verification required": "Lösenordsverifiering krävs",
     "Invalid two-factor authentication code": "Ogiltig tvåfaktorsautentiseringskod",
     "Two-factor authentication required": "Tvåfaktorsautentisering krävs",
-    "noUserData": "Inga användardata"
+    "noUserData": "Inga användardata",
+    "passwordAuthDisabled": "Inloggning med lösenord är inaktiverad på den här servern"
   },
   "fileActions": {
     "editFile": "Redigera fil",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "Tabell",
-      "grid": "Rutnät"
+      "grid": "Rutnät",
+      "label": "Vy"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Drivs av",
-    "kyanHomepage": "Kyantechs hemsida"
+    "kyanHomepage": "SolutionMAX hemsida"
   },
   "forgotPassword": {
     "emailLabel": "E-postadress",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Alternativet med öppen källkod till WeTransfer. Dela filer säkert, utan spårning eller begränsningar.",
+    "description": "Ladda upp, dela en länk och bestäm exakt hur länge den ska vara öppen. Körs på din egen server, utan någon mellanhand.",
     "documentation": "Dokumentation",
     "starOnGithub": "Stjärna på GitHub",
     "privacyMessage": "Byggd med integritet i åtanke. Dina filer är endast tillgängliga för de med delningslänken före uppladdning. För alltid gratis och öppen källkod.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Körs på din egen server",
+      "expiry": "Länkar upphör automatiskt",
+      "noTracking": "Ingen spårning, inga gränser"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "Inloggning",
     "or": "eller",
     "continueWithSSO": "Fortsätt med SSO",
-    "processing": "Bearbetar autentisering..."
+    "processing": "Bearbetar autentisering...",
+    "noAuthMethodsAvailable": "Ingen inloggningsmetod är tillgänglig. Be din administratör att aktivera en."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Skapa ett administratörskonto"
     }
   },
+  "registerWithInvite": {
+    "title": "Skapa ditt konto",
+    "description": "Fyll i informationen nedan för att skapa ditt konto",
+    "labels": {
+      "firstName": "Förnamn",
+      "firstNamePlaceholder": "Ange ditt förnamn",
+      "lastName": "Efternamn",
+      "lastNamePlaceholder": "Ange ditt efternamn",
+      "username": "Användarnamn",
+      "usernamePlaceholder": "Välj ett användarnamn",
+      "email": "E-post",
+      "emailPlaceholder": "Ange din e-post",
+      "password": "Lösenord",
+      "passwordPlaceholder": "Välj ett lösenord",
+      "confirmPassword": "Bekräfta lösenord",
+      "confirmPasswordPlaceholder": "Bekräfta ditt lösenord"
+    },
+    "buttons": {
+      "creating": "Skapar konto...",
+      "createAccount": "Skapa konto"
+    },
+    "validation": {
+      "firstNameRequired": "Förnamn krävs",
+      "lastNameRequired": "Efternamn krävs",
+      "usernameMinLength": "Användarnamnet måste vara minst 3 tecken",
+      "invalidEmail": "Ogiltig e-post",
+      "passwordMinLength": "Lösenordet måste vara minst 8 tecken",
+      "passwordsMatch": "Lösenorden måste matcha"
+    },
+    "messages": {
+      "success": "Kontot skapades framgångsrikt! Omdirigerar till inloggning...",
+      "redirecting": "Omdirigerar till inloggning..."
+    },
+    "errors": {
+      "invalidToken": "Fel med inbjudningslänk",
+      "tokenUsed": "Denna inbjudningslänk har redan använts",
+      "tokenExpired": "Denna inbjudningslänk har gått ut",
+      "usernameExists": "Användarnamnet finns redan",
+      "emailExists": "E-postadressen finns redan",
+      "createFailed": "Det gick inte att skapa konto. Försök igen."
+    },
+    "pageTitle": "Skapa konto"
+  },
   "resetPassword": {
     "pageTitle": "Återställ lösenord",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Skydda med lösenord",
       "layoutOptions": {
         "default": "Standard",
-        "wetransfer": "WeTransfer"
+        "vessel": "Amfora"
       },
       "noFilesLimit": "Ingen filgräns",
       "noSizeLimit": "Ingen storleksbegränsning",
@@ -1035,7 +1095,7 @@
         "description": "Hur uppladdningssidan kommer att se ut för användarna.",
         "options": {
           "default": "Standardlayout",
-          "wetransfer": "WeTransfer-stil"
+          "vessel": "Amfora-layout"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 fil delad} other {# filer delade}}"
     },
     "download": "Ladda ner",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# fil} other {# filer}}",
+    "breakSeal": "Bryt förseglingen",
+    "sealed": "Förseglad",
+    "opened": "Öppnad"
   },
   "shareActions": {
     "fileTitle": "Dela fil",
@@ -1467,7 +1527,8 @@
     "qrCode": "QR-kod",
     "downloadQrCode": "Ladda ner QR-kod",
     "clickToEnlargeQrCode": "Klicka för att förstora QR-koden",
-    "loadError": "Det gick inte att läsa in delningsinformation"
+    "loadError": "Det gick inte att läsa in delningsinformation",
+    "linkCopied": "Länk kopierad"
   },
   "shareExpiration": {
     "title": "Dela utgångsinställningar",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "Dela"
+    "defaultShareName": "Dela",
+    "downloading": "Laddar ner",
+    "preparingDownload": "Förbereder nedladdning"
   },
   "shareMultipleFiles": {
     "title": "Dela flera filer",
@@ -1856,7 +1919,10 @@
       "continue": "Fortsätt uppladdningar",
       "cancel": "Avbryt uppladdningar"
     },
-    "pasteSuccess": "{count, plural, =1 {Bild klistrad och uppladdad framgångsrikt} other {# bilder klistrade och uppladdade framgångsrikt}}"
+    "pasteSuccess": "{count, plural, =1 {Bild klistrad och uppladdad framgångsrikt} other {# bilder klistrade och uppladdade framgångsrikt}}",
+    "errors": {
+      "uploadFailed": "Uppladdningen misslyckades"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "Bädda in media",
-    "description": "Använd dessa koder för att bädda in detta media i forum, webbplatser eller andra plattformar",
-    "tabs": {
-      "directLink": "Direktlänk",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Direkt URL till mediafilen",
-    "htmlDescription": "Använd den här koden för att bädda in media i HTML-sidor",
-    "bbcodeDescription": "Använd den här koden för att bädda in media i forum som stöder BBCode"
-  },
   "validation": {
     "firstNameRequired": "Förnamn krävs",
     "lastNameRequired": "Efternamn krävs",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "Lösenordet måste bestå av minst 6 tecken",
     "nameRequired": "Namn krävs",
     "required": "Detta fält är obligatoriskt"
-  },
-  "registerWithInvite": {
-    "title": "Skapa ditt konto",
-    "description": "Fyll i informationen nedan för att skapa ditt konto",
-    "labels": {
-      "firstName": "Förnamn",
-      "firstNamePlaceholder": "Ange ditt förnamn",
-      "lastName": "Efternamn",
-      "lastNamePlaceholder": "Ange ditt efternamn",
-      "username": "Användarnamn",
-      "usernamePlaceholder": "Välj ett användarnamn",
-      "email": "E-post",
-      "emailPlaceholder": "Ange din e-post",
-      "password": "Lösenord",
-      "passwordPlaceholder": "Välj ett lösenord",
-      "confirmPassword": "Bekräfta lösenord",
-      "confirmPasswordPlaceholder": "Bekräfta ditt lösenord"
-    },
-    "buttons": {
-      "creating": "Skapar konto...",
-      "createAccount": "Skapa konto"
-    },
-    "validation": {
-      "firstNameRequired": "Förnamn krävs",
-      "lastNameRequired": "Efternamn krävs",
-      "usernameMinLength": "Användarnamnet måste vara minst 3 tecken",
-      "invalidEmail": "Ogiltig e-post",
-      "passwordMinLength": "Lösenordet måste vara minst 8 tecken",
-      "passwordsMatch": "Lösenorden måste matcha"
-    },
-    "messages": {
-      "success": "Kontot skapades framgångsrikt! Omdirigerar till inloggning...",
-      "redirecting": "Omdirigerar till inloggning..."
-    },
-    "errors": {
-      "invalidToken": "Fel med inbjudningslänk",
-      "tokenUsed": "Denna inbjudningslänk har redan använts",
-      "tokenExpired": "Denna inbjudningslänk har gått ut",
-      "usernameExists": "Användarnamnet finns redan",
-      "emailExists": "E-postadressen finns redan",
-      "createFailed": "Det gick inte att skapa konto. Försök igen."
-    },
-    "pageTitle": "Skapa konto"
   }
 }

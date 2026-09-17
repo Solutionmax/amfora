@@ -10,10 +10,6 @@
       "auth_failed": "Αποτυχία ελέγχου ταυτότητας. Προσπαθήστε ξανά."
     }
   },
-  "contextMenu": {
-    "newFolder": "Νέος φάκελος",
-    "uploadFile": "Μεταφόρτωση αρχείου"
-  },
   "authProviders": {
     "title": "Πάροχοι ελέγχου ταυτότητας",
     "description": "Ρυθμίστε εξωτερικούς παρόχους ελέγχου ταυτότητας για SSO",
@@ -158,7 +154,13 @@
     "share": "Κοινή χρήση",
     "search": "Αναζήτηση",
     "copy": "Αντιγραφή",
-    "copied": "Αντιγράφηκε"
+    "copied": "Αντιγράφηκε",
+    "invalidDate": "Μη έγκυρη ημερομηνία",
+    "notAvailable": "Μη διαθέσιμο"
+  },
+  "contextMenu": {
+    "newFolder": "Νέος φάκελος",
+    "uploadFile": "Μεταφόρτωση αρχείου"
   },
   "createShare": {
     "title": "Δημιουργία κοινής χρήσης",
@@ -278,6 +280,18 @@
       "refresh": "Ανανέωση ουράς"
     }
   },
+  "embedCode": {
+    "title": "Ενσωμάτωση πολυμέσων",
+    "description": "Χρησιμοποιήστε αυτούς τους κώδικες για ενσωμάτωση πολυμέσων σε φόρουμ, ιστοσελίδες ή άλλες πλατφόρμες",
+    "tabs": {
+      "directLink": "Άμεσος σύνδεσμος",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Άμεσο URL προς το αρχείο πολυμέσων",
+    "htmlDescription": "Χρησιμοποιήστε αυτόν τον κώδικα για ενσωμάτωση σε σελίδες HTML",
+    "bbcodeDescription": "Χρησιμοποιήστε αυτόν τον κώδικα για φόρουμ που υποστηρίζουν BBCode"
+  },
   "emptyState": {
     "noFiles": "Δεν έχουν μεταφορτωθεί ακόμη αρχεία",
     "uploadFile": "Μεταφόρτωση αρχείου"
@@ -294,7 +308,8 @@
     "Password verification required": "Απαιτείται επαλήθευση κωδικού πρόσβασης",
     "Invalid two-factor authentication code": "Μη έγκυρος κωδικός ελέγχου ταυτότητας δύο παραγόντων",
     "Two-factor authentication required": "Απαιτείται έλεγχος ταυτότητας δύο παραγόντων",
-    "noUserData": "Δεν υπάρχουν δεδομένα χρήστη"
+    "noUserData": "Δεν υπάρχουν δεδομένα χρήστη",
+    "passwordAuthDisabled": "Η σύνδεση με κωδικό πρόσβασης είναι απενεργοποιημένη σε αυτόν τον διακομιστή"
   },
   "fileActions": {
     "editFile": "Επεξεργασία αρχείου",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "Πίνακας",
-      "grid": "Πλέγμα"
+      "grid": "Πλέγμα",
+      "label": "Προβολή"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Με την υποστήριξη",
-    "kyanHomepage": "Αρχική σελίδα Kyantech"
+    "kyanHomepage": "Αρχική σελίδα SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Διεύθυνση email",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Η εναλλακτική λύση ανοιχτού κώδικα στο WeTransfer. Μοιραστείτε αρχεία με ασφάλεια, χωρίς παρακολούθηση ή περιορισμούς.",
+    "description": "Ανέβασε, μοιράσου έναν σύνδεσμο και αποφάσισε ακριβώς πόσο καιρό θα παραμείνει ανοιχτός. Λειτουργεί στον δικό σου διακομιστή, χωρίς κανέναν ενδιάμεσο.",
     "documentation": "Τεκμηρίωση",
     "starOnGithub": "Αστέρι στο GitHub",
     "privacyMessage": "Φτιαγμένο με γνώμονα το απόρρητο. Τα αρχεία σας είναι προσβάσιμα μόνο σε όσους έχουν τον σύνδεσμο κοινής χρήσης πριν τη μεταφόρτωση. Για πάντα δωρεάν και ανοικτού κώδικα.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Λειτουργεί στον δικό σας διακομιστή",
+      "expiry": "Οι σύνδεσμοι λήγουν από μόνοι τους",
+      "noTracking": "Χωρίς παρακολούθηση, χωρίς όρια"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "Σύνδεση",
     "or": "ή",
     "continueWithSSO": "Συνέχεια με SSO",
-    "processing": "Επεξεργασία ελέγχου ταυτότητας..."
+    "processing": "Επεξεργασία ελέγχου ταυτότητας...",
+    "noAuthMethodsAvailable": "Δεν υπάρχει διαθέσιμη μέθοδος σύνδεσης. Ζητήστε από τον διαχειριστή σας να ενεργοποιήσει μία."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Δημιουργία λογαριασμού διαχειριστή"
     }
   },
+  "registerWithInvite": {
+    "title": "Δημιουργήστε τον Λογαριασμό Σας",
+    "description": "Συμπληρώστε τις πληροφορίες παρακάτω για να δημιουργήσετε τον λογαριασμό σας",
+    "labels": {
+      "firstName": "Όνομα",
+      "firstNamePlaceholder": "Εισαγάγετε το όνομα σας",
+      "lastName": "Επώνυμο",
+      "lastNamePlaceholder": "Εισαγάγετε το επώνυμό σας",
+      "username": "Όνομα χρήστη",
+      "usernamePlaceholder": "Επιλέξτε ένα όνομα χρήστη",
+      "email": "Email",
+      "emailPlaceholder": "Εισαγάγετε το email σας",
+      "password": "Κωδικός πρόσβασης",
+      "passwordPlaceholder": "Επιλέξτε έναν κωδικό πρόσβασης",
+      "confirmPassword": "Επιβεβαίωση κωδικού πρόσβασης",
+      "confirmPasswordPlaceholder": "Επιβεβαιώστε τον κωδικό πρόσβασής σας"
+    },
+    "buttons": {
+      "creating": "Γίνεται δημιουργία λογαριασμού...",
+      "createAccount": "Δημιουργία λογαριασμού"
+    },
+    "validation": {
+      "firstNameRequired": "Απαιτείται όνομα",
+      "lastNameRequired": "Απαιτείται επώνυμο",
+      "usernameMinLength": "Το όνομα χρήστη πρέπει να έχει τουλάχιστον 3 χαρακτήρες",
+      "invalidEmail": "Μη έγκυρο email",
+      "passwordMinLength": "Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες",
+      "passwordsMatch": "Οι κωδικοί πρέπει να ταιριάζουν"
+    },
+    "messages": {
+      "success": "Ο λογαριασμός δημιουργήθηκε με επιτυχία! Ανακατεύθυνση στη σύνδεση...",
+      "redirecting": "Γίνεται ανακατεύθυνση στη σύνδεση..."
+    },
+    "errors": {
+      "invalidToken": "Σφάλμα με τον σύνδεσμο πρόσκλησης",
+      "tokenUsed": "Αυτός ο σύνδεσμος πρόσκλησης έχει ήδη χρησιμοποιηθεί",
+      "tokenExpired": "Αυτός ο σύνδεσμος πρόσκλησης έχει λήξει",
+      "usernameExists": "Το όνομα χρήστη υπάρχει ήδη",
+      "emailExists": "Το email υπάρχει ήδη",
+      "createFailed": "Αποτυχία δημιουργίας λογαριασμού. Παρακαλώ δοκιμάστε ξανά."
+    },
+    "pageTitle": "Δημιουργία λογαριασμού"
+  },
   "resetPassword": {
     "pageTitle": "Επαναφορά κωδικού",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Προστασία με κωδικό",
       "layoutOptions": {
         "default": "Προεπιλογή",
-        "wetransfer": "WeTransfer"
+        "vessel": "Αμφορέας"
       },
       "noFilesLimit": "Χωρίς όριο αρχείων",
       "noSizeLimit": "Χωρίς όριο μεγέθους",
@@ -1035,7 +1095,7 @@
         "description": "Πώς θα εμφανίζεται η σελίδα μεταφόρτωσης στους χρήστες.",
         "options": {
           "default": "Προεπιλεγμένη διάταξη",
-          "wetransfer": "Στιλ WeTransfer"
+          "vessel": "Διάταξη αμφορέα"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 αρχείο σε κοινή χρήση} other {# αρχεία σε κοινή χρήση}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# αρχείο} other {# αρχεία}}",
+    "breakSeal": "Σπάστε τη σφραγίδα",
+    "sealed": "Σφραγισμένο",
+    "opened": "Ανοιχτό"
   },
   "shareActions": {
     "fileTitle": "Κοινή χρήση αρχείου",
@@ -1467,7 +1527,8 @@
     "qrCode": "Κωδικός QR",
     "downloadQrCode": "Λήψη κωδικού QR",
     "clickToEnlargeQrCode": "Κάντε κλικ για μεγέθυνση του κωδικού QR",
-    "loadError": "Αποτυχία φόρτωσης λεπτομερειών κοινής χρήσης"
+    "loadError": "Αποτυχία φόρτωσης λεπτομερειών κοινής χρήσης",
+    "linkCopied": "Ο σύνδεσμος αντιγράφηκε"
   },
   "shareExpiration": {
     "title": "Ρυθμίσεις λήξης κοινής χρήσης",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_αρχεία.zip",
     "multipleSharesZipName": "{count}_κοινές_χρήσεις_αρχεία.zip",
-    "defaultShareName": "Κοινή χρήση"
+    "defaultShareName": "Κοινή χρήση",
+    "downloading": "Λήψη σε εξέλιξη",
+    "preparingDownload": "Προετοιμασία λήψης"
   },
   "shareMultipleFiles": {
     "title": "Κοινή χρήση πολλών αρχείων",
@@ -1856,7 +1919,10 @@
       "continue": "Συνέχιση μεταφορτώσεων",
       "cancel": "Ακύρωση μεταφορτώσεων"
     },
-    "pasteSuccess": "{count, plural, =1 {Η εικόνα επικολλήθηκε και μεταφορτώθηκε με επιτυχία} other {# εικόνες επικολλήθηκαν και μεταφορτώθηκαν με επιτυχία}}"
+    "pasteSuccess": "{count, plural, =1 {Η εικόνα επικολλήθηκε και μεταφορτώθηκε με επιτυχία} other {# εικόνες επικολλήθηκαν και μεταφορτώθηκαν με επιτυχία}}",
+    "errors": {
+      "uploadFailed": "Η μεταφόρτωση απέτυχε"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "Ενσωμάτωση πολυμέσων",
-    "description": "Χρησιμοποιήστε αυτούς τους κώδικες για ενσωμάτωση πολυμέσων σε φόρουμ, ιστοσελίδες ή άλλες πλατφόρμες",
-    "tabs": {
-      "directLink": "Άμεσος σύνδεσμος",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Άμεσο URL προς το αρχείο πολυμέσων",
-    "htmlDescription": "Χρησιμοποιήστε αυτόν τον κώδικα για ενσωμάτωση σε σελίδες HTML",
-    "bbcodeDescription": "Χρησιμοποιήστε αυτόν τον κώδικα για φόρουμ που υποστηρίζουν BBCode"
-  },
   "validation": {
     "firstNameRequired": "Απαιτείται όνομα",
     "lastNameRequired": "Απαιτείται επώνυμο",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες",
     "nameRequired": "Απαιτείται όνομα",
     "required": "Αυτό το πεδίο είναι υποχρεωτικό"
-  },
-  "registerWithInvite": {
-    "title": "Δημιουργήστε τον Λογαριασμό Σας",
-    "description": "Συμπληρώστε τις πληροφορίες παρακάτω για να δημιουργήσετε τον λογαριασμό σας",
-    "labels": {
-      "firstName": "Όνομα",
-      "firstNamePlaceholder": "Εισαγάγετε το όνομα σας",
-      "lastName": "Επώνυμο",
-      "lastNamePlaceholder": "Εισαγάγετε το επώνυμό σας",
-      "username": "Όνομα χρήστη",
-      "usernamePlaceholder": "Επιλέξτε ένα όνομα χρήστη",
-      "email": "Email",
-      "emailPlaceholder": "Εισαγάγετε το email σας",
-      "password": "Κωδικός πρόσβασης",
-      "passwordPlaceholder": "Επιλέξτε έναν κωδικό πρόσβασης",
-      "confirmPassword": "Επιβεβαίωση κωδικού πρόσβασης",
-      "confirmPasswordPlaceholder": "Επιβεβαιώστε τον κωδικό πρόσβασής σας"
-    },
-    "buttons": {
-      "creating": "Γίνεται δημιουργία λογαριασμού...",
-      "createAccount": "Δημιουργία λογαριασμού"
-    },
-    "validation": {
-      "firstNameRequired": "Απαιτείται όνομα",
-      "lastNameRequired": "Απαιτείται επώνυμο",
-      "usernameMinLength": "Το όνομα χρήστη πρέπει να έχει τουλάχιστον 3 χαρακτήρες",
-      "invalidEmail": "Μη έγκυρο email",
-      "passwordMinLength": "Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες",
-      "passwordsMatch": "Οι κωδικοί πρέπει να ταιριάζουν"
-    },
-    "messages": {
-      "success": "Ο λογαριασμός δημιουργήθηκε με επιτυχία! Ανακατεύθυνση στη σύνδεση...",
-      "redirecting": "Γίνεται ανακατεύθυνση στη σύνδεση..."
-    },
-    "errors": {
-      "invalidToken": "Σφάλμα με τον σύνδεσμο πρόσκλησης",
-      "tokenUsed": "Αυτός ο σύνδεσμος πρόσκλησης έχει ήδη χρησιμοποιηθεί",
-      "tokenExpired": "Αυτός ο σύνδεσμος πρόσκλησης έχει λήξει",
-      "usernameExists": "Το όνομα χρήστη υπάρχει ήδη",
-      "emailExists": "Το email υπάρχει ήδη",
-      "createFailed": "Αποτυχία δημιουργίας λογαριασμού. Παρακαλώ δοκιμάστε ξανά."
-    },
-    "pageTitle": "Δημιουργία λογαριασμού"
   }
 }

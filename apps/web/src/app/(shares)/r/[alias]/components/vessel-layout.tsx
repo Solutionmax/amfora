@@ -14,11 +14,11 @@ import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { MESSAGE_TYPES } from "../constants";
-import { WeTransferLayoutProps } from "../types";
+import { VesselLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
-import { WeTransferStatusMessage } from "./shared/status-message";
+import { VesselStatusMessage } from "./shared/status-message";
 
-export function WeTransferLayout({
+export function VesselLayout({
   reverseShare,
   password,
   alias,
@@ -28,7 +28,7 @@ export function WeTransferLayout({
   isLinkInactive,
   isLinkNotFound,
   isLinkExpired,
-}: WeTransferLayoutProps) {
+}: VesselLayoutProps) {
   const t = useTranslations();
   const { appName, appLogo } = useAppInfo();
   const [filled, setFilled] = useState({ count: 0, bytes: 0 });
@@ -41,7 +41,7 @@ export function WeTransferLayout({
   const uploadSection = () => {
     if (hasUploadedSuccessfully) {
       return (
-        <WeTransferStatusMessage
+        <VesselStatusMessage
           type={MESSAGE_TYPES.SUCCESS}
           icon={IconCheck}
           titleKey="reverseShares.upload.success.title"
@@ -52,7 +52,7 @@ export function WeTransferLayout({
 
     if (isLinkInactive) {
       return (
-        <WeTransferStatusMessage
+        <VesselStatusMessage
           type={MESSAGE_TYPES.INACTIVE}
           icon={IconAlertTriangle}
           titleKey="reverseShares.upload.linkInactive.title"
@@ -64,7 +64,7 @@ export function WeTransferLayout({
 
     if (isLinkNotFound || !reverseShare) {
       return (
-        <WeTransferStatusMessage
+        <VesselStatusMessage
           type={MESSAGE_TYPES.NOT_FOUND}
           icon={IconAlertTriangle}
           titleKey="reverseShares.upload.linkNotFound.title"
@@ -75,7 +75,7 @@ export function WeTransferLayout({
 
     if (isLinkExpired) {
       return (
-        <WeTransferStatusMessage
+        <VesselStatusMessage
           type={MESSAGE_TYPES.EXPIRED}
           icon={IconClock}
           titleKey="reverseShares.upload.linkExpired.title"
@@ -87,7 +87,7 @@ export function WeTransferLayout({
 
     if (isMaxFilesReached) {
       return (
-        <WeTransferStatusMessage
+        <VesselStatusMessage
           type={MESSAGE_TYPES.MAX_FILES}
           icon={IconInfoCircle}
           titleKey="reverseShares.upload.maxFilesReached.title"

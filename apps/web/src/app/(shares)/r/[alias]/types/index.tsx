@@ -37,7 +37,7 @@ export interface PasswordModalProps {
   onClose: () => void;
 }
 
-export interface WeTransferLayoutProps {
+export interface VesselLayoutProps {
   reverseShare: ReverseShareInfo | null;
   password: string;
   alias: string;

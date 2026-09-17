@@ -10,10 +10,6 @@
     "authenticationFailed": "Autenticación fallida",
     "successfullyAuthenticated": "¡Autenticado exitosamente!"
   },
-  "contextMenu": {
-    "newFolder": "Nueva carpeta",
-    "uploadFile": "Subir archivo"
-  },
   "authProviders": {
     "title": "Proveedores de Autenticación",
     "description": "Configurar proveedores de autenticación externos para SSO",
@@ -158,7 +154,13 @@
     "search": "Buscar",
     "share": "Compartir",
     "copied": "Copiado",
-    "copy": "Copiar"
+    "copy": "Copiar",
+    "invalidDate": "Fecha no válida",
+    "notAvailable": "No disponible"
+  },
+  "contextMenu": {
+    "newFolder": "Nueva carpeta",
+    "uploadFile": "Subir archivo"
   },
   "createShare": {
     "title": "Crear Compartir",
@@ -278,6 +280,18 @@
       "refresh": "Actualizar Cola"
     }
   },
+  "embedCode": {
+    "title": "Insertar multimedia",
+    "description": "Utiliza estos códigos para insertar este contenido multimedia en foros, sitios web u otras plataformas",
+    "tabs": {
+      "directLink": "Enlace directo",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL directa al archivo multimedia",
+    "htmlDescription": "Utiliza este código para insertar el contenido multimedia en páginas HTML",
+    "bbcodeDescription": "Utiliza este código para insertar el contenido multimedia en foros que admiten BBCode"
+  },
   "emptyState": {
     "noFiles": "Aún no se han subido archivos",
     "uploadFile": "Subir archivo"
@@ -294,7 +308,8 @@
     "Two-factor authentication is already enabled": "La autenticación de dos factores ya está habilitada",
     "Two-factor authentication is not enabled": "La autenticación de dos factores no está habilitada",
     "Two-factor authentication required": "Se requiere autenticación de dos factores",
-    "noUserData": "No hay datos del usuario"
+    "noUserData": "No hay datos del usuario",
+    "passwordAuthDisabled": "El inicio de sesión con contraseña está deshabilitado en este servidor"
   },
   "fileActions": {
     "editFile": "Editar archivo",
@@ -377,7 +392,8 @@
     "bulkDeleteConfirmation": "¿Está seguro de que desea eliminar {count, plural, =1 {1 archivo} other {# archivos}}? Esta acción no se puede deshacer.",
     "viewMode": {
       "table": "Tabla",
-      "grid": "Cuadrícula"
+      "grid": "Cuadrícula",
+      "label": "Vista"
     },
     "totalFiles": "{count, plural, =0 {Sin archivos} =1 {1 archivo} other {# archivos}}",
     "actions": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Desarrollado por",
-    "kyanHomepage": "Página principal de Kyantech"
+    "kyanHomepage": "Página principal de SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Dirección de correo electrónico",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "La alternativa de código abierto a WeTransfer. Comparte archivos de forma segura, sin rastreo ni limitaciones.",
+    "description": "Sube, comparte un enlace y decide exactamente cuánto tiempo permanece abierto. Funciona en tu propio servidor, sin nadie en medio.",
     "documentation": "Documentación",
     "starOnGithub": "Dale una estrella en GitHub",
     "privacyMessage": "Construido con la privacidad en mente. Tus archivos antes de la subida son accesibles solo para aquellos con el enlace de compartición. Siempre libre y de código abierto.",
@@ -543,8 +559,9 @@
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "pageTitle": "Iniciar sesión",
     "or": "ou",
-    "continueWithSSO": "Continuar com SSO",
-    "processing": "Processando autenticação..."
+    "continueWithSSO": "Continuar con SSO",
+    "processing": "Procesando autenticación...",
+    "noAuthMethodsAvailable": "No hay ningún método de inicio de sesión disponible. Pide a tu administrador que habilite uno."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Crear cuenta de administrador"
     }
   },
+  "registerWithInvite": {
+    "title": "Crea Tu Cuenta",
+    "description": "Completa la información a continuación para crear tu cuenta",
+    "labels": {
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Ingresa tu nombre",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Ingresa tu apellido",
+      "username": "Nombre de Usuario",
+      "usernamePlaceholder": "Elige un nombre de usuario",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Elige una contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu contraseña"
+    },
+    "buttons": {
+      "creating": "Creando cuenta...",
+      "createAccount": "Crear Cuenta"
+    },
+    "validation": {
+      "firstNameRequired": "El nombre es obligatorio",
+      "lastNameRequired": "El apellido es obligatorio",
+      "usernameMinLength": "El nombre de usuario debe tener al menos 3 caracteres",
+      "invalidEmail": "Correo electrónico inválido",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordsMatch": "Las contraseñas deben coincidir"
+    },
+    "messages": {
+      "success": "¡Cuenta creada exitosamente! Redirigiendo al inicio de sesión...",
+      "redirecting": "Redirigiendo al inicio de sesión..."
+    },
+    "errors": {
+      "invalidToken": "Error con el enlace de invitación",
+      "tokenUsed": "Este enlace de invitación ya ha sido utilizado",
+      "tokenExpired": "Este enlace de invitación ha expirado",
+      "usernameExists": "El nombre de usuario ya existe",
+      "emailExists": "El correo electrónico ya existe",
+      "createFailed": "Error al crear la cuenta. Por favor, inténtalo de nuevo."
+    },
+    "pageTitle": "Crear Cuenta"
+  },
   "resetPassword": {
     "pageTitle": "Restablecer contraseña",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Proteger con Contraseña",
       "layoutOptions": {
         "default": "Predeterminado",
-        "wetransfer": "WeTransfer"
+        "vessel": "Ánfora"
       },
       "noFilesLimit": "Sin límite de archivos",
       "noSizeLimit": "Sin límite de tamaño",
@@ -1035,7 +1095,7 @@
         "description": "Cómo aparecerá la página de carga para los usuarios.",
         "options": {
           "default": "Diseño Predeterminado",
-          "wetransfer": "Estilo WeTransfer"
+          "vessel": "Diseño ánfora"
         }
       },
       "password": {
@@ -1305,7 +1365,7 @@
       },
       "serverUrl": {
         "title": "URL del Servidor",
-        "description": "URL base del servidor Amfora (ej: https://palmr.ejemplo.com)"
+        "description": "URL base del servidor Amfora (ej: https://amfora.ejemplo.com)"
       },
       "testSmtp": {
         "title": "Probar Conexión SMTP",
@@ -1467,7 +1527,8 @@
     "editExpiration": "Editar Expiración",
     "clickToEnlargeQrCode": "Haz clic para ampliar el Código QR",
     "downloadQrCode": "Descargar Código QR",
-    "qrCode": "Código QR"
+    "qrCode": "Código QR",
+    "linkCopied": "Enlace copiado"
   },
   "shareExpiration": {
     "neverExpires": "Nunca Expira",
@@ -1528,7 +1589,9 @@
     "zipDownloadSuccess": "Archivo zip descargado correctamente",
     "errors": {
       "multipleDownloadNotSupported": "Descarga múltiple de compartidos aún no soportada - por favor descarga los compartidos individualmente"
-    }
+    },
+    "downloading": "Descargando",
+    "preparingDownload": "Preparando descarga"
   },
   "shareMultipleFiles": {
     "title": "Compartir Múltiples Archivos",
@@ -1856,7 +1919,10 @@
       "description": "Suelta para subir tus archivos"
     },
     "pasteSuccess": "{count, plural, =1 {Imagen pegada y subida exitosamente} other {# imágenes pegadas y subidas exitosamente}}",
-    "filesQueued": "{count, plural, one {# archivo en cola para subir} other {# archivos en cola para subir}}"
+    "filesQueued": "{count, plural, one {# archivo en cola para subir} other {# archivos en cola para subir}}",
+    "errors": {
+      "uploadFailed": "Error al subir el archivo"
+    }
   },
   "users": {
     "modes": {
@@ -1958,60 +2024,5 @@
     "passwordRequired": "Se requiere la contraseña",
     "nameRequired": "El nombre es obligatorio",
     "required": "Este campo es obligatorio"
-  },
-  "embedCode": {
-    "title": "Insertar multimedia",
-    "description": "Utiliza estos códigos para insertar este contenido multimedia en foros, sitios web u otras plataformas",
-    "tabs": {
-      "directLink": "Enlace directo",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL directa al archivo multimedia",
-    "htmlDescription": "Utiliza este código para insertar el contenido multimedia en páginas HTML",
-    "bbcodeDescription": "Utiliza este código para insertar el contenido multimedia en foros que admiten BBCode"
-  },
-  "registerWithInvite": {
-    "title": "Crea Tu Cuenta",
-    "description": "Completa la información a continuación para crear tu cuenta",
-    "labels": {
-      "firstName": "Nombre",
-      "firstNamePlaceholder": "Ingresa tu nombre",
-      "lastName": "Apellido",
-      "lastNamePlaceholder": "Ingresa tu apellido",
-      "username": "Nombre de Usuario",
-      "usernamePlaceholder": "Elige un nombre de usuario",
-      "email": "Correo Electrónico",
-      "emailPlaceholder": "Ingresa tu correo electrónico",
-      "password": "Contraseña",
-      "passwordPlaceholder": "Elige una contraseña",
-      "confirmPassword": "Confirmar Contraseña",
-      "confirmPasswordPlaceholder": "Confirma tu contraseña"
-    },
-    "buttons": {
-      "creating": "Creando cuenta...",
-      "createAccount": "Crear Cuenta"
-    },
-    "validation": {
-      "firstNameRequired": "El nombre es obligatorio",
-      "lastNameRequired": "El apellido es obligatorio",
-      "usernameMinLength": "El nombre de usuario debe tener al menos 3 caracteres",
-      "invalidEmail": "Correo electrónico inválido",
-      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
-      "passwordsMatch": "Las contraseñas deben coincidir"
-    },
-    "messages": {
-      "success": "¡Cuenta creada exitosamente! Redirigiendo al inicio de sesión...",
-      "redirecting": "Redirigiendo al inicio de sesión..."
-    },
-    "errors": {
-      "invalidToken": "Error con el enlace de invitación",
-      "tokenUsed": "Este enlace de invitación ya ha sido utilizado",
-      "tokenExpired": "Este enlace de invitación ha expirado",
-      "usernameExists": "El nombre de usuario ya existe",
-      "emailExists": "El correo electrónico ya existe",
-      "createFailed": "Error al crear la cuenta. Por favor, inténtalo de nuevo."
-    },
-    "pageTitle": "Crear Cuenta"
   }
 }

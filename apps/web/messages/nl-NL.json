@@ -154,7 +154,13 @@
     "search": "Zoeken",
     "share": "Delen",
     "copied": "Gekopieerd",
-    "copy": "Kopiëren"
+    "copy": "Kopiëren",
+    "invalidDate": "Ongeldige datum",
+    "notAvailable": "Niet beschikbaar"
+  },
+  "contextMenu": {
+    "newFolder": "Nieuwe map",
+    "uploadFile": "Bestand uploaden"
   },
   "createShare": {
     "title": "Delen Maken",
@@ -274,6 +280,18 @@
       "refresh": "Wachtrij Vernieuwen"
     }
   },
+  "embedCode": {
+    "title": "Media insluiten",
+    "description": "Gebruik deze codes om deze media in te sluiten in forums, websites of andere platforms",
+    "tabs": {
+      "directLink": "Directe link",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Directe URL naar het mediabestand",
+    "htmlDescription": "Gebruik deze code om de media in te sluiten in HTML-pagina's",
+    "bbcodeDescription": "Gebruik deze code om de media in te sluiten in forums die BBCode ondersteunen"
+  },
   "emptyState": {
     "noFiles": "Nog geen bestanden geüpload",
     "uploadFile": "Bestand Uploaden"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "Tweefactorauthenticatie is al ingeschakeld",
     "Two-factor authentication is not enabled": "Tweefactorauthenticatie is niet ingeschakeld",
     "Two-factor authentication required": "Tweefactorauthenticatie vereist",
-    "noUserData": "Geen gebruikersgegevens"
+    "noUserData": "Geen gebruikersgegevens",
+    "passwordAuthDisabled": "Inloggen met wachtwoord is uitgeschakeld op deze server"
   },
   "fileActions": {
     "editFile": "Bestand Bewerken",
@@ -371,7 +390,8 @@
     "bulkDeleteError": "Fout bij het verwijderen van geselecteerde bestanden",
     "viewMode": {
       "table": "Tabel",
-      "grid": "Raster"
+      "grid": "Raster",
+      "label": "Weergave"
     },
     "totalFiles": "{count, plural, =0 {Geen bestanden} =1 {1 bestand} other {# bestanden}}",
     "bulkDeleteConfirmation": "Weet je zeker dat je {count, plural, =1 {1 bestand} other {# bestanden}} wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
@@ -539,8 +559,9 @@
     "forgotPassword": "Wachtwoord vergeten?",
     "pageTitle": "Aanmelden",
     "or": "ou",
-    "continueWithSSO": "Continuar com SSO",
-    "processing": "Processando autenticação..."
+    "continueWithSSO": "Doorgaan met SSO",
+    "processing": "Authenticatie wordt verwerkt...",
+    "noAuthMethodsAvailable": "Geen inlogmethode beschikbaar. Vraag je beheerder om er een in te schakelen."
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "Admin Account Aanmaken"
     }
   },
+  "registerWithInvite": {
+    "title": "Maak Uw Account Aan",
+    "description": "Vul de onderstaande informatie in om uw account aan te maken",
+    "labels": {
+      "firstName": "Voornaam",
+      "firstNamePlaceholder": "Voer uw voornaam in",
+      "lastName": "Achternaam",
+      "lastNamePlaceholder": "Voer uw achternaam in",
+      "username": "Gebruikersnaam",
+      "usernamePlaceholder": "Kies een gebruikersnaam",
+      "email": "E-mail",
+      "emailPlaceholder": "Voer uw e-mail in",
+      "password": "Wachtwoord",
+      "passwordPlaceholder": "Kies een wachtwoord",
+      "confirmPassword": "Bevestig Wachtwoord",
+      "confirmPasswordPlaceholder": "Bevestig uw wachtwoord"
+    },
+    "buttons": {
+      "creating": "Account aanmaken...",
+      "createAccount": "Account Aanmaken"
+    },
+    "validation": {
+      "firstNameRequired": "Voornaam is verplicht",
+      "lastNameRequired": "Achternaam is verplicht",
+      "usernameMinLength": "Gebruikersnaam moet minimaal 3 tekens bevatten",
+      "invalidEmail": "Ongeldig e-mailadres",
+      "passwordMinLength": "Wachtwoord moet minimaal 8 tekens bevatten",
+      "passwordsMatch": "Wachtwoorden moeten overeenkomen"
+    },
+    "messages": {
+      "success": "Account succesvol aangemaakt! Doorverwijzen naar inloggen...",
+      "redirecting": "Doorverwijzen naar inloggen..."
+    },
+    "errors": {
+      "invalidToken": "Fout met uitnodigingslink",
+      "tokenUsed": "Deze uitnodigingslink is al gebruikt",
+      "tokenExpired": "Deze uitnodigingslink is verlopen",
+      "usernameExists": "Gebruikersnaam bestaat al",
+      "emailExists": "E-mailadres bestaat al",
+      "createFailed": "Aanmaken van account mislukt. Probeer het opnieuw."
+    },
+    "pageTitle": "Account Aanmaken"
+  },
   "resetPassword": {
     "pageTitle": "Wachtwoord Resetten",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "Beveiligen met Wachtwoord",
       "layoutOptions": {
         "default": "Standaard",
-        "wetransfer": "WeTransfer"
+        "vessel": "Kruik"
       },
       "noFilesLimit": "Geen bestandslimiet",
       "noSizeLimit": "Geen groottelimiet",
@@ -1031,7 +1095,7 @@
         "description": "Hoe de uploadpagina er voor gebruikers uitziet.",
         "options": {
           "default": "Standaard Layout",
-          "wetransfer": "WeTransfer Stijl"
+          "vessel": "Kruikweergave"
         }
       },
       "password": {
@@ -1222,7 +1286,7 @@
       },
       "oidc": {
         "title": "OpenID Connect (SSO)",
-        "description": "Configuração de autenticação SSO via OpenID Connect"
+        "description": "Configureer SSO-authenticatie via OpenID Connect"
       }
     },
     "fields": {
@@ -1463,7 +1527,8 @@
     "editExpiration": "Vervaldatum Bewerken",
     "clickToEnlargeQrCode": "Klik om QR Code te vergroten",
     "downloadQrCode": "QR Code Downloaden",
-    "qrCode": "QR Code"
+    "qrCode": "QR Code",
+    "linkCopied": "Link gekopieerd"
   },
   "shareExpiration": {
     "neverExpires": "Verloopt Nooit",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "Zipbestand met succes gedownload",
     "errors": {
       "multipleDownloadNotSupported": "Download van meerdere delen wordt nog niet ondersteund - download delen afzonderlijk"
-    }
+    },
+    "downloading": "Downloaden",
+    "preparingDownload": "Download wordt voorbereid"
   },
   "shareMultipleFiles": {
     "title": "Meerdere Bestanden Delen",
@@ -1852,7 +1919,10 @@
       "description": "Laat los om je bestanden te uploaden"
     },
     "pasteSuccess": "{count, plural, =1 {Afbeelding geplakt en succesvol geüpload} other {# afbeeldingen geplakt en succesvol geüpload}}",
-    "filesQueued": "{count, plural, one {# bestand in de wachtrij voor upload} other {# bestanden in de wachtrij voor upload}}"
+    "filesQueued": "{count, plural, one {# bestand in de wachtrij voor upload} other {# bestanden in de wachtrij voor upload}}",
+    "errors": {
+      "uploadFailed": "Uploaden mislukt"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordMinLength": "Wachtwoord moet minimaal 6 tekens bevatten",
     "nameRequired": "Naam is verplicht",
     "required": "Dit veld is verplicht"
-  },
-  "embedCode": {
-    "title": "Media insluiten",
-    "description": "Gebruik deze codes om deze media in te sluiten in forums, websites of andere platforms",
-    "tabs": {
-      "directLink": "Directe link",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Directe URL naar het mediabestand",
-    "htmlDescription": "Gebruik deze code om de media in te sluiten in HTML-pagina's",
-    "bbcodeDescription": "Gebruik deze code om de media in te sluiten in forums die BBCode ondersteunen"
-  },
-  "contextMenu": {
-    "newFolder": "Nieuwe map",
-    "uploadFile": "Bestand uploaden"
-  },
-  "registerWithInvite": {
-    "title": "Maak Uw Account Aan",
-    "description": "Vul de onderstaande informatie in om uw account aan te maken",
-    "labels": {
-      "firstName": "Voornaam",
-      "firstNamePlaceholder": "Voer uw voornaam in",
-      "lastName": "Achternaam",
-      "lastNamePlaceholder": "Voer uw achternaam in",
-      "username": "Gebruikersnaam",
-      "usernamePlaceholder": "Kies een gebruikersnaam",
-      "email": "E-mail",
-      "emailPlaceholder": "Voer uw e-mail in",
-      "password": "Wachtwoord",
-      "passwordPlaceholder": "Kies een wachtwoord",
-      "confirmPassword": "Bevestig Wachtwoord",
-      "confirmPasswordPlaceholder": "Bevestig uw wachtwoord"
-    },
-    "buttons": {
-      "creating": "Account aanmaken...",
-      "createAccount": "Account Aanmaken"
-    },
-    "validation": {
-      "firstNameRequired": "Voornaam is verplicht",
-      "lastNameRequired": "Achternaam is verplicht",
-      "usernameMinLength": "Gebruikersnaam moet minimaal 3 tekens bevatten",
-      "invalidEmail": "Ongeldig e-mailadres",
-      "passwordMinLength": "Wachtwoord moet minimaal 8 tekens bevatten",
-      "passwordsMatch": "Wachtwoorden moeten overeenkomen"
-    },
-    "messages": {
-      "success": "Account succesvol aangemaakt! Doorverwijzen naar inloggen...",
-      "redirecting": "Doorverwijzen naar inloggen..."
-    },
-    "errors": {
-      "invalidToken": "Fout met uitnodigingslink",
-      "tokenUsed": "Deze uitnodigingslink is al gebruikt",
-      "tokenExpired": "Deze uitnodigingslink is verlopen",
-      "usernameExists": "Gebruikersnaam bestaat al",
-      "emailExists": "E-mailadres bestaat al",
-      "createFailed": "Aanmaken van account mislukt. Probeer het opnieuw."
-    },
-    "pageTitle": "Account Aanmaken"
   }
 }

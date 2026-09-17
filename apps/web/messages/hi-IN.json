@@ -154,7 +154,13 @@
     "search": "खोजें",
     "share": "साझा करें",
     "copied": "कॉपी किया गया",
-    "copy": "कॉपी करें"
+    "copy": "कॉपी करें",
+    "invalidDate": "अमान्य तिथि",
+    "notAvailable": "उपलब्ध नहीं"
+  },
+  "contextMenu": {
+    "newFolder": "नया फ़ोल्डर",
+    "uploadFile": "फ़ाइल अपलोड करें"
   },
   "createShare": {
     "title": "साझाकरण बनाएं",
@@ -274,6 +280,18 @@
       "refresh": "कतार रीफ्रेश करें"
     }
   },
+  "embedCode": {
+    "title": "मीडिया एम्बेड करें",
+    "description": "इस मीडिया को मंचों, वेबसाइटों या अन्य प्लेटफार्मों में एम्बेड करने के लिए इन कोड का उपयोग करें",
+    "tabs": {
+      "directLink": "सीधा लिंक",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "मीडिया फ़ाइल का सीधा URL",
+    "htmlDescription": "HTML पेजों में मीडिया एम्बेड करने के लिए इस कोड का उपयोग करें",
+    "bbcodeDescription": "BBCode का समर्थन करने वाले मंचों में मीडिया एम्बेड करने के लिए इस कोड का उपयोग करें"
+  },
   "emptyState": {
     "noFiles": "अभी तक कोई फाइल अपलोड नहीं हुई",
     "uploadFile": "फाइल अपलोड करें"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "दो-कारक प्रमाणीकरण पहले से सक्षम है",
     "Two-factor authentication is not enabled": "दो-कारक प्रमाणीकरण सक्षम नहीं है",
     "Two-factor authentication required": "दो-कारक प्रमाणीकरण आवश्यक है",
-    "noUserData": "उपयोगकर्ता डेटा नहीं मिला"
+    "noUserData": "उपयोगकर्ता डेटा नहीं मिला",
+    "passwordAuthDisabled": "इस सर्वर पर पासवर्ड साइन इन अक्षम है"
   },
   "fileActions": {
     "editFile": "फाइल संपादित करें",
@@ -371,7 +390,8 @@
     "bulkDeleteError": "चयनित फाइलों को हटाने में त्रुटि",
     "viewMode": {
       "table": "तालिका",
-      "grid": "ग्रिड"
+      "grid": "ग्रिड",
+      "label": "दृश्य"
     },
     "totalFiles": "{count, plural, =0 {कोई फ़ाइल नहीं} =1 {1 फ़ाइल} other {# फ़ाइलें}}",
     "bulkDeleteConfirmation": "क्या आप वास्तव में {count, plural, =1 {1 फाइल} other {# फाइलों}} को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "द्वारा संचालित",
-    "kyanHomepage": "Kyantech होमपेज"
+    "kyanHomepage": "SolutionMAX होमपेज"
   },
   "forgotPassword": {
     "emailLabel": "ईमेल पता",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "WeTransfer का ओपन-सोर्स विकल्प। फाइलें सुरक्षित रूप से साझा करें, बिना ट्रैकिंग या सीमाओं के।",
+    "description": "अपलोड करें, एक लिंक साझा करें, और तय करें कि यह कितनी देर तक खुला रहेगा। आपके अपने सर्वर पर चलता है, बीच में कोई नहीं।",
     "documentation": "दस्तावेज",
     "starOnGithub": "GitHub पर स्टार करें",
     "privacyMessage": "गोपनीयता को ध्यान में रखते हुए बनाया गया। अपलोड से पहले आपकी फाइलें केवल उनके लिए उपलब्ध हैं जिनके पास साझाकरण लिंक है। हमेशा मुफ्त और ओपन सोर्स।",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "आपके अपने सर्वर पर चलता है",
+      "expiry": "लिंक अपने आप समाप्त हो जाते हैं",
+      "noTracking": "कोई ट्रैकिंग नहीं, कोई सीमा नहीं"
     }
   },
   "iconPicker": {
@@ -539,8 +559,9 @@
     "forgotPassword": "पासवर्ड भूल गए?",
     "pageTitle": "लॉगिन",
     "or": "ou",
-    "continueWithSSO": "Continuar com SSO",
-    "processing": "Processando autenticação..."
+    "continueWithSSO": "SSO के साथ जारी रखें",
+    "processing": "प्रमाणीकरण संसाधित हो रहा है...",
+    "noAuthMethodsAvailable": "कोई साइन इन विधि उपलब्ध नहीं है। अपने व्यवस्थापक से एक सक्षम करने के लिए कहें।"
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "व्यवस्थापक खाता बनाएं"
     }
   },
+  "registerWithInvite": {
+    "title": "अपना खाता बनाएं",
+    "description": "अपना खाता बनाने के लिए नीचे दी गई जानकारी भरें",
+    "labels": {
+      "firstName": "पहला नाम",
+      "firstNamePlaceholder": "अपना पहला नाम दर्ज करें",
+      "lastName": "अंतिम नाम",
+      "lastNamePlaceholder": "अपना अंतिम नाम दर्ज करें",
+      "username": "उपयोगकर्ता नाम",
+      "usernamePlaceholder": "एक उपयोगकर्ता नाम चुनें",
+      "email": "ईमेल",
+      "emailPlaceholder": "अपना ईमेल दर्ज करें",
+      "password": "पासवर्ड",
+      "passwordPlaceholder": "एक पासवर्ड चुनें",
+      "confirmPassword": "पासवर्ड की पुष्टि करें",
+      "confirmPasswordPlaceholder": "अपना पासवर्ड पुष्टि करें"
+    },
+    "buttons": {
+      "creating": "खाता बनाया जा रहा है...",
+      "createAccount": "खाता बनाएं"
+    },
+    "validation": {
+      "firstNameRequired": "पहला नाम आवश्यक है",
+      "lastNameRequired": "अंतिम नाम आवश्यक है",
+      "usernameMinLength": "उपयोगकर्ता नाम कम से कम 3 अक्षर का होना चाहिए",
+      "invalidEmail": "अमान्य ईमेल",
+      "passwordMinLength": "पासवर्ड कम से कम 8 अक्षर का होना चाहिए",
+      "passwordsMatch": "पासवर्ड मेल खाना चाहिए"
+    },
+    "messages": {
+      "success": "खाता सफलतापूर्वक बनाया गया! लॉगिन पर पुनर्निर्देशित किया जा रहा है...",
+      "redirecting": "लॉगिन पर पुनर्निर्देशित किया जा रहा है..."
+    },
+    "errors": {
+      "invalidToken": "आमंत्रण लिंक में त्रुटि",
+      "tokenUsed": "यह आमंत्रण लिंक पहले ही उपयोग किया जा चुका है",
+      "tokenExpired": "यह आमंत्रण लिंक समाप्त हो गया है",
+      "usernameExists": "उपयोगकर्ता नाम पहले से मौजूद है",
+      "emailExists": "ईमेल पहले से मौजूद है",
+      "createFailed": "खाता बनाने में विफल। कृपया पुनः प्रयास करें।"
+    },
+    "pageTitle": "खाता बनाएं"
+  },
   "resetPassword": {
     "pageTitle": "पासवर्ड रीसेट करें",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "पासवर्ड से सुरक्षित करें",
       "layoutOptions": {
         "default": "डिफ़ॉल्ट",
-        "wetransfer": "वीट्रांसफर"
+        "vessel": "पात्र"
       },
       "noFilesLimit": "फ़ाइलों की कोई सीमा नहीं",
       "noSizeLimit": "आकार की कोई सीमा नहीं",
@@ -1031,7 +1095,7 @@
         "description": "उपयोगकर्ताओं को अपलोड पृष्ठ कैसा दिखाई देगा।",
         "options": {
           "default": "डिफ़ॉल्ट लेआउट",
-          "wetransfer": "वीट्रांसफर शैली"
+          "vessel": "पात्र लेआउट"
         }
       },
       "password": {
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 फ़ाइल साझा की गई} other {# फ़ाइलें साझा की गईं}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# फ़ाइल} other {# फ़ाइलें}}",
+    "breakSeal": "मुहर तोड़ें",
+    "sealed": "सीलबंद",
+    "opened": "खोला गया"
   },
   "shareActions": {
     "deleteTitle": "साझाकरण हटाएं",
@@ -1463,7 +1527,8 @@
     "editExpiration": "समाप्ति संपादित करें",
     "clickToEnlargeQrCode": "QR कोड को बड़ा करने के लिए क्लिक करें",
     "downloadQrCode": "QR कोड डाउनलोड करें",
-    "qrCode": "QR कोड"
+    "qrCode": "QR कोड",
+    "linkCopied": "लिंक कॉपी हो गया"
   },
   "shareExpiration": {
     "neverExpires": "कभी समाप्त नहीं होता",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "ज़िप फ़ाइल सफलतापूर्वक डाउनलोड की गई",
     "errors": {
       "multipleDownloadNotSupported": "कई साझाकरण डाउनलोड अभी तक समर्थित नहीं है - कृपया साझाकरण को अलग-अलग डाउनलोड करें"
-    }
+    },
+    "downloading": "डाउनलोड हो रहा है",
+    "preparingDownload": "डाउनलोड तैयार किया जा रहा है"
   },
   "shareMultipleFiles": {
     "title": "कई फाइलें साझा करें",
@@ -1852,7 +1919,10 @@
       "description": "अपनी फ़ाइलें अपलोड करने के लिए छोड़ें"
     },
     "pasteSuccess": "{count, plural, =1 {छवि सफलतापूर्वक चिपकाई और अपलोड की गई} other {# छवियाँ सफलतापूर्वक चिपकाई और अपलोड की गईं}}",
-    "filesQueued": "{count, plural, one {# फ़ाइल अपलोड के लिए इंतजार में है} other {# फ़ाइलें अपलोड के लिए इंतजार में हैं}}"
+    "filesQueued": "{count, plural, one {# फ़ाइल अपलोड के लिए इंतजार में है} other {# फ़ाइलें अपलोड के लिए इंतजार में हैं}}",
+    "errors": {
+      "uploadFailed": "अपलोड विफल"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordRequired": "पासवर्ड आवश्यक है",
     "nameRequired": "नाम आवश्यक है",
     "required": "यह फ़ील्ड आवश्यक है"
-  },
-  "embedCode": {
-    "title": "मीडिया एम्बेड करें",
-    "description": "इस मीडिया को मंचों, वेबसाइटों या अन्य प्लेटफार्मों में एम्बेड करने के लिए इन कोड का उपयोग करें",
-    "tabs": {
-      "directLink": "सीधा लिंक",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "मीडिया फ़ाइल का सीधा URL",
-    "htmlDescription": "HTML पेजों में मीडिया एम्बेड करने के लिए इस कोड का उपयोग करें",
-    "bbcodeDescription": "BBCode का समर्थन करने वाले मंचों में मीडिया एम्बेड करने के लिए इस कोड का उपयोग करें"
-  },
-  "contextMenu": {
-    "newFolder": "नया फ़ोल्डर",
-    "uploadFile": "फ़ाइल अपलोड करें"
-  },
-  "registerWithInvite": {
-    "title": "अपना खाता बनाएं",
-    "description": "अपना खाता बनाने के लिए नीचे दी गई जानकारी भरें",
-    "labels": {
-      "firstName": "पहला नाम",
-      "firstNamePlaceholder": "अपना पहला नाम दर्ज करें",
-      "lastName": "अंतिम नाम",
-      "lastNamePlaceholder": "अपना अंतिम नाम दर्ज करें",
-      "username": "उपयोगकर्ता नाम",
-      "usernamePlaceholder": "एक उपयोगकर्ता नाम चुनें",
-      "email": "ईमेल",
-      "emailPlaceholder": "अपना ईमेल दर्ज करें",
-      "password": "पासवर्ड",
-      "passwordPlaceholder": "एक पासवर्ड चुनें",
-      "confirmPassword": "पासवर्ड की पुष्टि करें",
-      "confirmPasswordPlaceholder": "अपना पासवर्ड पुष्टि करें"
-    },
-    "buttons": {
-      "creating": "खाता बनाया जा रहा है...",
-      "createAccount": "खाता बनाएं"
-    },
-    "validation": {
-      "firstNameRequired": "पहला नाम आवश्यक है",
-      "lastNameRequired": "अंतिम नाम आवश्यक है",
-      "usernameMinLength": "उपयोगकर्ता नाम कम से कम 3 अक्षर का होना चाहिए",
-      "invalidEmail": "अमान्य ईमेल",
-      "passwordMinLength": "पासवर्ड कम से कम 8 अक्षर का होना चाहिए",
-      "passwordsMatch": "पासवर्ड मेल खाना चाहिए"
-    },
-    "messages": {
-      "success": "खाता सफलतापूर्वक बनाया गया! लॉगिन पर पुनर्निर्देशित किया जा रहा है...",
-      "redirecting": "लॉगिन पर पुनर्निर्देशित किया जा रहा है..."
-    },
-    "errors": {
-      "invalidToken": "आमंत्रण लिंक में त्रुटि",
-      "tokenUsed": "यह आमंत्रण लिंक पहले ही उपयोग किया जा चुका है",
-      "tokenExpired": "यह आमंत्रण लिंक समाप्त हो गया है",
-      "usernameExists": "उपयोगकर्ता नाम पहले से मौजूद है",
-      "emailExists": "ईमेल पहले से मौजूद है",
-      "createFailed": "खाता बनाने में विफल। कृपया पुनः प्रयास करें।"
-    },
-    "pageTitle": "खाता बनाएं"
   }
 }

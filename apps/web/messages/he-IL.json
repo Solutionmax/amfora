@@ -10,10 +10,6 @@
       "auth_failed": "האימות נכשל. אנא נסה שוב."
     }
   },
-  "contextMenu": {
-    "newFolder": "תיקייה חדשה",
-    "uploadFile": "העלה קובץ"
-  },
   "authProviders": {
     "title": "ספקי אימות",
     "description": "הגדר ספקי אימות חיצוניים ל-SSO",
@@ -158,7 +154,13 @@
     "share": "שתף",
     "search": "חפש",
     "copy": "העתק",
-    "copied": "הועתק"
+    "copied": "הועתק",
+    "invalidDate": "תאריך לא תקין",
+    "notAvailable": "לא זמין"
+  },
+  "contextMenu": {
+    "newFolder": "תיקייה חדשה",
+    "uploadFile": "העלה קובץ"
   },
   "createShare": {
     "title": "צור שיתוף",
@@ -278,6 +280,18 @@
       "refresh": "רענן תור"
     }
   },
+  "embedCode": {
+    "title": "הטמע מדיה",
+    "description": "השתמש בקודים האלה כדי להטמיע מדיה זו בפורומים, אתרים או פלטפורמות אחרות",
+    "tabs": {
+      "directLink": "קישור ישיר",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "כתובת URL ישירה לקובץ המדיה",
+    "htmlDescription": "השתמש בקוד הזה כדי להטמיע את המדיה בעמודי HTML",
+    "bbcodeDescription": "השתמש בקוד הזה כדי להטמיע את המדיה בפורומים שתומכים ב-BBCode"
+  },
   "emptyState": {
     "noFiles": "אין עדיין קבצים שהועלו",
     "uploadFile": "העלה קובץ"
@@ -294,7 +308,8 @@
     "Password verification required": "נדרש אימות סיסמה",
     "Invalid two-factor authentication code": "קוד אימות דו-שלבי לא חוקי",
     "Two-factor authentication required": "נדרש אימות דו-שלבי",
-    "noUserData": "אין נתוני משתמש"
+    "noUserData": "אין נתוני משתמש",
+    "passwordAuthDisabled": "כניסה עם סיסמה מושבתת בשרת זה"
   },
   "fileActions": {
     "editFile": "ערוך קובץ",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "טבלה",
-      "grid": "רשת"
+      "grid": "רשת",
+      "label": "תצוגה"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "מופעל על ידי",
-    "kyanHomepage": "דף הבית של Kyantech"
+    "kyanHomepage": "דף הבית של SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "כתובת דוא\"ל",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "האלטרנטיבה בקוד פתוח ל-WeTransfer. שתף קבצים בצורה מאובטחת, ללא מעקב או הגבלות.",
+    "description": "העלה, שתף קישור אחד, והחלט בדיוק כמה זמן הוא יישאר פתוח. פועל על השרת שלך, ללא מתווכים.",
     "documentation": "תיעוד",
     "starOnGithub": "תן כוכב ב-GitHub",
     "privacyMessage": "בנוי עם פרטיות בראש. הקבצים שלך נגישים רק לאלו עם קישור השיתוף לפני ההעלאה. חינמי וקוד פתוח לנצח.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "פועל על השרת שלך",
+      "expiry": "הקישורים פגים מעצמם",
+      "noTracking": "ללא מעקב, ללא הגבלות"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "כניסה",
     "or": "או",
     "continueWithSSO": "המשך עם SSO",
-    "processing": "מעבד אימות..."
+    "processing": "מעבד אימות...",
+    "noAuthMethodsAvailable": "אין שיטת כניסה זמינה. בקש מהמנהל שלך להפעיל אחת."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "צור חשבון מנהל"
     }
   },
+  "registerWithInvite": {
+    "title": "צור את החשבון שלך",
+    "description": "מלא את הפרטים למטה כדי ליצור את החשבון שלך",
+    "labels": {
+      "firstName": "שם פרטי",
+      "firstNamePlaceholder": "הזן את השם הפרטי שלך",
+      "lastName": "שם משפחה",
+      "lastNamePlaceholder": "הזן את השם המשפחה שלך",
+      "username": "שם משתמש",
+      "usernamePlaceholder": "בחר שם משתמש",
+      "email": "דוא\"ל",
+      "emailPlaceholder": "הזן את הדוא\"ל שלך",
+      "password": "סיסמה",
+      "passwordPlaceholder": "בחר סיסמה",
+      "confirmPassword": "אשר סיסמה",
+      "confirmPasswordPlaceholder": "אשר את הסיסמה שלך"
+    },
+    "buttons": {
+      "creating": "יוצר חשבון...",
+      "createAccount": "צור חשבון"
+    },
+    "validation": {
+      "firstNameRequired": "שם פרטי נדרש",
+      "lastNameRequired": "שם משפחה נדרש",
+      "usernameMinLength": "שם משתמש חייב להכיל לפחות 3 תווים",
+      "invalidEmail": "דוא\"ל לא חוקי",
+      "passwordMinLength": "סיסמה חייבת להכיל לפחות 8 תווים",
+      "passwordsMatch": "סיסמאות חייבות להתאים"
+    },
+    "messages": {
+      "success": "החשבון נוצר בהצלחה! מעביר לכניסה...",
+      "redirecting": "מעביר לכניסה..."
+    },
+    "errors": {
+      "invalidToken": "שגיאה בקישור ההזמנה",
+      "tokenUsed": "קישור ההזמנה הזה כבר נוצל",
+      "tokenExpired": "קישור ההזמנה הזה פג תוקפו",
+      "usernameExists": "שם המשתמש כבר קיים",
+      "emailExists": "הדוא\"ל כבר קיים",
+      "createFailed": "נכשל ביצירת חשבון. אנא נסה שוב."
+    },
+    "pageTitle": "צור חשבון"
+  },
   "resetPassword": {
     "pageTitle": "אפס סיסמה",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "הגן בסיסמה",
       "layoutOptions": {
         "default": "ברירת מחדל",
-        "wetransfer": "WeTransfer"
+        "vessel": "כד"
       },
       "noFilesLimit": "ללא הגבלת קבצים",
       "noSizeLimit": "ללא הגבלת גודל",
@@ -1035,7 +1095,7 @@
         "description": "כיצד עמוד ההעלאה יופיע למשתמשים.",
         "options": {
           "default": "פריסת ברירת מחדל",
-          "wetransfer": "סגנון WeTransfer"
+          "vessel": "פריסת כד"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {קובץ אחד משותף} other {# קבצים משותפים}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# קובץ} two {# קבצים} many {# קבצים} other {# קבצים}}",
+    "breakSeal": "שבור את החותם",
+    "sealed": "חתום",
+    "opened": "נפתח"
   },
   "shareActions": {
     "fileTitle": "שתף קובץ",
@@ -1467,7 +1527,8 @@
     "qrCode": "קוד QR",
     "downloadQrCode": "הורד קוד QR",
     "clickToEnlargeQrCode": "לחץ להגדלת קוד QR",
-    "loadError": "נכשל בטעינת פרטי שיתוף"
+    "loadError": "נכשל בטעינת פרטי שיתוף",
+    "linkCopied": "הקישור הועתק"
   },
   "shareExpiration": {
     "title": "הגדרות תפוגת שיתוף",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "שיתוף"
+    "defaultShareName": "שיתוף",
+    "downloading": "מוריד",
+    "preparingDownload": "מכין הורדה"
   },
   "shareMultipleFiles": {
     "title": "שתף מספר קבצים",
@@ -1856,7 +1919,10 @@
       "continue": "המשך העלאות",
       "cancel": "בטל העלאות"
     },
-    "pasteSuccess": "{count, plural, =1 {תמונה הודבקה והועלתה בהצלחה} other {# תמונות הודבקו והועלו בהצלחה}}"
+    "pasteSuccess": "{count, plural, =1 {תמונה הודבקה והועלתה בהצלחה} other {# תמונות הודבקו והועלו בהצלחה}}",
+    "errors": {
+      "uploadFailed": "ההעלאה נכשלה"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "הטמע מדיה",
-    "description": "השתמש בקודים האלה כדי להטמיע מדיה זו בפורומים, אתרים או פלטפורמות אחרות",
-    "tabs": {
-      "directLink": "קישור ישיר",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "כתובת URL ישירה לקובץ המדיה",
-    "htmlDescription": "השתמש בקוד הזה כדי להטמיע את המדיה בעמודי HTML",
-    "bbcodeDescription": "השתמש בקוד הזה כדי להטמיע את המדיה בפורומים שתומכים ב-BBCode"
-  },
   "validation": {
     "firstNameRequired": "שם פרטי נדרש",
     "lastNameRequired": "שם משפחה נדרש",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "סיסמה חייבת להכיל לפחות 6 תווים",
     "nameRequired": "שם נדרש",
     "required": "שדה זה נדרש"
-  },
-  "registerWithInvite": {
-    "title": "צור את החשבון שלך",
-    "description": "מלא את הפרטים למטה כדי ליצור את החשבון שלך",
-    "labels": {
-      "firstName": "שם פרטי",
-      "firstNamePlaceholder": "הזן את השם הפרטי שלך",
-      "lastName": "שם משפחה",
-      "lastNamePlaceholder": "הזן את השם המשפחה שלך",
-      "username": "שם משתמש",
-      "usernamePlaceholder": "בחר שם משתמש",
-      "email": "דוא\"ל",
-      "emailPlaceholder": "הזן את הדוא\"ל שלך",
-      "password": "סיסמה",
-      "passwordPlaceholder": "בחר סיסמה",
-      "confirmPassword": "אשר סיסמה",
-      "confirmPasswordPlaceholder": "אשר את הסיסמה שלך"
-    },
-    "buttons": {
-      "creating": "יוצר חשבון...",
-      "createAccount": "צור חשבון"
-    },
-    "validation": {
-      "firstNameRequired": "שם פרטי נדרש",
-      "lastNameRequired": "שם משפחה נדרש",
-      "usernameMinLength": "שם משתמש חייב להכיל לפחות 3 תווים",
-      "invalidEmail": "דוא\"ל לא חוקי",
-      "passwordMinLength": "סיסמה חייבת להכיל לפחות 8 תווים",
-      "passwordsMatch": "סיסמאות חייבות להתאים"
-    },
-    "messages": {
-      "success": "החשבון נוצר בהצלחה! מעביר לכניסה...",
-      "redirecting": "מעביר לכניסה..."
-    },
-    "errors": {
-      "invalidToken": "שגיאה בקישור ההזמנה",
-      "tokenUsed": "קישור ההזמנה הזה כבר נוצל",
-      "tokenExpired": "קישור ההזמנה הזה פג תוקפו",
-      "usernameExists": "שם המשתמש כבר קיים",
-      "emailExists": "הדוא\"ל כבר קיים",
-      "createFailed": "נכשל ביצירת חשבון. אנא נסה שוב."
-    },
-    "pageTitle": "צור חשבון"
   }
 }

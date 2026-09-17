@@ -14,7 +14,7 @@ interface StatusMessageProps {
   size?: "default" | "compact";
 }
 
-interface WeTransferStatusMessageProps {
+interface VesselStatusMessageProps {
   type: keyof typeof MESSAGE_TYPES;
   icon: React.ComponentType<{ className?: string }>;
   titleKey: string;
@@ -56,14 +56,14 @@ export function StatusMessage({
   );
 }
 
-export function WeTransferStatusMessage({
+export function VesselStatusMessage({
   type,
   icon: Icon,
   titleKey,
   descriptionKey,
   showContactOwner = false,
   reverseShare,
-}: WeTransferStatusMessageProps) {
+}: VesselStatusMessageProps) {
   const t = useTranslations();
 
   const getVariant = (): "success" | "warning" | "error" | "info" | "neutral" => {

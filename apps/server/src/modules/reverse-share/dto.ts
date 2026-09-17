@@ -15,7 +15,7 @@ export const CreateReverseShareSchema = z.object({
   maxFileSize: z.number().int().positive().nullable().optional().describe("Maximum file size in bytes"),
   allowedFileTypes: z.string().nullable().optional().describe("Comma-separated list of allowed file extensions"),
   password: z.string().optional().describe("Password for private access"),
-  pageLayout: z.enum(["WETRANSFER", "DEFAULT"]).default("DEFAULT").describe("Page layout type"),
+  pageLayout: z.enum(["VESSEL", "DEFAULT"]).default("DEFAULT").describe("Page layout type"),
   nameFieldRequired: FieldRequirementSchema.default("OPTIONAL").describe("Name field requirement setting"),
   emailFieldRequired: FieldRequirementSchema.default("OPTIONAL").describe("Email field requirement setting"),
 });
@@ -29,7 +29,7 @@ export const UpdateReverseShareSchema = z.object({
   maxFileSize: z.number().int().positive().nullable().optional(),
   allowedFileTypes: z.string().nullable().optional(),
   password: z.string().nullable().optional(),
-  pageLayout: z.enum(["WETRANSFER", "DEFAULT"]).optional(),
+  pageLayout: z.enum(["VESSEL", "DEFAULT"]).optional(),
   isActive: z.boolean().optional(),
   nameFieldRequired: FieldRequirementSchema.optional().describe("Name field requirement setting"),
   emailFieldRequired: FieldRequirementSchema.optional().describe("Email field requirement setting"),

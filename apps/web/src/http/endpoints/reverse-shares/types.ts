@@ -1,7 +1,7 @@
 import type { AxiosResponse } from "axios";
 
 export type FieldRequirement = "HIDDEN" | "OPTIONAL" | "REQUIRED";
-export type PageLayout = "WETRANSFER" | "DEFAULT";
+export type PageLayout = "VESSEL" | "DEFAULT";
 
 export interface ReverseShareFile {
   id: string;

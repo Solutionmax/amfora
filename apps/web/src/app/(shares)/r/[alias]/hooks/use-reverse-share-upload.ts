@@ -114,7 +114,7 @@ export function useReverseShareUpload({ alias }: UseReverseShareUploadProps) {
   }, [alias, loadReverseShare]);
 
   const isMaxFilesReached = reverseShare ? checkIfMaxFilesReached(reverseShare) : false;
-  const isWeTransferLayout = reverseShare?.pageLayout === "WETRANSFER";
+  const isVesselLayout = reverseShare?.pageLayout === "VESSEL";
   const hasError = error.type !== null || (!reverseShare && !isLoading && !isPasswordModalOpen);
 
   const isLinkInactive = error.type === "inactive";
@@ -131,7 +131,7 @@ export function useReverseShareUpload({ alias }: UseReverseShareUploadProps) {
     hasUploadedSuccessfully,
     error: error.type,
     isMaxFilesReached,
-    isWeTransferLayout,
+    isVesselLayout,
     hasError,
 
     isLinkInactive,

@@ -1,11 +1,11 @@
 {
   "auth": {
     "errors": {
-      "account_inactive": "Conta inativa. Entre em contato com o administrador.",
-      "registration_disabled": "Registro via SSO está desabilitado.",
-      "token_expired": "Token expirado. Tente novamente.",
-      "config_error": "Erro de configuração. Contate o suporte.",
-      "auth_failed": "Falha na autenticação. Tente novamente."
+      "account_inactive": "Аккаунт неактивен. Обратитесь к администратору.",
+      "registration_disabled": "Регистрация через SSO отключена.",
+      "token_expired": "Срок действия токена истёк. Попробуйте снова.",
+      "config_error": "Ошибка конфигурации. Обратитесь в поддержку.",
+      "auth_failed": "Ошибка аутентификации. Попробуйте снова."
     },
     "authenticationFailed": "Ошибка аутентификации",
     "successfullyAuthenticated": "Успешно аутентифицирован!"
@@ -154,7 +154,13 @@
     "search": "Поиск",
     "share": "Поделиться",
     "copied": "Скопировано",
-    "copy": "Копировать"
+    "copy": "Копировать",
+    "invalidDate": "Неверная дата",
+    "notAvailable": "Недоступно"
+  },
+  "contextMenu": {
+    "newFolder": "Новая папка",
+    "uploadFile": "Загрузить файл"
   },
   "createShare": {
     "title": "Создать общий доступ",
@@ -274,6 +280,18 @@
       "refresh": "Обновить очередь"
     }
   },
+  "embedCode": {
+    "title": "Встроить медиа",
+    "description": "Используйте эти коды для встраивания этого медиа на форумах, веб-сайтах или других платформах",
+    "tabs": {
+      "directLink": "Прямая ссылка",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Прямой URL-адрес медиафайла",
+    "htmlDescription": "Используйте этот код для встраивания медиа в HTML-страницы",
+    "bbcodeDescription": "Используйте этот код для встраивания медиа на форумах, поддерживающих BBCode"
+  },
   "emptyState": {
     "noFiles": "Файлы еще не загружены",
     "uploadFile": "Загрузить файл"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "Двухфакторная аутентификация уже включена",
     "Two-factor authentication is not enabled": "Двухфакторная аутентификация не включена",
     "Two-factor authentication required": "Требуется двухфакторная аутентификация",
-    "noUserData": "Нет данных пользователя"
+    "noUserData": "Нет данных пользователя",
+    "passwordAuthDisabled": "Вход по паролю отключён на этом сервере"
   },
   "fileActions": {
     "editFile": "Редактировать файл",
@@ -372,7 +391,8 @@
     "totalFiles": "{count, plural, =0 {Нет файлов} =1 {1 файл} other {# файлов}}",
     "viewMode": {
       "table": "Таблица",
-      "grid": "Сетка"
+      "grid": "Сетка",
+      "label": "Вид"
     },
     "bulkDeleteConfirmation": "Вы уверены, что хотите удалить {count, plural, =1 {1 файл} other {# файлов}}? Это действие нельзя отменить.",
     "bulkDeleteTitle": "Удалить Выбранные Файлы",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "При поддержке",
-    "kyanHomepage": "Домашняя страница Kyantech"
+    "kyanHomepage": "Домашняя страница SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Адрес электронной почты",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Открытая альтернатива WeTransfer. Делитесь файлами безопасно, без отслеживания и ограничений.",
+    "description": "Загрузите, поделитесь одной ссылкой и решите, сколько именно времени она будет активна. Работает на вашем собственном сервере, без посредников.",
     "documentation": "Документация",
     "starOnGithub": "Оцените на GitHub",
     "privacyMessage": "Создано с учетом конфиденциальности. Ваши файлы до загрузки доступны только тем, у кого есть ссылка для доступа. Всегда бесплатно и с открытым исходным кодом.",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Работает на вашем собственном сервере",
+      "expiry": "Ссылки истекают сами по себе",
+      "noTracking": "Без отслеживания, без ограничений"
     }
   },
   "iconPicker": {
@@ -540,7 +560,8 @@
     "pageTitle": "Вход",
     "or": "или",
     "continueWithSSO": "Продолжить с SSO",
-    "processing": "Обработка аутентификации..."
+    "processing": "Обработка аутентификации...",
+    "noAuthMethodsAvailable": "Нет доступного способа входа. Попросите администратора включить один."
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "Создать учетную запись администратора"
     }
   },
+  "registerWithInvite": {
+    "title": "Создайте свою учетную запись",
+    "description": "Заполните информацию ниже, чтобы создать свою учетную запись",
+    "labels": {
+      "firstName": "Имя",
+      "firstNamePlaceholder": "Введите ваше имя",
+      "lastName": "Фамилия",
+      "lastNamePlaceholder": "Введите вашу фамилию",
+      "username": "Имя пользователя",
+      "usernamePlaceholder": "Выберите имя пользователя",
+      "email": "Электронная почта",
+      "emailPlaceholder": "Введите вашу электронную почту",
+      "password": "Пароль",
+      "passwordPlaceholder": "Выберите пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "confirmPasswordPlaceholder": "Подтвердите ваш пароль"
+    },
+    "buttons": {
+      "creating": "Создание учетной записи...",
+      "createAccount": "Создать учетную запись"
+    },
+    "validation": {
+      "firstNameRequired": "Имя обязательно",
+      "lastNameRequired": "Фамилия обязательна",
+      "usernameMinLength": "Имя пользователя должно содержать не менее 3 символов",
+      "invalidEmail": "Неверный адрес электронной почты",
+      "passwordMinLength": "Пароль должен содержать не менее 8 символов",
+      "passwordsMatch": "Пароли должны совпадать"
+    },
+    "messages": {
+      "success": "Учетная запись успешно создана! Перенаправление на вход...",
+      "redirecting": "Перенаправление на вход..."
+    },
+    "errors": {
+      "invalidToken": "Ошибка с ссылкой приглашения",
+      "tokenUsed": "Эта ссылка приглашения уже была использована",
+      "tokenExpired": "Срок действия этой ссылки приглашения истек",
+      "usernameExists": "Имя пользователя уже существует",
+      "emailExists": "Электронная почта уже существует",
+      "createFailed": "Не удалось создать учетную запись. Пожалуйста, попробуйте еще раз."
+    },
+    "pageTitle": "Создать учетную запись"
+  },
   "resetPassword": {
     "pageTitle": "Сбросить пароль",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "Защитить паролем",
       "layoutOptions": {
         "default": "По умолчанию",
-        "wetransfer": "WeTransfer"
+        "vessel": "Амфора"
       },
       "noFilesLimit": "Без ограничения файлов",
       "noSizeLimit": "Без ограничения размера",
@@ -1031,7 +1095,7 @@
         "description": "Как будет выглядеть страница загрузки для пользователей.",
         "options": {
           "default": "Стандартный макет",
-          "wetransfer": "Стиль WeTransfer"
+          "vessel": "Макет амфоры"
         }
       },
       "password": {
@@ -1300,8 +1364,8 @@
         "description": "Время первого доступа пользователя"
       },
       "serverUrl": {
-        "title": "URL do Servidor",
-        "description": "URL base do servidor Amfora (ex: https://palmr.exemplo.com)"
+        "title": "URL сервера",
+        "description": "Базовый URL сервера Amfora (например: https://amfora.example.com)"
       },
       "testSmtp": {
         "title": "Проверить SMTP-соединение",
@@ -1362,8 +1426,8 @@
       "defaultPlaceholder": "Введите и нажмите Enter"
     },
     "redirectUri": {
-      "placeholder": "https://meusite.com",
-      "previewLabel": "URL completa que será salva:"
+      "placeholder": "https://mysite.com",
+      "previewLabel": "Полный URL, который будет сохранён:"
     }
   },
   "share": {
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 файл отправлен} other {# файлов отправлено}}"
     },
     "download": "Скачать",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# файл} few {# файла} many {# файлов} other {# файла}}",
+    "breakSeal": "Сломать печать",
+    "sealed": "Запечатано",
+    "opened": "Открыто"
   },
   "shareActions": {
     "deleteTitle": "Удалить Общий Доступ",
@@ -1463,7 +1527,8 @@
     "editExpiration": "Изменить срок действия",
     "clickToEnlargeQrCode": "Нажмите, чтобы увеличить QR-код",
     "downloadQrCode": "Скачать QR-код",
-    "qrCode": "QR-код"
+    "qrCode": "QR-код",
+    "linkCopied": "Ссылка скопирована"
   },
   "shareExpiration": {
     "neverExpires": "Никогда не истекает",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "Zip -файл успешно загружен",
     "errors": {
       "multipleDownloadNotSupported": "Множественная загрузка общих ресурсов пока не поддерживается - загружайте общие ресурсы по отдельности"
-    }
+    },
+    "downloading": "Загрузка",
+    "preparingDownload": "Подготовка загрузки"
   },
   "shareMultipleFiles": {
     "title": "Поделиться Несколькими Файлами",
@@ -1852,7 +1919,10 @@
       "description": "Отпустите, чтобы загрузить файлы"
     },
     "pasteSuccess": "{count, plural, =1 {Изображение вставлено и успешно загружено} other {# изображений вставлено и успешно загружено}}",
-    "filesQueued": "{count, plural, one {# файл в очереди для загрузки} other {# файлов в очереди для загрузки}}"
+    "filesQueued": "{count, plural, one {# файл в очереди для загрузки} other {# файлов в очереди для загрузки}}",
+    "errors": {
+      "uploadFailed": "Ошибка загрузки"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordRequired": "Требуется пароль",
     "nameRequired": "Требуется имя",
     "required": "Это поле обязательно"
-  },
-  "embedCode": {
-    "title": "Встроить медиа",
-    "description": "Используйте эти коды для встраивания этого медиа на форумах, веб-сайтах или других платформах",
-    "tabs": {
-      "directLink": "Прямая ссылка",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Прямой URL-адрес медиафайла",
-    "htmlDescription": "Используйте этот код для встраивания медиа в HTML-страницы",
-    "bbcodeDescription": "Используйте этот код для встраивания медиа на форумах, поддерживающих BBCode"
-  },
-  "contextMenu": {
-    "newFolder": "Новая папка",
-    "uploadFile": "Загрузить файл"
-  },
-  "registerWithInvite": {
-    "title": "Создайте свою учетную запись",
-    "description": "Заполните информацию ниже, чтобы создать свою учетную запись",
-    "labels": {
-      "firstName": "Имя",
-      "firstNamePlaceholder": "Введите ваше имя",
-      "lastName": "Фамилия",
-      "lastNamePlaceholder": "Введите вашу фамилию",
-      "username": "Имя пользователя",
-      "usernamePlaceholder": "Выберите имя пользователя",
-      "email": "Электронная почта",
-      "emailPlaceholder": "Введите вашу электронную почту",
-      "password": "Пароль",
-      "passwordPlaceholder": "Выберите пароль",
-      "confirmPassword": "Подтвердите пароль",
-      "confirmPasswordPlaceholder": "Подтвердите ваш пароль"
-    },
-    "buttons": {
-      "creating": "Создание учетной записи...",
-      "createAccount": "Создать учетную запись"
-    },
-    "validation": {
-      "firstNameRequired": "Имя обязательно",
-      "lastNameRequired": "Фамилия обязательна",
-      "usernameMinLength": "Имя пользователя должно содержать не менее 3 символов",
-      "invalidEmail": "Неверный адрес электронной почты",
-      "passwordMinLength": "Пароль должен содержать не менее 8 символов",
-      "passwordsMatch": "Пароли должны совпадать"
-    },
-    "messages": {
-      "success": "Учетная запись успешно создана! Перенаправление на вход...",
-      "redirecting": "Перенаправление на вход..."
-    },
-    "errors": {
-      "invalidToken": "Ошибка с ссылкой приглашения",
-      "tokenUsed": "Эта ссылка приглашения уже была использована",
-      "tokenExpired": "Срок действия этой ссылки приглашения истек",
-      "usernameExists": "Имя пользователя уже существует",
-      "emailExists": "Электронная почта уже существует",
-      "createFailed": "Не удалось создать учетную запись. Пожалуйста, попробуйте еще раз."
-    },
-    "pageTitle": "Создать учетную запись"
   }
 }

@@ -154,7 +154,13 @@
     "search": "搜索",
     "share": "分享",
     "copied": "已复制",
-    "copy": "复制"
+    "copy": "复制",
+    "invalidDate": "日期无效",
+    "notAvailable": "不可用"
+  },
+  "contextMenu": {
+    "newFolder": "新建文件夹",
+    "uploadFile": "上传文件"
   },
   "createShare": {
     "title": "创建分享",
@@ -274,6 +280,18 @@
       "refresh": "刷新队列"
     }
   },
+  "embedCode": {
+    "title": "嵌入媒体",
+    "description": "使用这些代码将此媒体嵌入到论坛、网站或其他平台中",
+    "tabs": {
+      "directLink": "直接链接",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "媒体文件的直接URL",
+    "htmlDescription": "使用此代码将媒体嵌入HTML页面",
+    "bbcodeDescription": "使用此代码将媒体嵌入支持BBCode的论坛"
+  },
   "emptyState": {
     "noFiles": "尚未上传任何文件",
     "uploadFile": "上传文件"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "双重认证已启用",
     "Two-factor authentication is not enabled": "双重认证未启用",
     "Two-factor authentication required": "需要双重认证",
-    "noUserData": "没有用户数据"
+    "noUserData": "没有用户数据",
+    "passwordAuthDisabled": "此服务器已禁用密码登录"
   },
   "fileActions": {
     "editFile": "编辑文件",
@@ -371,7 +390,8 @@
     "bulkDeleteError": "删除选中文件错误",
     "viewMode": {
       "table": "表格",
-      "grid": "网格"
+      "grid": "网格",
+      "label": "视图"
     },
     "totalFiles": "{count, plural, =0 {无文件} =1 {1个文件} other {#个文件}}",
     "bulkDeleteConfirmation": "您确定要删除 {count, plural, =1 {1 个文件} other {# 个文件}}吗？此操作无法撤销。",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "技术支持：",
-    "kyanHomepage": "Kyantech 主页"
+    "kyanHomepage": "SolutionMAX 主页"
   },
   "forgotPassword": {
     "emailLabel": "电子邮件地址",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "WeTransfer的开源替代方案。安全分享文件，无需跟踪或限制。",
+    "description": "上传、分享一个链接，并精确决定它保持开放的时长。在您自己的服务器上运行，中间没有任何第三方。",
     "documentation": "文档",
     "starOnGithub": "在GitHub上点赞",
     "privacyMessage": "本应用注重隐私。在上传前，您的文件仅对拥有共享链接的人可见。永远免费且开源。",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "在您自己的服务器上运行",
+      "expiry": "链接会自动过期",
+      "noTracking": "无跟踪，无限制"
     }
   },
   "iconPicker": {
@@ -540,7 +560,8 @@
     "pageTitle": "登录",
     "or": "或",
     "continueWithSSO": "使用SSO继续",
-    "processing": "正在处理认证..."
+    "processing": "正在处理认证...",
+    "noAuthMethodsAvailable": "没有可用的登录方式。请联系管理员启用一种。"
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "创建管理员账户"
     }
   },
+  "registerWithInvite": {
+    "title": "创建您的账户",
+    "description": "填写以下信息以创建您的账户",
+    "labels": {
+      "firstName": "名字",
+      "firstNamePlaceholder": "输入您的名字",
+      "lastName": "姓氏",
+      "lastNamePlaceholder": "输入您的姓氏",
+      "username": "用户名",
+      "usernamePlaceholder": "选择一个用户名",
+      "email": "电子邮件",
+      "emailPlaceholder": "输入您的电子邮件",
+      "password": "密码",
+      "passwordPlaceholder": "选择一个密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "确认您的密码"
+    },
+    "buttons": {
+      "creating": "正在创建账户...",
+      "createAccount": "创建账户"
+    },
+    "validation": {
+      "firstNameRequired": "名字为必填项",
+      "lastNameRequired": "姓氏为必填项",
+      "usernameMinLength": "用户名至少需要3个字符",
+      "invalidEmail": "无效的电子邮件",
+      "passwordMinLength": "密码至少需要8个字符",
+      "passwordsMatch": "密码必须匹配"
+    },
+    "messages": {
+      "success": "账户创建成功！正在重定向到登录...",
+      "redirecting": "正在重定向到登录..."
+    },
+    "errors": {
+      "invalidToken": "邀请链接错误",
+      "tokenUsed": "此邀请链接已被使用",
+      "tokenExpired": "此邀请链接已过期",
+      "usernameExists": "用户名已存在",
+      "emailExists": "电子邮件已存在",
+      "createFailed": "创建账户失败。请重试。"
+    },
+    "pageTitle": "创建账户"
+  },
   "resetPassword": {
     "pageTitle": "重置密码",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "密码保护",
       "layoutOptions": {
         "default": "默认",
-        "wetransfer": "WeTransfer"
+        "vessel": "陶罐"
       },
       "noFilesLimit": "无文件数限制",
       "noSizeLimit": "无大小限制",
@@ -1031,7 +1095,7 @@
         "description": "上传页面对用户的显示方式。",
         "options": {
           "default": "默认布局",
-          "wetransfer": "WeTransfer风格"
+          "vessel": "陶罐布局"
         }
       },
       "password": {
@@ -1300,8 +1364,8 @@
         "title": "首次用户访问"
       },
       "serverUrl": {
-        "title": "URL do Servidor",
-        "description": "URL base do servidor Amfora (ex: https://palmr.exemplo.com)"
+        "title": "服务器 URL",
+        "description": "Amfora 服务器的基础 URL（例如：https://amfora.example.com）"
       },
       "testSmtp": {
         "title": "测试SMTP连接",
@@ -1362,8 +1426,8 @@
       "defaultPlaceholder": "输入并按回车键"
     },
     "redirectUri": {
-      "placeholder": "https://meusite.com",
-      "previewLabel": "URL completa que será salva:"
+      "placeholder": "https://mysite.com",
+      "previewLabel": "将保存的完整 URL："
     }
   },
   "share": {
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {已共享 1 个文件} other {已共享 # 个文件}}"
     },
     "download": "下载",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, other {#个文件}}",
+    "breakSeal": "打破封印",
+    "sealed": "已封印",
+    "opened": "已打开"
   },
   "shareActions": {
     "deleteTitle": "删除共享",
@@ -1463,7 +1527,8 @@
     "editExpiration": "编辑过期",
     "clickToEnlargeQrCode": "点击放大QR Code",
     "downloadQrCode": "下载QR Code",
-    "qrCode": "QR Code"
+    "qrCode": "QR Code",
+    "linkCopied": "链接已复制"
   },
   "shareExpiration": {
     "neverExpires": "永不过期",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "zip文件成功下载了",
     "errors": {
       "multipleDownloadNotSupported": "暂不支持多个分享下载 - 请分别下载各个分享"
-    }
+    },
+    "downloading": "正在下载",
+    "preparingDownload": "正在准备下载"
   },
   "shareMultipleFiles": {
     "title": "分享多个文件",
@@ -1608,7 +1675,7 @@
       "files": "文件",
       "recipients": "收件人",
       "actions": "操作",
-      "description": "DESCRIÇÃO"
+      "description": "描述"
     },
     "status": {
       "neverExpires": "永不过期",
@@ -1700,11 +1767,7 @@
       "copyToClipboard": "复制到剪贴板",
       "savedMessage": "我已保存备用码",
       "available": "可用备用码：{count}个",
-      "instructions": [
-        "• 将这些代码保存在安全的位置",
-        "• 每个备用码只能使用一次",
-        "• 您可以随时生成新的备用码"
-      ]
+      "instructions": ["• 将这些代码保存在安全的位置", "• 每个备用码只能使用一次", "• 您可以随时生成新的备用码"]
     },
     "verification": {
       "title": "双重认证",
@@ -1852,7 +1915,10 @@
       "description": "松开以上传您的文件"
     },
     "pasteSuccess": "{count, plural, =1 {图片已成功粘贴并上传} other {# 张图片已成功粘贴并上传}}",
-    "filesQueued": "{count, plural, one {# 文件正在等待上传} other {# 文件正在等待上传}}"
+    "filesQueued": "{count, plural, one {# 文件正在等待上传} other {# 文件正在等待上传}}",
+    "errors": {
+      "uploadFailed": "上传失败"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2020,5 @@
     "passwordRequired": "密码为必填项",
     "nameRequired": "名称为必填项",
     "required": "此字段为必填项"
-  },
-  "embedCode": {
-    "title": "嵌入媒体",
-    "description": "使用这些代码将此媒体嵌入到论坛、网站或其他平台中",
-    "tabs": {
-      "directLink": "直接链接",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "媒体文件的直接URL",
-    "htmlDescription": "使用此代码将媒体嵌入HTML页面",
-    "bbcodeDescription": "使用此代码将媒体嵌入支持BBCode的论坛"
-  },
-  "contextMenu": {
-    "newFolder": "新建文件夹",
-    "uploadFile": "上传文件"
-  },
-  "registerWithInvite": {
-    "title": "创建您的账户",
-    "description": "填写以下信息以创建您的账户",
-    "labels": {
-      "firstName": "名字",
-      "firstNamePlaceholder": "输入您的名字",
-      "lastName": "姓氏",
-      "lastNamePlaceholder": "输入您的姓氏",
-      "username": "用户名",
-      "usernamePlaceholder": "选择一个用户名",
-      "email": "电子邮件",
-      "emailPlaceholder": "输入您的电子邮件",
-      "password": "密码",
-      "passwordPlaceholder": "选择一个密码",
-      "confirmPassword": "确认密码",
-      "confirmPasswordPlaceholder": "确认您的密码"
-    },
-    "buttons": {
-      "creating": "正在创建账户...",
-      "createAccount": "创建账户"
-    },
-    "validation": {
-      "firstNameRequired": "名字为必填项",
-      "lastNameRequired": "姓氏为必填项",
-      "usernameMinLength": "用户名至少需要3个字符",
-      "invalidEmail": "无效的电子邮件",
-      "passwordMinLength": "密码至少需要8个字符",
-      "passwordsMatch": "密码必须匹配"
-    },
-    "messages": {
-      "success": "账户创建成功！正在重定向到登录...",
-      "redirecting": "正在重定向到登录..."
-    },
-    "errors": {
-      "invalidToken": "邀请链接错误",
-      "tokenUsed": "此邀请链接已被使用",
-      "tokenExpired": "此邀请链接已过期",
-      "usernameExists": "用户名已存在",
-      "emailExists": "电子邮件已存在",
-      "createFailed": "创建账户失败。请重试。"
-    },
-    "pageTitle": "创建账户"
   }
 }

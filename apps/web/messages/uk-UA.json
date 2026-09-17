@@ -10,10 +10,6 @@
       "auth_failed": "Помилка автентифікації. Спробуйте ще раз."
     }
   },
-  "contextMenu": {
-    "newFolder": "Нова папка",
-    "uploadFile": "Завантажити файл"
-  },
   "authProviders": {
     "title": "Постачальники автентифікації",
     "description": "Налаштувати зовнішніх постачальників автентифікації для SSO",
@@ -158,7 +154,13 @@
     "share": "Поділитися",
     "search": "Пошук",
     "copy": "Копіювати",
-    "copied": "Скопійовано"
+    "copied": "Скопійовано",
+    "invalidDate": "Недійсна дата",
+    "notAvailable": "Недоступно"
+  },
+  "contextMenu": {
+    "newFolder": "Нова папка",
+    "uploadFile": "Завантажити файл"
   },
   "createShare": {
     "title": "Створити спільний доступ",
@@ -278,6 +280,18 @@
       "refresh": "Оновити чергу"
     }
   },
+  "embedCode": {
+    "title": "Вбудувати медіа",
+    "description": "Використовуйте ці коди для вбудовування цього медіа на форумах, веб-сайтах або інших платформах",
+    "tabs": {
+      "directLink": "Пряме посилання",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Прямий URL до медіа файлу",
+    "htmlDescription": "Використовуйте цей код для вбудовування медіа в HTML сторінки",
+    "bbcodeDescription": "Використовуйте цей код для вбудовування медіа на форумах, які підтримують BBCode"
+  },
   "emptyState": {
     "noFiles": "Ще немає завантажених файлів",
     "uploadFile": "Завантажити файл"
@@ -294,7 +308,8 @@
     "Password verification required": "Потрібна перевірка пароля",
     "Invalid two-factor authentication code": "Неправильний код двофакторної автентифікації",
     "Two-factor authentication required": "Потрібна двофакторна автентифікація",
-    "noUserData": "Немає даних користувача"
+    "noUserData": "Немає даних користувача",
+    "passwordAuthDisabled": "Вхід за паролем вимкнено на цьому сервері"
   },
   "fileActions": {
     "editFile": "Редагувати файл",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "Таблиця",
-      "grid": "Сітка"
+      "grid": "Сітка",
+      "label": "Вигляд"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Працює на",
-    "kyanHomepage": "Домашня сторінка Kyantech"
+    "kyanHomepage": "Домашня сторінка SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Адреса електронної пошти",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Альтернатива WeTransfer з відкритим кодом. Діліться файлами безпечно, без відстеження або обмежень.",
+    "description": "Завантажте, поділіться одним посиланням і вирішіть, скільки саме часу воно залишатиметься активним. Працює на вашому власному сервері, без посередників.",
     "documentation": "Документація",
     "starOnGithub": "Поставити зірочку на GitHub",
     "privacyMessage": "Створено з думкою про приватність. Ваші файли доступні лише тим, у кого є посилання для спільного доступу перед завантаженням. Назавжди безкоштовно та з відкритим кодом.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Працює на вашому власному сервері",
+      "expiry": "Посилання закінчуються самі",
+      "noTracking": "Без відстеження, без обмежень"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "Вхід",
     "or": "або",
     "continueWithSSO": "Продовжити з SSO",
-    "processing": "Обробка автентифікації..."
+    "processing": "Обробка автентифікації...",
+    "noAuthMethodsAvailable": "Немає доступного способу входу. Попросіть адміністратора увімкнути один."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Створити акаунт адміністратора"
     }
   },
+  "registerWithInvite": {
+    "title": "Створіть свій обліковий запис",
+    "description": "Заповніть інформацію нижче, щоб створити свій обліковий запис",
+    "labels": {
+      "firstName": "Ім'я",
+      "firstNamePlaceholder": "Введіть ваше ім'я",
+      "lastName": "Прізвище",
+      "lastNamePlaceholder": "Введіть ваше прізвище",
+      "username": "Ім'я користувача",
+      "usernamePlaceholder": "Виберіть ім'я користувача",
+      "email": "Електронна пошта",
+      "emailPlaceholder": "Введіть вашу електронну пошту",
+      "password": "Пароль",
+      "passwordPlaceholder": "Виберіть пароль",
+      "confirmPassword": "Підтвердити пароль",
+      "confirmPasswordPlaceholder": "Підтвердіть ваш пароль"
+    },
+    "buttons": {
+      "creating": "Створення облікового запису...",
+      "createAccount": "Створити обліковий запис"
+    },
+    "validation": {
+      "firstNameRequired": "Ім'я обов'язкове",
+      "lastNameRequired": "Прізвище обов'язкове",
+      "usernameMinLength": "Ім'я користувача має бути щонайменше 3 символи",
+      "invalidEmail": "Неправильна електронна пошта",
+      "passwordMinLength": "Пароль має бути щонайменше 8 символів",
+      "passwordsMatch": "Паролі повинні збігатися"
+    },
+    "messages": {
+      "success": "Обліковий запис створено успішно! Перенаправлення на вхід...",
+      "redirecting": "Перенаправлення на вхід..."
+    },
+    "errors": {
+      "invalidToken": "Помилка з посиланням для запрошення",
+      "tokenUsed": "Це посилання для запрошення вже використано",
+      "tokenExpired": "Термін дії цього посилання для запрошення закінчився",
+      "usernameExists": "Ім'я користувача вже існує",
+      "emailExists": "Електронна пошта вже існує",
+      "createFailed": "Не вдалося створити обліковий запис. Спробуйте ще раз."
+    },
+    "pageTitle": "Створити обліковий запис"
+  },
   "resetPassword": {
     "pageTitle": "Скинути пароль",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Захистити паролем",
       "layoutOptions": {
         "default": "Стандартний",
-        "wetransfer": "WeTransfer"
+        "vessel": "Амфора"
       },
       "noFilesLimit": "Без обмеження файлів",
       "noSizeLimit": "Без обмеження розміру",
@@ -1035,7 +1095,7 @@
         "description": "Як сторінка завантаження буде виглядати для користувачів.",
         "options": {
           "default": "Стандартний макет",
-          "wetransfer": "Стиль WeTransfer"
+          "vessel": "Макет амфори"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 файл спільно використовується} few {# файли спільно використовуються} many {# файлів спільно використовується} other {# файлів спільно використовується}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# файл} few {# файли} many {# файлів} other {# файлу}}",
+    "breakSeal": "Зламати печатку",
+    "sealed": "Запечатано",
+    "opened": "Відкрито"
   },
   "shareActions": {
     "fileTitle": "Поділитися файлом",
@@ -1467,7 +1527,8 @@
     "qrCode": "QR код",
     "downloadQrCode": "Завантажити QR код",
     "clickToEnlargeQrCode": "Клікніть, щоб збільшити QR код",
-    "loadError": "Не вдалося завантажити деталі спільного використання"
+    "loadError": "Не вдалося завантажити деталі спільного використання",
+    "linkCopied": "Посилання скопійовано"
   },
   "shareExpiration": {
     "title": "Share Expiration Settings",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "Спільне використання"
+    "defaultShareName": "Спільне використання",
+    "downloading": "Завантаження",
+    "preparingDownload": "Підготовка завантаження"
   },
   "shareMultipleFiles": {
     "title": "Поділитися кількома файлами",
@@ -1856,7 +1919,10 @@
       "continue": "Продовжити завантаження",
       "cancel": "Скасувати завантаження"
     },
-    "pasteSuccess": "{count, plural, =1 {Зображення вставлено і завантажено успішно} few {# зображення вставлено і завантажено успішно} many {# зображень вставлено і завантажено успішно} other {# зображень вставлено і завантажено успішно}}"
+    "pasteSuccess": "{count, plural, =1 {Зображення вставлено і завантажено успішно} few {# зображення вставлено і завантажено успішно} many {# зображень вставлено і завантажено успішно} other {# зображень вставлено і завантажено успішно}}",
+    "errors": {
+      "uploadFailed": "Не вдалося завантажити"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "Вбудувати медіа",
-    "description": "Використовуйте ці коди для вбудовування цього медіа на форумах, веб-сайтах або інших платформах",
-    "tabs": {
-      "directLink": "Пряме посилання",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Прямий URL до медіа файлу",
-    "htmlDescription": "Використовуйте цей код для вбудовування медіа в HTML сторінки",
-    "bbcodeDescription": "Використовуйте цей код для вбудовування медіа на форумах, які підтримують BBCode"
-  },
   "validation": {
     "firstNameRequired": "Ім'я обов'язкове",
     "lastNameRequired": "Прізвище обов'язкове",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "Пароль повинен містити принаймні 6 символів",
     "nameRequired": "Назва обов'язкова",
     "required": "Це поле обов'язкове"
-  },
-  "registerWithInvite": {
-    "title": "Створіть свій обліковий запис",
-    "description": "Заповніть інформацію нижче, щоб створити свій обліковий запис",
-    "labels": {
-      "firstName": "Ім'я",
-      "firstNamePlaceholder": "Введіть ваше ім'я",
-      "lastName": "Прізвище",
-      "lastNamePlaceholder": "Введіть ваше прізвище",
-      "username": "Ім'я користувача",
-      "usernamePlaceholder": "Виберіть ім'я користувача",
-      "email": "Електронна пошта",
-      "emailPlaceholder": "Введіть вашу електронну пошту",
-      "password": "Пароль",
-      "passwordPlaceholder": "Виберіть пароль",
-      "confirmPassword": "Підтвердити пароль",
-      "confirmPasswordPlaceholder": "Підтвердіть ваш пароль"
-    },
-    "buttons": {
-      "creating": "Створення облікового запису...",
-      "createAccount": "Створити обліковий запис"
-    },
-    "validation": {
-      "firstNameRequired": "Ім'я обов'язкове",
-      "lastNameRequired": "Прізвище обов'язкове",
-      "usernameMinLength": "Ім'я користувача має бути щонайменше 3 символи",
-      "invalidEmail": "Неправильна електронна пошта",
-      "passwordMinLength": "Пароль має бути щонайменше 8 символів",
-      "passwordsMatch": "Паролі повинні збігатися"
-    },
-    "messages": {
-      "success": "Обліковий запис створено успішно! Перенаправлення на вхід...",
-      "redirecting": "Перенаправлення на вхід..."
-    },
-    "errors": {
-      "invalidToken": "Помилка з посиланням для запрошення",
-      "tokenUsed": "Це посилання для запрошення вже використано",
-      "tokenExpired": "Термін дії цього посилання для запрошення закінчився",
-      "usernameExists": "Ім'я користувача вже існує",
-      "emailExists": "Електронна пошта вже існує",
-      "createFailed": "Не вдалося створити обліковий запис. Спробуйте ще раз."
-    },
-    "pageTitle": "Створити обліковий запис"
   }
 }

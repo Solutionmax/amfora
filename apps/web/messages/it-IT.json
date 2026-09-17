@@ -154,7 +154,13 @@
     "search": "Cerca",
     "share": "Condividi",
     "copied": "Copiato",
-    "copy": "Copia"
+    "copy": "Copia",
+    "invalidDate": "Data non valida",
+    "notAvailable": "Non disponibile"
+  },
+  "contextMenu": {
+    "newFolder": "Nuova cartella",
+    "uploadFile": "Carica file"
   },
   "createShare": {
     "title": "Crea Condivisione",
@@ -274,6 +280,18 @@
       "refresh": "Aggiorna Coda"
     }
   },
+  "embedCode": {
+    "title": "Incorpora contenuto multimediale",
+    "description": "Usa questi codici per incorporare questo contenuto multimediale in forum, siti web o altre piattaforme",
+    "tabs": {
+      "directLink": "Link diretto",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL diretto al file multimediale",
+    "htmlDescription": "Usa questo codice per incorporare il contenuto multimediale nelle pagine HTML",
+    "bbcodeDescription": "Usa questo codice per incorporare il contenuto multimediale nei forum che supportano BBCode"
+  },
   "emptyState": {
     "noFiles": "Nessun file caricato ancora",
     "uploadFile": "Carica File"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "L'autenticazione a due fattori è già abilitata",
     "Two-factor authentication is not enabled": "L'autenticazione a due fattori non è abilitata",
     "Two-factor authentication required": "Autenticazione a due fattori richiesta",
-    "noUserData": "Nessun dato utente"
+    "noUserData": "Nessun dato utente",
+    "passwordAuthDisabled": "L'accesso con password è disabilitato su questo server"
   },
   "fileActions": {
     "editFile": "Modifica File",
@@ -373,7 +392,8 @@
     "bulkDeleteConfirmation": "Sei sicuro di voler eliminare {count, plural, =1 {1 file} other {# file}}? Questa azione non può essere annullata.",
     "viewMode": {
       "table": "Tabella",
-      "grid": "Griglia"
+      "grid": "Griglia",
+      "label": "Vista"
     },
     "totalFiles": "{count, plural, =0 {Nessun file} =1 {1 file} other {# file}}",
     "actions": {
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Sviluppato da",
-    "kyanHomepage": "Homepage di Kyantech"
+    "kyanHomepage": "Homepage di SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Indirizzo Email",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "L'alternativa open-source a WeTransfer. Condividi file in sicurezza, senza tracciamento o limitazioni.",
+    "description": "Carica, condividi un link e decidi esattamente per quanto tempo resta attivo. Funziona sul tuo server, senza intermediari.",
     "documentation": "Documentazione",
     "starOnGithub": "Metti una stella su GitHub",
     "privacyMessage": "Costruito pensando alla privacy. I tuoi file prima del caricamento sono accessibili solo a chi ha il link di condivisione. Sempre gratuito e open source.",
@@ -540,7 +560,8 @@
     "pageTitle": "Accesso",
     "or": "oppure",
     "continueWithSSO": "Continua con SSO",
-    "processing": "Elaborazione autenticazione..."
+    "processing": "Elaborazione autenticazione...",
+    "noAuthMethodsAvailable": "Nessun metodo di accesso disponibile. Chiedi al tuo amministratore di abilitarne uno."
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "Crea Account Amministratore"
     }
   },
+  "registerWithInvite": {
+    "title": "Crea il Tuo Account",
+    "description": "Compila le informazioni sottostanti per creare il tuo account",
+    "labels": {
+      "firstName": "Nome",
+      "firstNamePlaceholder": "Inserisci il tuo nome",
+      "lastName": "Cognome",
+      "lastNamePlaceholder": "Inserisci il tuo cognome",
+      "username": "Nome Utente",
+      "usernamePlaceholder": "Scegli un nome utente",
+      "email": "Email",
+      "emailPlaceholder": "Inserisci la tua email",
+      "password": "Password",
+      "passwordPlaceholder": "Scegli una password",
+      "confirmPassword": "Conferma Password",
+      "confirmPasswordPlaceholder": "Conferma la tua password"
+    },
+    "buttons": {
+      "creating": "Creazione account in corso...",
+      "createAccount": "Crea Account"
+    },
+    "validation": {
+      "firstNameRequired": "Il nome è obbligatorio",
+      "lastNameRequired": "Il cognome è obbligatorio",
+      "usernameMinLength": "Il nome utente deve essere di almeno 3 caratteri",
+      "invalidEmail": "Email non valida",
+      "passwordMinLength": "La password deve essere di almeno 8 caratteri",
+      "passwordsMatch": "Le password devono corrispondere"
+    },
+    "messages": {
+      "success": "Account creato con successo! Reindirizzamento al login...",
+      "redirecting": "Reindirizzamento al login..."
+    },
+    "errors": {
+      "invalidToken": "Errore con il link di invito",
+      "tokenUsed": "Questo link di invito è già stato utilizzato",
+      "tokenExpired": "Questo link di invito è scaduto",
+      "usernameExists": "Il nome utente esiste già",
+      "emailExists": "L'email esiste già",
+      "createFailed": "Impossibile creare l'account. Riprova."
+    },
+    "pageTitle": "Crea Account"
+  },
   "resetPassword": {
     "pageTitle": "Reimposta Parola d'accesso",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "Proteggi con Password",
       "layoutOptions": {
         "default": "Predefinito",
-        "wetransfer": "WeTransfer"
+        "vessel": "Anfora"
       },
       "noFilesLimit": "Nessun limite di file",
       "noSizeLimit": "Nessun limite di dimensione",
@@ -1031,7 +1095,7 @@
         "description": "Come apparirà la pagina di upload agli utenti.",
         "options": {
           "default": "Layout Predefinito",
-          "wetransfer": "Stile WeTransfer"
+          "vessel": "Layout anfora"
         }
       },
       "password": {
@@ -1301,7 +1365,7 @@
       },
       "serverUrl": {
         "title": "URL del Server",
-        "description": "URL base del server Amfora (es: https://palmr.esempio.com)"
+        "description": "URL base del server Amfora (es: https://amfora.esempio.com)"
       },
       "testSmtp": {
         "title": "Test Connessione SMTP",
@@ -1463,7 +1527,8 @@
     "editExpiration": "Modifica Scadenza",
     "clickToEnlargeQrCode": "Clicca per ingrandire il QR Code",
     "downloadQrCode": "Scarica QR Code",
-    "qrCode": "QR Code"
+    "qrCode": "QR Code",
+    "linkCopied": "Link copiato"
   },
   "shareExpiration": {
     "neverExpires": "Non Scade Mai",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "File zip scaricato correttamente",
     "errors": {
       "multipleDownloadNotSupported": "Il download di più condivisioni non è ancora supportato - scarica le condivisioni singolarmente"
-    }
+    },
+    "downloading": "Download in corso",
+    "preparingDownload": "Preparazione del download"
   },
   "shareMultipleFiles": {
     "title": "Condividi File Multipli",
@@ -1852,7 +1919,10 @@
       "description": "Rilascia per caricare i tuoi file"
     },
     "pasteSuccess": "{count, plural, =1 {Immagine incollata e caricata con successo} other {# immagini incollate e caricate con successo}}",
-    "filesQueued": "{count, plural, one {# file in coda per il caricamento} other {# files in coda per il caricamento}}"
+    "filesQueued": "{count, plural, one {# file in coda per il caricamento} other {# files in coda per il caricamento}}",
+    "errors": {
+      "uploadFailed": "Caricamento non riuscito"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordMinLength": "La password deve contenere almeno 6 caratteri",
     "nameRequired": "Il nome è obbligatorio",
     "required": "Questo campo è obbligatorio"
-  },
-  "embedCode": {
-    "title": "Incorpora contenuto multimediale",
-    "description": "Usa questi codici per incorporare questo contenuto multimediale in forum, siti web o altre piattaforme",
-    "tabs": {
-      "directLink": "Link diretto",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL diretto al file multimediale",
-    "htmlDescription": "Usa questo codice per incorporare il contenuto multimediale nelle pagine HTML",
-    "bbcodeDescription": "Usa questo codice per incorporare il contenuto multimediale nei forum che supportano BBCode"
-  },
-  "contextMenu": {
-    "newFolder": "Nuova cartella",
-    "uploadFile": "Carica file"
-  },
-  "registerWithInvite": {
-    "title": "Crea il Tuo Account",
-    "description": "Compila le informazioni sottostanti per creare il tuo account",
-    "labels": {
-      "firstName": "Nome",
-      "firstNamePlaceholder": "Inserisci il tuo nome",
-      "lastName": "Cognome",
-      "lastNamePlaceholder": "Inserisci il tuo cognome",
-      "username": "Nome Utente",
-      "usernamePlaceholder": "Scegli un nome utente",
-      "email": "Email",
-      "emailPlaceholder": "Inserisci la tua email",
-      "password": "Password",
-      "passwordPlaceholder": "Scegli una password",
-      "confirmPassword": "Conferma Password",
-      "confirmPasswordPlaceholder": "Conferma la tua password"
-    },
-    "buttons": {
-      "creating": "Creazione account in corso...",
-      "createAccount": "Crea Account"
-    },
-    "validation": {
-      "firstNameRequired": "Il nome è obbligatorio",
-      "lastNameRequired": "Il cognome è obbligatorio",
-      "usernameMinLength": "Il nome utente deve essere di almeno 3 caratteri",
-      "invalidEmail": "Email non valida",
-      "passwordMinLength": "La password deve essere di almeno 8 caratteri",
-      "passwordsMatch": "Le password devono corrispondere"
-    },
-    "messages": {
-      "success": "Account creato con successo! Reindirizzamento al login...",
-      "redirecting": "Reindirizzamento al login..."
-    },
-    "errors": {
-      "invalidToken": "Errore con il link di invito",
-      "tokenUsed": "Questo link di invito è già stato utilizzato",
-      "tokenExpired": "Questo link di invito è scaduto",
-      "usernameExists": "Il nome utente esiste già",
-      "emailExists": "L'email esiste già",
-      "createFailed": "Impossibile creare l'account. Riprova."
-    },
-    "pageTitle": "Crea Account"
   }
 }

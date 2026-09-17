@@ -55,7 +55,7 @@ interface CreateReverseShareFormData {
   maxFileSize?: string;
   allowedFileTypes?: string;
   password?: string;
-  pageLayout?: "DEFAULT" | "WETRANSFER";
+  pageLayout?: "DEFAULT" | "VESSEL";
   nameFieldRequired: "HIDDEN" | "OPTIONAL" | "REQUIRED";
   emailFieldRequired: "HIDDEN" | "OPTIONAL" | "REQUIRED";
   isPasswordProtected: boolean;
@@ -274,9 +274,7 @@ export function CreateReverseShareModal({
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="DEFAULT">{t("reverseShares.form.pageLayout.options.default")}</SelectItem>
-                          <SelectItem value="WETRANSFER">
-                            {t("reverseShares.form.pageLayout.options.wetransfer")}
-                          </SelectItem>
+                          <SelectItem value="VESSEL">{t("reverseShares.form.pageLayout.options.vessel")}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormDescription>{t("reverseShares.form.pageLayout.description")}</FormDescription>

@@ -154,7 +154,13 @@
     "search": "Szukaj",
     "share": "Udostępnij",
     "copied": "Skopiowano",
-    "copy": "Kopiuj"
+    "copy": "Kopiuj",
+    "invalidDate": "Nieprawidłowa data",
+    "notAvailable": "Niedostępne"
+  },
+  "contextMenu": {
+    "newFolder": "Nowy folder",
+    "uploadFile": "Prześlij plik"
   },
   "createShare": {
     "title": "Utwórz Udostępnienie",
@@ -274,6 +280,18 @@
       "refresh": "Odśwież kolejkę"
     }
   },
+  "embedCode": {
+    "title": "Osadź multimedia",
+    "description": "Użyj tych kodów, aby osadzić te multimedia na forach, stronach internetowych lub innych platformach",
+    "tabs": {
+      "directLink": "Link bezpośredni",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Bezpośredni adres URL pliku multimedialnego",
+    "htmlDescription": "Użyj tego kodu, aby osadzić multimedia na stronach HTML",
+    "bbcodeDescription": "Użyj tego kodu, aby osadzić multimedia na forach obsługujących BBCode"
+  },
   "emptyState": {
     "noFiles": "Brak przesłanych plików",
     "uploadFile": "Prześlij plik"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "Uwierzytelnianie dwuskładnikowe jest już włączone",
     "Two-factor authentication is not enabled": "Uwierzytelnianie dwuskładnikowe nie jest włączone",
     "Two-factor authentication required": "Wymagane uwierzytelnianie dwuskładnikowe",
-    "noUserData": "Brak danych użytkownika"
+    "noUserData": "Brak danych użytkownika",
+    "passwordAuthDisabled": "Logowanie hasłem jest wyłączone na tym serwerze"
   },
   "fileActions": {
     "editFile": "Edytuj plik",
@@ -372,7 +391,8 @@
     "totalFiles": "{count, plural, =0 {Brak plików} =1 {1 plik} other {# plików}}",
     "viewMode": {
       "table": "Tabela",
-      "grid": "Siatka"
+      "grid": "Siatka",
+      "label": "Widok"
     },
     "bulkDeleteConfirmation": "Czy na pewno chcesz usunąć {count, plural, =1 {1 plik} other {# plików}}? Ta akcja nie może zostać cofnięta.",
     "bulkDeleteTitle": "Usuń Wybrane Pliki",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Zasilane przez",
-    "kyanHomepage": "Strona główna Kyantech"
+    "kyanHomepage": "Strona główna SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Adres e-mail",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Otwartoźródłowa alternatywa dla WeTransfer. Udostępniaj pliki bezpiecznie, bez śledzenia i ograniczeń.",
+    "description": "Prześlij, udostępnij jeden link i zdecyduj dokładnie, jak długo pozostanie aktywny. Działa na twoim własnym serwerze, bez pośredników.",
     "documentation": "Dokumentacja",
     "starOnGithub": "Oceń na GitHub",
     "privacyMessage": "Stworzone z myślą o prywatności. Twoje pliki są dostępne tylko dla osób posiadających link do udostępniania przed przesłaniem. Zawsze darmowe i open source.",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Działa na własnym serwerze",
+      "expiry": "Linki wygasają same",
+      "noTracking": "Bez śledzenia, bez limitów"
     }
   },
   "iconPicker": {
@@ -540,7 +560,8 @@
     "pageTitle": "Logowanie",
     "or": "lub",
     "continueWithSSO": "Kontynuuj z SSO",
-    "processing": "Przetwarzanie uwierzytelnienia..."
+    "processing": "Przetwarzanie uwierzytelnienia...",
+    "noAuthMethodsAvailable": "Brak dostępnej metody logowania. Poproś administratora o włączenie jednej."
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "Utwórz konto administratora"
     }
   },
+  "registerWithInvite": {
+    "title": "Utwórz swoje konto",
+    "description": "Wypełnij poniższe informacje, aby utworzyć swoje konto",
+    "labels": {
+      "firstName": "Imię",
+      "firstNamePlaceholder": "Wprowadź swoje imię",
+      "lastName": "Nazwisko",
+      "lastNamePlaceholder": "Wprowadź swoje nazwisko",
+      "username": "Nazwa użytkownika",
+      "usernamePlaceholder": "Wybierz nazwę użytkownika",
+      "email": "E-mail",
+      "emailPlaceholder": "Wprowadź swój adres e-mail",
+      "password": "Hasło",
+      "passwordPlaceholder": "Wybierz hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "confirmPasswordPlaceholder": "Potwierdź swoje hasło"
+    },
+    "buttons": {
+      "creating": "Tworzenie konta...",
+      "createAccount": "Utwórz konto"
+    },
+    "validation": {
+      "firstNameRequired": "Imię jest wymagane",
+      "lastNameRequired": "Nazwisko jest wymagane",
+      "usernameMinLength": "Nazwa użytkownika musi mieć co najmniej 3 znaki",
+      "invalidEmail": "Nieprawidłowy adres e-mail",
+      "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+      "passwordsMatch": "Hasła muszą być zgodne"
+    },
+    "messages": {
+      "success": "Konto utworzone pomyślnie! Przekierowywanie do logowania...",
+      "redirecting": "Przekierowywanie do logowania..."
+    },
+    "errors": {
+      "invalidToken": "Błąd z linkiem zaproszenia",
+      "tokenUsed": "Ten link zaproszenia został już użyty",
+      "tokenExpired": "Ten link zaproszenia wygasł",
+      "usernameExists": "Nazwa użytkownika już istnieje",
+      "emailExists": "Adres e-mail już istnieje",
+      "createFailed": "Nie udało się utworzyć konta. Spróbuj ponownie."
+    },
+    "pageTitle": "Utwórz konto"
+  },
   "resetPassword": {
     "pageTitle": "Resetuj hasło",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "Chroń hasłem",
       "layoutOptions": {
         "default": "Domyślny",
-        "wetransfer": "WeTransfer"
+        "vessel": "Amfora"
       },
       "noFilesLimit": "Bez limitu plików",
       "noSizeLimit": "Bez limitu rozmiaru",
@@ -1031,7 +1095,7 @@
         "description": "Jak strona przesyłania będzie wyglądać dla użytkowników.",
         "options": {
           "default": "Układ domyślny",
-          "wetransfer": "Styl WeTransfer"
+          "vessel": "Układ amfory"
         }
       },
       "password": {
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 plik udostępniony} other {# plików udostępnionych}}"
     },
     "download": "Pobierz",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# plik} few {# pliki} many {# plików} other {# pliku}}",
+    "breakSeal": "Złam pieczęć",
+    "sealed": "Zapieczętowane",
+    "opened": "Otwarte"
   },
   "shareActions": {
     "deleteTitle": "Usuń udostępnienie",
@@ -1463,7 +1527,8 @@
     "loadError": "Nie udało się załadować szczegółów udostępnienia",
     "clickToEnlargeQrCode": "Kliknij, aby powiększyć kod QR",
     "downloadQrCode": "Pobierz kod QR",
-    "qrCode": "Kod QR"
+    "qrCode": "Kod QR",
+    "linkCopied": "Link skopiowany"
   },
   "shareExpiration": {
     "title": "Ustawienia wygaśnięcia udostępnienia",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "Plik zip pobrany pomyślnie",
     "errors": {
       "multipleDownloadNotSupported": "Pobieranie wielu udostępnień nie jest jeszcze obsługiwane - pobierz udostępnienia pojedynczo"
-    }
+    },
+    "downloading": "Pobieranie",
+    "preparingDownload": "Przygotowywanie pobierania"
   },
   "shareMultipleFiles": {
     "title": "Udostępnij wiele plików",
@@ -1852,7 +1919,10 @@
       "description": "Zwolnij, aby przesłać pliki"
     },
     "pasteSuccess": "{count, plural, =1 {Obraz wklejony i przesłany pomyślnie} other {# obrazy wklejone i przesłane pomyślnie}}",
-    "filesQueued": "{count, plural, one {# plik w kolejce do przesyłania} other {# pliki w kolejce do przesyłania}}"
+    "filesQueued": "{count, plural, one {# plik w kolejce do przesyłania} other {# pliki w kolejce do przesyłania}}",
+    "errors": {
+      "uploadFailed": "Przesyłanie nie powiodło się"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordMinLength": "Hasło musi mieć co najmniej 6 znaków",
     "nameRequired": "Nazwa jest wymagana",
     "required": "To pole jest wymagane"
-  },
-  "embedCode": {
-    "title": "Osadź multimedia",
-    "description": "Użyj tych kodów, aby osadzić te multimedia na forach, stronach internetowych lub innych platformach",
-    "tabs": {
-      "directLink": "Link bezpośredni",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Bezpośredni adres URL pliku multimedialnego",
-    "htmlDescription": "Użyj tego kodu, aby osadzić multimedia na stronach HTML",
-    "bbcodeDescription": "Użyj tego kodu, aby osadzić multimedia na forach obsługujących BBCode"
-  },
-  "contextMenu": {
-    "newFolder": "Nowy folder",
-    "uploadFile": "Prześlij plik"
-  },
-  "registerWithInvite": {
-    "title": "Utwórz swoje konto",
-    "description": "Wypełnij poniższe informacje, aby utworzyć swoje konto",
-    "labels": {
-      "firstName": "Imię",
-      "firstNamePlaceholder": "Wprowadź swoje imię",
-      "lastName": "Nazwisko",
-      "lastNamePlaceholder": "Wprowadź swoje nazwisko",
-      "username": "Nazwa użytkownika",
-      "usernamePlaceholder": "Wybierz nazwę użytkownika",
-      "email": "E-mail",
-      "emailPlaceholder": "Wprowadź swój adres e-mail",
-      "password": "Hasło",
-      "passwordPlaceholder": "Wybierz hasło",
-      "confirmPassword": "Potwierdź hasło",
-      "confirmPasswordPlaceholder": "Potwierdź swoje hasło"
-    },
-    "buttons": {
-      "creating": "Tworzenie konta...",
-      "createAccount": "Utwórz konto"
-    },
-    "validation": {
-      "firstNameRequired": "Imię jest wymagane",
-      "lastNameRequired": "Nazwisko jest wymagane",
-      "usernameMinLength": "Nazwa użytkownika musi mieć co najmniej 3 znaki",
-      "invalidEmail": "Nieprawidłowy adres e-mail",
-      "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
-      "passwordsMatch": "Hasła muszą być zgodne"
-    },
-    "messages": {
-      "success": "Konto utworzone pomyślnie! Przekierowywanie do logowania...",
-      "redirecting": "Przekierowywanie do logowania..."
-    },
-    "errors": {
-      "invalidToken": "Błąd z linkiem zaproszenia",
-      "tokenUsed": "Ten link zaproszenia został już użyty",
-      "tokenExpired": "Ten link zaproszenia wygasł",
-      "usernameExists": "Nazwa użytkownika już istnieje",
-      "emailExists": "Adres e-mail już istnieje",
-      "createFailed": "Nie udało się utworzyć konta. Spróbuj ponownie."
-    },
-    "pageTitle": "Utwórz konto"
   }
 }

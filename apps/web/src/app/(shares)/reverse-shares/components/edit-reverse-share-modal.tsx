@@ -51,7 +51,7 @@ interface EditReverseShareFormData {
   maxFiles?: string;
   maxFileSize?: string;
   allowedFileTypes?: string;
-  pageLayout?: "DEFAULT" | "WETRANSFER";
+  pageLayout?: "DEFAULT" | "VESSEL";
   nameFieldRequired: "HIDDEN" | "OPTIONAL" | "REQUIRED";
   emailFieldRequired: "HIDDEN" | "OPTIONAL" | "REQUIRED";
   hasExpiration: boolean;
@@ -117,7 +117,7 @@ function mapReverseShareToFormData(reverseShare: ReverseShare): EditReverseShare
     maxFiles: maxFilesValue,
     maxFileSize: maxFileSizeValue,
     allowedFileTypes: allowedFileTypesValue,
-    pageLayout: (reverseShare.pageLayout as "DEFAULT" | "WETRANSFER") || DEFAULT_VALUES.PAGE_LAYOUT,
+    pageLayout: (reverseShare.pageLayout as "DEFAULT" | "VESSEL") || DEFAULT_VALUES.PAGE_LAYOUT,
     nameFieldRequired: (reverseShare.nameFieldRequired as "HIDDEN" | "OPTIONAL" | "REQUIRED") || "OPTIONAL",
     emailFieldRequired: (reverseShare.emailFieldRequired as "HIDDEN" | "OPTIONAL" | "REQUIRED") || "OPTIONAL",
     hasExpiration: !!reverseShare.expiration,
@@ -247,7 +247,7 @@ function BasicInfoSection({ form, t }: { form: any; t: any }) {
               </FormControl>
               <SelectContent>
                 <SelectItem value="DEFAULT">{t("reverseShares.form.pageLayout.options.default")}</SelectItem>
-                <SelectItem value="WETRANSFER">{t("reverseShares.form.pageLayout.options.wetransfer")}</SelectItem>
+                <SelectItem value="VESSEL">{t("reverseShares.form.pageLayout.options.vessel")}</SelectItem>
               </SelectContent>
             </Select>
             <FormDescription className="text-xs">{t("reverseShares.form.pageLayout.description")}</FormDescription>
