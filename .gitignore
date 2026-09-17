@@ -35,3 +35,6 @@ data/
 
 node_modules/
 screenshots/
+# Product screenshots are reviewed, sanitized, versioned website assets.
+!site/assets/screenshots/
+!site/assets/screenshots/*.webp
