@@ -79,7 +79,7 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
           {isLoading ? (
             <Skeleton className="w-25 h-25 rounded-full" />
           ) : (
-            <Avatar className="w-25 h-25">
+            <Avatar className="h-24 w-24">
               <AvatarImage src={userData?.image} />
               <AvatarFallback className="absolute inset-0 rounded-full border text-4xl font-bold">
                 {userData?.firstName
@@ -96,7 +96,7 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
             <DropdownMenuTrigger asChild>
               <Button
                 size="icon"
-                className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full cursor-pointer"
+                className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-primary text-primary-foreground"
                 variant="default"
                 disabled={isLoading}
               >

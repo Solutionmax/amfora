@@ -1,24 +1,24 @@
+import Link from "next/link";
 import { IconLock } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export function ShareNotFound() {
   const t = useTranslations();
 
   return (
-    <Card>
-      <CardContent>
-        <div className="flex flex-col items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-full bg-destructive/20 flex items-center justify-center">
-            <IconLock className="w-10 h-10 text-destructive" />
-          </div>
-          <h2 className="text-2xl font-semibold text-destructive">{t("share.notFound.title")}</h2>
+    <div className="mx-auto flex w-full max-w-xl flex-1 items-center justify-center py-12">
+      <div className="w-full rounded-[1.75rem] border bg-card p-8 text-center shadow-sm sm:p-12">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
+          <IconLock className="size-7 text-destructive" />
         </div>
-        <div className="text-center pb-8">
-          <p className="text-lg text-muted-foreground">{t("share.notFound.description")}</p>
-        </div>
-      </CardContent>
-    </Card>
+        <h2 className="mt-6 font-display text-3xl font-extrabold tracking-tight">{t("share.notFound.title")}</h2>
+        <p className="mx-auto mt-3 max-w-sm text-muted-foreground">{t("share.notFound.description")}</p>
+        <Button asChild variant="outline" className="mt-7 rounded-lg">
+          <Link href="/">{t("home.pageTitle")}</Link>
+        </Button>
+      </div>
+    </div>
   );
 }

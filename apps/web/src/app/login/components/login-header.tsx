@@ -22,7 +22,8 @@ export function LoginHeader({ firstAccess }: { firstAccess: boolean }) {
         )}
         <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
       </div>
-      <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight">
+      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">{t("home.pageTitle")}</p>
+      <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
         {t("login.welcome")} {appName}
       </h1>
       {!firstAccess && <p className="text-sm text-muted-foreground">{t("login.signInToContinue")}</p>}

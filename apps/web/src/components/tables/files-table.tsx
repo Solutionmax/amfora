@@ -381,7 +381,7 @@ export function FilesTable({
   return (
     <div className="space-y-4">
       {shouldShowBulkActions && (
-        <div className="flex items-center justify-between p-4 bg-muted/30 border rounded-lg">
+        <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-foreground">
               {t("filesTable.bulkActions.selected", { count: selectedFiles.size + selectedFolders.size })}
@@ -448,12 +448,12 @@ export function FilesTable({
         </div>
       )}
 
-      <div className="rounded-lg shadow-sm overflow-hidden border">
+      <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-none">
         <Table>
           <TableHeader>
             <TableRow className="border-b-0">
               {showBulkActions && (
-                <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4 w-12">
+                <TableHead className="h-11 w-12 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   <Checkbox
                     checked={isAllSelected}
                     onCheckedChange={handleSelectAll}
@@ -461,22 +461,22 @@ export function FilesTable({
                   />
                 </TableHead>
               )}
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("filesTable.columns.name")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:table-cell">
                 {t("filesTable.columns.description")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("filesTable.columns.size")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:table-cell">
                 {t("filesTable.columns.createdAt")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:table-cell">
                 {t("filesTable.columns.updatedAt")}
               </TableHead>
-              <TableHead className="h-10 w-[70px] text-xs font-bold text-muted-foreground bg-muted/50 px-4 rounded-tr-lg">
+              <TableHead className="h-11 w-[70px] rounded-tr-lg bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("filesTable.columns.actions")}
               </TableHead>
             </TableRow>
@@ -495,7 +495,7 @@ export function FilesTable({
               const displayDescription = getDisplayFolderValue(folder, "description");
 
               return (
-                <TableRow key={folder.id} className="group hover:bg-muted/50 transition-colors border-0">
+                <TableRow key={folder.id} className="group border-border/60 transition-colors hover:bg-secondary/35">
                   {showBulkActions && (
                     <TableCell className="h-12 px-4 border-0">
                       <Checkbox
@@ -646,11 +646,11 @@ export function FilesTable({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="hidden h-12 px-4 sm:table-cell">
                     {folder.totalSize ? formatFileSize(Number(folder.totalSize)) : "—"}
                   </TableCell>
-                  <TableCell className="h-12 px-4">{formatDateTime(folder.createdAt)}</TableCell>
-                  <TableCell className="h-12 px-4">{formatDateTime(folder.updatedAt)}</TableCell>
+                  <TableCell className="hidden h-12 px-4 lg:table-cell">{formatDateTime(folder.createdAt)}</TableCell>
+                  <TableCell className="hidden h-12 px-4 lg:table-cell">{formatDateTime(folder.updatedAt)}</TableCell>
                   <TableCell className="h-12 px-4 text-right">
                     {isShareMode ? (
                       onDownloadFolder && (
@@ -730,7 +730,7 @@ export function FilesTable({
               return (
                 <TableRow
                   key={file.id}
-                  className="group hover:bg-muted/50 transition-colors border-0 cursor-pointer"
+                  className="group cursor-pointer border-border/60 transition-colors hover:bg-secondary/35"
                   onClick={(e) => {
                     if (
                       (e.target as HTMLElement).closest(".checkbox-wrapper") ||
@@ -827,7 +827,7 @@ export function FilesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="hidden h-12 px-4 sm:table-cell">
                     <div
                       className="flex items-center gap-1"
                       onMouseEnter={() => setHoveredField({ fileId: file.id, field: "description" })}
@@ -895,8 +895,10 @@ export function FilesTable({
                     </div>
                   </TableCell>
                   <TableCell className="h-12 px-4">{formatFileSize(file.size)}</TableCell>
-                  <TableCell className="h-12 px-4">{formatDateTime(file.createdAt)}</TableCell>
-                  <TableCell className="h-12 px-4">{formatDateTime(file.updatedAt || file.createdAt)}</TableCell>
+                  <TableCell className="hidden h-12 px-4 lg:table-cell">{formatDateTime(file.createdAt)}</TableCell>
+                  <TableCell className="hidden h-12 px-4 lg:table-cell">
+                    {formatDateTime(file.updatedAt || file.createdAt)}
+                  </TableCell>
                   <TableCell className="h-12 px-4 text-right">
                     {isShareMode ? (
                       <Button

@@ -81,15 +81,15 @@ export function BackgroundPickerForm() {
         <div className="flex flex-col gap-6">
           <div className="space-y-2 mb-3">
             <Label className="text-sm font-medium mb-6">{t("customization.background.lightMode")}</Label>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {BACKGROUND_OPTIONS.light.map((bg) => (
                 <button
                   key={bg.name}
                   onClick={() => handleBackgroundSelect("light", bg.background)}
-                  className={`relative p-4 rounded-xl border-2 transition-all hover:shadow-md text-center group ${
+                  className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
                     selectedBackground.light === bg.background
                       ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
-                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-muted/30"
+                      : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
                   }`}
                   type="button"
                 >
@@ -98,10 +98,7 @@ export function BackgroundPickerForm() {
                       <span className="font-medium text-base">{bg.name}</span>
                       <span className="text-xs text-muted-foreground">{bg.description}</span>
                     </div>
-                    <div
-                      className="w-12 h-8 rounded border border-gray-300"
-                      style={{ backgroundColor: bg.background }}
-                    />
+                    <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
                   </div>
                 </button>
               ))}
@@ -110,15 +107,15 @@ export function BackgroundPickerForm() {
 
           <div className="space-y-2 mb-3">
             <Label className="text-sm font-medium mb-6">{t("customization.background.darkMode")}</Label>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {BACKGROUND_OPTIONS.dark.map((bg) => (
                 <button
                   key={bg.name}
                   onClick={() => handleBackgroundSelect("dark", bg.background)}
-                  className={`relative p-4 rounded-xl border-2 transition-all hover:shadow-md text-center group ${
+                  className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
                     selectedBackground.dark === bg.background
                       ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
-                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-muted/30"
+                      : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
                   }`}
                   type="button"
                 >
@@ -127,10 +124,7 @@ export function BackgroundPickerForm() {
                       <span className="font-medium text-base">{bg.name}</span>
                       <span className="text-xs text-muted-foreground">{bg.description}</span>
                     </div>
-                    <div
-                      className="w-12 h-8 rounded border border-gray-600"
-                      style={{ backgroundColor: bg.background }}
-                    />
+                    <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
                   </div>
                 </button>
               ))}

@@ -11,30 +11,30 @@ export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatu
   const isCurrentUser = (userId: string) => currentUser?.id === userId;
 
   return (
-    <div className="rounded-lg shadow-sm overflow-hidden border">
+    <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-none">
       <Table>
         <TableHeader>
           <TableRow className="border-b-0">
-            <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+            <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {t("users.table.user")}
             </TableHead>
-            <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+            <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {t("users.table.email")}
             </TableHead>
-            <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+            <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {t("users.table.status")}
             </TableHead>
-            <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+            <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {t("users.table.role")}
             </TableHead>
-            <TableHead className="h-10 w-[70px] text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+            <TableHead className="h-11 w-[70px] bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {t("users.table.actions")}
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id} className="hover:bg-muted/50 transition-colors border-0">
+            <TableRow key={user.id} className="border-border/60 transition-colors hover:bg-secondary/35">
               <TableCell className="h-12 px-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-12 w-12">

@@ -77,20 +77,32 @@ export function LogoInput({ value, onChange, isDisabled }: LogoInputProps) {
       />
 
       {currentLogo ? (
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative max-w-[200px] max-h-[200px] flex">
-            <img alt={t("logo.labels.appLogo")} className="rounded-lg" src={currentLogo} sizes="200px" />
+        <div className="flex flex-wrap items-center gap-5 rounded-xl border bg-background/60 p-4">
+          <div className="flex size-16 shrink-0 items-center justify-center rounded-lg border bg-card p-2">
+            <img
+              alt={t("logo.labels.appLogo")}
+              className="max-h-full max-w-full object-contain"
+              src={currentLogo}
+              sizes="64px"
+            />
           </div>
-          <Button variant="destructive" disabled={isDisabled} onClick={handleRemoveLogo}>
+          <Button
+            type="button"
+            variant="outline"
+            className="text-destructive hover:text-destructive"
+            disabled={isDisabled || isUploading}
+            onClick={handleRemoveLogo}
+          >
             {!isUploading && <IconTrash className="h-4 w-4" />}
             {t("logo.buttons.remove")}
           </Button>
         </div>
       ) : (
         <Button
-          className="w-full py-8"
+          type="button"
+          className="w-full border-dashed py-8"
           variant="outline"
-          disabled={isDisabled}
+          disabled={isDisabled || isUploading}
           onClick={() => fileInputRef.current?.click()}
         >
           {!isUploading && <IconCloudUpload className="h-5 w-5" />}

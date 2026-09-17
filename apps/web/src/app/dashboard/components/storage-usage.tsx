@@ -28,13 +28,13 @@ export function StorageUsage({ diskSpace, diskSpaceError, onRetry }: StorageUsag
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold flex items-center gap-2">
-                <IconDatabaseCog className="text-gray-500" size={24} />
+                <IconDatabaseCog className="text-primary" size={24} />
                 {t("storageUsage.title")}
               </h2>
               <span className="text-sm text-muted-foreground">{t("storageUsage.total")}: --</span>
             </div>
             <div className="flex flex-col gap-3 py-4">
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+              <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
                 <IconAlertCircle size={20} />
                 <span className="text-sm font-medium">{t("storageUsage.errors.title")}</span>
               </div>
@@ -59,13 +59,13 @@ export function StorageUsage({ diskSpace, diskSpaceError, onRetry }: StorageUsag
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold flex items-center gap-2">
-                <IconDatabaseCog className="text-gray-500" size={24} />
+                <IconDatabaseCog className="text-primary" size={24} />
                 {t("storageUsage.title")}
               </h2>
               <span className="text-sm text-muted-foreground">{t("storageUsage.total")}: --</span>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              <div className="h-3 animate-pulse rounded bg-secondary" />
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>{t("storageUsage.loading")}</span>
                 <span>{t("storageUsage.loading")}</span>
@@ -83,7 +83,7 @@ export function StorageUsage({ diskSpace, diskSpaceError, onRetry }: StorageUsag
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold flex items-center gap-2">
-              <IconDatabaseCog className="text-gray-500" size={24} />
+              <IconDatabaseCog className="text-primary" size={24} />
               {t("storageUsage.title")}
             </h2>
             <span className="text-sm text-muted-foreground">

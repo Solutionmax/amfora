@@ -7,10 +7,10 @@ export function EmptySharesState({ onCreate }: { onCreate: () => void }) {
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 gap-4">
-      <IconShare className="h-10 w-10 text-gray-500" />
+    <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-border/70 bg-secondary/20 py-10">
+      <IconShare className="h-10 w-10 text-primary/70" />
       <div className="text-center">
-        <p className="text-gray-500 mb-4">{t("recentShares.noShares")}</p>
+        <p className="mb-4 text-muted-foreground">{t("recentShares.noShares")}</p>
         <Button variant="outline" size="sm" onClick={onCreate}>
           <IconPlus className="h-4 w-4" />
           {t("recentShares.createFirst")}

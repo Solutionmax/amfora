@@ -42,7 +42,7 @@ export default function CustomizationPage() {
           onSelect={setActiveId}
           label={t("customization.pageTitle")}
         >
-          {panels[activeId]}
+          <div className="max-w-4xl">{panels[activeId]}</div>
         </SectionLayout>
       </FileManagerLayout>
     </ProtectedRoute>

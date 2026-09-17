@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { IconDeviceDesktopDown, IconFoldersFilled, IconShare2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export function QuickAccessCards() {
   const t = useTranslations();
-  const router = useRouter();
 
   const QUICK_ACCESS_ITEMS = [
     {
@@ -30,27 +29,27 @@ export function QuickAccessCards() {
   ] as const;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {QUICK_ACCESS_ITEMS.map((card) => (
-        <Card
+        <Link
           key={card.title}
-          className="cursor-pointer group transition-all duration-400 border-border/50 backdrop-blur-sm h-full hover:opacity-80 "
-          onClick={() => router.push(card.path)}
+          href={card.path}
+          className="block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <CardContent className="h-full">
-            <div className="flex items-center gap-4 h-full">
-              <div className="dark:group-hover:bg-accent group-hover:bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center text-primary/80 group-hover:text-primary dark:bg-accent/60 bg-accent/50 border dark:border-none transition-all duration-400 flex-shrink-0">
-                {card.icon}
+          <Card className="group h-full cursor-pointer border-border/70 bg-card transition-colors hover:border-primary/40 hover:bg-secondary/30">
+            <CardContent className="h-full">
+              <div className="flex h-full items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-primary/15 bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+                  {card.icon}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="mb-1 truncate font-medium text-foreground">{card.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-foreground mb-1 truncate">{card.title}</h3>
-                <p className="text-sm text-muted-foreground group-hover:text-muted-foreground leading-relaxed">
-                  {card.description}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
       ))}
     </div>
   );

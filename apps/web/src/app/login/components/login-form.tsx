@@ -63,7 +63,7 @@ export function LoginForm({
 
   const renderErrorMessage = () =>
     error && (
-      <p className="text-destructive text-sm text-center bg-destructive/10 p-2 rounded-md">
+      <p className="rounded-xl bg-destructive/10 p-3 text-center text-sm text-destructive">
         {error.replace("errors.", "")}
       </p>
     );
@@ -81,7 +81,7 @@ export function LoginForm({
               type="text"
               placeholder={t("login.emailOrUsernamePlaceholder")}
               disabled={isSubmitting}
-              className="bg-transparent backdrop-blur-md"
+              className="h-12 rounded-xl bg-background"
             />
           </FormControl>
           <FormMessage />
@@ -104,7 +104,7 @@ export function LoginForm({
                 type={isVisible ? "text" : "password"}
                 placeholder={t("login.passwordPlaceholder")}
                 disabled={isSubmitting}
-                className="bg-transparent backdrop-blur-md pr-10"
+                className="h-12 rounded-xl bg-background pr-10"
               />
               <PasswordVisibilityToggle isVisible={isVisible} onToggle={onToggleVisibility} />
             </div>
@@ -150,7 +150,7 @@ export function LoginForm({
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {renderEmailOrUsernameField()}
           {passwordAuthEnabled && renderPasswordField()}
-          <Button className="w-full mt-4 cursor-pointer" variant="default" size="lg" type="submit">
+          <Button className="mt-4 h-12 w-full cursor-pointer rounded-full" variant="default" size="lg" type="submit">
             {isSubmitting ? t("login.signingIn") : t("login.signIn")}
           </Button>
         </form>
@@ -160,7 +160,10 @@ export function LoginForm({
 
       {passwordAuthEnabled && (
         <div className="flex w-full items-center justify-center px-1 mt-2">
-          <Link className="text-muted-foreground hover:text-primary text-sm" href="/forgot-password">
+          <Link
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+            href="/forgot-password"
+          >
             {t("login.forgotPassword")}
           </Link>
         </div>

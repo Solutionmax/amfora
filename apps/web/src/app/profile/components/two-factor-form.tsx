@@ -111,11 +111,7 @@ export function TwoFactorForm() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            {status.enabled ? (
-              <IconShieldCheck className="h-5 w-5 text-green-600" />
-            ) : (
-              <IconShield className="h-5 w-5" />
-            )}
+            {status.enabled ? <IconShieldCheck className="h-5 w-5 text-primary" /> : <IconShield className="h-5 w-5" />}
             {t("twoFactor.title")}
           </CardTitle>
           <CardDescription>{status.enabled ? t("twoFactor.enabled") : t("twoFactor.description")}</CardDescription>

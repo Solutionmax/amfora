@@ -151,7 +151,7 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] w-full">
+      <DialogContent className="sm:max-w-3xl max-h-[calc(100dvh-2rem)] w-full">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <IconShare className="h-5 w-5" />
@@ -173,7 +173,7 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="details" className="space-y-4 mt-4">
+            <TabsContent value="details" className="space-y-5 mt-6">
               <div className="space-y-2">
                 <Label htmlFor="share-name">{t("createShare.nameLabel")} *</Label>
                 <Input
@@ -256,7 +256,7 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
               </div>
             </TabsContent>
 
-            <TabsContent value="files" className="space-y-4 mt-4 flex-1 min-h-0">
+            <TabsContent value="files" className="space-y-5 mt-6 flex-1 min-h-0">
               <div className="space-y-2">
                 <Label htmlFor="file-search">{t("common.search")}</Label>
                 <Input
@@ -316,7 +316,7 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
                 )}
               </div>
 
-              <div className="flex justify-between">
+              <div className="flex flex-wrap justify-between gap-3 border-t pt-5">
                 <Button variant="outline" onClick={() => setCurrentTab("details")}>
                   {t("common.back")}
                 </Button>

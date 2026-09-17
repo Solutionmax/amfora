@@ -302,21 +302,23 @@ export function ShareDetailsModal({
             ) : (
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="text-center p-2 bg-muted/30 rounded-lg">
-                    <p className="text-lg font-semibold text-green-600">{share.views || 0}</p>
+                  <div className="rounded-xl border bg-background p-4">
+                    <p className="font-display text-2xl font-semibold text-foreground">{share.views || 0}</p>
                     <p className="text-xs text-muted-foreground">{t("shareDetails.views")}</p>
                   </div>
-                  <div className="text-center p-2 bg-muted/30 rounded-lg">
-                    <p className="text-lg font-semibold text-green-600">{share.files?.length || 0}</p>
+                  <div className="rounded-xl border bg-background p-4">
+                    <p className="font-display text-2xl font-semibold text-foreground">{share.files?.length || 0}</p>
                     <p className="text-xs text-muted-foreground">{t("shareDetails.files")}</p>
                   </div>
-                  <div className="text-center p-2 bg-muted/30 rounded-lg">
-                    <p className="text-lg font-semibold text-green-600">{share.recipients?.length || 0}</p>
+                  <div className="rounded-xl border bg-background p-4">
+                    <p className="font-display text-2xl font-semibold text-foreground">
+                      {share.recipients?.length || 0}
+                    </p>
                     <p className="text-xs text-muted-foreground">{t("shareDetails.recipients")}</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-5 sm:grid-cols-2">
                   {/* Basic Information */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 border-b pb-2">
@@ -350,7 +352,7 @@ export function ShareDetailsModal({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-green-600 hover:text-green-700"
+                            className="h-8 w-8 text-primary hover:text-primary/80"
                             onClick={saveEdit}
                           >
                             <IconCheck className="h-3 w-3" />
@@ -358,7 +360,7 @@ export function ShareDetailsModal({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-red-600 hover:text-red-700"
+                            className="h-8 w-8 text-destructive hover:text-destructive/80"
                             onClick={cancelEdit}
                           >
                             <IconX className="h-3 w-3" />
@@ -399,7 +401,7 @@ export function ShareDetailsModal({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-green-600 hover:text-green-700"
+                            className="h-8 w-8 text-primary hover:text-primary/80"
                             onClick={saveEdit}
                           >
                             <IconCheck className="h-3 w-3" />
@@ -407,7 +409,7 @@ export function ShareDetailsModal({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-red-600 hover:text-red-700"
+                            className="h-8 w-8 text-destructive hover:text-destructive/80"
                             onClick={cancelEdit}
                           >
                             <IconX className="h-3 w-3" />
@@ -504,7 +506,7 @@ export function ShareDetailsModal({
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-5 sm:grid-cols-2">
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 border-b pb-2">
                       <h3 className="text-base font-medium text-foreground">{t("shareDetails.dates")}</h3>

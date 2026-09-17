@@ -36,29 +36,27 @@ export default function PublicSharePage() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
-      {/* No photo wallpaper here: the vessel is the picture. */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[70vh] bg-[radial-gradient(60%_60%_at_50%_0%,var(--secondary)_0%,transparent_70%)]"
+        className="pointer-events-none absolute right-0 top-0 size-[30rem] rounded-full bg-primary/[0.05] blur-3xl"
         aria-hidden="true"
       />
-
-      <header className="relative flex items-center justify-between px-6 py-5">
-        <Link href="/" className="flex items-center gap-2.5">
+      <header className="relative flex items-center justify-between gap-4 border-b px-6 py-4">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5">
           {appLogo ? (
-            <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
+            <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
           ) : (
-            <AmphoraMark className="h-8 w-8 text-primary" />
+            <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
           )}
-          <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+          <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <GithubStar className="hidden sm:inline-flex" />
           <LanguageSwitcher />
           <ModeToggle />
         </div>
       </header>
 
-      <main className="relative flex-1 px-4 pb-6 lg:px-6">
+      <main className="relative mx-auto flex w-full max-w-6xl flex-1 items-start px-4 py-8 lg:px-6 lg:py-12">
         {!isPasswordModalOpen && !share && <ShareNotFound />}
         {share && (
           <ShareStage
@@ -76,7 +74,7 @@ export default function PublicSharePage() {
         )}
       </main>
 
-      <footer className="relative flex items-end justify-between gap-6 px-6 pb-8 lg:px-16">
+      <footer className="relative mx-auto flex w-full max-w-6xl items-end justify-between gap-6 px-6 pb-8">
         <Maxim seed={share?.id ?? "amfora"} />
       </footer>
 

@@ -72,12 +72,14 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
   return (
     <div className="space-y-3">
       {showSeparator && (
-        <div className="relative">
+        <div className="relative py-1">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+            <span className="bg-card px-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              Or continue with
+            </span>
           </div>
         </div>
       )}
@@ -87,7 +89,7 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
           <Button
             key={provider.id}
             variant="outline"
-            className="w-full"
+            className="h-11 w-full rounded-xl bg-background"
             onClick={() => handleProviderLogin(provider)}
             type="button"
           >

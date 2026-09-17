@@ -17,15 +17,6 @@ import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const t = useTranslations();
-  const [scrolled, setScrolled] = useState(false);
-
-  // Transparent over the artwork, solid once the sand sections come up.
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
   const { appName, appLogo, refreshAppInfo } = useAppInfo();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -34,28 +25,16 @@ export function Navbar() {
   }, [refreshAppInfo]);
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 z-40 w-full px-6 transition-colors duration-300",
-        scrolled ? "border-b bg-background/90 backdrop-blur-sm" : "text-background"
-      )}
-    >
-      <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5">
+    <header className="relative z-40 w-full border-b bg-background/95 px-6 backdrop-blur-sm">
+      <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-8">
+          <Link href="/" className="flex min-w-0 items-center gap-2.5">
             {appLogo ? (
-              <img
-                alt=""
-                className={cn(
-                  "h-8 w-8 rounded object-contain transition-colors",
-                  scrolled ? "" : "bg-background/90 p-0.5"
-                )}
-                src={appLogo}
-              />
+              <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
             ) : (
-              <AmphoraMark className={cn("h-8 w-8", scrolled ? "text-primary" : "text-background")} />
+              <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
             )}
-            <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+            <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
           </Link>
           <nav className="hidden gap-6 md:flex">
             {siteConfig.navItems.map((item) => (
@@ -64,9 +43,7 @@ export function Navbar() {
                 href={item.href}
                 className={cn(
                   "relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:transition-all hover:after:w-full",
-                  scrolled
-                    ? "text-muted-foreground after:bg-foreground hover:text-foreground"
-                    : "text-background/80 after:bg-background hover:text-background"
+                  "text-muted-foreground after:bg-foreground hover:text-foreground"
                 )}
               >
                 {item.label}
@@ -76,7 +53,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <GithubStar tone={scrolled ? "default" : "light"} />
+          <GithubStar />
           <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
           <LanguageSwitcher />
           <ModeToggle />

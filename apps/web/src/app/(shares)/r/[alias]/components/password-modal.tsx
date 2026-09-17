@@ -35,10 +35,10 @@ export function PasswordModal({ isOpen, onSubmit, onClose }: PasswordModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900/20">
-            <IconLock className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+      <DialogContent className="rounded-[1.5rem] sm:max-w-md">
+        <DialogHeader className="gap-3">
+          <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <IconLock className="size-5" />
           </div>
           <DialogTitle>{t("reverseShares.upload.password.title")}</DialogTitle>
           <DialogDescription>{t("reverseShares.upload.password.description")}</DialogDescription>
@@ -59,11 +59,17 @@ export function PasswordModal({ isOpen, onSubmit, onClose }: PasswordModalProps)
             />
           </div>
 
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" className="flex-1" onClick={onClose} disabled={isSubmitting}>
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 rounded-lg"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
               {t("reverseShares.upload.password.cancel")}
             </Button>
-            <Button type="submit" className="flex-1" disabled={!password.trim() || isSubmitting}>
+            <Button type="submit" className="flex-1 rounded-lg" disabled={!password.trim() || isSubmitting}>
               {isSubmitting ? t("reverseShares.upload.password.verifying") : t("reverseShares.upload.password.submit")}
             </Button>
           </div>

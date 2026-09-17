@@ -101,15 +101,15 @@ export function ColorPickerForm() {
         <div className="flex flex-col gap-4">
           <div className="space-y-2 mb-3">
             <Label className="text-sm font-medium mb-6">{t("customization.colors.presets")}</Label>
-            <div className="grid grid-cols-8 gap-3">
+            <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
               {PREDEFINED_COLORS.map((color) => (
                 <div key={color.name} className="flex flex-col items-center gap-1">
                   <button
                     onClick={() => handlePresetColorSelect(color.value)}
-                    className={`relative w-14 h-14 rounded-xl border-2 transition-all hover:scale-105 shadow-sm ${
+                    className={`relative h-14 w-14 rounded-xl border-2 shadow-sm transition-colors hover:scale-105 ${
                       selectedColor === color.value
                         ? "border-primary ring-2 ring-primary ring-offset-2"
-                        : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:shadow-md"
+                        : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
                     }`}
                     style={{
                       backgroundColor: color.value,
@@ -119,7 +119,7 @@ export function ColorPickerForm() {
                   >
                     {selectedColor === color.value && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-4 h-4 bg-white dark:bg-black rounded-full shadow-md border border-gray-200 dark:border-gray-600" />
+                        <div className="h-4 w-4 rounded-full border border-border bg-background shadow-md" />
                       </div>
                     )}
                   </button>

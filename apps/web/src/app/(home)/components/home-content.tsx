@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { IconArrowDown, IconClock, IconDownload, IconLock } from "@tabler/icons-react";
+import { IconArrowUpRight, IconClock, IconDownload, IconLock, IconSparkles } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -12,9 +11,6 @@ import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { HomeContentProps } from "../types";
 
-// A different view of the same world on every visit.
-const ARTWORK = ["/art/sea.jpg", "/art/vault.jpg", "/art/terrace.jpg", "/art/wall.jpg"];
-
 const rise = (delay: number) => ({
   animate: { opacity: 1, y: 0 },
   initial: { opacity: 0, y: 20 },
@@ -23,12 +19,6 @@ const rise = (delay: number) => ({
 
 export function HomeContent({ isLoading }: HomeContentProps) {
   const t = useTranslations();
-  const [artwork, setArtwork] = useState(ARTWORK[0]);
-
-  // Picked after mount so the server and the client agree on the first paint.
-  useEffect(() => {
-    setArtwork(ARTWORK[Math.floor(Math.random() * ARTWORK.length)]);
-  }, []);
 
   if (isLoading) {
     return null;
@@ -41,72 +31,106 @@ export function HomeContent({ isLoading }: HomeContentProps) {
   ];
 
   return (
-    <main className="-mt-16 flex-grow">
-      {/* The artwork is the whole first screen. Everything else waits below the fold. */}
-      <section className="relative flex min-h-screen flex-col justify-end overflow-hidden">
-        <motion.img
-          key={artwork}
-          src={artwork}
-          alt=""
-          animate={{ opacity: 1, scale: 1 }}
-          initial={{ opacity: 0, scale: 1.04 }}
-          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B1626]/95 via-[#0B1626]/55 to-[#0B1626]/25" />
+    <main className="flex-grow">
+      <section className="relative overflow-hidden border-b bg-background">
+        <div className="pointer-events-none absolute -right-40 -top-44 size-[34rem] rounded-full bg-primary/[0.06] blur-3xl" />
+        <div className="container relative mx-auto grid max-w-6xl items-center gap-14 px-6 pb-20 pt-28 lg:grid-cols-[1.08fr_0.92fr] lg:pb-28 lg:pt-36">
+          <div>
+            <motion.p {...rise(0)} className="font-mono text-xs uppercase tracking-[0.28em] text-primary">
+              {t("home.pageTitle")}
+            </motion.p>
+            <h1 className="mt-5 max-w-3xl font-display text-5xl font-extrabold leading-[0.94] tracking-[-0.04em] sm:text-6xl lg:text-8xl">
+              <motion.span {...rise(0.08)} className="block">
+                {t("home.header.fileSharing")}
+              </motion.span>
+              <motion.span {...rise(0.16)} className="block text-primary">
+                {t("home.header.tagline")}
+              </motion.span>
+            </h1>
+            <motion.p {...rise(0.24)} className="mt-7 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+              {t("home.description")}
+            </motion.p>
+            <motion.div {...rise(0.32)} className="mt-9 flex flex-wrap items-center gap-3">
+              <Button asChild size="lg" className="h-12 rounded-full px-7">
+                <Link href="/login">
+                  {t("login.signIn")} <IconArrowUpRight className="size-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-12 rounded-full px-7">
+                <Link href={siteConfig.links.docs} target="_blank" rel="noopener noreferrer">
+                  {t("home.documentation")}
+                </Link>
+              </Button>
+            </motion.div>
+            <div className="mt-12 flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-primary">
+                <IconLock className="size-4" />
+              </span>
+              <span>
+                {t("home.points.selfHosted")} · {t("home.points.noTracking")}
+              </span>
+            </div>
+          </div>
 
-        <div className="container relative mx-auto max-w-6xl px-6 pb-20 pt-32 text-background">
-          <motion.p {...rise(0)} className="font-mono text-xs uppercase tracking-[0.3em] opacity-70">
-            Amfora
-          </motion.p>
-
-          <h1 className="mt-5 font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
-            <motion.span {...rise(0.08)} className="block">
-              {t("home.header.fileSharing")}
-            </motion.span>
-            <motion.span {...rise(0.16)} className="block opacity-60">
-              {t("home.header.tagline")}
-            </motion.span>
-          </h1>
-
-          <motion.p {...rise(0.24)} className="mt-7 max-w-lg text-lg leading-relaxed opacity-85">
-            {t("home.description")}
-          </motion.p>
-
-          <motion.div {...rise(0.32)} className="mt-9 flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="px-8">
-              <Link href="/login">{t("login.signIn")}</Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-background/40 bg-transparent text-background hover:bg-background/10 hover:text-background"
-            >
-              <Link href={siteConfig.links.docs} target="_blank" rel="noopener noreferrer">
-                {t("home.documentation")}
-              </Link>
-            </Button>
+          <motion.div {...rise(0.2)} className="relative mx-auto w-full max-w-[440px]">
+            <div className="absolute -inset-5 rounded-[2rem] bg-secondary/70 blur-2xl" />
+            <div className="relative overflow-hidden rounded-[1.75rem] border bg-card shadow-[0_30px_80px_-42px_rgba(14,32,54,0.55)]">
+              <div className="flex items-center justify-between border-b px-6 py-5">
+                <div>
+                  <p className="font-display text-lg font-bold tracking-tight">{t("home.header.fileSharing")}</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {t("share.sealed")}
+                  </p>
+                </div>
+                <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-primary">
+                  <IconSparkles className="size-4" />
+                </span>
+              </div>
+              <div className="space-y-3 p-6">
+                <div className="flex items-center gap-4 rounded-xl border bg-background p-4">
+                  <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <IconDownload className="size-5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">project-files.zip</p>
+                    <p className="font-mono text-[11px] text-muted-foreground">4.2 MB · {t("share.sealed")}</p>
+                  </div>
+                  <span className="size-2 rounded-full bg-emerald-500" />
+                </div>
+                <div className="grid grid-cols-3 gap-2 border-t pt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <span>
+                    <strong className="block text-sm font-medium tracking-normal text-foreground">01</strong>
+                    {t("share.itemCount", { count: 1 })}
+                  </span>
+                  <span>
+                    <strong className="block text-sm font-medium tracking-normal text-foreground">7 days</strong>
+                    {t("home.visual.expires")}
+                  </span>
+                  <span>
+                    <strong className="block text-sm font-medium tracking-normal text-foreground">
+                      {t("share.sealed")}
+                    </strong>
+                    {t("home.visual.password")}
+                  </span>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
-
-        <motion.div {...rise(0.5)} className="relative pb-8 text-center text-background/60">
-          <IconArrowDown className="mx-auto size-5 animate-bounce" aria-hidden="true" />
-        </motion.div>
       </section>
 
-      {/* What you actually get, next to the thing the recipient sees. */}
       <section className="border-b bg-background">
-        <div className="container mx-auto grid max-w-6xl items-center gap-14 px-6 py-24 lg:grid-cols-[1fr_360px]">
+        <div className="container mx-auto grid max-w-6xl items-center gap-14 px-6 py-20 lg:grid-cols-[1fr_360px] lg:py-24">
           <div>
-            <h2 className="max-w-lg font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+            <p className="font-mono text-xs uppercase tracking-[0.24em] text-primary">{t("home.pageTitle")}</p>
+            <h2 className="mt-4 max-w-lg font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
               {t("home.privacyMessage")}
             </h2>
 
             <ul className="mt-10 grid gap-8 sm:grid-cols-3">
               {points.map(({ label, icon: Icon }, index) => (
                 <li key={label} className="flex flex-col gap-3">
-                  <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-primary">
+                  <span className="flex size-9 items-center justify-center rounded-lg bg-secondary text-primary">
                     <Icon className="size-4" aria-hidden="true" />
                   </span>
                   <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -120,7 +144,7 @@ export function HomeContent({ isLoading }: HomeContentProps) {
 
           <div className="relative mx-auto w-full max-w-[330px]">
             <div className="rounded-[1.5rem] border bg-card p-6 shadow-[0_30px_70px_-35px_rgba(14,32,54,0.55)]">
-              <p className="font-display text-base font-bold tracking-tight">offerte-2026.pdf</p>
+              <p className="font-display text-base font-bold tracking-tight">project-files.zip</p>
               <p className="mt-1 font-mono text-[11px] text-muted-foreground">4,2 MB &middot; PDF</p>
 
               <dl className="mt-4 space-y-2.5 border-t pt-4 font-mono text-[11px]">

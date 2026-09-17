@@ -170,23 +170,27 @@ export function FilesViewManager({
   return (
     <div className="space-y-4">
       {/* Breadcrumbs, Search and View Controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">{breadcrumbs}</div>
+      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/70 p-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">{breadcrumbs}</div>
 
-        <div className="flex items-center gap-4">
-          <div className="relative">
+        <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+          <div className="relative min-w-0 flex-1 sm:w-64 sm:flex-none">
             <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
+              aria-label={t("searchBar.placeholder")}
               placeholder={t("searchBar.placeholder")}
               value={searchQuery}
               onChange={(e) => onSearch(e.target.value)}
-              className="max-w-sm pl-10"
+              className="w-full pl-10"
             />
           </div>
 
-          <div className="flex items-center border rounded-lg p-1">
+          <div className="flex items-center rounded-lg border border-border/70 bg-background p-1">
             <Button
+              type="button"
+              aria-label={t("files.viewMode.table")}
+              aria-pressed={viewMode === "table"}
               variant={viewMode === "table" ? "default" : "ghost"}
               size="sm"
               className="h-8 px-3"
@@ -195,6 +199,9 @@ export function FilesViewManager({
               <IconTable className="h-4 w-4" />
             </Button>
             <Button
+              type="button"
+              aria-label={t("files.viewMode.grid")}
+              aria-pressed={viewMode === "grid"}
               variant={viewMode === "grid" ? "default" : "ghost"}
               size="sm"
               className="h-8 px-3"

@@ -34,7 +34,7 @@ export function ResetPasswordForm({
                     type={isPasswordVisible ? "text" : "password"}
                     placeholder={t("resetPassword.form.newPasswordPlaceholder")}
                     disabled={isSubmitting}
-                    className="bg-transparent backdrop-blur-md pr-10"
+                    className="h-12 rounded-xl bg-background pr-10"
                   />
                   <button
                     type="button"
@@ -63,7 +63,7 @@ export function ResetPasswordForm({
                     type={isConfirmPasswordVisible ? "text" : "password"}
                     placeholder={t("resetPassword.form.confirmPasswordPlaceholder")}
                     disabled={isSubmitting}
-                    className="bg-transparent backdrop-blur-md pr-10"
+                    className="h-12 rounded-xl bg-background pr-10"
                   />
                   <button
                     type="button"
@@ -79,12 +79,15 @@ export function ResetPasswordForm({
           )}
         />
 
-        <Button className="w-full" disabled={isSubmitting} size="lg" type="submit">
+        <Button className="h-12 w-full rounded-full" disabled={isSubmitting} size="lg" type="submit">
           {isSubmitting ? t("resetPassword.form.resetting") : t("resetPassword.form.submit")}
         </Button>
 
         <div className="mt-4 text-center">
-          <Link className="text-muted-foreground hover:text-primary text-sm" href="/login">
+          <Link
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+            href="/login"
+          >
             {t("resetPassword.form.backToLogin")}
           </Link>
         </div>

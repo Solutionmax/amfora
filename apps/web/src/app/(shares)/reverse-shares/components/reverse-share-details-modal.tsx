@@ -145,7 +145,7 @@ export function ReverseShareDetailsModal({
               isActive={reverseShare.isActive}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Informações Básicas */}
               <div className="space-y-3">
                 <h3 className="text-base font-medium text-foreground border-b pb-2">
@@ -313,7 +313,7 @@ export function ReverseShareDetailsModal({
             </div>
 
             {/* Configurações e Limites */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-3">
                 <h3 className="text-base font-medium text-foreground border-b pb-2">
                   {t("reverseShares.labels.limits")}
@@ -448,7 +448,7 @@ export function ReverseShareDetailsModal({
               <h3 className="text-base font-medium text-foreground border-b pb-2">
                 {t("reverseShares.modals.details.dates")}
               </h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm">
                 <div>
                   <div className="text-xs font-medium text-muted-foreground">
                     {t("reverseShares.modals.details.createdAt")}

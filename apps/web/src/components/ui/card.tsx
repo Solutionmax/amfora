@@ -4,16 +4,14 @@ import { cn } from "@/lib/utils";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className="border p-1.5 rounded-xl text-card-foreground shadow-lg dark:shadow-sm">
-      <div
-        data-slot="card"
-        className={cn(
-          "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border dark:border-none py-6 ",
-          className
-        )}
-        {...props}
-      />
-    </div>
+    <div
+      data-slot="card"
+      className={cn(
+        "bg-card text-card-foreground flex min-w-0 flex-col gap-6 rounded-xl border py-6 shadow-[0_2px_8px_-4px_rgb(14_32_54/0.08)]",
+        className
+      )}
+      {...props}
+    />
   );
 }
 

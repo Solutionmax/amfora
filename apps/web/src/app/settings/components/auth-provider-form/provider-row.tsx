@@ -45,7 +45,7 @@ export function ProviderRow({
   const isEditing = editingProvider?.id === provider.id;
 
   return (
-    <div className={`border rounded-lg ${isDragging ? "border-blue-300 bg-blue-50 dark:bg-blue-950/20" : ""}`}>
+    <div className={`rounded-lg border border-border/70 ${isDragging ? "border-primary/40 bg-primary/5" : ""}`}>
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-3">
           {!isDragDisabled ? (
@@ -69,9 +69,7 @@ export function ProviderRow({
             </div>
             <div className="text-xs text-muted-foreground">
               {provider.type.toUpperCase()} • {provider.name}
-              {provider.isOfficial && (
-                <span className="text-blue-600 dark:text-blue-400"> • {t("authProviders.officialProvider")}</span>
-              )}
+              {provider.isOfficial && <span className="text-primary"> • {t("authProviders.officialProvider")}</span>}
             </div>
           </div>
         </div>
@@ -96,7 +94,7 @@ export function ProviderRow({
       </div>
 
       {isEditing && (
-        <div className="border-t border-border dark:border-border p-4 space-y-4 bg-muted/50 dark:bg-muted/20">
+        <div className="space-y-4 border-t border-border/70 bg-secondary/25 p-4">
           <div className="flex items-center justify-between">
             <h3 className="font-medium text-foreground dark:text-foreground">{provider.displayName}</h3>
           </div>

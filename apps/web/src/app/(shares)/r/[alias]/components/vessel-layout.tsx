@@ -115,36 +115,46 @@ export function VesselLayout({
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[70vh] bg-[radial-gradient(60%_60%_at_50%_0%,var(--secondary)_0%,transparent_70%)]"
+        className="pointer-events-none absolute right-0 top-0 size-[30rem] rounded-full bg-primary/[0.05] blur-3xl"
         aria-hidden="true"
       />
 
-      <header className="relative flex items-center justify-between px-6 py-5">
-        <Link href="/" className="flex items-center gap-2.5">
+      <header className="relative flex items-center justify-between gap-4 border-b px-6 py-4">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5">
           {appLogo ? (
-            <img alt="" className="h-8 w-8 rounded object-contain" src={appLogo} />
+            <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
           ) : (
-            <AmphoraMark className="h-8 w-8 text-primary" />
+            <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
           )}
-          <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+          <span className="truncate font-display text-xl font-bold tracking-tight">{appName}</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <GithubStar className="hidden sm:inline-flex" />
           <LanguageSwitcher />
           <ModeToggle />
         </div>
       </header>
 
-      <main className="relative flex-1 px-4 pb-6 lg:px-6">
+      <main className="relative mx-auto flex w-full max-w-6xl flex-1 items-start px-4 py-8 lg:px-6 lg:py-12">
         <Stage
-          object={<Vessel level={level} strata={filled.count} sealed={hasUploadedSuccessfully} className="w-full" />}
+          object={
+            <Vessel
+              level={level}
+              strata={filled.count}
+              sealed={hasUploadedSuccessfully}
+              className="h-10 w-9 opacity-90"
+            />
+          }
           caption={hasUploadedSuccessfully ? t("share.sealed") : t("share.itemCount", { count: filled.count })}
         >
-          <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+            {t("reverseShares.pageTitle")}
+          </p>
+          <h1 className="mt-4 break-words font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
             {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
           </h1>
           {reverseShare?.description && (
-            <p className="mt-3 max-w-md text-muted-foreground">{reverseShare.description}</p>
+            <p className="mt-3 max-w-md break-words text-muted-foreground">{reverseShare.description}</p>
           )}
 
           <div className="mt-8">{uploadSection()}</div>

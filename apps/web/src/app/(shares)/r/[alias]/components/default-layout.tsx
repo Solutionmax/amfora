@@ -4,6 +4,7 @@ import Link from "next/link";
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { DefaultFooter } from "@/components/ui/default-footer";
@@ -119,15 +120,22 @@ export function DefaultLayout({
     (reverseShare.maxFiles || reverseShare.maxFileSize || reverseShare.allowedFileTypes);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header público */}
-      <header className="w-full px-6 border-b border-border/50 bg-background/70 backdrop-blur-sm">
-        <div className="mx-auto max-w-5xl sm:p-0 h-16 flex items-center justify-between">
-          <Link className="flex items-center gap-2" href="/">
-            {appLogo && <img alt="App Logo" className="h-8 w-8 object-contain rounded" src={appLogo} />}
-            <p className="font-bold text-2xl text-foreground">{appName}</p>
+    <div className="relative flex min-h-screen flex-col bg-background">
+      <div
+        className="pointer-events-none absolute right-0 top-0 size-[30rem] rounded-full bg-primary/[0.05] blur-3xl"
+        aria-hidden="true"
+      />
+      <header className="relative w-full border-b bg-background/95 px-6 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4">
+          <Link className="flex min-w-0 items-center gap-2" href="/">
+            {appLogo ? (
+              <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
+            ) : (
+              <AmphoraMark className="h-8 w-8 shrink-0 text-primary" />
+            )}
+            <p className="truncate font-display text-xl font-bold tracking-tight">{appName}</p>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <LanguageSwitcher />
             <ModeToggle />
           </div>
@@ -135,28 +143,31 @@ export function DefaultLayout({
       </header>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 container mx-auto px-6 py-8 md:py-12">
-        <div className="max-w-2xl mx-auto space-y-8 ">
+      <main className="relative container mx-auto flex-1 px-4 py-8 md:px-6 md:py-12">
+        <div className="mx-auto max-w-3xl space-y-8">
           {/* Header da página */}
-          <div className="text-center space-y-4">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+          <div className="space-y-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+              {t("reverseShares.pageTitle")}
+            </p>
+            <h1 className="break-words font-display text-4xl font-extrabold tracking-tight md:text-5xl">
               {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
             </h1>
             {reverseShare?.description && (
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              <p className="max-w-2xl break-words leading-7 text-muted-foreground md:text-lg">
                 {reverseShare.description}
               </p>
             )}
           </div>
 
           {/* Seção de upload */}
-          <div className="bg-card rounded-xl shadow-sm border border-border p-6 md:p-8 lg:p-10">
+          <div className="rounded-[1.75rem] border bg-card p-6 shadow-sm md:p-8 lg:p-10">
             {getUploadStatus().component}
           </div>
 
           {/* Informações adicionais */}
           {showUploadLimits && (
-            <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+            <div className="space-y-2 rounded-2xl border bg-secondary/35 p-5">
               <h3 className="text-sm font-medium text-foreground">{t("reverseShares.upload.layout.importantInfo")}</h3>
               <div className="text-xs text-muted-foreground space-y-1">
                 {reverseShare?.maxFiles && (

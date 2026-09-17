@@ -174,8 +174,8 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
         <h3 className="font-medium text-foreground dark:text-foreground">{t("authProviders.addProviderTitle")}</h3>
       </div>
 
-      <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-        <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+        <div className="flex items-center gap-2 text-primary">
           <span>
             <IconInfoCircle className="h-4 w-4" />
           </span>
@@ -189,7 +189,7 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-2 block">{t("authProviders.form.providerName")} *</Label>
           <Input
@@ -208,11 +208,11 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-2 block">{t("authProviders.form.type")}</Label>
           <select
-            className="w-full rounded-md border border-input bg-background dark:bg-background px-3 py-2 text-sm text-foreground dark:text-foreground"
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
             value={newProvider.type}
             onChange={(e) => updateProvider({ type: e.target.value as "oidc" | "oauth2" })}
           >
@@ -232,7 +232,7 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
 
       <ConfigurationMethodSelector provider={newProvider} onUpdate={updateProvider} onUrlUpdate={updateProviderUrl} />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-2 block">{t("authProviders.form.clientId")} *</Label>
           <Input

@@ -17,8 +17,8 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
       <CardContent>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <IconShare className="text-xl text-gray-500" />
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <IconShare className="size-5 text-primary" />
               {t("recentShares.title")}
             </h2>
 

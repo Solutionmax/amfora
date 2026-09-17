@@ -1,26 +1,18 @@
-import { motion } from "framer-motion";
+"use client";
+
 import { useTranslations } from "next-intl";
 
-import { BackgroundLights } from "@/components/ui/background-lights";
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 
 export function LoadingScreen() {
   const t = useTranslations();
-
   return (
-    <div className="fixed inset-0 bg-background">
-      <BackgroundLights />
-      <div className="relative flex flex-col items-center justify-center h-full">
-        <motion.div
-          animate={{ scale: [1, 1.1, 1] }}
-          className="flex flex-col items-center gap-4"
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <span className="text-xl font-semibold text-primary">{t("common.loading")}</span>
-        </motion.div>
+    <div className="fixed inset-0 flex items-center justify-center bg-background" role="status" aria-live="polite">
+      <div className="flex flex-col items-center gap-5">
+        <div className="flex size-16 items-center justify-center rounded-2xl border bg-card">
+          <AmphoraMark className="size-8 text-primary" />
+        </div>
+        <span className="text-sm font-medium text-muted-foreground">{t("common.loading")}</span>
       </div>
     </div>
   );

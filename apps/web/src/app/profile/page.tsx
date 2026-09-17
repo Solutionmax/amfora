@@ -33,27 +33,29 @@ export default function ProfilePage() {
     <ProtectedRoute>
       <FileManagerLayout title={t("profile.pageTitle")}>
         <SectionLayout sections={sections} activeId={activeId} onSelect={setActiveId} label={t("profile.pageTitle")}>
-          {activeId === "account" && (
-            <div className="flex flex-col gap-8">
-              <ProfilePicture
-                userData={profile.userData}
-                onImageChange={profile.handleImageChange}
-                onImageRemove={profile.handleImageRemove}
+          <div className="max-w-3xl">
+            {activeId === "account" && (
+              <div className="flex flex-col gap-6">
+                <ProfilePicture
+                  userData={profile.userData}
+                  onImageChange={profile.handleImageChange}
+                  onImageRemove={profile.handleImageRemove}
+                />
+                <ProfileForm form={profile.profileForm} onSubmit={profile.onProfileSubmit} />
+              </div>
+            )}
+            {activeId === "password" && (
+              <PasswordForm
+                form={profile.passwordForm}
+                isConfirmPasswordVisible={profile.isConfirmPasswordVisible}
+                isNewPasswordVisible={profile.isNewPasswordVisible}
+                onSubmit={profile.onPasswordSubmit}
+                onToggleConfirmPassword={() => profile.setIsConfirmPasswordVisible(!profile.isConfirmPasswordVisible)}
+                onToggleNewPassword={() => profile.setIsNewPasswordVisible(!profile.isNewPasswordVisible)}
               />
-              <ProfileForm form={profile.profileForm} onSubmit={profile.onProfileSubmit} />
-            </div>
-          )}
-          {activeId === "password" && (
-            <PasswordForm
-              form={profile.passwordForm}
-              isConfirmPasswordVisible={profile.isConfirmPasswordVisible}
-              isNewPasswordVisible={profile.isNewPasswordVisible}
-              onSubmit={profile.onPasswordSubmit}
-              onToggleConfirmPassword={() => profile.setIsConfirmPasswordVisible(!profile.isConfirmPasswordVisible)}
-              onToggleNewPassword={() => profile.setIsNewPasswordVisible(!profile.isNewPasswordVisible)}
-            />
-          )}
-          {activeId === "twoFactor" && <TwoFactorForm />}
+            )}
+            {activeId === "twoFactor" && <TwoFactorForm />}
+          </div>
         </SectionLayout>
       </FileManagerLayout>
     </ProtectedRoute>

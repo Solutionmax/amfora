@@ -35,14 +35,14 @@ export function StatusMessage({
   const isCompact = size === "compact";
 
   return (
-    <div className={`text-center space-y-4 ${isCompact ? "py-6" : "py-8"}`}>
-      <div className="flex justify-center">
-        <div className={`${styles.iconBg} p-3 rounded-full`}>
+    <div className={`space-y-4 ${isCompact ? "py-6" : "py-8"}`}>
+      <div>
+        <div className={`${styles.iconBg} flex size-12 items-center justify-center rounded-xl`}>
           <Icon className={`${isCompact ? "h-6 w-6" : "h-8 w-8"} ${styles.iconColor}`} />
         </div>
       </div>
       <div className="space-y-2">
-        <h3 className={`${isCompact ? "text-lg" : "text-xl"} font-semibold ${styles.titleColor}`}>{title}</h3>
+        <h3 className={`${isCompact ? "text-lg" : "text-xl"} font-display font-bold ${styles.titleColor}`}>{title}</h3>
         <p
           className={`${styles.descriptionColor} ${isCompact ? "text-sm" : ""} ${isCompact ? "" : "max-w-md mx-auto"}`}
         >

@@ -11,9 +11,9 @@ export function EmptySharesState({ onCreateShare }: EmptySharesStateProps) {
   const t = useTranslations();
 
   return (
-    <div className="text-center py-6 flex flex-col items-center gap-2">
-      <IconShare className="w-8 h-8 text-gray-500" />
-      <p className="text-gray-500">{t("shares.empty.message")}</p>
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border/70 bg-secondary/20 py-14 text-center">
+      <IconShare className="h-10 w-10 text-primary/70" />
+      <p className="text-muted-foreground">{t("shares.empty.message")}</p>
       <Button variant="default" size="sm" onClick={onCreateShare} className="gap-2">
         <IconPlus className="h-4 w-4" />
         {t("shares.empty.createButton")}
