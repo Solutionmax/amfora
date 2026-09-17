@@ -1,19 +1,30 @@
 #!/bin/sh
 # Start storage system with persistent root password
-# This script MUST run as root to fix permissions, then drops to palmr user
+# This script MUST run as root to fix permissions, then drops to amfora user
 
 set -e
 
+# Skip internal storage when external S3 is configured, so presigned URLs never
+# point back at the internal MinIO instance instead of the operator's S3 provider.
+if [ "$ENABLE_S3" = "true" ]; then
+    echo "[STORAGE-SYSTEM] External S3 enabled (ENABLE_S3=true)"
+    echo "[STORAGE-SYSTEM] Skipping internal storage system"
+    # Keep supervisor happy by sleeping forever instead of exiting: the [program:minio]
+    # entry in supervisord.conf has autorestart=true, so exiting would just be
+    # restarted in a loop. Sleeping avoids templating supervisord.conf per ENABLE_S3.
+    exec tail -f /dev/null
+fi
+
 DATA_DIR="/app/server/minio-data"
 PASSWORD_FILE="/app/server/.minio-root-password"
-MINIO_USER="palmr"
+MINIO_USER="amfora"
 
 echo "[STORAGE-SYSTEM] Initializing storage..."
 
 # USE ENVIRONMENT VARIABLES: Allow runtime UID/GID configuration
-# Falls back to palmr user's UID/GID if not specified
-export MINIO_UID=${PALMR_UID:-$(id -u $MINIO_USER 2>/dev/null || echo "1001")}
-export MINIO_GID=${PALMR_GID:-$(id -g $MINIO_USER 2>/dev/null || echo "1001")}
+# Falls back to amfora user's UID/GID if not specified
+export MINIO_UID=${AMFORA_UID:-$(id -u $MINIO_USER 2>/dev/null || echo "1001")}
+export MINIO_GID=${AMFORA_GID:-$(id -g $MINIO_USER 2>/dev/null || echo "1001")}
 
 echo "[STORAGE-SYSTEM]   Target user: $MINIO_USER (UID:$MINIO_UID, GID:$MINIO_GID)"
 
@@ -45,7 +56,7 @@ else
     echo "[STORAGE-SYSTEM] ⚠️  WARNING: Not running as root"
 fi
 
-# Verify directory is writable (test as palmr with detected UID:GID)
+# Verify directory is writable (test as amfora with detected UID:GID)
 su-exec ${MINIO_UID}:${MINIO_GID} sh -c "
     if ! touch '$DATA_DIR/.test-write' 2>/dev/null; then
         echo '[STORAGE-SYSTEM] ❌ FATAL: Still cannot write to $DATA_DIR'
@@ -57,7 +68,7 @@ su-exec ${MINIO_UID}:${MINIO_GID} sh -c "
     echo '[STORAGE-SYSTEM]   ✓ Write test passed'
 "
 
-# Generate or reuse password (as root, then chown to palmr)
+# Generate or reuse password (as root, then chown to amfora)
 if [ -f "$PASSWORD_FILE" ]; then
     MINIO_ROOT_PASSWORD=$(cat "$PASSWORD_FILE")
     echo "[STORAGE-SYSTEM] Using existing root password"
@@ -70,12 +81,12 @@ else
 fi
 
 # Export for storage system
-export MINIO_ROOT_USER="palmr-minio-admin"
+export MINIO_ROOT_USER="amfora-storage-admin"
 export MINIO_ROOT_PASSWORD="$MINIO_ROOT_PASSWORD"
 
-echo "[STORAGE-SYSTEM] Starting storage server on 0.0.0.0:9379 as user palmr..."
+echo "[STORAGE-SYSTEM] Starting storage server on 0.0.0.0:9379 as user amfora..."
 
-# Execute storage system as palmr user (dropping from root)
+# Execute storage system as amfora user (dropping from root)
 exec su-exec ${MINIO_UID}:${MINIO_GID} /usr/local/bin/minio server "$DATA_DIR" \
     --address 0.0.0.0:9379 \
     --console-address 0.0.0.0:9378

@@ -47,10 +47,30 @@ export class AuthProvidersController {
     this.configService = new ConfigService();
   }
 
+  /**
+   * A chain of reverse proxies can each append their own value to x-forwarded-* headers,
+   * turning "https" into "https, http" (RFC 7239 leaves this to convention; different
+   * proxies handle it differently). Only the first hop set these, so take its value.
+   */
+  private firstForwardedValue(headerValue: string | undefined): string | undefined {
+    if (!headerValue) {
+      return undefined;
+    }
+
+    const first = headerValue.split(",")[0]?.trim();
+    return first && first.length > 0 ? first : undefined;
+  }
+
   private buildRequestContext(request: FastifyRequest): RequestContext {
+    const forwardedProto = this.firstForwardedValue(request.headers["x-forwarded-proto"] as string | undefined);
+    const protocol = forwardedProto === "http" || forwardedProto === "https" ? forwardedProto : request.protocol;
+
+    const forwardedHost = this.firstForwardedValue(request.headers["x-forwarded-host"] as string | undefined);
+    const host = forwardedHost || (request.headers.host as string);
+
     return {
-      protocol: (request.headers["x-forwarded-proto"] as string) || request.protocol,
-      host: (request.headers["x-forwarded-host"] as string) || (request.headers.host as string),
+      protocol,
+      host,
       headers: request.headers,
     };
   }

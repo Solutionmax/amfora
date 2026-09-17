@@ -12,6 +12,7 @@ const envSchema = z.object({
   S3_BUCKET_NAME: z.string().optional(),
   S3_FORCE_PATH_STYLE: z.union([z.literal("true"), z.literal("false")]).default("false"),
   S3_REJECT_UNAUTHORIZED: z.union([z.literal("true"), z.literal("false")]).default("true"),
+  S3_DISABLE_CHECKSUMS: z.union([z.literal("true"), z.literal("false")]).default("false"),
 
   // Legacy encryption vars (kept for backward compatibility but not used with S3/Garage)
   ENCRYPTION_KEY: z.string().optional(),
@@ -21,7 +22,7 @@ const envSchema = z.object({
   PRESIGNED_URL_EXPIRATION: z.string().optional().default("3600"),
   SECURE_SITE: z.union([z.literal("true"), z.literal("false")]).default("false"),
   STORAGE_URL: z.string().optional(), // Storage URL for internal storage presigned URLs (required when ENABLE_S3=false, e.g., https://syrg.amfora.com or http://192.168.1.100:9379)
-  DATABASE_URL: z.string().optional().default("file:/app/server/prisma/palmr.db"),
+  DATABASE_URL: z.string().optional().default("file:/app/server/prisma/amfora.db"),
   CUSTOM_PATH: z.string().optional(),
 });
 
