@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { createFieldDescriptions, createGroupMetadata } from "../constants";
 import { SettingsGroupProps } from "../types";
 import { isFieldHidden, SettingsInput } from "./settings-input";
@@ -24,15 +23,18 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Card className="p-6 gap-0">
-        <CardHeader className="flex flex-row items-center justify-between p-0">
+      <Card className="gap-0 overflow-hidden p-0">
+        <CardHeader className="border-b bg-muted/30 p-6 sm:p-8">
           <div className="flex flex-row items-center gap-3">
-            {metadata.icon && React.createElement(metadata.icon, { className: "text-xl text-muted-foreground" })}
+            {metadata.icon &&
+              React.createElement(metadata.icon, {
+                className: "size-10 shrink-0 rounded-xl border bg-background p-2.5 text-primary",
+              })}
             <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-semibold">
+              <h2 className="text-xl font-semibold tracking-tight">
                 {t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title}
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
                 {t.has(`settings.groups.${group}.description`)
                   ? t(`settings.groups.${group}.description`)
                   : metadata.description}
@@ -40,9 +42,8 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
             </div>
           </div>
         </CardHeader>
-        <CardContent className="block px-0">
-          <Separator className="my-6" />
-          <div className="flex flex-col gap-4">
+        <CardContent className="p-6 sm:p-8">
+          <div className="divide-y">
             {configs
               .filter((config) => !isFieldHidden(config.key))
               .map((config) => {
@@ -71,7 +72,7 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
                 }
 
                 return (
-                  <div key={config.key} className="space-y-2 mb-3">
+                  <div key={config.key} className="space-y-2 py-5 first:pt-0 last:pb-0">
                     <SettingsInput
                       config={config}
                       error={form.formState.errors.configs?.[config.key]}
@@ -82,18 +83,17 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
                       watch={form.watch}
                     />
                     <p className="text-xs text-muted-foreground ml-1">
-                      {t(`settings.fields.${config.key}.description`, {
-                        defaultValue:
-                          FIELD_DESCRIPTIONS[config.key as keyof typeof FIELD_DESCRIPTIONS] ||
+                      {t.has(`settings.fields.${config.key}.description`)
+                        ? t(`settings.fields.${config.key}.description`)
+                        : FIELD_DESCRIPTIONS[config.key as keyof typeof FIELD_DESCRIPTIONS] ||
                           config.description ||
-                          t("settings.fields.noDescription"),
-                      })}
+                          t("settings.fields.noDescription")}
                     </p>
                   </div>
                 );
               })}
           </div>
-          <div className="flex flex-wrap justify-between items-center gap-3 mt-4">
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
             <div className="flex">
               {isEmailGroup && form.watch("configs.smtpEnabled") === "true" && (
                 <SmtpTestButton
@@ -120,7 +120,7 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
               >
                 {!form.formState.isSubmitting && <IconDeviceFloppy className="h-4 w-4" />}
                 {t("settings.buttons.save", {
-                  group: t(`settings.groups.${group}.title`, { defaultValue: metadata.title }),
+                  group: t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title,
                 })}
               </Button>
             </div>

@@ -229,7 +229,10 @@
       "availableDescription": "お好みのテーマモードを選択",
       "reset": "システム設定に戻す"
     },
-    "pageTitle": "カスタマイズ"
+    "pageTitle": "カスタマイズ",
+    "preview": {
+      "title": "プレビュー"
+    }
   },
   "dashboard": {
     "loadError": "ダッシュボードデータの読み込みに失敗しました",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "招待リンクの生成に失敗しました"
       }
+    },
+    "filters": {
+      "all": "すべて"
     }
   },
   "validation": {

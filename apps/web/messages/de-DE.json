@@ -229,7 +229,10 @@
       "availableDescription": "Wählen Sie Ihren bevorzugten Themenmodus",
       "reset": "Auf System zurücksetzen"
     },
-    "pageTitle": "Anpassung"
+    "pageTitle": "Anpassung",
+    "preview": {
+      "title": "Vorschau"
+    }
   },
   "dashboard": {
     "loadError": "Fehler beim Laden der Dashboard-Daten",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Fehler beim Generieren des Einladungslinks"
       }
+    },
+    "filters": {
+      "all": "Alle"
     }
   },
   "validation": {

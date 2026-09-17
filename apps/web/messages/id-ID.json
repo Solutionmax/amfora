@@ -229,7 +229,10 @@
       "availableDescription": "Pilih mode tema favorit Anda",
       "reset": "Atur Ulang ke Sistem"
     },
-    "pageTitle": "Kustomisasi"
+    "pageTitle": "Kustomisasi",
+    "preview": {
+      "title": "Pratinjau"
+    }
   },
   "dashboard": {
     "loadError": "Gagal memuat data dasbor",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Gagal membuat tautan undangan"
       }
+    },
+    "filters": {
+      "all": "Semua"
     }
   },
   "validation": {

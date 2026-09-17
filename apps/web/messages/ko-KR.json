@@ -229,7 +229,10 @@
       "availableDescription": "선호하는 테마 모드를 선택하세요",
       "reset": "시스템 설정으로 재설정"
     },
-    "pageTitle": "커스터마이징"
+    "pageTitle": "커스터마이징",
+    "preview": {
+      "title": "미리보기"
+    }
   },
   "dashboard": {
     "loadError": "대시보드 데이터를 불러오는데 실패했습니다",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "초대 링크 생성 실패"
       }
+    },
+    "filters": {
+      "all": "전체"
     }
   },
   "validation": {

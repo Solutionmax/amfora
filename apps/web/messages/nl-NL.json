@@ -11,8 +11,8 @@
     "successfullyAuthenticated": "Succesvol geauthenticeerd!"
   },
   "authProviders": {
-    "title": "Authenticatie Providers",
-    "description": "Configureer externe authenticatie providers voor SSO",
+    "title": "Extern aanmelden",
+    "description": "Optioneel: laat mensen aanmelden met een bestaand account van een andere dienst. Aanmelden met wachtwoord werkt zonder provider.",
     "enabledCount": "{count} ingeschakeld",
     "loadingProviders": "Providers laden...",
     "providersConfigured": "{count} providers geconfigureerd",
@@ -28,7 +28,7 @@
     "dragToReorder": "Sleep om te herordenen",
     "dragDisabledMessage": "Slepen en neerzetten is uitgeschakeld bij het filteren van providers. Toon alle providers om ze opnieuw te ordenen.",
     "dragEnabledMessage": "Sleep providers om ze te herordenen. Deze volgorde wordt weergegeven op de inlogpagina.",
-    "noProvidersEnabled": "Geen authenticatie providers ingeschakeld",
+    "noProvidersEnabled": "Geen externe aanmelding ingeschakeld. Voeg alleen een provider toe als je single sign-on wilt gebruiken.",
     "noProvidersConfigured": "Geen authenticatie providers geconfigureerd",
     "form": {
       "providerName": "Provider Naam",
@@ -229,7 +229,10 @@
       "availableDescription": "Selecteer je gewenste thema modus",
       "reset": "Terugzetten naar Systeem"
     },
-    "pageTitle": "Aanpassing"
+    "pageTitle": "Aanpassing",
+    "preview": {
+      "title": "Voorbeeld"
+    }
   },
   "dashboard": {
     "loadError": "Fout bij het laden van controlepaneel gegevens",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Genereren van uitnodigingslink mislukt"
       }
+    },
+    "filters": {
+      "all": "Alle"
     }
   },
   "validation": {

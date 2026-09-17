@@ -13,8 +13,8 @@ export const createGroupMetadata = (t: ReturnType<typeof createTranslator>) => (
     icon: IconSettings,
   },
   "auth-providers": {
-    title: "Authentication Providers",
-    description: "Configure external authentication providers for SSO",
+    title: t("authProviders.title"),
+    description: t("authProviders.description"),
     icon: IconUserCheck,
   },
   security: {

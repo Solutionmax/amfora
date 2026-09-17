@@ -229,7 +229,10 @@
       "availableDescription": "Välj ditt föredragna temaläge",
       "reset": "Återställ till system"
     },
-    "pageTitle": "Anpassning"
+    "pageTitle": "Anpassning",
+    "preview": {
+      "title": "Förhandsvisning"
+    }
   },
   "dashboard": {
     "loadError": "Det gick inte att läsa in instrumentpanelsdata",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Det gick inte att generera inbjudningslänk"
       }
+    },
+    "filters": {
+      "all": "Alla"
     }
   },
   "validation": {

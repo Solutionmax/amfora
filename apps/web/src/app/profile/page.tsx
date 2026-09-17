@@ -33,7 +33,12 @@ export default function ProfilePage() {
     <ProtectedRoute>
       <FileManagerLayout title={t("profile.pageTitle")}>
         <SectionLayout sections={sections} activeId={activeId} onSelect={setActiveId} label={t("profile.pageTitle")}>
-          <div className="max-w-3xl">
+          <div className="max-w-3xl space-y-6">
+            <div className="rounded-2xl border bg-secondary/30 p-5 sm:p-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">{t("profile.pageTitle")}</p>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">{t("profile.header.title")}</h2>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{t("profile.header.subtitle")}</p>
+            </div>
             {activeId === "account" && (
               <div className="flex flex-col gap-6">
                 <ProfilePicture

@@ -4,11 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { IconPalette } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useAppearance } from "@/hooks/use-appearance";
+import { CustomizationCard } from "./customization-card";
 
 const PREDEFINED_COLORS = [
   // Row 1: Standard vibrant colors
@@ -86,59 +84,43 @@ export function ColorPickerForm() {
   };
 
   return (
-    <Card className="gap-0 p-6">
-      <CardHeader className="flex flex-row items-center justify-between p-0">
-        <div className="flex flex-row items-center gap-8">
-          <IconPalette className="text-xl text-muted-foreground" />
-          <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold">{t("customization.colors.title")}</h2>
-            <p className="text-sm text-muted-foreground">{t("customization.colors.description")}</p>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="px-0">
-        <Separator className="my-6" />
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2 mb-3">
-            <Label className="text-sm font-medium mb-6">{t("customization.colors.presets")}</Label>
-            <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
-              {PREDEFINED_COLORS.map((color) => (
-                <div key={color.name} className="flex flex-col items-center gap-1">
-                  <button
-                    onClick={() => handlePresetColorSelect(color.value)}
-                    className={`relative h-14 w-14 rounded-xl border-2 shadow-sm transition-colors hover:scale-105 ${
-                      selectedColor === color.value
-                        ? "border-primary ring-2 ring-primary ring-offset-2"
-                        : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
-                    }`}
-                    style={{
-                      backgroundColor: color.value,
-                    }}
-                    title={color.name}
-                    type="button"
-                  >
-                    {selectedColor === color.value && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="h-4 w-4 rounded-full border border-border bg-background shadow-md" />
-                      </div>
-                    )}
-                  </button>
-                  <span className="text-xs text-muted-foreground text-center leading-tight">{color.name}</span>
-                </div>
-              ))}
+    <CustomizationCard
+      icon={IconPalette}
+      title={t("customization.colors.title")}
+      description={t("customization.colors.description")}
+      resetLabel={t("customization.colors.reset")}
+      onReset={resetToDefault}
+    >
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">{t("customization.colors.presets")}</Label>
+        <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
+          {PREDEFINED_COLORS.map((color) => (
+            <div key={color.name} className="flex flex-col items-center gap-1">
+              <button
+                onClick={() => handlePresetColorSelect(color.value)}
+                className={`relative h-14 w-14 rounded-xl border-2 shadow-sm transition-colors hover:scale-105 ${
+                  selectedColor === color.value
+                    ? "border-primary ring-2 ring-primary ring-offset-2"
+                    : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
+                }`}
+                style={{
+                  backgroundColor: color.value,
+                }}
+                title={color.name}
+                type="button"
+              >
+                {selectedColor === color.value && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="h-4 w-4 rounded-full border border-border bg-background shadow-md" />
+                  </div>
+                )}
+              </button>
+              <span className="text-xs text-muted-foreground text-center leading-tight">{color.name}</span>
             </div>
-            <p className="text-xs text-muted-foreground ml-1 mt-6">{t("customization.colors.presetsDescription")}</p>
-          </div>
+          ))}
         </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="flex"></div>
-          <div className="flex">
-            <Button variant="outline" onClick={resetToDefault} className="text-sm">
-              {t("customization.colors.reset")}
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        <p className="text-xs leading-5 text-muted-foreground">{t("customization.colors.presetsDescription")}</p>
+      </div>
+    </CustomizationCard>
   );
 }

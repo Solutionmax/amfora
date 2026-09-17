@@ -229,7 +229,10 @@
       "availableDescription": "Selecciona tu modo de tema preferido",
       "reset": "Restablecer al Sistema"
     },
-    "pageTitle": "Personalización"
+    "pageTitle": "Personalización",
+    "preview": {
+      "title": "Vista previa"
+    }
   },
   "dashboard": {
     "loadError": "Error al cargar los datos del tablero",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Error al generar el enlace de invitación"
       }
+    },
+    "filters": {
+      "all": "Todos"
     }
   },
   "validation": {

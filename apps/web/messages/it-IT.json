@@ -229,7 +229,10 @@
       "availableDescription": "Seleziona la tua modalità tema preferita",
       "reset": "Ripristina Sistema"
     },
-    "pageTitle": "Personalizzazione"
+    "pageTitle": "Personalizzazione",
+    "preview": {
+      "title": "Anteprima"
+    }
   },
   "dashboard": {
     "loadError": "Errore durante il caricamento dei dati del pannello di controllo",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Impossibile generare il link di invito"
       }
+    },
+    "filters": {
+      "all": "Tutti"
     }
   },
   "validation": {

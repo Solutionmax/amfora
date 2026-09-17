@@ -12,7 +12,7 @@ export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatu
 
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-none">
-      <Table>
+      <Table className="min-w-[680px]">
         <TableHeader>
           <TableRow className="border-b-0">
             <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -39,8 +39,8 @@ export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatu
                 <div className="flex items-center gap-3">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={user.image || ""} alt={user.username} />
-                    <AvatarFallback className="bg-primary/10 text-primary font-bold text-xl">
-                      {user.firstName[0]}
+                    <AvatarFallback className="bg-primary/10 text-xl font-bold text-primary">
+                      {(user.firstName?.[0] || user.username?.[0] || "?").toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>

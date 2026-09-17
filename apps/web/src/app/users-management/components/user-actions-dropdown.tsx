@@ -22,8 +22,15 @@ export function UserActionsDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost" className={isCurrentUser ? "hidden" : ""} disabled={isCurrentUser}>
-          <IconDotsVertical className="h-4 w-4" />
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          className={isCurrentUser ? "hidden" : ""}
+          disabled={isCurrentUser}
+          aria-label={`${t("users.table.actions")}: ${user.username}`}
+        >
+          <IconDotsVertical className="h-4 w-4" aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

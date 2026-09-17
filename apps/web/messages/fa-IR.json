@@ -229,7 +229,10 @@
       "availableDescription": "حالت تم ترجیحی خود را انتخاب کنید",
       "reset": "بازنشانی به سیستم"
     },
-    "pageTitle": "شخصی‌سازی"
+    "pageTitle": "شخصی‌سازی",
+    "preview": {
+      "title": "پیش‌نمایش"
+    }
   },
   "dashboard": {
     "loadError": "بارگذاری داده‌های داشبورد ناموفق بود",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "تولید لینک دعوت ناموفق بود"
       }
+    },
+    "filters": {
+      "all": "همه"
     }
   },
   "validation": {

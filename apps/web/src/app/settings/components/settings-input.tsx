@@ -127,7 +127,9 @@ export function SettingsInput({
       <Input
         id={config.key}
         type={
-          config.key.toLowerCase().includes("password") || config.key.toLowerCase().includes("secret")
+          config.key === "smtpPass" ||
+          config.key.toLowerCase().includes("password") ||
+          config.key.toLowerCase().includes("secret")
             ? "password"
             : "text"
         }
@@ -138,7 +140,7 @@ export function SettingsInput({
   };
 
   return (
-    <div className="space-y-2">
+    <div className={config.type === "boolean" ? "flex items-center justify-between gap-6" : "space-y-2.5"}>
       <Label htmlFor={config.key} className={isDisabled ? "text-muted-foreground" : ""}>
         {t(`settings.fields.${config.key}.title`)}
       </Label>

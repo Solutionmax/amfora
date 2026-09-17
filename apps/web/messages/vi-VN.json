@@ -229,7 +229,10 @@
       "availableDescription": "Chọn chế độ chủ đề ưa thích của bạn",
       "reset": "Đặt lại về hệ thống"
     },
-    "pageTitle": "Tùy chỉnh"
+    "pageTitle": "Tùy chỉnh",
+    "preview": {
+      "title": "Xem trước"
+    }
   },
   "dashboard": {
     "loadError": "Không thể tải dữ liệu bảng điều khiển",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Không thể tạo liên kết mời"
       }
+    },
+    "filters": {
+      "all": "Tất cả"
     }
   },
   "validation": {

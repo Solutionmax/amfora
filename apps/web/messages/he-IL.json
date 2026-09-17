@@ -229,7 +229,10 @@
       "availableDescription": "בחר את מצב הנושא המועדף עליך",
       "reset": "אפס למערכת"
     },
-    "pageTitle": "התאמה אישית"
+    "pageTitle": "התאמה אישית",
+    "preview": {
+      "title": "תצוגה מקדימה"
+    }
   },
   "dashboard": {
     "loadError": "נכשל בטעינת נתוני לוח הבקרה",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "נכשל ביצירת קישור הזמנה"
       }
+    },
+    "filters": {
+      "all": "הכול"
     }
   },
   "validation": {

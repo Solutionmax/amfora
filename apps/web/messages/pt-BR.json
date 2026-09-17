@@ -229,7 +229,10 @@
       "availableDescription": "Selecione seu modo de tema preferido",
       "reset": "Restaurar para Sistema"
     },
-    "pageTitle": "Personalização"
+    "pageTitle": "Personalização",
+    "preview": {
+      "title": "Prévia"
+    }
   },
   "dashboard": {
     "loadError": "Falha ao carregar dados do painel",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Falha ao gerar link de convite"
       }
+    },
+    "filters": {
+      "all": "Todos"
     }
   },
   "validation": {

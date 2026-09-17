@@ -21,20 +21,13 @@ export function useAuthProviders() {
   const [saving, setSaving] = useState<string | null>(null);
   const [editingProvider, setEditingProvider] = useState<AuthProvider | null>(null);
   const [editingFormData, setEditingFormData] = useState<Record<string, any>>({});
-  const [hideDisabledProviders, setHideDisabledProviders] = useState<boolean>(false);
+  const [hideDisabledProviders, setHideDisabledProviders] = useState<boolean>(true);
   const [providerToDelete, setProviderToDelete] = useState<{
     id: string;
     name: string;
     displayName: string;
   } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const savedState = localStorage.getItem("hideDisabledProviders");
-    if (savedState !== null) {
-      setHideDisabledProviders(JSON.parse(savedState));
-    }
-  }, []);
 
   const loadProviders = useCallback(async () => {
     try {
@@ -200,7 +193,6 @@ export function useAuthProviders() {
 
   const handleHideDisabledProvidersChange = (checked: boolean) => {
     setHideDisabledProviders(checked);
-    localStorage.setItem("hideDisabledProviders", JSON.stringify(checked));
   };
 
   const handleEditProvider = (provider: AuthProvider) => {

@@ -9,7 +9,7 @@ import { SettingsFormProps, ValidGroup } from "../types";
 import { AuthProvidersSettings } from "./auth-provider-form/auth-providers-settings";
 import { SettingsGroup } from "./settings-group";
 
-const GROUP_ORDER: string[] = ["general", "email", "auth-providers", "security", "storage"];
+const GROUP_ORDER: string[] = ["general", "security", "storage", "email", "auth-providers"];
 
 export function SettingsForm({ groupedConfigs, groupForms, onGroupSubmit }: SettingsFormProps) {
   const t = useTranslations();
