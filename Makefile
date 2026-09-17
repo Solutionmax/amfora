@@ -2,7 +2,7 @@
 
 # Default target
 help:
-	@echo "🚀 Palmr - Available Commands:"
+	@echo "🚀 Amfora - Available Commands:"
 	@echo ""
 	@echo "  make build         - Build Docker image with multi-platform support"
 	@echo "  make update-version - Update version in all package.json files"
@@ -16,7 +16,7 @@ help:
 
 # Build Docker image using the build script
 build:
-	@echo "🏗️  Building Palmr Docker image..."
+	@echo "🏗️  Building Amfora Docker image..."
 	@echo "📝 This will update version numbers in all package.json files before building"
 	@echo ""
 	@chmod +x ./infra/update-versions.sh
@@ -38,17 +38,17 @@ update-version:
 
 # Start the application
 start:
-	@echo "🚀 Starting Palmr application..."
+	@echo "🚀 Starting Amfora application..."
 	@docker-compose up -d
 
 # Stop the application
 stop:
-	@echo "🛑 Stopping Palmr application..."
+	@echo "🛑 Stopping Amfora application..."
 	@docker-compose down
 
 # Show logs
 logs:
-	@echo "📋 Showing Palmr logs..."
+	@echo "📋 Showing Amfora logs..."
 	@docker-compose logs -f
 
 # Clean up containers and images
@@ -60,5 +60,5 @@ clean:
 
 # Access container shell
 shell:
-	@echo "🐚 Accessing Palmr container shell..."
-	@docker-compose exec palmr /bin/sh
+	@echo "🐚 Accessing Amfora container shell..."
+	@docker-compose exec amfora /bin/sh

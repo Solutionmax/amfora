@@ -237,12 +237,9 @@ export function useUppyUpload(options: UseUppyUploadOptions) {
         }
       },
 
-      //TODO: List parts (for resuming multipart uploads)
-      async listParts(file: UppyFile<any, any>, { uploadId, key }: any) {
-        console.log(`[Upload:Multipart] Listing parts for: ${file.name}`);
-        console.log(`Upload ID: ${uploadId}, Key: ${key}`);
-        // Para simplificar, não vamos implementar resumo de upload por enquanto
-        // Retornamos array vazio indicando que não há partes já enviadas
+      // Resuming an interrupted multipart upload is not supported yet, so every upload
+      // starts from the first part. Returning no parts is what tells Uppy to do that.
+      async listParts() {
         return [];
       },
 

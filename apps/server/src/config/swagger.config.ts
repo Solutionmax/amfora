@@ -5,7 +5,7 @@ export function registerSwagger(app: any) {
   app.register(fastifySwagger, {
     openapi: {
       info: {
-        title: "🌴 Amfora. API",
+        title: "Amfora API",
         description: "API documentation for Amfora file sharing system",
         version: "1.0.0",
       },

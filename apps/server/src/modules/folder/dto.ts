@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const RegisterFolderSchema = z.object({
-  name: z.string().min(1, "O nome da pasta é obrigatório"),
+  name: z.string().min(1, "A folder name is required"),
   description: z.string().optional(),
-  objectName: z.string().min(1, "O objectName é obrigatório"),
+  objectName: z.string().min(1, "An object name is required"),
   parentId: z.string().optional(),
 });
 
@@ -37,9 +37,9 @@ export const FolderResponseSchema = z.object({
 });
 
 export const CheckFolderSchema = z.object({
-  name: z.string().min(1, "O nome da pasta é obrigatório"),
+  name: z.string().min(1, "A folder name is required"),
   description: z.string().optional(),
-  objectName: z.string().min(1, "O objectName é obrigatório"),
+  objectName: z.string().min(1, "An object name is required"),
   parentId: z.string().optional(),
 });
 

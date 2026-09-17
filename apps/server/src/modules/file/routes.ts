@@ -12,7 +12,7 @@ export async function fileRoutes(app: FastifyInstance) {
       await request.jwtVerify();
     } catch (err) {
       console.error(err);
-      reply.status(401).send({ error: "Token inválido ou ausente." });
+      reply.status(401).send({ error: "Invalid or missing token." });
     }
   };
 

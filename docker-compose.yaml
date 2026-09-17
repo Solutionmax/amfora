@@ -1,55 +1,68 @@
 services:
-  palmr:
-    image: kyantech/palmr:latest
-    container_name: palmr
+  amfora:
+    # Build the image from this repository. Swap for the published image when you prefer:
+    #   image: ghcr.io/raym0nz82/amfora:1.0.0
+    build:
+      context: .
+    image: amfora:local
+    container_name: amfora
     environment:
       # ==============================================================================
-      # STORAGE CONFIGURATION
+      # STORAGE
       # ==============================================================================
-      # By default, Palmr uses internal storage - ZERO CONFIG NEEDED!
-      # Files are managed automatically with no setup required.
+      # Internal storage needs no configuration. Files are managed for you.
       #
-      # Want to use external S3 storage (AWS, S3-compatible, etc)? Just add:
-      # - ENABLE_S3=true                    # Enable external S3
-      # - S3_ENDPOINT=s3.amazonaws.com      # Your S3 endpoint
-      # - S3_ACCESS_KEY=your-access-key     # Your access key
-      # - S3_SECRET_KEY=your-secret-key     # Your secret key
-      # - S3_BUCKET_NAME=palmr-files        # Your bucket name
-      # - S3_REGION=us-east-1               # Region (optional)
-      # - S3_USE_SSL=true                   # Use SSL (optional)
-      # - S3_FORCE_PATH_STYLE=false         # Path-style URLs (optional, true for Minio)
-      # - S3_REJECT_UNAUTHORIZED=true       # Reject self-signed certs (optional)
-      #
-      # ==============================================================================
-      # USER/GROUP CONFIGURATION
-      # ==============================================================================
-      # - PALMR_UID=1000                    # UID for container processes (optional)
-      # - PALMR_GID=1000                    # GID for container processes (optional)
+      # To use external S3 storage (AWS, Wasabi, Backblaze, R2, MinIO elsewhere):
+      # - ENABLE_S3=true
+      # - S3_ENDPOINT=s3.amazonaws.com
+      # - S3_ACCESS_KEY=your-access-key
+      # - S3_SECRET_KEY=your-secret-key
+      # - S3_BUCKET_NAME=amfora-files
+      # - S3_REGION=us-east-1
+      # - S3_USE_SSL=true
+      # - S3_FORCE_PATH_STYLE=false      # true for MinIO
+      # - S3_REJECT_UNAUTHORIZED=true
+      # - S3_DISABLE_CHECKSUMS=true      # required for Cloudflare R2
       #
       # ==============================================================================
-      # APPLICATION SETTINGS
+      # USER AND GROUP
       # ==============================================================================
-      # - DEFAULT_LANGUAGE=en-US            # Default language (optional)
-      # - PRESIGNED_URL_EXPIRATION=3600     # Presigned URL expiration in seconds (optional)
-      # - SECURE_SITE=true                  # Set true if using HTTPS reverse proxy (optional)
-      STORAGE_URL: "https://palmr-demo:9379" # REQUIRED for internal storage: Full storage URL with protocol (e.g., https://syrg.palmr.com or http://192.168.1.100:9379). Not needed when ENABLE_S3=true.
+      # - AMFORA_UID=1000
+      # - AMFORA_GID=1000
       #
+      # ==============================================================================
+      # APPLICATION
+      # ==============================================================================
+      # - DEFAULT_LANGUAGE=en-US
+      # - PRESIGNED_URL_EXPIRATION=3600
+      # - SECURE_SITE=true               # set when behind an HTTPS reverse proxy
+      # - CORS_ORIGINS=https://app.example.com   # only if a browser calls the API directly
+      #
+      # Required for internal storage: the URL the browser uses to reach storage.
+      STORAGE_URL: "http://127.0.0.1:9379"
     ports:
-      - "9379:9379" # Internal storage (S3-compatible, REQUIRED for file uploads when using internal storage)
       - "5487:5487" # Web interface
-      - "3333:3333" # API (optional, only if you need direct API access)
+      - "9379:9379" # Internal storage, the browser uploads and downloads here directly
+      # The API on 3333 is reached from inside the container. Publish it only if you
+      # actually call the API from outside, and put it behind authentication if you do.
+      # - "3333:3333"
     volumes:
-      - palmr_data:/app/server
-      # ==============================================================================
-      # ADVANCED: Use a different disk for file storage (for larger capacity)
-      # ==============================================================================
-      # Uncomment the line below to store files on a different disk:
-      # - /path/to/your/large/disk:/app/server/data
-      #
-      # Example: Mount a 2TB drive for files while keeping database on fast SSD
-      # - /mnt/storage/palmr-files:/app/server/data
-      #
+      - amfora_data:/app/server
+      # To keep files on a different disk, mount it here instead:
+      # - /mnt/storage/amfora-files:/app/server/minio-data
     restart: unless-stopped
+    # The image ships a health check; this makes it visible to compose as well.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5487"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    # A runaway process should not be able to take the whole host with it.
+    mem_limit: 4g
+    cpus: 2.0
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
-  palmr_data:
+  amfora_data:
