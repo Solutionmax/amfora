@@ -32,8 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=product-20260917-2" />
-    <script src="/assets/site.js?v=product-20260917-2" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=polish-20260917-1" />
+    <script src="/assets/site.js?v=polish-20260917-1" defer></script>
   </head>
   <body class="docs-page">
     <a class="skip" href="#main">Skip to content</a>
@@ -73,9 +73,10 @@
         <nav id="navigation" aria-label="Main navigation">
           <a href="/#how-it-works">How it works</a
           ><a href="/#features">Features</a><a href="/docs/">Documentation</a
-          ><a class="nav-source" href="https://github.com/raym0nz82/amfora"
-            >GitHub <span class="badge">Private</span
-            ><span aria-hidden="true">↗</span></a
+          ><a
+            class="nav-source nav-contact"
+            href="https://solutionmax.net/#start"
+            >Discuss your setup <span aria-hidden="true">↗</span></a
           >
         </nav>
       </div>
@@ -100,12 +101,12 @@
           ><a href="#admin"><span>06</span>Administration</a
           ><a href="#operations"><span>07</span>Backups & upgrades</a
           ><a href="#troubleshooting"><span>08</span>Troubleshooting</a
-          ><a href="#about"><span>09</span>About this preview</a>
+          ><a href="#about"><span>09</span>About Amfora</a>
         </nav>
         <div class="docs-sidebar-bottom">
-          <span class="badge">Private preview</span>
-          <p>Amfora 1.0<br />Reviewed September 2026</p>
-          <a href="https://github.com/raym0nz82/amfora">Source repository ↗</a>
+          <span class="badge">Self-hosted installation</span>
+          <p>Current guide<br />Updated September 2026</p>
+          <a href="https://solutionmax.net/#start">Arrange access ↗</a>
         </div>
       </aside>
       <div class="docs-main">
@@ -198,10 +199,11 @@ docker compose up -d --no-build</code></pre>
               server-side proxy.
             </p>
             <aside>
-              <strong>Private preview.</strong> GitHub access is required. A 404
-              on the repository usually means your GitHub account has not been
-              granted access. There is no public prebuilt image or release
-              download offered by this preview.
+              <strong>Repository access.</strong> The Amfora GitHub repository
+              is private. Arrange access through
+              <a href="https://solutionmax.net/#start">SolutionMAX</a> before
+              cloning. A 404 on the repository usually means your GitHub account
+              has not been granted access.
             </aside>
             <p>
               For access from another computer, change
@@ -306,7 +308,7 @@ S3_FORCE_PATH_STYLE=false</code></pre>
           </section>
           <section class="docs-section" id="sharing">
             <p class="section-kicker">05 / Daily work</p>
-            <h2>Send a link or collect files through one</h2>
+            <h2>Send a link or collect files through a form</h2>
             <h3 id="workspace">Your workspace</h3>
             <p>
               The application opens at sign-in, or your dashboard when you are
@@ -467,19 +469,22 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
             </dl>
           </section>
           <section id="about">
-            <p class="section-kicker">09 / About this preview</p>
-            <h2>A work in progress, ready to explore.</h2>
+            <p class="section-kicker">09 / About Amfora</p>
+            <h2>A self-hosted workspace for the handoff.</h2>
             <p>
-              This product website and documentation are available for preview.
-              The application source remains in a private GitHub repository,
-              available to invited collaborators. Screenshots use example
-              content from an isolated test installation.
+              Amfora is a self-hosted file workspace for sending files,
+              collecting uploads, and managing access. This guide covers the
+              installation, storage, sharing, and administration workflows that
+              keep a handoff moving.
             </p>
             <p>
-              Amfora has its own visual identity and ongoing improvements. Its
-              upstream attribution is preserved in NOTICE. It is licensed under
-              the Apache License 2.0. Bundled MinIO and mc are separate,
-              unmodified AGPL-3.0 programs. See <a href="/LICENSE">LICENSE</a>,
+              The application source is maintained in a private GitHub
+              repository. Arrange access through
+              <a href="https://solutionmax.net/#start">SolutionMAX</a>. Amfora
+              has its own visual identity and ongoing improvements. Its upstream
+              attribution is preserved in NOTICE. It is licensed under the
+              Apache License 2.0. Bundled MinIO and mc are separate, unmodified
+              AGPL-3.0 programs. See <a href="/LICENSE">LICENSE</a>,
               <a href="/NOTICE">NOTICE</a> and the
               <a href="/licenses/AGPL-3.0.txt">bundled program license</a>.
             </p>
@@ -533,12 +538,12 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
         <div class="footer-links">
           <a href="/#how-it-works">How it works</a
           ><a href="/docs/">Documentation</a
-          ><a href="https://github.com/raym0nz82/amfora">GitHub · private ↗</a>
+          ><a href="https://solutionmax.net/#start">Discuss your setup ↗</a>
         </div>
       </div>
       <div class="wrap footer-bottom">
         <span>© 2026 SolutionMAX</span><span>Built for a better handoff.</span
-        ><a href="/docs/#about">About this preview</a>
+        ><a href="/docs/#about">About Amfora</a>
       </div>
     </footer>
     <p class="toast" role="status" aria-live="polite"></p>
