@@ -32,8 +32,8 @@ export async function copyText(text: string): Promise<void> {
   }
 
   const previousActiveElement = document.activeElement as HTMLElement | null;
-  const dialog = previousActiveElement?.closest('[role="dialog"]');
-  const target = dialog || document.body;
+  const focusScope = previousActiveElement?.closest('[role="dialog"], [role="menu"]');
+  const target = focusScope || document.body;
 
   target.appendChild(textarea);
   textarea.focus({ preventScroll: true });
