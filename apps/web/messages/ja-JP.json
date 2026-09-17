@@ -154,7 +154,13 @@
     "search": "検索",
     "share": "共有",
     "copied": "コピーしました",
-    "copy": "コピー"
+    "copy": "コピー",
+    "invalidDate": "無効な日付",
+    "notAvailable": "利用不可"
+  },
+  "contextMenu": {
+    "newFolder": "新規フォルダ",
+    "uploadFile": "ファイルをアップロード"
   },
   "createShare": {
     "title": "共有を作成",
@@ -274,6 +280,18 @@
       "refresh": "キューを更新"
     }
   },
+  "embedCode": {
+    "title": "メディアを埋め込む",
+    "description": "これらのコードを使用して、このメディアをフォーラム、ウェブサイト、またはその他のプラットフォームに埋め込みます",
+    "tabs": {
+      "directLink": "直接リンク",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "メディアファイルへの直接URL",
+    "htmlDescription": "このコードを使用してHTMLページにメディアを埋め込みます",
+    "bbcodeDescription": "BBCodeをサポートするフォーラムにメディアを埋め込むには、このコードを使用します"
+  },
   "emptyState": {
     "noFiles": "まだファイルがアップロードされていません",
     "uploadFile": "ファイルをアップロード"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "二要素認証は既に有効になっています",
     "Two-factor authentication is not enabled": "二要素認証が有効になっていません",
     "Two-factor authentication required": "二要素認証が必要です",
-    "noUserData": "ユーザーデータがありません"
+    "noUserData": "ユーザーデータがありません",
+    "passwordAuthDisabled": "このサーバーではパスワードによるサインインが無効になっています"
   },
   "fileActions": {
     "editFile": "ファイルを編集",
@@ -371,7 +390,8 @@
     "bulkDeleteError": "選択されたファイルの削除エラー",
     "viewMode": {
       "table": "テーブル",
-      "grid": "グリッド"
+      "grid": "グリッド",
+      "label": "表示"
     },
     "totalFiles": "{count, plural, =0 {ファイルなし} =1 {1ファイル} other {#ファイル}}",
     "bulkDeleteConfirmation": "{count, plural, =1 {1つのファイル} other {#つのファイル}}を削除してよろしいですか？この操作は元に戻せません。",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "提供:",
-    "kyanHomepage": "Kyantech ホームページ"
+    "kyanHomepage": "SolutionMAX ホームページ"
   },
   "forgotPassword": {
     "emailLabel": "メールアドレス",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "WeTransferのオープンソース代替です。トラッキングや制限なしに安全にファイルを共有します。",
+    "description": "アップロードして、1つのリンクを共有し、それがどれだけの期間開いたままにするかを正確に決められます。自分のサーバーで動作し、間に誰も入りません。",
     "documentation": "ドキュメント",
     "starOnGithub": "GitHubでスターを付ける",
     "privacyMessage": "プライバシーを重視して作られています。アップロード前のファイルは、共有リンクを持つ人だけがアクセスできます。常に無料でオープンソースです。",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "自分のサーバーで動作します",
+      "expiry": "リンクは自動的に期限切れになります",
+      "noTracking": "追跡なし、制限なし"
     }
   },
   "iconPicker": {
@@ -540,7 +560,8 @@
     "pageTitle": "ログイン",
     "or": "または",
     "continueWithSSO": "SSOで続行",
-    "processing": "認証処理中..."
+    "processing": "認証処理中...",
+    "noAuthMethodsAvailable": "利用可能なサインイン方法がありません。管理者に有効化を依頼してください。"
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "管理者アカウントを作成"
     }
   },
+  "registerWithInvite": {
+    "title": "アカウントを作成",
+    "description": "アカウントを作成するには、以下の情報を入力してください",
+    "labels": {
+      "firstName": "名",
+      "firstNamePlaceholder": "名を入力してください",
+      "lastName": "姓",
+      "lastNamePlaceholder": "姓を入力してください",
+      "username": "ユーザー名",
+      "usernamePlaceholder": "ユーザー名を選択してください",
+      "email": "メールアドレス",
+      "emailPlaceholder": "メールアドレスを入力してください",
+      "password": "パスワード",
+      "passwordPlaceholder": "パスワードを選択してください",
+      "confirmPassword": "パスワードの確認",
+      "confirmPasswordPlaceholder": "パスワードを確認してください"
+    },
+    "buttons": {
+      "creating": "アカウントを作成中...",
+      "createAccount": "アカウントを作成"
+    },
+    "validation": {
+      "firstNameRequired": "名は必須です",
+      "lastNameRequired": "姓は必須です",
+      "usernameMinLength": "ユーザー名は3文字以上である必要があります",
+      "invalidEmail": "無効なメールアドレスです",
+      "passwordMinLength": "パスワードは8文字以上である必要があります",
+      "passwordsMatch": "パスワードが一致する必要があります"
+    },
+    "messages": {
+      "success": "アカウントが正常に作成されました！ログインにリダイレクト中...",
+      "redirecting": "ログインにリダイレクト中..."
+    },
+    "errors": {
+      "invalidToken": "招待リンクにエラーがあります",
+      "tokenUsed": "この招待リンクは既に使用されています",
+      "tokenExpired": "この招待リンクは期限切れです",
+      "usernameExists": "ユーザー名は既に存在します",
+      "emailExists": "メールアドレスは既に存在します",
+      "createFailed": "アカウントの作成に失敗しました。もう一度お試しください。"
+    },
+    "pageTitle": "アカウントを作成"
+  },
   "resetPassword": {
     "pageTitle": "パスワードリセット",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "パスワードで保護",
       "layoutOptions": {
         "default": "デフォルト",
-        "wetransfer": "WeTransfer"
+        "vessel": "壺"
       },
       "noFilesLimit": "ファイル数制限なし",
       "noSizeLimit": "サイズ制限なし",
@@ -1031,7 +1095,7 @@
         "description": "アップロードページのユーザー向け表示方法。",
         "options": {
           "default": "デフォルトレイアウト",
-          "wetransfer": "WeTransferスタイル"
+          "vessel": "壺レイアウト"
         }
       },
       "password": {
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 ファイルが共有されました} other {# ファイルが共有されました}}"
     },
     "download": "ダウンロード",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, other {#ファイル}}",
+    "breakSeal": "封を切る",
+    "sealed": "封印済み",
+    "opened": "開封済み"
   },
   "shareActions": {
     "deleteTitle": "共有を削除",
@@ -1463,7 +1527,8 @@
     "editExpiration": "期限を編集",
     "clickToEnlargeQrCode": "QRコードを拡大",
     "downloadQrCode": "QRコードをダウンロード",
-    "qrCode": "QRコード"
+    "qrCode": "QRコード",
+    "linkCopied": "リンクをコピーしました"
   },
   "shareExpiration": {
     "neverExpires": "期限なし",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "zipファイルは正常にダウンロードされました",
     "errors": {
       "multipleDownloadNotSupported": "複数の共有のダウンロードはまだサポートされていません - 共有を個別にダウンロードしてください"
-    }
+    },
+    "downloading": "ダウンロード中",
+    "preparingDownload": "ダウンロードを準備中"
   },
   "shareMultipleFiles": {
     "title": "複数ファイルを共有",
@@ -1852,7 +1919,10 @@
       "description": "ファイルをアップロードするにはリリースしてください"
     },
     "pasteSuccess": "{count, plural, =1 {画像が貼り付けられ、正常にアップロードされました} other {#個の画像が貼り付けられ、正常にアップロードされました}}",
-    "filesQueued": "{count, plural, one {# ファイルがアップロード待ち} other {# ファイルがアップロード待ち}}"
+    "filesQueued": "{count, plural, one {# ファイルがアップロード待ち} other {# ファイルがアップロード待ち}}",
+    "errors": {
+      "uploadFailed": "アップロードに失敗しました"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordRequired": "パスワードは必須です",
     "nameRequired": "名前は必須です",
     "required": "このフィールドは必須です"
-  },
-  "embedCode": {
-    "title": "メディアを埋め込む",
-    "description": "これらのコードを使用して、このメディアをフォーラム、ウェブサイト、またはその他のプラットフォームに埋め込みます",
-    "tabs": {
-      "directLink": "直接リンク",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "メディアファイルへの直接URL",
-    "htmlDescription": "このコードを使用してHTMLページにメディアを埋め込みます",
-    "bbcodeDescription": "BBCodeをサポートするフォーラムにメディアを埋め込むには、このコードを使用します"
-  },
-  "contextMenu": {
-    "newFolder": "新規フォルダ",
-    "uploadFile": "ファイルをアップロード"
-  },
-  "registerWithInvite": {
-    "title": "アカウントを作成",
-    "description": "アカウントを作成するには、以下の情報を入力してください",
-    "labels": {
-      "firstName": "名",
-      "firstNamePlaceholder": "名を入力してください",
-      "lastName": "姓",
-      "lastNamePlaceholder": "姓を入力してください",
-      "username": "ユーザー名",
-      "usernamePlaceholder": "ユーザー名を選択してください",
-      "email": "メールアドレス",
-      "emailPlaceholder": "メールアドレスを入力してください",
-      "password": "パスワード",
-      "passwordPlaceholder": "パスワードを選択してください",
-      "confirmPassword": "パスワードの確認",
-      "confirmPasswordPlaceholder": "パスワードを確認してください"
-    },
-    "buttons": {
-      "creating": "アカウントを作成中...",
-      "createAccount": "アカウントを作成"
-    },
-    "validation": {
-      "firstNameRequired": "名は必須です",
-      "lastNameRequired": "姓は必須です",
-      "usernameMinLength": "ユーザー名は3文字以上である必要があります",
-      "invalidEmail": "無効なメールアドレスです",
-      "passwordMinLength": "パスワードは8文字以上である必要があります",
-      "passwordsMatch": "パスワードが一致する必要があります"
-    },
-    "messages": {
-      "success": "アカウントが正常に作成されました！ログインにリダイレクト中...",
-      "redirecting": "ログインにリダイレクト中..."
-    },
-    "errors": {
-      "invalidToken": "招待リンクにエラーがあります",
-      "tokenUsed": "この招待リンクは既に使用されています",
-      "tokenExpired": "この招待リンクは期限切れです",
-      "usernameExists": "ユーザー名は既に存在します",
-      "emailExists": "メールアドレスは既に存在します",
-      "createFailed": "アカウントの作成に失敗しました。もう一度お試しください。"
-    },
-    "pageTitle": "アカウントを作成"
   }
 }

@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { DefaultLayout, PasswordModal, WeTransferLayout } from "./components";
+import { DefaultLayout, PasswordModal, VesselLayout } from "./components";
 import { useReverseShareUpload } from "./hooks/use-reverse-share-upload";
 
 export default function ReverseShareUploadPage() {
@@ -17,7 +17,7 @@ export default function ReverseShareUploadPage() {
     isPasswordModalOpen,
     hasUploadedSuccessfully,
     isMaxFilesReached,
-    isWeTransferLayout,
+    isVesselLayout,
     hasError,
     isLinkInactive,
     isLinkNotFound,
@@ -53,9 +53,9 @@ export default function ReverseShareUploadPage() {
     );
   }
 
-  if (isWeTransferLayout) {
+  if (isVesselLayout) {
     return (
-      <WeTransferLayout
+      <VesselLayout
         reverseShare={reverseShare}
         password={currentPassword}
         alias={shareAlias}

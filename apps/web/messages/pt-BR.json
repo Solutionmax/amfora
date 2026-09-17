@@ -10,10 +10,6 @@
     "authenticationFailed": "Falha na autenticação",
     "successfullyAuthenticated": "Autenticado com sucesso!"
   },
-  "contextMenu": {
-    "newFolder": "Nova pasta",
-    "uploadFile": "Enviar arquivo"
-  },
   "authProviders": {
     "title": "Provedores de autenticação",
     "description": "Configure provedores de autenticação externos para SSO",
@@ -158,7 +154,13 @@
     "search": "Pesquisar",
     "share": "Compartilhar",
     "copied": "Copiado",
-    "copy": "Copiar"
+    "copy": "Copiar",
+    "invalidDate": "Data inválida",
+    "notAvailable": "Não disponível"
+  },
+  "contextMenu": {
+    "newFolder": "Nova pasta",
+    "uploadFile": "Enviar arquivo"
   },
   "createShare": {
     "title": "Criar compartilhamento",
@@ -278,6 +280,18 @@
       "refresh": "Atualizar Fila"
     }
   },
+  "embedCode": {
+    "title": "Incorporar mídia",
+    "description": "Use estes códigos para incorporar esta mídia em fóruns, sites ou outras plataformas",
+    "tabs": {
+      "directLink": "Link direto",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL direto para o arquivo de mídia",
+    "htmlDescription": "Use este código para incorporar a mídia em páginas HTML",
+    "bbcodeDescription": "Use este código para incorporar a mídia em fóruns que suportam BBCode"
+  },
   "emptyState": {
     "noFiles": "Nenhum arquivo enviado ainda",
     "uploadFile": "Enviar arquivo"
@@ -294,7 +308,8 @@
     "Two-factor authentication is already enabled": "A autenticação de dois fatores já está ativada",
     "Two-factor authentication is not enabled": "A autenticação de dois fatores não está ativada",
     "Two-factor authentication required": "Autenticação de dois fatores necessária",
-    "noUserData": "Nenhum dado do usuário"
+    "noUserData": "Nenhum dado do usuário",
+    "passwordAuthDisabled": "O login com senha está desativado neste servidor"
   },
   "fileActions": {
     "editFile": "Editar arquivo",
@@ -378,7 +393,8 @@
     "totalFiles": "{count, plural, =0 {Nenhum arquivo} =1 {1 arquivo} other {# arquivos}}",
     "viewMode": {
       "table": "Tabela",
-      "grid": "Grade"
+      "grid": "Grade",
+      "label": "Visualização"
     },
     "actions": {
       "open": "Abrir",
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Desenvolvido por",
-    "kyanHomepage": "Página inicial da Kyantech"
+    "kyanHomepage": "Página inicial da SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Endereço de Email",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "A alternativa open-source ao WeTransfer. Compartilhe arquivos com segurança, sem rastreamento ou limitações.",
+    "description": "Envie, compartilhe um único link e decida exatamente por quanto tempo ele fica ativo. Funciona no seu próprio servidor, sem intermediários.",
     "documentation": "Documentação",
     "starOnGithub": "Estrela no GitHub",
     "privacyMessage": "Construído com privacidade em mente. Seus arquivos antes do upload são acessíveis apenas por aqueles com o link de compartilhamento. Para sempre gratuito e open source.",
@@ -544,7 +560,8 @@
     "pageTitle": "Login",
     "or": "ou",
     "continueWithSSO": "Continuar com SSO",
-    "processing": "Processando autenticação..."
+    "processing": "Processando autenticação...",
+    "noAuthMethodsAvailable": "Nenhum método de login disponível. Peça ao administrador para habilitar um."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Criar conta de administrador"
     }
   },
+  "registerWithInvite": {
+    "pageTitle": "Criar Conta",
+    "title": "Crie Sua Conta",
+    "description": "Preencha as informações abaixo para criar sua conta",
+    "labels": {
+      "firstName": "Nome",
+      "firstNamePlaceholder": "Digite seu nome",
+      "lastName": "Sobrenome",
+      "lastNamePlaceholder": "Digite seu sobrenome",
+      "username": "Nome de Usuário",
+      "usernamePlaceholder": "Escolha um nome de usuário",
+      "email": "E-mail",
+      "emailPlaceholder": "Digite seu e-mail",
+      "password": "Senha",
+      "passwordPlaceholder": "Escolha uma senha",
+      "confirmPassword": "Confirmar Senha",
+      "confirmPasswordPlaceholder": "Confirme sua senha"
+    },
+    "buttons": {
+      "creating": "Criando conta...",
+      "createAccount": "Criar Conta"
+    },
+    "validation": {
+      "firstNameRequired": "Nome é obrigatório",
+      "lastNameRequired": "Sobrenome é obrigatório",
+      "usernameMinLength": "Nome de usuário deve ter pelo menos 3 caracteres",
+      "invalidEmail": "E-mail inválido",
+      "passwordMinLength": "Senha deve ter pelo menos 8 caracteres",
+      "passwordsMatch": "As senhas devem coincidir"
+    },
+    "messages": {
+      "success": "Conta criada com sucesso! Redirecionando para o login...",
+      "redirecting": "Redirecionando para o login..."
+    },
+    "errors": {
+      "invalidToken": "Link de convite inválido ou expirado",
+      "tokenUsed": "Este link de convite já foi usado",
+      "tokenExpired": "Este link de convite expirou",
+      "usernameExists": "Nome de usuário já existe",
+      "emailExists": "E-mail já existe",
+      "createFailed": "Falha ao criar conta. Por favor, tente novamente."
+    }
+  },
   "resetPassword": {
     "pageTitle": "Redefinir Senha",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Proteger com Senha",
       "layoutOptions": {
         "default": "Padrão",
-        "wetransfer": "WeTransfer"
+        "vessel": "Ânfora"
       },
       "noFilesLimit": "Sem limite de arquivos",
       "noSizeLimit": "Sem limite de tamanho",
@@ -1035,7 +1095,7 @@
         "description": "Como a página de upload aparecerá para os usuários.",
         "options": {
           "default": "Layout Padrão",
-          "wetransfer": "Estilo WeTransfer"
+          "vessel": "Layout ânfora"
         }
       },
       "password": {
@@ -1313,7 +1373,7 @@
       },
       "serverUrl": {
         "title": "URL do Servidor",
-        "description": "URL base do servidor Amfora (ex: https://palmr.exemplo.com)"
+        "description": "URL base do servidor Amfora (ex: https://amfora.exemplo.com)"
       },
       "testSmtp": {
         "title": "Testar Conexão SMTP",
@@ -1467,7 +1527,8 @@
     "editExpiration": "Editar Expiração",
     "clickToEnlargeQrCode": "Clique para ampliar o QR Code",
     "downloadQrCode": "Baixar QR Code",
-    "qrCode": "QR Code"
+    "qrCode": "QR Code",
+    "linkCopied": "Link copiado"
   },
   "shareExpiration": {
     "neverExpires": "Nunca Expira",
@@ -1528,7 +1589,9 @@
     "zipDownloadSuccess": "Arquivo ZIP baixado com sucesso",
     "errors": {
       "multipleDownloadNotSupported": "Download de múltiplos compartilhamentos ainda não é suportado - por favor, baixe os compartilhamentos individualmente"
-    }
+    },
+    "downloading": "Baixando",
+    "preparingDownload": "Preparando download"
   },
   "shareMultipleFiles": {
     "title": "Compartilhar Múltiplos Arquivos",
@@ -1856,7 +1919,10 @@
       "cancel": "Cancelar Uploads"
     },
     "pasteSuccess": "{count, plural, =1 {Imagem colada e enviada com sucesso} other {# imagens coladas e enviadas com sucesso}}",
-    "filesQueued": "{count, plural, one {# arquivo na fila para upload} other {# arquivos na fila para upload}}"
+    "filesQueued": "{count, plural, one {# arquivo na fila para upload} other {# arquivos na fila para upload}}",
+    "errors": {
+      "uploadFailed": "Falha no envio"
+    }
   },
   "users": {
     "modes": {
@@ -1944,49 +2010,6 @@
       }
     }
   },
-  "registerWithInvite": {
-    "pageTitle": "Criar Conta",
-    "title": "Crie Sua Conta",
-    "description": "Preencha as informações abaixo para criar sua conta",
-    "labels": {
-      "firstName": "Nome",
-      "firstNamePlaceholder": "Digite seu nome",
-      "lastName": "Sobrenome",
-      "lastNamePlaceholder": "Digite seu sobrenome",
-      "username": "Nome de Usuário",
-      "usernamePlaceholder": "Escolha um nome de usuário",
-      "email": "E-mail",
-      "emailPlaceholder": "Digite seu e-mail",
-      "password": "Senha",
-      "passwordPlaceholder": "Escolha uma senha",
-      "confirmPassword": "Confirmar Senha",
-      "confirmPasswordPlaceholder": "Confirme sua senha"
-    },
-    "buttons": {
-      "creating": "Criando conta...",
-      "createAccount": "Criar Conta"
-    },
-    "validation": {
-      "firstNameRequired": "Nome é obrigatório",
-      "lastNameRequired": "Sobrenome é obrigatório",
-      "usernameMinLength": "Nome de usuário deve ter pelo menos 3 caracteres",
-      "invalidEmail": "E-mail inválido",
-      "passwordMinLength": "Senha deve ter pelo menos 8 caracteres",
-      "passwordsMatch": "As senhas devem coincidir"
-    },
-    "messages": {
-      "success": "Conta criada com sucesso! Redirecionando para o login...",
-      "redirecting": "Redirecionando para o login..."
-    },
-    "errors": {
-      "invalidToken": "Link de convite inválido ou expirado",
-      "tokenUsed": "Este link de convite já foi usado",
-      "tokenExpired": "Este link de convite expirou",
-      "usernameExists": "Nome de usuário já existe",
-      "emailExists": "E-mail já existe",
-      "createFailed": "Falha ao criar conta. Por favor, tente novamente."
-    }
-  },
   "validation": {
     "invalidEmail": "Por favor, insira um endereço de e-mail válido",
     "passwordLength": "A senha deve ter pelo menos 8 caracteres",
@@ -2001,17 +2024,5 @@
     "lastNameRequired": "O sobrenome é necessário",
     "usernameLength": "O nome de usuário deve ter pelo menos 3 caracteres",
     "usernameSpaces": "O nome de usuário não pode conter espaços"
-  },
-  "embedCode": {
-    "title": "Incorporar mídia",
-    "description": "Use estes códigos para incorporar esta mídia em fóruns, sites ou outras plataformas",
-    "tabs": {
-      "directLink": "Link direto",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL direto para o arquivo de mídia",
-    "htmlDescription": "Use este código para incorporar a mídia em páginas HTML",
-    "bbcodeDescription": "Use este código para incorporar a mídia em fóruns que suportam BBCode"
   }
 }

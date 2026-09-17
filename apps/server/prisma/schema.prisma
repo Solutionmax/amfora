@@ -273,7 +273,7 @@ enum FieldRequirement {
 
 enum PageLayout {
   DEFAULT
-  WETRANSFER
+  VESSEL
 }
 
 model TrustedDevice {

@@ -10,10 +10,6 @@
       "auth_failed": "Autentikasi gagal. Silakan coba lagi."
     }
   },
-  "contextMenu": {
-    "newFolder": "Folder baru",
-    "uploadFile": "Unggah file"
-  },
   "authProviders": {
     "title": "Penyedia Otentikasi",
     "description": "Konfigurasikan penyedia otentikasi eksternal untuk SSO",
@@ -158,7 +154,13 @@
     "share": "Bagikan",
     "search": "Cari",
     "copy": "Salin",
-    "copied": "Disalin"
+    "copied": "Disalin",
+    "invalidDate": "Tanggal tidak valid",
+    "notAvailable": "Tidak tersedia"
+  },
+  "contextMenu": {
+    "newFolder": "Folder baru",
+    "uploadFile": "Unggah file"
   },
   "createShare": {
     "title": "Buat Berbagi",
@@ -278,6 +280,18 @@
       "refresh": "Muat Ulang Antrean"
     }
   },
+  "embedCode": {
+    "title": "Sematkan Media",
+    "description": "Gunakan kode-kode ini untuk menyematkan media ini di forum, situs web, atau platform lainnya",
+    "tabs": {
+      "directLink": "Tautan Langsung",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL langsung ke file media",
+    "htmlDescription": "Gunakan kode ini untuk menyematkan media di halaman HTML",
+    "bbcodeDescription": "Gunakan kode ini untuk menyematkan media di forum yang mendukung BBCode"
+  },
   "emptyState": {
     "noFiles": "Belum ada file yang diunggah",
     "uploadFile": "Unggah File"
@@ -294,7 +308,8 @@
     "Password verification required": "Verifikasi kata sandi diperlukan",
     "Invalid two-factor authentication code": "Kode otentikasi dua faktor tidak valid",
     "Two-factor authentication required": "Otentikasi dua faktor diperlukan",
-    "noUserData": "Tidak ada data pengguna"
+    "noUserData": "Tidak ada data pengguna",
+    "passwordAuthDisabled": "Masuk dengan kata sandi dinonaktifkan di server ini"
   },
   "fileActions": {
     "editFile": "Edit Berkas",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "Tabel",
-      "grid": "Grid"
+      "grid": "Grid",
+      "label": "Tampilan"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Ditenagai oleh",
-    "kyanHomepage": "Beranda Kyantech"
+    "kyanHomepage": "Beranda SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Alamat Email",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Alternatif open-source untuk WeTransfer. Bagikan file secara aman, tanpa pelacakan atau batasan.",
+    "description": "Unggah, bagikan satu tautan, dan tentukan persis berapa lama tautan itu tetap terbuka. Berjalan di server Anda sendiri, tanpa perantara.",
     "documentation": "Dokumentasi",
     "starOnGithub": "Berikan Bintang di GitHub",
     "privacyMessage": "Dibangun dengan mengutamakan privasi. File Anda hanya dapat diakses oleh mereka yang memiliki tautan berbagi sebelum unggah. Selamanya gratis dan open source.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Berjalan di server Anda sendiri",
+      "expiry": "Tautan kedaluwarsa dengan sendirinya",
+      "noTracking": "Tanpa pelacakan, tanpa batasan"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "Masuk",
     "or": "atau",
     "continueWithSSO": "Lanjutkan dengan SSO",
-    "processing": "Memproses autentikasi..."
+    "processing": "Memproses autentikasi...",
+    "noAuthMethodsAvailable": "Tidak ada metode masuk yang tersedia. Minta administrator Anda untuk mengaktifkan salah satu."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Buat Akun Admin"
     }
   },
+  "registerWithInvite": {
+    "title": "Buat Akun Anda",
+    "description": "Isi informasi di bawah ini untuk membuat akun Anda",
+    "labels": {
+      "firstName": "Nama Depan",
+      "firstNamePlaceholder": "Masukkan nama depan Anda",
+      "lastName": "Nama Belakang",
+      "lastNamePlaceholder": "Masukkan nama belakang Anda",
+      "username": "Nama Pengguna",
+      "usernamePlaceholder": "Pilih nama pengguna",
+      "email": "Email",
+      "emailPlaceholder": "Masukkan email Anda",
+      "password": "Kata Sandi",
+      "passwordPlaceholder": "Pilih kata sandi",
+      "confirmPassword": "Konfirmasi Kata Sandi",
+      "confirmPasswordPlaceholder": "Konfirmasi kata sandi Anda"
+    },
+    "buttons": {
+      "creating": "Membuat akun...",
+      "createAccount": "Buat Akun"
+    },
+    "validation": {
+      "firstNameRequired": "Nama depan wajib diisi",
+      "lastNameRequired": "Nama belakang wajib diisi",
+      "usernameMinLength": "Nama pengguna harus minimal 3 karakter",
+      "invalidEmail": "Email tidak valid",
+      "passwordMinLength": "Kata sandi harus minimal 8 karakter",
+      "passwordsMatch": "Kata sandi harus sama"
+    },
+    "messages": {
+      "success": "Akun berhasil dibuat! Mengalihkan ke login...",
+      "redirecting": "Mengalihkan ke login..."
+    },
+    "errors": {
+      "invalidToken": "Kesalahan dengan tautan undangan",
+      "tokenUsed": "Tautan undangan ini sudah digunakan",
+      "tokenExpired": "Tautan undangan ini telah kedaluwarsa",
+      "usernameExists": "Nama pengguna sudah ada",
+      "emailExists": "Email sudah ada",
+      "createFailed": "Gagal membuat akun. Silakan coba lagi."
+    },
+    "pageTitle": "Buat Akun"
+  },
   "resetPassword": {
     "pageTitle": "Atur Ulang Kata Sandi",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Lindungi dengan Kata Sandi",
       "layoutOptions": {
         "default": "Default",
-        "wetransfer": "WeTransfer"
+        "vessel": "Wadah"
       },
       "noFilesLimit": "Tidak ada batas file",
       "noSizeLimit": "Tidak ada batas ukuran",
@@ -1035,7 +1095,7 @@
         "description": "Bagaimana halaman unggah akan muncul untuk pengguna.",
         "options": {
           "default": "Tata Letak Default",
-          "wetransfer": "Gaya WeTransfer"
+          "vessel": "Tata letak wadah"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 file dibagikan} other {# file dibagikan}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, other {# file}}",
+    "breakSeal": "Buka segel",
+    "sealed": "Tersegel",
+    "opened": "Dibuka"
   },
   "shareActions": {
     "fileTitle": "Bagikan File",
@@ -1467,7 +1527,8 @@
     "qrCode": "Kode QR",
     "downloadQrCode": "Unduh Kode QR",
     "clickToEnlargeQrCode": "Klik untuk memperbesar Kode QR",
-    "loadError": "Gagal memuat detail berbagi"
+    "loadError": "Gagal memuat detail berbagi",
+    "linkCopied": "Tautan disalin"
   },
   "shareExpiration": {
     "title": "Pengaturan Kedaluwarsa Berbagi",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "Berbagi"
+    "defaultShareName": "Berbagi",
+    "downloading": "Mengunduh",
+    "preparingDownload": "Menyiapkan unduhan"
   },
   "shareMultipleFiles": {
     "title": "Bagikan Beberapa File",
@@ -1856,7 +1919,10 @@
       "continue": "Lanjutkan Unggah",
       "cancel": "Batalkan Unggah"
     },
-    "pasteSuccess": "{count, plural, =1 {Gambar berhasil ditempel dan diunggah} other {# gambar berhasil ditempel dan diunggah}}"
+    "pasteSuccess": "{count, plural, =1 {Gambar berhasil ditempel dan diunggah} other {# gambar berhasil ditempel dan diunggah}}",
+    "errors": {
+      "uploadFailed": "Unggahan gagal"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "Sematkan Media",
-    "description": "Gunakan kode-kode ini untuk menyematkan media ini di forum, situs web, atau platform lainnya",
-    "tabs": {
-      "directLink": "Tautan Langsung",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL langsung ke file media",
-    "htmlDescription": "Gunakan kode ini untuk menyematkan media di halaman HTML",
-    "bbcodeDescription": "Gunakan kode ini untuk menyematkan media di forum yang mendukung BBCode"
-  },
   "validation": {
     "firstNameRequired": "Nama depan wajib diisi",
     "lastNameRequired": "Nama belakang wajib diisi",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "Kata sandi harus minimal 6 karakter",
     "nameRequired": "Nama wajib diisi",
     "required": "Bidang ini wajib diisi"
-  },
-  "registerWithInvite": {
-    "title": "Buat Akun Anda",
-    "description": "Isi informasi di bawah ini untuk membuat akun Anda",
-    "labels": {
-      "firstName": "Nama Depan",
-      "firstNamePlaceholder": "Masukkan nama depan Anda",
-      "lastName": "Nama Belakang",
-      "lastNamePlaceholder": "Masukkan nama belakang Anda",
-      "username": "Nama Pengguna",
-      "usernamePlaceholder": "Pilih nama pengguna",
-      "email": "Email",
-      "emailPlaceholder": "Masukkan email Anda",
-      "password": "Kata Sandi",
-      "passwordPlaceholder": "Pilih kata sandi",
-      "confirmPassword": "Konfirmasi Kata Sandi",
-      "confirmPasswordPlaceholder": "Konfirmasi kata sandi Anda"
-    },
-    "buttons": {
-      "creating": "Membuat akun...",
-      "createAccount": "Buat Akun"
-    },
-    "validation": {
-      "firstNameRequired": "Nama depan wajib diisi",
-      "lastNameRequired": "Nama belakang wajib diisi",
-      "usernameMinLength": "Nama pengguna harus minimal 3 karakter",
-      "invalidEmail": "Email tidak valid",
-      "passwordMinLength": "Kata sandi harus minimal 8 karakter",
-      "passwordsMatch": "Kata sandi harus sama"
-    },
-    "messages": {
-      "success": "Akun berhasil dibuat! Mengalihkan ke login...",
-      "redirecting": "Mengalihkan ke login..."
-    },
-    "errors": {
-      "invalidToken": "Kesalahan dengan tautan undangan",
-      "tokenUsed": "Tautan undangan ini sudah digunakan",
-      "tokenExpired": "Tautan undangan ini telah kedaluwarsa",
-      "usernameExists": "Nama pengguna sudah ada",
-      "emailExists": "Email sudah ada",
-      "createFailed": "Gagal membuat akun. Silakan coba lagi."
-    },
-    "pageTitle": "Buat Akun"
   }
 }

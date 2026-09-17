@@ -154,7 +154,13 @@
     "search": "Ara",
     "share": "Paylaş",
     "copied": "Kopyalandı",
-    "copy": "Kopyala"
+    "copy": "Kopyala",
+    "invalidDate": "Geçersiz tarih",
+    "notAvailable": "Mevcut değil"
+  },
+  "contextMenu": {
+    "newFolder": "Yeni klasör",
+    "uploadFile": "Dosya yükle"
   },
   "createShare": {
     "title": "Paylaşım Oluştur",
@@ -274,6 +280,18 @@
       "refresh": "Kuyruğu Yenile"
     }
   },
+  "embedCode": {
+    "title": "Medyayı Yerleştir",
+    "description": "Bu medyayı forumlara, web sitelerine veya diğer platformlara yerleştirmek için bu kodları kullanın",
+    "tabs": {
+      "directLink": "Doğrudan Bağlantı",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Medya dosyasının doğrudan URL'si",
+    "htmlDescription": "Medyayı HTML sayfalarına yerleştirmek için bu kodu kullanın",
+    "bbcodeDescription": "BBCode destekleyen forumlara medyayı yerleştirmek için bu kodu kullanın"
+  },
   "emptyState": {
     "noFiles": "Henüz dosya yüklenmedi",
     "uploadFile": "Dosya Yükle"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "İki faktörlü kimlik doğrulama zaten etkin",
     "Two-factor authentication is not enabled": "İki faktörlü kimlik doğrulama etkin değil",
     "Two-factor authentication required": "İki faktörlü kimlik doğrulama gerekli",
-    "noUserData": "Kullanıcı verisi yok"
+    "noUserData": "Kullanıcı verisi yok",
+    "passwordAuthDisabled": "Bu sunucuda parola ile giriş devre dışı bırakılmıştır"
   },
   "fileActions": {
     "editFile": "Dosyayı Düzenle",
@@ -372,7 +391,8 @@
     "totalFiles": "{count, plural, =0 {Dosya yok} =1 {1 dosya} other {# dosya}}",
     "viewMode": {
       "table": "Tablo",
-      "grid": "Izgara"
+      "grid": "Izgara",
+      "label": "Görünüm"
     },
     "bulkDeleteConfirmation": "{count, plural, =1 {1 dosyayı} other {# dosyayı}} silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "bulkDeleteTitle": "Seçili Dosyaları Sil",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Tarafından destekleniyor:",
-    "kyanHomepage": "Kyantech Ana Sayfası"
+    "kyanHomepage": "SolutionMAX Ana Sayfası"
   },
   "forgotPassword": {
     "emailLabel": "E-posta Adresi",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "WeTransfer'e açık kaynaklı alternatif. Takip veya kısıtlama olmadan dosyalarınızı güvenle paylaşın.",
+    "description": "Yükleyin, tek bir bağlantı paylaşın ve ne kadar süre açık kalacağına tam olarak siz karar verin. Kendi sunucunuzda çalışır, arada kimse olmadan.",
     "documentation": "Belgelendirme",
     "starOnGithub": "GitHub'da Yıldız Verin",
     "privacyMessage": "Gizlilik göz önünde bulundurularak tasarlanmıştır. Yüklemeden önceki dosyalar, yalnızca paylaşım bağlantısına sahip olanlar tarafından erişilebilir. Her zaman ücretsiz ve açık kaynaktır.",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Kendi sunucunuzda çalışır",
+      "expiry": "Bağlantılar kendiliğinden sona erer",
+      "noTracking": "Takip yok, sınır yok"
     }
   },
   "iconPicker": {
@@ -539,8 +559,9 @@
     "forgotPassword": "Şifrenizi mi unuttunuz?",
     "pageTitle": "Giriş",
     "or": "ou",
-    "continueWithSSO": "Continuar com SSO",
-    "processing": "Processando autenticação..."
+    "continueWithSSO": "SSO ile devam et",
+    "processing": "Kimlik doğrulama işleniyor...",
+    "noAuthMethodsAvailable": "Kullanılabilir giriş yöntemi yok. Yöneticinizden birini etkinleştirmesini isteyin."
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "Yönetici Hesabı Oluştur"
     }
   },
+  "registerWithInvite": {
+    "title": "Hesabınızı Oluşturun",
+    "description": "Hesabınızı oluşturmak için aşağıdaki bilgileri doldurun",
+    "labels": {
+      "firstName": "Ad",
+      "firstNamePlaceholder": "Adınızı girin",
+      "lastName": "Soyad",
+      "lastNamePlaceholder": "Soyadınızı girin",
+      "username": "Kullanıcı Adı",
+      "usernamePlaceholder": "Bir kullanıcı adı seçin",
+      "email": "E-posta",
+      "emailPlaceholder": "E-postanızı girin",
+      "password": "Şifre",
+      "passwordPlaceholder": "Bir şifre seçin",
+      "confirmPassword": "Şifreyi Onayla",
+      "confirmPasswordPlaceholder": "Şifrenizi onaylayın"
+    },
+    "buttons": {
+      "creating": "Hesap oluşturuluyor...",
+      "createAccount": "Hesap Oluştur"
+    },
+    "validation": {
+      "firstNameRequired": "Ad gerekli",
+      "lastNameRequired": "Soyad gerekli",
+      "usernameMinLength": "Kullanıcı adı en az 3 karakter olmalıdır",
+      "invalidEmail": "Geçersiz e-posta",
+      "passwordMinLength": "Şifre en az 8 karakter olmalıdır",
+      "passwordsMatch": "Şifreler eşleşmelidir"
+    },
+    "messages": {
+      "success": "Hesap başarıyla oluşturuldu! Girişe yönlendiriliyor...",
+      "redirecting": "Girişe yönlendiriliyor..."
+    },
+    "errors": {
+      "invalidToken": "Davet bağlantısında hata",
+      "tokenUsed": "Bu davet bağlantısı zaten kullanılmış",
+      "tokenExpired": "Bu davet bağlantısının süresi dolmuş",
+      "usernameExists": "Kullanıcı adı zaten mevcut",
+      "emailExists": "E-posta zaten mevcut",
+      "createFailed": "Hesap oluşturulamadı. Lütfen tekrar deneyin."
+    },
+    "pageTitle": "Hesap Oluştur"
+  },
   "resetPassword": {
     "pageTitle": "Şifreyi Sıfırla",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "Şifre ile Koru",
       "layoutOptions": {
         "default": "Varsayılan",
-        "wetransfer": "WeTransfer"
+        "vessel": "Amfora"
       },
       "noFilesLimit": "Dosya sınırı yok",
       "noSizeLimit": "Boyut sınırı yok",
@@ -1031,7 +1095,7 @@
         "description": "Yükleme sayfası kullanıcılara nasıl görünecek.",
         "options": {
           "default": "Varsayılan Düzen",
-          "wetransfer": "WeTransfer Tarzı"
+          "vessel": "Amfora düzeni"
         }
       },
       "password": {
@@ -1301,7 +1365,7 @@
       },
       "serverUrl": {
         "title": "Sunucu URL'si",
-        "description": "Amfora sunucu temel URL'si (örn: https://palmr.ornek.com)"
+        "description": "Amfora sunucu temel URL'si (örn: https://amfora.ornek.com)"
       },
       "testSmtp": {
         "title": "SMTP Bağlantısını Test Et",
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 dosya paylaşıldı} other {# dosya paylaşıldı}}"
     },
     "download": "İndir",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, other {# dosya}}",
+    "breakSeal": "Mührü kır",
+    "sealed": "Mühürlü",
+    "opened": "Açıldı"
   },
   "shareActions": {
     "deleteTitle": "Paylaşımı Sil",
@@ -1463,7 +1527,8 @@
     "editExpiration": "Son Kullanma Düzenle",
     "clickToEnlargeQrCode": "QR Kodu Büyüt",
     "downloadQrCode": "QR Kodu İndir",
-    "qrCode": "QR Kodu"
+    "qrCode": "QR Kodu",
+    "linkCopied": "Bağlantı kopyalandı"
   },
   "shareExpiration": {
     "neverExpires": "Asla Sona Ermez",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "Zip dosyası başarıyla indirildi",
     "errors": {
       "multipleDownloadNotSupported": "Çoklu paylaşım indirme henüz desteklenmiyor - lütfen paylaşımları ayrı ayrı indirin"
-    }
+    },
+    "downloading": "İndiriliyor",
+    "preparingDownload": "İndirme hazırlanıyor"
   },
   "shareMultipleFiles": {
     "title": "Çoklu Dosya Paylaş",
@@ -1852,7 +1919,10 @@
       "description": "Dosyalarınızı yüklemek için bırakın"
     },
     "pasteSuccess": "{count, plural, =1 {Görüntü yapıştırıldı ve başarıyla yüklendi} other {# görüntü yapıştırıldı ve başarıyla yüklendi}}",
-    "filesQueued": "{count, plural, one {# dosya yükleme için bekliyor} other {# dosya yükleme için bekliyor}}"
+    "filesQueued": "{count, plural, one {# dosya yükleme için bekliyor} other {# dosya yükleme için bekliyor}}",
+    "errors": {
+      "uploadFailed": "Yükleme başarısız"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordRequired": "Şifre gerekli",
     "nameRequired": "İsim gereklidir",
     "required": "Bu alan zorunludur"
-  },
-  "embedCode": {
-    "title": "Medyayı Yerleştir",
-    "description": "Bu medyayı forumlara, web sitelerine veya diğer platformlara yerleştirmek için bu kodları kullanın",
-    "tabs": {
-      "directLink": "Doğrudan Bağlantı",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Medya dosyasının doğrudan URL'si",
-    "htmlDescription": "Medyayı HTML sayfalarına yerleştirmek için bu kodu kullanın",
-    "bbcodeDescription": "BBCode destekleyen forumlara medyayı yerleştirmek için bu kodu kullanın"
-  },
-  "contextMenu": {
-    "newFolder": "Yeni klasör",
-    "uploadFile": "Dosya yükle"
-  },
-  "registerWithInvite": {
-    "title": "Hesabınızı Oluşturun",
-    "description": "Hesabınızı oluşturmak için aşağıdaki bilgileri doldurun",
-    "labels": {
-      "firstName": "Ad",
-      "firstNamePlaceholder": "Adınızı girin",
-      "lastName": "Soyad",
-      "lastNamePlaceholder": "Soyadınızı girin",
-      "username": "Kullanıcı Adı",
-      "usernamePlaceholder": "Bir kullanıcı adı seçin",
-      "email": "E-posta",
-      "emailPlaceholder": "E-postanızı girin",
-      "password": "Şifre",
-      "passwordPlaceholder": "Bir şifre seçin",
-      "confirmPassword": "Şifreyi Onayla",
-      "confirmPasswordPlaceholder": "Şifrenizi onaylayın"
-    },
-    "buttons": {
-      "creating": "Hesap oluşturuluyor...",
-      "createAccount": "Hesap Oluştur"
-    },
-    "validation": {
-      "firstNameRequired": "Ad gerekli",
-      "lastNameRequired": "Soyad gerekli",
-      "usernameMinLength": "Kullanıcı adı en az 3 karakter olmalıdır",
-      "invalidEmail": "Geçersiz e-posta",
-      "passwordMinLength": "Şifre en az 8 karakter olmalıdır",
-      "passwordsMatch": "Şifreler eşleşmelidir"
-    },
-    "messages": {
-      "success": "Hesap başarıyla oluşturuldu! Girişe yönlendiriliyor...",
-      "redirecting": "Girişe yönlendiriliyor..."
-    },
-    "errors": {
-      "invalidToken": "Davet bağlantısında hata",
-      "tokenUsed": "Bu davet bağlantısı zaten kullanılmış",
-      "tokenExpired": "Bu davet bağlantısının süresi dolmuş",
-      "usernameExists": "Kullanıcı adı zaten mevcut",
-      "emailExists": "E-posta zaten mevcut",
-      "createFailed": "Hesap oluşturulamadı. Lütfen tekrar deneyin."
-    },
-    "pageTitle": "Hesap Oluştur"
   }
 }

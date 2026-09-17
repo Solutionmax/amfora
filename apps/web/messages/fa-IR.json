@@ -10,10 +10,6 @@
       "auth_failed": "احراز هویت ناموفق بود. لطفاً دوباره تلاش کنید."
     }
   },
-  "contextMenu": {
-    "newFolder": "پوشه جدید",
-    "uploadFile": "بارگذاری فایل"
-  },
   "authProviders": {
     "title": "ارائه‌دهندگان احراز هویت",
     "description": "ارائه‌دهندگان احراز هویت خارجی را برای SSO پیکربندی کنید",
@@ -158,7 +154,13 @@
     "share": "اشتراک‌گذاری",
     "search": "جست‌وجو",
     "copy": "کپی",
-    "copied": "کپی شد"
+    "copied": "کپی شد",
+    "invalidDate": "تاریخ نامعتبر",
+    "notAvailable": "در دسترس نیست"
+  },
+  "contextMenu": {
+    "newFolder": "پوشه جدید",
+    "uploadFile": "بارگذاری فایل"
   },
   "createShare": {
     "title": "ایجاد اشتراک",
@@ -278,6 +280,18 @@
       "refresh": "بروزرسانی صف"
     }
   },
+  "embedCode": {
+    "title": "جاسازی رسانه",
+    "description": "از این کدها برای جاسازی این رسانه در انجمن‌ها، وب‌سایت‌ها یا پلتفرم‌های دیگر استفاده کنید",
+    "tabs": {
+      "directLink": "لینک مستقیم",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL مستقیم به فایل رسانه",
+    "htmlDescription": "از این کد برای جاسازی رسانه در صفحات HTML استفاده کنید",
+    "bbcodeDescription": "از این کد برای جاسازی رسانه در انجمن‌هایی که از BBCode پشتیبانی می‌کنند استفاده کنید"
+  },
   "emptyState": {
     "noFiles": "هنوز فایلی بارگذاری نشده است",
     "uploadFile": "بارگذاری فایل"
@@ -294,7 +308,8 @@
     "Password verification required": "تأیید گذرواژه الزامی است",
     "Invalid two-factor authentication code": "کد احراز هویت دو مرحله‌ای نامعتبر است",
     "Two-factor authentication required": "احراز هویت دو مرحله‌ای الزامی است",
-    "noUserData": "داده کاربری وجود ندارد"
+    "noUserData": "داده کاربری وجود ندارد",
+    "passwordAuthDisabled": "ورود با رمز عبور در این سرور غیرفعال است"
   },
   "fileActions": {
     "editFile": "ویرایش فایل",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "جدول",
-      "grid": "شبکه"
+      "grid": "شبکه",
+      "label": "نما"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "قدرت گرفته از",
-    "kyanHomepage": "صفحه اصلی Kyantech"
+    "kyanHomepage": "صفحه اصلی SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "آدرس ایمیل",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "جایگزین متن‌باز برای WeTransfer. فایل‌ها را به صورت امن و بدون ردیابی یا محدودیت به اشتراک بگذارید.",
+    "description": "بارگذاری کنید، یک پیوند به اشتراک بگذارید و دقیقاً مشخص کنید چه مدت باز بماند. روی سرور خودتان اجرا می‌شود، بدون هیچ واسطه‌ای.",
     "documentation": "مستندات",
     "starOnGithub": "ستاره در GitHub",
     "privacyMessage": "با در نظر گرفتن حریم خصوصی ساخته شده. فایل‌های شما فقط قبل از بارگذاری برای کسانی که لینک اشتراک‌گذاری دارند قابل دسترسی هستند. برای همیشه رایگان و متن‌باز.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "روی سرور خودتان اجرا می‌شود",
+      "expiry": "پیوندها به‌خودی‌خود منقضی می‌شوند",
+      "noTracking": "بدون ردیابی، بدون محدودیت"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "ورود",
     "or": "یا",
     "continueWithSSO": "ادامه با SSO",
-    "processing": "در حال پردازش احراز هویت..."
+    "processing": "در حال پردازش احراز هویت...",
+    "noAuthMethodsAvailable": "هیچ روش ورودی در دسترس نیست. از مدیر سیستم بخواهید یکی را فعال کند."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "ایجاد حساب مدیر"
     }
   },
+  "registerWithInvite": {
+    "title": "حساب خود را ایجاد کنید",
+    "description": "برای ایجاد حساب خود، اطلاعات زیر را پر کنید",
+    "labels": {
+      "firstName": "نام",
+      "firstNamePlaceholder": "نام خود را وارد کنید",
+      "lastName": "نام خانوادگی",
+      "lastNamePlaceholder": "نام خانوادگی خود را وارد کنید",
+      "username": "نام کاربری",
+      "usernamePlaceholder": "یک نام کاربری انتخاب کنید",
+      "email": "ایمیل",
+      "emailPlaceholder": "ایمیل خود را وارد کنید",
+      "password": "گذرواژه",
+      "passwordPlaceholder": "یک گذرواژه انتخاب کنید",
+      "confirmPassword": "تأیید گذرواژه",
+      "confirmPasswordPlaceholder": "گذرواژه خود را تأیید کنید"
+    },
+    "buttons": {
+      "creating": "در حال ایجاد حساب...",
+      "createAccount": "ایجاد حساب"
+    },
+    "validation": {
+      "firstNameRequired": "نام الزامی است",
+      "lastNameRequired": "نام خانوادگی الزامی است",
+      "usernameMinLength": "نام کاربری باید حداقل ۳ کاراکتر باشد",
+      "invalidEmail": "ایمیل نامعتبر است",
+      "passwordMinLength": "گذرواژه باید حداقل ۸ کاراکتر باشد",
+      "passwordsMatch": "گذرواژه‌ها باید مطابقت داشته باشند"
+    },
+    "messages": {
+      "success": "حساب با موفقیت ایجاد شد! در حال انتقال به صفحه ورود...",
+      "redirecting": "در حال انتقال به صفحه ورود..."
+    },
+    "errors": {
+      "invalidToken": "خطا در لینک دعوت",
+      "tokenUsed": "این لینک دعوت قبلاً استفاده شده است",
+      "tokenExpired": "این لینک دعوت منقضی شده است",
+      "usernameExists": "نام کاربری قبلاً وجود دارد",
+      "emailExists": "ایمیل قبلاً وجود دارد",
+      "createFailed": "ایجاد حساب ناموفق بود. لطفاً دوباره تلاش کنید."
+    },
+    "pageTitle": "ایجاد حساب"
+  },
   "resetPassword": {
     "pageTitle": "بازنشانی گذرواژه",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "محافظت با گذرواژه",
       "layoutOptions": {
         "default": "پیش‌فرض",
-        "wetransfer": "WeTransfer"
+        "vessel": "سبو"
       },
       "noFilesLimit": "بدون محدودیت تعداد فایل",
       "noSizeLimit": "بدون محدودیت حجم",
@@ -1035,7 +1095,7 @@
         "description": "چگونه صفحه بارگذاری به کاربران نمایش داده شود.",
         "options": {
           "default": "چیدمان پیش‌فرض",
-          "wetransfer": "سبک WeTransfer"
+          "vessel": "چیدمان سبو"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {۱ فایل به اشتراک گذاشته شد} other {# فایل به اشتراک گذاشته شد}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, one {# فایل} other {# فایل}}",
+    "breakSeal": "مهر و موم را بشکنید",
+    "sealed": "مهروموم‌شده",
+    "opened": "بازشده"
   },
   "shareActions": {
     "fileTitle": "اشتراک‌گذاری فایل",
@@ -1467,7 +1527,8 @@
     "qrCode": "QR کد",
     "downloadQrCode": "دانلود QR کد",
     "clickToEnlargeQrCode": "برای بزرگ‌نمایی QR کد کلیک کنید",
-    "loadError": "بارگذاری جزئیات اشتراک ناموفق بود"
+    "loadError": "بارگذاری جزئیات اشتراک ناموفق بود",
+    "linkCopied": "پیوند کپی شد"
   },
   "shareExpiration": {
     "title": "تنظیمات انقضای اشتراک",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "اشتراک"
+    "defaultShareName": "اشتراک",
+    "downloading": "در حال دانلود",
+    "preparingDownload": "در حال آماده‌سازی دانلود"
   },
   "shareMultipleFiles": {
     "title": "اشتراک‌گذاری چند فایل",
@@ -1856,7 +1919,10 @@
       "continue": "ادامه بارگذاری",
       "cancel": "لغو بارگذاری"
     },
-    "pasteSuccess": "{count, plural, =1 {تصویر چسبانده و با موفقیت بارگذاری شد} other {# تصویر چسبانده و با موفقیت بارگذاری شد}}"
+    "pasteSuccess": "{count, plural, =1 {تصویر چسبانده و با موفقیت بارگذاری شد} other {# تصویر چسبانده و با موفقیت بارگذاری شد}}",
+    "errors": {
+      "uploadFailed": "بارگذاری ناموفق بود"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "جاسازی رسانه",
-    "description": "از این کدها برای جاسازی این رسانه در انجمن‌ها، وب‌سایت‌ها یا پلتفرم‌های دیگر استفاده کنید",
-    "tabs": {
-      "directLink": "لینک مستقیم",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL مستقیم به فایل رسانه",
-    "htmlDescription": "از این کد برای جاسازی رسانه در صفحات HTML استفاده کنید",
-    "bbcodeDescription": "از این کد برای جاسازی رسانه در انجمن‌هایی که از BBCode پشتیبانی می‌کنند استفاده کنید"
-  },
   "validation": {
     "firstNameRequired": "نام الزامی است",
     "lastNameRequired": "نام خانوادگی الزامی است",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "گذرواژه باید حداقل ۶ کاراکتر باشد",
     "nameRequired": "نام الزامی است",
     "required": "این فیلد الزامی است"
-  },
-  "registerWithInvite": {
-    "title": "حساب خود را ایجاد کنید",
-    "description": "برای ایجاد حساب خود، اطلاعات زیر را پر کنید",
-    "labels": {
-      "firstName": "نام",
-      "firstNamePlaceholder": "نام خود را وارد کنید",
-      "lastName": "نام خانوادگی",
-      "lastNamePlaceholder": "نام خانوادگی خود را وارد کنید",
-      "username": "نام کاربری",
-      "usernamePlaceholder": "یک نام کاربری انتخاب کنید",
-      "email": "ایمیل",
-      "emailPlaceholder": "ایمیل خود را وارد کنید",
-      "password": "گذرواژه",
-      "passwordPlaceholder": "یک گذرواژه انتخاب کنید",
-      "confirmPassword": "تأیید گذرواژه",
-      "confirmPasswordPlaceholder": "گذرواژه خود را تأیید کنید"
-    },
-    "buttons": {
-      "creating": "در حال ایجاد حساب...",
-      "createAccount": "ایجاد حساب"
-    },
-    "validation": {
-      "firstNameRequired": "نام الزامی است",
-      "lastNameRequired": "نام خانوادگی الزامی است",
-      "usernameMinLength": "نام کاربری باید حداقل ۳ کاراکتر باشد",
-      "invalidEmail": "ایمیل نامعتبر است",
-      "passwordMinLength": "گذرواژه باید حداقل ۸ کاراکتر باشد",
-      "passwordsMatch": "گذرواژه‌ها باید مطابقت داشته باشند"
-    },
-    "messages": {
-      "success": "حساب با موفقیت ایجاد شد! در حال انتقال به صفحه ورود...",
-      "redirecting": "در حال انتقال به صفحه ورود..."
-    },
-    "errors": {
-      "invalidToken": "خطا در لینک دعوت",
-      "tokenUsed": "این لینک دعوت قبلاً استفاده شده است",
-      "tokenExpired": "این لینک دعوت منقضی شده است",
-      "usernameExists": "نام کاربری قبلاً وجود دارد",
-      "emailExists": "ایمیل قبلاً وجود دارد",
-      "createFailed": "ایجاد حساب ناموفق بود. لطفاً دوباره تلاش کنید."
-    },
-    "pageTitle": "ایجاد حساب"
   }
 }

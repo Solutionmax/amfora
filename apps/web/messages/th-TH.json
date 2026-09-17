@@ -10,10 +10,6 @@
       "auth_failed": "การยืนยันตัวตนล้มเหลว กรุณาลองใหม่อีกครั้ง"
     }
   },
-  "contextMenu": {
-    "newFolder": "โฟลเดอร์ใหม่",
-    "uploadFile": "อัปโหลดไฟล์"
-  },
   "authProviders": {
     "title": "ผู้ให้บริการยืนยันตัวตน",
     "description": "กำหนดค่าผู้ให้บริการยืนยันตัวตนภายนอกสำหรับ SSO",
@@ -158,7 +154,13 @@
     "share": "แชร์",
     "search": "ค้นหา",
     "copy": "คัดลอก",
-    "copied": "คัดลอกแล้ว"
+    "copied": "คัดลอกแล้ว",
+    "invalidDate": "วันที่ไม่ถูกต้อง",
+    "notAvailable": "ไม่พร้อมใช้งาน"
+  },
+  "contextMenu": {
+    "newFolder": "โฟลเดอร์ใหม่",
+    "uploadFile": "อัปโหลดไฟล์"
   },
   "createShare": {
     "title": "สร้างแชร์",
@@ -278,6 +280,18 @@
       "refresh": "รีเฟรชคิว"
     }
   },
+  "embedCode": {
+    "title": "ฝังสื่อ",
+    "description": "ใช้รหัสเหล่านี้เพื่อฝังสื่อนี้ในฟอรัม เว็บไซต์ หรือแพลตฟอร์มอื่น ๆ",
+    "tabs": {
+      "directLink": "ลิงก์โดยตรง",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL โดยตรงไปยังไฟล์สื่อ",
+    "htmlDescription": "ใช้รหัสนี้เพื่อฝังสื่อในหน้า HTML",
+    "bbcodeDescription": "ใช้รหัสนี้เพื่อฝังสื่อในฟอรัมที่รองรับ BBCode"
+  },
   "emptyState": {
     "noFiles": "ยังไม่มีไฟล์ที่อัปโหลด",
     "uploadFile": "อัปโหลดไฟล์"
@@ -294,7 +308,8 @@
     "Password verification required": "ต้องใช้การยืนยันรหัสผ่าน",
     "Invalid two-factor authentication code": "รหัสการยืนยันตัวตนสองปัจจัยไม่ถูกต้อง",
     "Two-factor authentication required": "ต้องใช้การยืนยันตัวตนสองปัจจัย",
-    "noUserData": "ไม่มีข้อมูลผู้ใช้"
+    "noUserData": "ไม่มีข้อมูลผู้ใช้",
+    "passwordAuthDisabled": "การเข้าสู่ระบบด้วยรหัสผ่านถูกปิดใช้งานบนเซิร์ฟเวอร์นี้"
   },
   "fileActions": {
     "editFile": "แก้ไขไฟล์",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "ตาราง",
-      "grid": "กริด"
+      "grid": "กริด",
+      "label": "มุมมอง"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "ขับเคลื่อนโดย",
-    "kyanHomepage": "หน้าแรก Kyantech"
+    "kyanHomepage": "หน้าแรก SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "ที่อยู่อีเมล",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "ทางเลือกโอเพนซอร์สแทน WeTransfer แชร์ไฟล์อย่างปลอดภัยโดยไม่มีการติดตามหรือข้อจำกัด",
+    "description": "อัปโหลด แชร์ลิงก์เดียว และกำหนดได้อย่างชัดเจนว่าจะเปิดให้ใช้งานนานแค่ไหน ทำงานบนเซิร์ฟเวอร์ของคุณเอง โดยไม่มีใครอยู่ตรงกลาง",
     "documentation": "เอกสารประกอบ",
     "starOnGithub": "ให้ดาว บน GitHub",
     "privacyMessage": "สร้างขึ้นด้วยการคำนึงถึงความเป็นส่วนตัว ไฟล์ของคุณสามารถเข้าถึงได้เฉพาะผู้ที่มีลิงค์แชร์เท่านั้นก่อนการอัปโหลด ฟรีและโอเพนซอร์สตลอดไป",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "ทำงานบนเซิร์ฟเวอร์ของคุณเอง",
+      "expiry": "ลิงก์หมดอายุเองโดยอัตโนมัติ",
+      "noTracking": "ไม่มีการติดตาม ไม่มีการจำกัด"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "เข้าสู่ระบบ",
     "or": "หรือ",
     "continueWithSSO": "ดำเนินการต่อด้วย SSO",
-    "processing": "กำลังประมวลผลการยืนยันตัวตน..."
+    "processing": "กำลังประมวลผลการยืนยันตัวตน...",
+    "noAuthMethodsAvailable": "ไม่มีวิธีเข้าสู่ระบบที่ใช้งานได้ กรุณาติดต่อผู้ดูแลระบบให้เปิดใช้งาน"
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "สร้างบัญชีผู้ดูแลระบบ"
     }
   },
+  "registerWithInvite": {
+    "title": "สร้างบัญชีของคุณ",
+    "description": "กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีของคุณ",
+    "labels": {
+      "firstName": "ชื่อจริง",
+      "firstNamePlaceholder": "ป้อนชื่อจริงของคุณ",
+      "lastName": "นามสกุล",
+      "lastNamePlaceholder": "ป้อนนามสกุลของคุณ",
+      "username": "ชื่อผู้ใช้",
+      "usernamePlaceholder": "เลือกชื่อผู้ใช้",
+      "email": "อีเมล",
+      "emailPlaceholder": "ป้อนอีเมลของคุณ",
+      "password": "รหัสผ่าน",
+      "passwordPlaceholder": "เลือกรหัสผ่าน",
+      "confirmPassword": "ยืนยันรหัสผ่าน",
+      "confirmPasswordPlaceholder": "ยืนยันรหัสผ่านของคุณ"
+    },
+    "buttons": {
+      "creating": "กำลังสร้างบัญชี...",
+      "createAccount": "สร้างบัญชี"
+    },
+    "validation": {
+      "firstNameRequired": "ต้องระบุชื่อจริง",
+      "lastNameRequired": "ต้องระบุนามสกุล",
+      "usernameMinLength": "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร",
+      "invalidEmail": "อีเมลไม่ถูกต้อง",
+      "passwordMinLength": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+      "passwordsMatch": "รหัสผ่านต้องตรงกัน"
+    },
+    "messages": {
+      "success": "สร้างบัญชีเรียบร้อยแล้ว! กำลังเปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ...",
+      "redirecting": "กำลังเปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ..."
+    },
+    "errors": {
+      "invalidToken": "ข้อผิดพลาดกับลิงค์เชิญ",
+      "tokenUsed": "ลิงค์เชิญนี้ถูกใช้ไปแล้ว",
+      "tokenExpired": "ลิงค์เชิญนี้หมดอายุแล้ว",
+      "usernameExists": "ชื่อผู้ใช้มีอยู่แล้ว",
+      "emailExists": "อีเมลมีอยู่แล้ว",
+      "createFailed": "ไม่สามารถสร้างบัญชี โปรดลองอีกครั้ง"
+    },
+    "pageTitle": "สร้างบัญชี"
+  },
   "resetPassword": {
     "pageTitle": "รีเซ็ตรหัสผ่าน",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "ปกป้องด้วยรหัสผ่าน",
       "layoutOptions": {
         "default": "ค่าเริ่มต้น",
-        "wetransfer": "WeTransfer"
+        "vessel": "โถ"
       },
       "noFilesLimit": "ไม่มีขีดจำกัดไฟล์",
       "noSizeLimit": "ไม่มีขีดจำกัดขนาด",
@@ -1035,7 +1095,7 @@
         "description": "วิธีการปรากฏของหน้าการอัปโหลดต่อผู้ใช้",
         "options": {
           "default": "เค้าโครงค่าเริ่มต้น",
-          "wetransfer": "สไตล์ WeTransfer"
+          "vessel": "เค้าโครงโถ"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {แชร์ 1 ไฟล์} other {แชร์ # ไฟล์}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, other {# ไฟล์}}",
+    "breakSeal": "แกะผนึก",
+    "sealed": "ปิดผนึกแล้ว",
+    "opened": "เปิดแล้ว"
   },
   "shareActions": {
     "fileTitle": "แชร์ไฟล์",
@@ -1467,7 +1527,8 @@
     "qrCode": "รหัส QR",
     "downloadQrCode": "ดาวน์โหลดรหัส QR",
     "clickToEnlargeQrCode": "คลิกเพื่อขยายรหัส QR",
-    "loadError": "ไม่สามารถโหลดรายละเอียดแชร์"
+    "loadError": "ไม่สามารถโหลดรายละเอียดแชร์",
+    "linkCopied": "คัดลอกลิงก์แล้ว"
   },
   "shareExpiration": {
     "title": "การตั้งค่าการหมดอายุของแชร์",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_ไฟล์.zip",
     "multipleSharesZipName": "{count}_แชร์_ไฟล์.zip",
-    "defaultShareName": "แชร์"
+    "defaultShareName": "แชร์",
+    "downloading": "กำลังดาวน์โหลด",
+    "preparingDownload": "กำลังเตรียมการดาวน์โหลด"
   },
   "shareMultipleFiles": {
     "title": "แชร์ไฟล์หลายรายการ",
@@ -1856,7 +1919,10 @@
       "continue": "ดำเนินการอัปโหลดต่อ",
       "cancel": "ยกเลิกการอัปโหลด"
     },
-    "pasteSuccess": "{count, plural, =1 {วางและอัปโหลดรูปภาพเรียบร้อยแล้ว} other {วางและอัปโหลด # รูปภาพเรียบร้อยแล้ว}}"
+    "pasteSuccess": "{count, plural, =1 {วางและอัปโหลดรูปภาพเรียบร้อยแล้ว} other {วางและอัปโหลด # รูปภาพเรียบร้อยแล้ว}}",
+    "errors": {
+      "uploadFailed": "อัปโหลดล้มเหลว"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "ฝังสื่อ",
-    "description": "ใช้รหัสเหล่านี้เพื่อฝังสื่อนี้ในฟอรัม เว็บไซต์ หรือแพลตฟอร์มอื่น ๆ",
-    "tabs": {
-      "directLink": "ลิงก์โดยตรง",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL โดยตรงไปยังไฟล์สื่อ",
-    "htmlDescription": "ใช้รหัสนี้เพื่อฝังสื่อในหน้า HTML",
-    "bbcodeDescription": "ใช้รหัสนี้เพื่อฝังสื่อในฟอรัมที่รองรับ BBCode"
-  },
   "validation": {
     "firstNameRequired": "จำเป็นต้องมีชื่อ",
     "lastNameRequired": "จำเป็นต้องมีนามสกุล",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร",
     "nameRequired": "จำเป็นต้องมีชื่อ",
     "required": "จำเป็นต้องกรอกข้อมูลช่องนี้"
-  },
-  "registerWithInvite": {
-    "title": "สร้างบัญชีของคุณ",
-    "description": "กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีของคุณ",
-    "labels": {
-      "firstName": "ชื่อจริง",
-      "firstNamePlaceholder": "ป้อนชื่อจริงของคุณ",
-      "lastName": "นามสกุล",
-      "lastNamePlaceholder": "ป้อนนามสกุลของคุณ",
-      "username": "ชื่อผู้ใช้",
-      "usernamePlaceholder": "เลือกชื่อผู้ใช้",
-      "email": "อีเมล",
-      "emailPlaceholder": "ป้อนอีเมลของคุณ",
-      "password": "รหัสผ่าน",
-      "passwordPlaceholder": "เลือกรหัสผ่าน",
-      "confirmPassword": "ยืนยันรหัสผ่าน",
-      "confirmPasswordPlaceholder": "ยืนยันรหัสผ่านของคุณ"
-    },
-    "buttons": {
-      "creating": "กำลังสร้างบัญชี...",
-      "createAccount": "สร้างบัญชี"
-    },
-    "validation": {
-      "firstNameRequired": "ต้องระบุชื่อจริง",
-      "lastNameRequired": "ต้องระบุนามสกุล",
-      "usernameMinLength": "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร",
-      "invalidEmail": "อีเมลไม่ถูกต้อง",
-      "passwordMinLength": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
-      "passwordsMatch": "รหัสผ่านต้องตรงกัน"
-    },
-    "messages": {
-      "success": "สร้างบัญชีเรียบร้อยแล้ว! กำลังเปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ...",
-      "redirecting": "กำลังเปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ..."
-    },
-    "errors": {
-      "invalidToken": "ข้อผิดพลาดกับลิงค์เชิญ",
-      "tokenUsed": "ลิงค์เชิญนี้ถูกใช้ไปแล้ว",
-      "tokenExpired": "ลิงค์เชิญนี้หมดอายุแล้ว",
-      "usernameExists": "ชื่อผู้ใช้มีอยู่แล้ว",
-      "emailExists": "อีเมลมีอยู่แล้ว",
-      "createFailed": "ไม่สามารถสร้างบัญชี โปรดลองอีกครั้ง"
-    },
-    "pageTitle": "สร้างบัญชี"
   }
 }

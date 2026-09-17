@@ -10,10 +10,6 @@
       "auth_failed": "Xác thực không thành công. Vui lòng thử lại."
     }
   },
-  "contextMenu": {
-    "newFolder": "Thư mục mới",
-    "uploadFile": "Tải lên tệp"
-  },
   "authProviders": {
     "title": "Nhà cung cấp xác thực",
     "description": "Định cấu hình nhà cung cấp xác thực bên ngoài cho SSO",
@@ -158,7 +154,13 @@
     "share": "Chia sẻ",
     "search": "Tìm kiếm",
     "copy": "Sao chép",
-    "copied": "Đã sao chép"
+    "copied": "Đã sao chép",
+    "invalidDate": "Ngày không hợp lệ",
+    "notAvailable": "Không có sẵn"
+  },
+  "contextMenu": {
+    "newFolder": "Thư mục mới",
+    "uploadFile": "Tải lên tệp"
   },
   "createShare": {
     "title": "Tạo chia sẻ",
@@ -278,6 +280,18 @@
       "refresh": "Làm mới hàng đợi"
     }
   },
+  "embedCode": {
+    "title": "Nhúng phương tiện",
+    "description": "Sử dụng các mã này để nhúng phương tiện này vào diễn đàn, trang web hoặc các nền tảng khác",
+    "tabs": {
+      "directLink": "Liên kết trực tiếp",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "URL trực tiếp đến tệp phương tiện",
+    "htmlDescription": "Sử dụng mã này để nhúng phương tiện vào các trang HTML",
+    "bbcodeDescription": "Sử dụng mã này để nhúng phương tiện vào các diễn đàn hỗ trợ BBCode"
+  },
   "emptyState": {
     "noFiles": "Chưa có tệp nào được tải lên",
     "uploadFile": "Tải lên tệp"
@@ -294,7 +308,8 @@
     "Password verification required": "Yêu cầu xác minh mật khẩu",
     "Invalid two-factor authentication code": "Mã xác thực hai yếu tố không hợp lệ",
     "Two-factor authentication required": "Yêu cầu xác thực hai yếu tố",
-    "noUserData": "Không có dữ liệu người dùng"
+    "noUserData": "Không có dữ liệu người dùng",
+    "passwordAuthDisabled": "Đăng nhập bằng mật khẩu đã bị vô hiệu hóa trên máy chủ này"
   },
   "fileActions": {
     "editFile": "Chỉnh sửa tệp",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "Bảng",
-      "grid": "Lưới"
+      "grid": "Lưới",
+      "label": "Chế độ xem"
     }
   },
   "filesTable": {
@@ -454,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "Cung cấp bởi",
-    "kyanHomepage": "Trang chủ Kyantech"
+    "kyanHomepage": "Trang chủ SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "Địa chỉ email",
@@ -488,7 +504,7 @@
     }
   },
   "home": {
-    "description": "Giải pháp thay thế mã nguồn mở cho WeTransfer. Chia sẻ tệp một cách an toàn, không theo dõi hoặc giới hạn.",
+    "description": "Tải lên, chia sẻ một liên kết và quyết định chính xác thời gian nó còn mở. Chạy trên máy chủ riêng của bạn, không qua trung gian.",
     "documentation": "Tài liệu",
     "starOnGithub": "Gắn sao trên GitHub",
     "privacyMessage": "Được xây dựng với sự riêng tư. Các tệp của bạn chỉ có thể được truy cập bởi những người có liên kết chia sẻ trước khi tải lên. Mãi mãi miễn phí và mã nguồn mở.",
@@ -503,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "Chạy trên máy chủ riêng của bạn",
+      "expiry": "Liên kết tự động hết hạn",
+      "noTracking": "Không theo dõi, không giới hạn"
     }
   },
   "iconPicker": {
@@ -544,7 +560,8 @@
     "pageTitle": "Đăng nhập",
     "or": "hoặc",
     "continueWithSSO": "Tiếp tục với SSO",
-    "processing": "Đang xử lý xác thực..."
+    "processing": "Đang xử lý xác thực...",
+    "noAuthMethodsAvailable": "Không có phương thức đăng nhập nào khả dụng. Hãy yêu cầu quản trị viên kích hoạt một phương thức."
   },
   "logo": {
     "labels": {
@@ -732,6 +749,49 @@
       "createAdmin": "Tạo tài khoản quản trị"
     }
   },
+  "registerWithInvite": {
+    "title": "Tạo Tài Khoản Của Bạn",
+    "description": "Điền thông tin bên dưới để tạo tài khoản của bạn",
+    "labels": {
+      "firstName": "Tên",
+      "firstNamePlaceholder": "Nhập tên của bạn",
+      "lastName": "Họ",
+      "lastNamePlaceholder": "Nhập họ của bạn",
+      "username": "Tên người dùng",
+      "usernamePlaceholder": "Chọn tên người dùng",
+      "email": "Email",
+      "emailPlaceholder": "Nhập email của bạn",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "Chọn mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "confirmPasswordPlaceholder": "Xác nhận mật khẩu của bạn"
+    },
+    "buttons": {
+      "creating": "Đang tạo tài khoản...",
+      "createAccount": "Tạo Tài Khoản"
+    },
+    "validation": {
+      "firstNameRequired": "Tên là bắt buộc",
+      "lastNameRequired": "Họ là bắt buộc",
+      "usernameMinLength": "Tên người dùng phải có ít nhất 3 ký tự",
+      "invalidEmail": "Email không hợp lệ",
+      "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+      "passwordsMatch": "Mật khẩu phải khớp"
+    },
+    "messages": {
+      "success": "Đã tạo tài khoản thành công! Đang chuyển hướng đến đăng nhập...",
+      "redirecting": "Đang chuyển hướng đến đăng nhập..."
+    },
+    "errors": {
+      "invalidToken": "Lỗi với liên kết mời",
+      "tokenUsed": "Liên kết mời này đã được sử dụng",
+      "tokenExpired": "Liên kết mời này đã hết hạn",
+      "usernameExists": "Tên người dùng đã tồn tại",
+      "emailExists": "Email đã tồn tại",
+      "createFailed": "Không thể tạo tài khoản. Vui lòng thử lại."
+    },
+    "pageTitle": "Tạo Tài Khoản"
+  },
   "resetPassword": {
     "pageTitle": "Đặt lại mật khẩu",
     "header": {
@@ -790,7 +850,7 @@
       "protectWithPassword": "Bảo vệ bằng mật khẩu",
       "layoutOptions": {
         "default": "Mặc định",
-        "wetransfer": "Kiểu WeTransfer"
+        "vessel": "Bình"
       },
       "noFilesLimit": "Không giới hạn tệp",
       "noSizeLimit": "Không giới hạn kích thước",
@@ -1035,7 +1095,7 @@
         "description": "Trang tải lên sẽ xuất hiện như thế nào với người dùng.",
         "options": {
           "default": "Bố cục mặc định",
-          "wetransfer": "Kiểu WeTransfer"
+          "vessel": "Bố cục bình"
         }
       },
       "password": {
@@ -1404,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {1 tệp đã được chia sẻ} other {# tệp đã được chia sẻ}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, other {# tệp}}",
+    "breakSeal": "Phá dấu niêm phong",
+    "sealed": "Đã niêm phong",
+    "opened": "Đã mở"
   },
   "shareActions": {
     "fileTitle": "Chia sẻ tệp",
@@ -1467,7 +1527,8 @@
     "qrCode": "Mã QR",
     "downloadQrCode": "Tải xuống mã QR",
     "clickToEnlargeQrCode": "Nhấp để phóng to mã QR",
-    "loadError": "Không thể tải chi tiết chia sẻ"
+    "loadError": "Không thể tải chi tiết chia sẻ",
+    "linkCopied": "Đã sao chép liên kết"
   },
   "shareExpiration": {
     "title": "Cài đặt hết hạn chia sẻ",
@@ -1528,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "Chia sẻ"
+    "defaultShareName": "Chia sẻ",
+    "downloading": "Đang tải xuống",
+    "preparingDownload": "Đang chuẩn bị tải xuống"
   },
   "shareMultipleFiles": {
     "title": "Chia sẻ nhiều tệp",
@@ -1856,7 +1919,10 @@
       "continue": "Tiếp tục tải lên",
       "cancel": "Hủy tải lên"
     },
-    "pasteSuccess": "{count, plural, =1 {Hình ảnh đã được dán và tải lên thành công} other {# hình ảnh đã được dán và tải lên thành công}}"
+    "pasteSuccess": "{count, plural, =1 {Hình ảnh đã được dán và tải lên thành công} other {# hình ảnh đã được dán và tải lên thành công}}",
+    "errors": {
+      "uploadFailed": "Tải lên thất bại"
+    }
   },
   "users": {
     "modes": {
@@ -1944,18 +2010,6 @@
       }
     }
   },
-  "embedCode": {
-    "title": "Nhúng phương tiện",
-    "description": "Sử dụng các mã này để nhúng phương tiện này vào diễn đàn, trang web hoặc các nền tảng khác",
-    "tabs": {
-      "directLink": "Liên kết trực tiếp",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "URL trực tiếp đến tệp phương tiện",
-    "htmlDescription": "Sử dụng mã này để nhúng phương tiện vào các trang HTML",
-    "bbcodeDescription": "Sử dụng mã này để nhúng phương tiện vào các diễn đàn hỗ trợ BBCode"
-  },
   "validation": {
     "firstNameRequired": "Tên là bắt buộc",
     "lastNameRequired": "Họ là bắt buộc",
@@ -1970,48 +2024,5 @@
     "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
     "nameRequired": "Tên là bắt buộc",
     "required": "Trường này là bắt buộc"
-  },
-  "registerWithInvite": {
-    "title": "Tạo Tài Khoản Của Bạn",
-    "description": "Điền thông tin bên dưới để tạo tài khoản của bạn",
-    "labels": {
-      "firstName": "Tên",
-      "firstNamePlaceholder": "Nhập tên của bạn",
-      "lastName": "Họ",
-      "lastNamePlaceholder": "Nhập họ của bạn",
-      "username": "Tên người dùng",
-      "usernamePlaceholder": "Chọn tên người dùng",
-      "email": "Email",
-      "emailPlaceholder": "Nhập email của bạn",
-      "password": "Mật khẩu",
-      "passwordPlaceholder": "Chọn mật khẩu",
-      "confirmPassword": "Xác nhận mật khẩu",
-      "confirmPasswordPlaceholder": "Xác nhận mật khẩu của bạn"
-    },
-    "buttons": {
-      "creating": "Đang tạo tài khoản...",
-      "createAccount": "Tạo Tài Khoản"
-    },
-    "validation": {
-      "firstNameRequired": "Tên là bắt buộc",
-      "lastNameRequired": "Họ là bắt buộc",
-      "usernameMinLength": "Tên người dùng phải có ít nhất 3 ký tự",
-      "invalidEmail": "Email không hợp lệ",
-      "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
-      "passwordsMatch": "Mật khẩu phải khớp"
-    },
-    "messages": {
-      "success": "Đã tạo tài khoản thành công! Đang chuyển hướng đến đăng nhập...",
-      "redirecting": "Đang chuyển hướng đến đăng nhập..."
-    },
-    "errors": {
-      "invalidToken": "Lỗi với liên kết mời",
-      "tokenUsed": "Liên kết mời này đã được sử dụng",
-      "tokenExpired": "Liên kết mời này đã hết hạn",
-      "usernameExists": "Tên người dùng đã tồn tại",
-      "emailExists": "Email đã tồn tại",
-      "createFailed": "Không thể tạo tài khoản. Vui lòng thử lại."
-    },
-    "pageTitle": "Tạo Tài Khoản"
   }
 }

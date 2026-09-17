@@ -175,13 +175,13 @@ export function ReverseShareDetailsModal({
                   type="select"
                   options={[
                     { value: "DEFAULT", label: t("reverseShares.labels.layoutOptions.default") },
-                    { value: "WETRANSFER", label: t("reverseShares.labels.layoutOptions.wetransfer") },
+                    { value: "VESSEL", label: t("reverseShares.labels.layoutOptions.vessel") },
                   ]}
                   disabled={!onUpdateReverseShare}
                   renderValue={(value) => (
                     <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 border-purple-200">
-                      {value === "WETRANSFER"
-                        ? t("reverseShares.labels.layoutOptions.wetransfer")
+                      {value === "VESSEL"
+                        ? t("reverseShares.labels.layoutOptions.vessel")
                         : t("reverseShares.labels.layoutOptions.default")}
                     </Badge>
                   )}

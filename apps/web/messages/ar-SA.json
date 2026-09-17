@@ -154,7 +154,13 @@
     "search": "بحث",
     "share": "مشاركة",
     "copied": "تم النسخ",
-    "copy": "نسخ"
+    "copy": "نسخ",
+    "invalidDate": "تاريخ غير صالح",
+    "notAvailable": "غير متاح"
+  },
+  "contextMenu": {
+    "newFolder": "مجلد جديد",
+    "uploadFile": "رفع ملف"
   },
   "createShare": {
     "title": "إنشاء مشاركة",
@@ -274,6 +280,18 @@
       "refresh": "تحديث قائمة الانتظار"
     }
   },
+  "embedCode": {
+    "title": "تضمين الوسائط",
+    "description": "استخدم هذه الأكواد لتضمين هذه الوسائط في المنتديات أو المواقع الإلكترونية أو المنصات الأخرى",
+    "tabs": {
+      "directLink": "رابط مباشر",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "عنوان URL مباشر لملف الوسائط",
+    "htmlDescription": "استخدم هذا الكود لتضمين الوسائط في صفحات HTML",
+    "bbcodeDescription": "استخدم هذا الكود لتضمين الوسائط في المنتديات التي تدعم BBCode"
+  },
   "emptyState": {
     "noFiles": "لم يتم رفع أي ملفات بعد",
     "uploadFile": "رفع ملف"
@@ -290,7 +308,8 @@
     "Two-factor authentication is already enabled": "المصادقة الثنائية مفعلة بالفعل",
     "Two-factor authentication is not enabled": "المصادقة الثنائية غير مفعلة",
     "Two-factor authentication required": "المصادقة الثنائية مطلوبة",
-    "noUserData": "لا يوجد بيانات المستخدم"
+    "noUserData": "لا يوجد بيانات المستخدم",
+    "passwordAuthDisabled": "تسجيل الدخول بكلمة المرور معطل على هذا الخادم"
   },
   "fileActions": {
     "editFile": "تعديل الملف",
@@ -371,7 +390,8 @@
     "bulkDeleteError": "خطأ في حذف الملفات المحددة",
     "viewMode": {
       "table": "جدول",
-      "grid": "شبكة"
+      "grid": "شبكة",
+      "label": "عرض"
     },
     "totalFiles": "{count, plural, =0 {لا توجد ملفات} =1 {ملف واحد} other {# ملفات}}",
     "bulkDeleteConfirmation": "هل أنت متأكد من رغبتك في حذف {count, plural, =1 {ملف واحد} other {# ملفات}}؟ لا يمكن التراجع عن هذا الإجراء.",
@@ -450,7 +470,7 @@
   },
   "footer": {
     "poweredBy": "مدعوم من",
-    "kyanHomepage": "الصفحة الرئيسية لـ Kyantech"
+    "kyanHomepage": "الصفحة الرئيسية لـ SolutionMAX"
   },
   "forgotPassword": {
     "emailLabel": "البريد الإلكتروني",
@@ -484,7 +504,7 @@
     }
   },
   "home": {
-    "description": "البديل مفتوح المصدر لـ WeTransfer. شارك ملفاتك بأمان، دون تتبع أو قيود.",
+    "description": "ارفع الملف، شارك رابطًا واحدًا، وحدد بالضبط كم من الوقت يبقى متاحًا. يعمل على خادمك الخاص، دون أي وسيط.",
     "documentation": "التوثيق",
     "starOnGithub": "ضع نجمة على GitHub",
     "privacyMessage": "مصمم مع مراعاة الخصوصية. ملفاتك قبل الرفع متاحة فقط لأولئك الذين لديهم رابط المشاركة. مجاني ومفتوح المصدر دائمًا.",
@@ -499,9 +519,9 @@
       "password": "Password"
     },
     "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
+      "selfHosted": "يعمل على خادمك الخاص",
+      "expiry": "تنتهي صلاحية الروابط تلقائيًا",
+      "noTracking": "بدون تتبع، بدون حدود"
     }
   },
   "iconPicker": {
@@ -540,7 +560,8 @@
     "pageTitle": "تسجيل الدخول",
     "or": "أو",
     "continueWithSSO": "متابعة مع تسجيل الدخول الموحد",
-    "processing": "جاري معالجة المصادقة..."
+    "processing": "جاري معالجة المصادقة...",
+    "noAuthMethodsAvailable": "لا توجد طريقة تسجيل دخول متاحة. اطلب من المسؤول تفعيل واحدة."
   },
   "logo": {
     "labels": {
@@ -728,6 +749,49 @@
       "createAdmin": "إنشاء حساب المسؤول"
     }
   },
+  "registerWithInvite": {
+    "title": "إنشاء حسابك",
+    "description": "املأ المعلومات أدناه لإنشاء حسابك",
+    "labels": {
+      "firstName": "الاسم الأول",
+      "firstNamePlaceholder": "أدخل اسمك الأول",
+      "lastName": "اسم العائلة",
+      "lastNamePlaceholder": "أدخل اسم عائلتك",
+      "username": "اسم المستخدم",
+      "usernamePlaceholder": "اختر اسم مستخدم",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "اختر كلمة مرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "أكد كلمة مرورك"
+    },
+    "buttons": {
+      "creating": "جاري إنشاء الحساب...",
+      "createAccount": "إنشاء حساب"
+    },
+    "validation": {
+      "firstNameRequired": "الاسم الأول مطلوب",
+      "lastNameRequired": "اسم العائلة مطلوب",
+      "usernameMinLength": "يجب أن يحتوي اسم المستخدم على 3 أحرف على الأقل",
+      "invalidEmail": "البريد الإلكتروني غير صالح",
+      "passwordMinLength": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+      "passwordsMatch": "يجب أن تتطابق كلمتا المرور"
+    },
+    "messages": {
+      "success": "تم إنشاء الحساب بنجاح! جارٍ إعادة التوجيه إلى تسجيل الدخول...",
+      "redirecting": "جارٍ إعادة التوجيه إلى تسجيل الدخول..."
+    },
+    "errors": {
+      "invalidToken": "خطأ في رابط الدعوة",
+      "tokenUsed": "تم استخدام رابط الدعوة هذا بالفعل",
+      "tokenExpired": "انتهت صلاحية رابط الدعوة هذا",
+      "usernameExists": "اسم المستخدم موجود بالفعل",
+      "emailExists": "البريد الإلكتروني موجود بالفعل",
+      "createFailed": "فشل في إنشاء الحساب. يرجى المحاولة مرة أخرى."
+    },
+    "pageTitle": "إنشاء حساب"
+  },
   "resetPassword": {
     "pageTitle": "إعادة تعيين كلمة المرور",
     "header": {
@@ -786,7 +850,7 @@
       "protectWithPassword": "حماية بكلمة مرور",
       "layoutOptions": {
         "default": "افتراضي",
-        "wetransfer": "WeTransfer"
+        "vessel": "وعاء"
       },
       "noFilesLimit": "بدون حد للملفات",
       "noSizeLimit": "بدون حد للحجم",
@@ -1031,7 +1095,7 @@
         "description": "كيف ستظهر صفحة الرفع للمستخدمين.",
         "options": {
           "default": "التخطيط الافتراضي",
-          "wetransfer": "نمط WeTransfer"
+          "vessel": "تخطيط الوعاء"
         }
       },
       "password": {
@@ -1400,10 +1464,10 @@
       "filesShared": "{count, plural, =1 {ملف واحد تمت مشاركته} other {# ملفات تمت مشاركتها}}"
     },
     "download": "Download",
-    "itemCount": "{count, plural, =1 {# file} other {# files}}",
-    "breakSeal": "Break the seal",
-    "sealed": "Sealed",
-    "opened": "Opened"
+    "itemCount": "{count, plural, zero {# ملف} one {ملف واحد} two {ملفان} few {# ملفات} many {# ملفًا} other {# ملف}}",
+    "breakSeal": "اكسر الختم",
+    "sealed": "مختوم",
+    "opened": "مفتوح"
   },
   "shareActions": {
     "deleteTitle": "حذف المشاركة",
@@ -1463,7 +1527,8 @@
     "editExpiration": "تحرير انتهاء الصلاحية",
     "clickToEnlargeQrCode": "انقر لتكبير رمز QR",
     "downloadQrCode": "تحميل رمز QR",
-    "qrCode": "رمز QR"
+    "qrCode": "رمز QR",
+    "linkCopied": "تم نسخ الرابط"
   },
   "shareExpiration": {
     "neverExpires": "لا تنتهي صلاحيته أبداً",
@@ -1524,7 +1589,9 @@
     "zipDownloadSuccess": "تم تنزيل ملف zip بنجاح",
     "errors": {
       "multipleDownloadNotSupported": "تنزيل مشاركات متعددة غير مدعوم حالياً - يرجى تنزيل المشاركات بشكل فردي"
-    }
+    },
+    "downloading": "جارٍ التنزيل",
+    "preparingDownload": "جارٍ تجهيز التنزيل"
   },
   "shareMultipleFiles": {
     "title": "مشاركة ملفات متعددة",
@@ -1852,7 +1919,10 @@
       "description": "حرر للرفع ملفاتك"
     },
     "pasteSuccess": "{count, plural, =1 {تم لصق الصورة ورفعها بنجاح} other {تم لصق # صور ورفعها بنجاح}}",
-    "filesQueued": "{count, plural, one {# ملف في الصف} other {# ملفات في الصف}}"
+    "filesQueued": "{count, plural, one {# ملف في الصف} other {# ملفات في الصف}}",
+    "errors": {
+      "uploadFailed": "فشل الرفع"
+    }
   },
   "users": {
     "modes": {
@@ -1954,64 +2024,5 @@
     "passwordRequired": "كلمة المرور مطلوبة",
     "nameRequired": "الاسم مطلوب",
     "required": "هذا الحقل مطلوب"
-  },
-  "embedCode": {
-    "title": "تضمين الوسائط",
-    "description": "استخدم هذه الأكواد لتضمين هذه الوسائط في المنتديات أو المواقع الإلكترونية أو المنصات الأخرى",
-    "tabs": {
-      "directLink": "رابط مباشر",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "عنوان URL مباشر لملف الوسائط",
-    "htmlDescription": "استخدم هذا الكود لتضمين الوسائط في صفحات HTML",
-    "bbcodeDescription": "استخدم هذا الكود لتضمين الوسائط في المنتديات التي تدعم BBCode"
-  },
-  "contextMenu": {
-    "newFolder": "مجلد جديد",
-    "uploadFile": "رفع ملف"
-  },
-  "registerWithInvite": {
-    "title": "إنشاء حسابك",
-    "description": "املأ المعلومات أدناه لإنشاء حسابك",
-    "labels": {
-      "firstName": "الاسم الأول",
-      "firstNamePlaceholder": "أدخل اسمك الأول",
-      "lastName": "اسم العائلة",
-      "lastNamePlaceholder": "أدخل اسم عائلتك",
-      "username": "اسم المستخدم",
-      "usernamePlaceholder": "اختر اسم مستخدم",
-      "email": "البريد الإلكتروني",
-      "emailPlaceholder": "أدخل بريدك الإلكتروني",
-      "password": "كلمة المرور",
-      "passwordPlaceholder": "اختر كلمة مرور",
-      "confirmPassword": "تأكيد كلمة المرور",
-      "confirmPasswordPlaceholder": "أكد كلمة مرورك"
-    },
-    "buttons": {
-      "creating": "جاري إنشاء الحساب...",
-      "createAccount": "إنشاء حساب"
-    },
-    "validation": {
-      "firstNameRequired": "الاسم الأول مطلوب",
-      "lastNameRequired": "اسم العائلة مطلوب",
-      "usernameMinLength": "يجب أن يحتوي اسم المستخدم على 3 أحرف على الأقل",
-      "invalidEmail": "البريد الإلكتروني غير صالح",
-      "passwordMinLength": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
-      "passwordsMatch": "يجب أن تتطابق كلمتا المرور"
-    },
-    "messages": {
-      "success": "تم إنشاء الحساب بنجاح! جارٍ إعادة التوجيه إلى تسجيل الدخول...",
-      "redirecting": "جارٍ إعادة التوجيه إلى تسجيل الدخول..."
-    },
-    "errors": {
-      "invalidToken": "خطأ في رابط الدعوة",
-      "tokenUsed": "تم استخدام رابط الدعوة هذا بالفعل",
-      "tokenExpired": "انتهت صلاحية رابط الدعوة هذا",
-      "usernameExists": "اسم المستخدم موجود بالفعل",
-      "emailExists": "البريد الإلكتروني موجود بالفعل",
-      "createFailed": "فشل في إنشاء الحساب. يرجى المحاولة مرة أخرى."
-    },
-    "pageTitle": "إنشاء حساب"
   }
 }

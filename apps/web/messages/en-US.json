@@ -10,10 +10,6 @@
       "auth_failed": "Authentication failed. Please try again."
     }
   },
-  "contextMenu": {
-    "newFolder": "New folder",
-    "uploadFile": "Upload file"
-  },
   "authProviders": {
     "title": "Authentication Providers",
     "description": "Configure external authentication providers for SSO",
@@ -158,7 +154,13 @@
     "share": "Share",
     "search": "Search",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "invalidDate": "Invalid date",
+    "notAvailable": "Not available"
+  },
+  "contextMenu": {
+    "newFolder": "New folder",
+    "uploadFile": "Upload file"
   },
   "createShare": {
     "title": "Create Share",
@@ -278,6 +280,18 @@
       "refresh": "Refresh Queue"
     }
   },
+  "embedCode": {
+    "title": "Embed Media",
+    "description": "Use these codes to embed this media in forums, websites, or other platforms",
+    "tabs": {
+      "directLink": "Direct Link",
+      "html": "HTML",
+      "bbcode": "BBCode"
+    },
+    "directLinkDescription": "Direct URL to the media file",
+    "htmlDescription": "Use this code to embed the media in HTML pages",
+    "bbcodeDescription": "Use this code to embed the media in forums that support BBCode"
+  },
   "emptyState": {
     "noFiles": "No files uploaded yet",
     "uploadFile": "Upload File"
@@ -294,7 +308,8 @@
     "Password verification required": "Password verification required",
     "Invalid two-factor authentication code": "Invalid two-factor authentication code",
     "Two-factor authentication required": "Two-factor authentication required",
-    "noUserData": "No user data"
+    "noUserData": "No user data",
+    "passwordAuthDisabled": "Password sign in is disabled on this server"
   },
   "fileActions": {
     "editFile": "Edit File",
@@ -394,7 +409,8 @@
     },
     "viewMode": {
       "table": "Table",
-      "grid": "Grid"
+      "grid": "Grid",
+      "label": "View"
     }
   },
   "filesTable": {
@@ -544,7 +560,8 @@
     "pageTitle": "Login",
     "or": "or",
     "continueWithSSO": "Continue with SSO",
-    "processing": "Processing authentication..."
+    "processing": "Processing authentication...",
+    "noAuthMethodsAvailable": "No sign in method is available. Ask your administrator to enable one."
   },
   "logo": {
     "labels": {
@@ -833,7 +850,7 @@
       "protectWithPassword": "Protect with Password",
       "layoutOptions": {
         "default": "Default",
-        "wetransfer": "WeTransfer"
+        "vessel": "Vessel"
       },
       "noFilesLimit": "No file limit",
       "noSizeLimit": "No size limit",
@@ -1078,7 +1095,7 @@
         "description": "How the upload page will appear to users.",
         "options": {
           "default": "Default Layout",
-          "wetransfer": "WeTransfer Style"
+          "vessel": "Vessel layout"
         }
       },
       "password": {
@@ -1510,7 +1527,8 @@
     "qrCode": "QR Code",
     "downloadQrCode": "Download QR Code",
     "clickToEnlargeQrCode": "Click to enlarge QR Code",
-    "loadError": "Failed to load share details"
+    "loadError": "Failed to load share details",
+    "linkCopied": "Link copied"
   },
   "shareExpiration": {
     "title": "Share Expiration Settings",
@@ -1571,7 +1589,9 @@
     },
     "singleShareZipName": "{shareName}_files.zip",
     "multipleSharesZipName": "{count}_shares_files.zip",
-    "defaultShareName": "Share"
+    "defaultShareName": "Share",
+    "downloading": "Downloading",
+    "preparingDownload": "Preparing download"
   },
   "shareMultipleFiles": {
     "title": "Share Multiple Files",
@@ -1899,7 +1919,10 @@
       "continue": "Continue Uploads",
       "cancel": "Cancel Uploads"
     },
-    "pasteSuccess": "{count, plural, =1 {Image pasted and uploaded successfully} other {# images pasted and uploaded successfully}}"
+    "pasteSuccess": "{count, plural, =1 {Image pasted and uploaded successfully} other {# images pasted and uploaded successfully}}",
+    "errors": {
+      "uploadFailed": "Upload failed"
+    }
   },
   "users": {
     "modes": {
@@ -1986,18 +2009,6 @@
         "generateFailed": "Failed to generate invite link"
       }
     }
-  },
-  "embedCode": {
-    "title": "Embed Media",
-    "description": "Use these codes to embed this media in forums, websites, or other platforms",
-    "tabs": {
-      "directLink": "Direct Link",
-      "html": "HTML",
-      "bbcode": "BBCode"
-    },
-    "directLinkDescription": "Direct URL to the media file",
-    "htmlDescription": "Use this code to embed the media in HTML pages",
-    "bbcodeDescription": "Use this code to embed the media in forums that support BBCode"
   },
   "validation": {
     "firstNameRequired": "First name is required",
