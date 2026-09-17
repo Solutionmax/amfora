@@ -15,10 +15,12 @@ function installBrowser({
   nativeCopy,
   fallbackCopy,
   inDialog = false,
+  inMenu = false,
 }: {
   nativeCopy?: (text: string) => Promise<void>;
   fallbackCopy: boolean;
   inDialog?: boolean;
+  inMenu?: boolean;
 }) {
   const originalNavigator = Object.getOwnPropertyDescriptor(globalThis, "navigator");
   const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
@@ -51,7 +53,7 @@ function installBrowser({
     },
   };
   const activeElement = {
-    closest: () => (inDialog ? dialog : null),
+    closest: () => (inDialog || inMenu ? dialog : null),
     focus: () => {
       focusRestored = true;
     },
@@ -144,6 +146,18 @@ test("copyText keeps the fallback inside a focused dialog and restores focus", a
 
   try {
     await copyText("dialog value");
+    assert.equal(browser.appendedToDialog, true);
+    assert.equal(browser.focusRestored, true);
+  } finally {
+    browser.restore();
+  }
+});
+
+test("copyText keeps the fallback inside a focused menu and restores focus", async () => {
+  const browser = installBrowser({ fallbackCopy: true, inMenu: true });
+
+  try {
+    await copyText("menu value");
     assert.equal(browser.appendedToDialog, true);
     assert.equal(browser.focusRestored, true);
   } finally {
