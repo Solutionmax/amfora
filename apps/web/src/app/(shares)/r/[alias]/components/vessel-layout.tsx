@@ -46,17 +46,6 @@ export function VesselLayout({
       );
     }
 
-    if (isLinkNotFound || !reverseShare) {
-      return (
-        <VesselStatusMessage
-          type={MESSAGE_TYPES.NOT_FOUND}
-          icon={IconAlertTriangle}
-          titleKey="reverseShares.upload.linkNotFound.title"
-          descriptionKey="reverseShares.upload.linkNotFound.description"
-        />
-      );
-    }
-
     if (isLinkExpired) {
       return (
         <VesselStatusMessage
@@ -65,6 +54,17 @@ export function VesselLayout({
           titleKey="reverseShares.upload.linkExpired.title"
           descriptionKey="reverseShares.upload.linkExpired.description"
           showContactOwner
+        />
+      );
+    }
+
+    if (isLinkNotFound || !reverseShare) {
+      return (
+        <VesselStatusMessage
+          type={MESSAGE_TYPES.NOT_FOUND}
+          icon={IconAlertTriangle}
+          titleKey="reverseShares.upload.linkNotFound.title"
+          descriptionKey="reverseShares.upload.linkNotFound.description"
         />
       );
     }
