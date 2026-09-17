@@ -665,6 +665,12 @@
     },
     "pageTitle": "Profil"
   },
+  "publicTransfer": {
+    "downloadTitle": "Güzel şeyler,\nsenin için.",
+    "uploadTitle": "Fikirlerine\nyer aç.",
+    "downloadCaption": "Onların dünyasından seninkine.",
+    "uploadCaption": "Her büyük fikir küçük bir paylaşımla başlar."
+  },
   "qrCodeModal": {
     "title": "QR Kodu Paylaş",
     "description": "Bu QR kodu tarayarak bağlantıya erişebilirsiniz.",

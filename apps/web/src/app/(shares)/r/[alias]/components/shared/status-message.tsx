@@ -85,7 +85,13 @@ export function VesselStatusMessage({
   const description =
     type === MESSAGE_TYPES.MAX_FILES ? t(descriptionKey, { maxFiles: reverseShare?.maxFiles || 0 }) : t(descriptionKey);
 
-  const additionalText = showContactOwner ? t("reverseShares.upload.maxFilesReached.contactOwner") : undefined;
+  const contactKey =
+    type === MESSAGE_TYPES.INACTIVE
+      ? "reverseShares.upload.linkInactive.contactOwner"
+      : type === MESSAGE_TYPES.EXPIRED
+        ? "reverseShares.upload.linkExpired.contactOwner"
+        : "reverseShares.upload.maxFilesReached.contactOwner";
+  const additionalText = showContactOwner ? t(contactKey) : undefined;
 
   return (
     <StatusMessage

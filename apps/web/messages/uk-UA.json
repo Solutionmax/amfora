@@ -665,6 +665,12 @@
     },
     "pageTitle": "Профіль"
   },
+  "publicTransfer": {
+    "downloadTitle": "Гарні речі,\nдля вас.",
+    "uploadTitle": "Простір для\nваших ідей.",
+    "downloadCaption": "З їхнього світу до вашого.",
+    "uploadCaption": "Кожна велика ідея починається з обміну."
+  },
   "qrCodeModal": {
     "title": "QR-код спільного доступу",
     "description": "Відскануйте цей QR-код для доступу до посилання.",

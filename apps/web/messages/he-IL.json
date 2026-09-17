@@ -665,6 +665,12 @@
     },
     "pageTitle": "פרופיל"
   },
+  "publicTransfer": {
+    "downloadTitle": "דברים טובים,\nבשבילך.",
+    "uploadTitle": "מקום\nלרעיונות שלך.",
+    "downloadCaption": "מהעולם שלהם לעולם שלך.",
+    "uploadCaption": "כל רעיון גדול מתחיל בשיתוף."
+  },
   "qrCodeModal": {
     "title": "קוד QR לשיתוף",
     "description": "סרוק קוד QR זה כדי לגשת לקישור.",

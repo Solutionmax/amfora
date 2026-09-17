@@ -665,6 +665,12 @@
     },
     "pageTitle": "프로필"
   },
+  "publicTransfer": {
+    "downloadTitle": "좋은 것들을,\n당신에게.",
+    "uploadTitle": "아이디어를\n위한 공간.",
+    "downloadCaption": "그들의 세상에서 당신의 세상으로.",
+    "uploadCaption": "멋진 아이디어는 작은 나눔에서 시작됩니다."
+  },
   "qrCodeModal": {
     "title": "QR 코드 공유",
     "description": "이 QR 코드를 스캔하여 링크에 접근할 수 있습니다.",

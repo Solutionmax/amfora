@@ -665,6 +665,12 @@
     },
     "pageTitle": "Hồ sơ"
   },
+  "publicTransfer": {
+    "downloadTitle": "Điều tốt đẹp,\ngửi đến bạn.",
+    "uploadTitle": "Không gian cho\ný tưởng của bạn.",
+    "downloadCaption": "Từ thế giới của họ đến thế giới của bạn.",
+    "uploadCaption": "Mỗi ý tưởng lớn đều bắt đầu từ sự sẻ chia."
+  },
   "qrCodeModal": {
     "title": "Chia sẻ mã QR",
     "description": "Quét mã QR này để truy cập liên kết.",
