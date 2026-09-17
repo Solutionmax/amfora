@@ -2390,7 +2390,9 @@ details a {
 }
 .product-site .workspace-frame {
   border-radius: 16px;
-  max-height: 640px;
+  max-width: 960px;
+  max-height: none;
+  margin-inline: auto;
 }
 .product-site .workspace-features h3 {
   font-size: 25px;
@@ -2968,4 +2970,13 @@ h3 {
   .legal-layout {
     padding-block: 36px 50px;
   }
+}
+
+/* Full screenshots stay available at their original resolution. */
+.screenshot-link {
+  display: block;
+}
+.screenshot-link:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: -3px;
 }
