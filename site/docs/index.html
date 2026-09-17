@@ -395,12 +395,10 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
             <p>
               Keep the persistent volume, replace the image, and start the
               container. Startup applies the Prisma schema and seeds missing
-              configuration/provider records. An installation created under
-              Palmr is migrated from
-              <code>prisma/palmr.db</code> to <code>prisma/amfora.db</code>; an
-              existing internal bucket is preserved when no explicit bucket
-              override is supplied. Verify a test share and download after the
-              upgrade.
+              configuration/provider records. Older database filenames are
+              migrated to <code>prisma/amfora.db</code>; an existing internal
+              bucket is preserved when no explicit bucket override is supplied.
+              Verify a test share and download after the upgrade.
             </p>
           </section>
           <section class="docs-section" id="troubleshooting">
@@ -450,10 +448,10 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
               content from an isolated test installation.
             </p>
             <p>
-              Amfora is a maintained fork of Palmr, with its own visual identity
-              and ongoing improvements. It is licensed under the Apache License
-              2.0. Bundled MinIO and mc are separate, unmodified AGPL-3.0
-              programs. See <a href="/LICENSE">LICENSE</a>,
+              Amfora has its own visual identity and ongoing improvements. Its
+              upstream attribution is preserved in NOTICE. It is licensed under
+              the Apache License 2.0. Bundled MinIO and mc are separate,
+              unmodified AGPL-3.0 programs. See <a href="/LICENSE">LICENSE</a>,
               <a href="/NOTICE">NOTICE</a> and the
               <a href="/licenses/AGPL-3.0.txt">bundled program license</a>.
             </p>
