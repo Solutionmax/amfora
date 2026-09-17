@@ -23,15 +23,19 @@ export function FileManagerLayout({ children, title, actions }: FileManagerLayou
 
   return (
     <div className="workspace-shell flex min-h-dvh w-full">
-      <aside className="sticky top-0 hidden h-dvh w-[256px] shrink-0 lg:block">
+      <aside className="sticky top-0 hidden h-dvh w-[240px] shrink-0 lg:block">
         <AppSidebar />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="sticky top-0 z-30 flex min-h-16 items-center gap-3 border-b border-white/10 bg-[#071827] text-white px-4 backdrop-blur-sm lg:hidden">
+        <div className="sticky top-0 z-30 flex min-h-16 items-center gap-3 border-b border-sidebar-border bg-sidebar px-4 text-sidebar-foreground backdrop-blur-sm lg:hidden">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="hover:bg-white/10 hover:text-white">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
                 <IconMenu2 className="size-5" />
                 <span className="sr-only">Menu</span>
               </Button>
@@ -41,7 +45,7 @@ export function FileManagerLayout({ children, title, actions }: FileManagerLayou
               <AppSidebar onNavigate={() => setIsMenuOpen(false)} />
             </SheetContent>
           </Sheet>
-          <h1 className="min-w-0 truncate font-display text-lg font-bold tracking-tight">{title}</h1>
+          <h1 className="min-w-0 truncate font-display text-lg font-semibold tracking-tight">{title}</h1>
         </div>
 
         <header className="hidden h-20 shrink-0 items-center gap-3 border-b border-border/60 bg-card/70 px-8 text-xs lg:flex xl:px-10">
@@ -49,7 +53,7 @@ export function FileManagerLayout({ children, title, actions }: FileManagerLayou
           <IconChevronRight className="size-3 text-muted-foreground/60" aria-hidden="true" />
           <span className="text-foreground">{title}</span>
         </header>
-        <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-9 xl:px-10">
+        <main className="mx-auto w-full max-w-[1440px] flex-1 bg-background px-4 py-6 sm:px-6 lg:px-8 lg:py-9 xl:px-10">
           <div className={actions ? "mb-7 flex flex-wrap items-center justify-between gap-4" : "mb-7 hidden lg:flex"}>
             <h1 className="hidden font-display text-[38px] font-semibold leading-tight tracking-tight lg:block">
               {title}

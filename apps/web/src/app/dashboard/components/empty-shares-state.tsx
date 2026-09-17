@@ -7,7 +7,7 @@ export function EmptySharesState({ onCreate }: { onCreate: () => void }) {
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-border/70 bg-secondary/20 py-10">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border/70 bg-secondary/20 px-5 py-12 text-center">
       <IconShare className="h-10 w-10 text-primary/70" />
       <div className="text-center">
         <p className="mb-4 text-muted-foreground">{t("recentShares.noShares")}</p>

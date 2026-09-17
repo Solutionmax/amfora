@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -68,40 +67,34 @@ export default function AdminAreaPage() {
         actions={<UsersHeader onCreateUser={handleCreateUser} onGenerateInvite={() => setIsInviteModalOpen(true)} />}
       >
         <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Card className="border-border/70 bg-card shadow-none">
-              <CardContent className="flex items-center gap-4 p-5">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <IconUsers className="size-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <p className="text-sm text-muted-foreground">{t("users.table.user")}</p>
-                  <p className="font-display text-2xl font-semibold tracking-tight">{users.length}</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-border/70 bg-card shadow-none">
-              <CardContent className="flex items-center gap-4 p-5">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <IconUserCheck className="size-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <p className="text-sm text-muted-foreground">{t("users.table.active")}</p>
-                  <p className="font-display text-2xl font-semibold tracking-tight">{activeUsers}</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-border/70 bg-card shadow-none">
-              <CardContent className="flex items-center gap-4 p-5">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <IconShieldCheck className="size-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <p className="text-sm text-muted-foreground">{t("users.table.admin")}</p>
-                  <p className="font-display text-2xl font-semibold tracking-tight">{adminUsers}</p>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid overflow-hidden rounded-xl border border-border/70 bg-card sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="flex items-center gap-4 border-b border-border/70 p-5 sm:border-b-0">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <IconUsers className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-sm text-muted-foreground">{t("users.table.user")}</p>
+                <p className="font-display text-2xl font-semibold tracking-tight">{users.length}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 border-b border-border/70 p-5 sm:border-b-0">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <IconUserCheck className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-sm text-muted-foreground">{t("users.table.active")}</p>
+                <p className="font-display text-2xl font-semibold tracking-tight">{activeUsers}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-5">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <IconShieldCheck className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-sm text-muted-foreground">{t("users.table.admin")}</p>
+                <p className="font-display text-2xl font-semibold tracking-tight">{adminUsers}</p>
+              </div>
+            </div>
           </div>
 
           <section className="rounded-xl border border-border/70 bg-card p-4 sm:p-5" aria-label={t("common.search")}>

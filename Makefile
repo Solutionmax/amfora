@@ -4,25 +4,20 @@
 help:
 	@echo "🚀 Amfora - Available Commands:"
 	@echo ""
-	@echo "  make build         - Build Docker image with multi-platform support"
+	@echo "  make build         - Build local image: make build TAG=version"
 	@echo "  make update-version - Update version in all package.json files"
-	@echo "  make start         - Start the application using docker-compose"
-	@echo "  make stop          - Stop all running containers"
+	@echo "  make start         - Start the application using docker compose"
+	@echo "  make stop          - Stop the application"
 	@echo "  make logs          - Show application logs"
-	@echo "  make clean         - Clean up containers and images"
+	@echo "  make clean         - Reclaim unused Amfora build cache (keeps data/images)"
 	@echo "  make shell         - Access the application container shell"
 	@echo ""
 	@echo "📁 Scripts location: ./infra/"
 
-# Build Docker image using the build script
+# Publishing is explicit: make build TAG=version MODE=push
+MODE ?= local
 build:
-	@echo "🏗️  Building Amfora Docker image..."
-	@echo "📝 This will update version numbers in all package.json files before building"
-	@echo ""
-	@chmod +x ./infra/update-versions.sh
-	@chmod +x ./infra/build-docker.sh
-	@echo "🔄 Starting build process..."
-	@./infra/build-docker.sh
+	@bash ./infra/build-docker.sh "$(TAG)" "$(MODE)"
 
 # Update version in all package.json files
 update-version:
@@ -39,26 +34,23 @@ update-version:
 # Start the application
 start:
 	@echo "🚀 Starting Amfora application..."
-	@docker-compose up -d
+	@docker compose up -d
 
 # Stop the application
 stop:
 	@echo "🛑 Stopping Amfora application..."
-	@docker-compose down
+	@docker compose down
 
 # Show logs
 logs:
 	@echo "📋 Showing Amfora logs..."
-	@docker-compose logs -f
+	@docker compose logs -f
 
-# Clean up containers and images
+# Only the dedicated builder cache; application volumes/images are retained.
 clean:
-	@echo "🧹 Cleaning up Docker containers and images..."
-	@docker-compose down -v
-	@docker system prune -f
-	@echo "✅ Cleanup completed!"
+	@docker buildx prune --builder amfora-builder --force --max-used-space 4GB --reserved-space 1GB --min-free-space 10GB
 
 # Access container shell
 shell:
 	@echo "🐚 Accessing Amfora container shell..."
-	@docker-compose exec amfora /bin/sh
+	@docker compose exec amfora /bin/sh

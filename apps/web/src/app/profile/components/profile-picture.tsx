@@ -72,7 +72,7 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
   };
 
   return (
-    <section className="flex flex-col items-start gap-5 rounded-2xl border bg-secondary/30 p-5 sm:flex-row sm:items-center">
+    <section className="flex flex-col items-start gap-5 border-b border-border/70 pb-6 sm:flex-row sm:items-center">
       <div className="relative shrink-0">
         {isLoading ? (
           <Skeleton className="w-25 h-25 rounded-full" />

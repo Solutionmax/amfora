@@ -50,27 +50,33 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/50 bg-background/70 backdrop-blur-sm px-6">
+    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/90 px-6 backdrop-blur-sm">
       <div className="container flex h-16 max-w-screen-xl items-center mx-auto lg:px-6">
         <div className="flex flex-1 items-center justify-between">
           <div className="flex items-center gap-3">
             <div
               onClick={handleLogoClick}
-              className={`flex items-center gap-2 cursor-pointer transition-opacity ${
+              className={`flex min-w-0 items-center gap-2 cursor-pointer transition-opacity ${
                 isNavigating ? "opacity-50" : "opacity-100"
               }`}
             >
-              {appLogo && <img alt={t("navbar.logoAlt")} className="h-8 w-8 object-contain rounded" src={appLogo} />}
-              <p className="font-bold text-2xl">{appName}</p>
+              {appLogo && (
+                <img
+                  alt={t("navbar.logoAlt")}
+                  className="h-8 w-8 shrink-0 rounded-lg border border-border bg-card p-1 object-contain"
+                  src={appLogo}
+                />
+              )}
+              <p className="truncate font-display text-2xl font-bold tracking-tight">{appName}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 cursor-pointer">
+          <div className="flex shrink-0 items-center gap-1">
             <LanguageSwitcher />
             <ModeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger className="rounded-full">
-                <Avatar className="cursor-pointer h-10 w-10 rounded-full">
+                <Avatar className="h-10 w-10 cursor-pointer rounded-full">
                   <AvatarImage src={user?.image as string | undefined} />
                   <AvatarFallback>{user?.firstName?.[0]}</AvatarFallback>
                 </Avatar>

@@ -27,20 +27,20 @@ function CustomizationPreview() {
   const { theme } = useTheme();
 
   return (
-    <div className="order-last min-w-0 rounded-2xl border bg-secondary/30 p-5">
-      <div className="flex items-start justify-between gap-3">
+    <section className="order-last min-w-0 border-y border-border/70 py-5">
+      <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
             {t("customization.pageTitle")}
           </p>
-          <h2 className="mt-1 font-display text-lg font-bold tracking-tight">{t("customization.preview.title")}</h2>
+          <h2 className="mt-1 font-display text-lg font-semibold tracking-tight">{t("customization.preview.title")}</h2>
         </div>
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <IconCheck className="size-4" />
         </span>
       </div>
       <div
-        className="mt-4 space-y-3 border bg-background p-3"
+        className="mt-4 border bg-background p-3"
         style={{ borderRadius: "var(--radius)", fontFamily: "var(--font-sans)" }}
       >
         <div className="flex items-center justify-between gap-3">
@@ -55,7 +55,7 @@ function CustomizationPreview() {
           </div>
           <span className="size-8 shrink-0 rounded-lg" style={{ backgroundColor: "var(--primary)" }} />
         </div>
-        <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
           <div className="border bg-card p-2.5" style={{ borderRadius: "var(--radius)" }}>
             <p className="text-muted-foreground">{t("dashboard.recentFiles.title")}</p>
             <div className="mt-3 h-2 w-full rounded-full" style={{ backgroundColor: "var(--primary)" }} />
@@ -66,7 +66,7 @@ function CustomizationPreview() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -83,10 +83,10 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         onClick={onNavigate}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "group flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+          "group flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
           active
-            ? "bg-primary text-primary-foreground shadow-lg shadow-black/10"
-            : "text-slate-300 hover:bg-white/8 hover:text-white"
+            ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+            : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         )}
       >
         <entry.icon className="size-[18px]" aria-hidden="true" />
@@ -96,27 +96,35 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   return (
-    <div className="flex h-full flex-col border-r border-white/10 bg-[#071827] px-4 text-white">
-      <Link href="/dashboard" onClick={onNavigate} className="flex min-h-20 min-w-0 shrink-0 items-center gap-3 px-3">
+    <div className="flex h-full flex-col border-r border-sidebar-border bg-sidebar px-4 text-sidebar-foreground">
+      <Link
+        href="/dashboard"
+        onClick={onNavigate}
+        className="flex min-h-20 min-w-0 shrink-0 items-center gap-3 border-b border-sidebar-border px-3"
+      >
         {appLogo ? (
-          <img alt="" className="h-9 w-9 shrink-0 rounded-xl bg-white p-1 object-contain" src={appLogo} />
+          <img
+            alt=""
+            className="h-9 w-9 shrink-0 rounded-lg border border-border bg-card p-1 object-contain"
+            src={appLogo}
+          />
         ) : (
-          <AmphoraMark className="h-9 w-9 shrink-0 text-sky-400" />
+          <AmphoraMark className="h-9 w-9 shrink-0 text-sidebar-primary" />
         )}
         <span className="truncate font-display text-[22px] font-bold tracking-tight">{appName}</span>
       </Link>
 
-      <nav aria-label={appName} className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto py-5">
+      <nav aria-label={appName} className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto py-6">
         {main.map(item)}
-        <span className="mt-8 px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+        <span className="mt-8 px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/50">
           {t("navbar.settings")}
         </span>
         {manage.map(item)}
       </nav>
 
-      <div className="mb-5 shrink-0 rounded-xl border border-white/10 bg-white/5 p-4">
+      <div className="mb-5 shrink-0 rounded-lg border border-sidebar-border bg-sidebar-accent/40 p-4">
         <div className="mb-3 flex items-center justify-between text-xs">
-          <span className="font-medium text-slate-400">{t("storageUsage.total")}</span>
+          <span className="font-medium text-sidebar-foreground/60">{t("storageUsage.total")}</span>
           <span className="font-mono text-[11px]">{disk ? formatStorageSize(disk.diskSizeGB) : "—"}</span>
         </div>
         <div
@@ -125,19 +133,19 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={disk ? Math.round(used * 100) : undefined}
-          className="h-1.5 overflow-hidden rounded-full bg-white/10"
+          className="h-1.5 overflow-hidden rounded-full bg-sidebar-border"
         >
           <div className="h-full rounded-full bg-primary" style={{ width: `${used * 100}%` }} />
         </div>
-        <p className="mt-2.5 font-mono text-[11px] text-slate-400">
+        <p className="mt-2.5 font-mono text-[11px] text-sidebar-foreground/60">
           {disk ? formatStorageSize(disk.diskUsedGB) : "—"} / {disk ? formatStorageSize(disk.diskSizeGB) : "—"}
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2.5 border-t border-white/10 py-4">
+      <div className="flex shrink-0 items-center gap-2.5 border-t border-sidebar-border py-4">
         <Avatar className="h-9 w-9">
           <AvatarImage src={user?.image as string | undefined} />
-          <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
+          <AvatarFallback className="bg-sidebar-primary/10 text-xs font-semibold text-sidebar-primary">
             {user?.firstName?.[0]}
             {user?.lastName?.[0]}
           </AvatarFallback>
@@ -146,12 +154,12 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
           <p className="truncate text-sm font-medium">
             {user?.firstName} {user?.lastName}
           </p>
-          <p className="truncate text-xs text-slate-400">{user?.email}</p>
+          <p className="truncate text-xs text-sidebar-foreground/60">{user?.email}</p>
         </div>
         <Button
           variant="ghost"
           size="icon"
-          className="text-slate-300 hover:bg-white/10 hover:text-white"
+          className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           onClick={handleLogout}
           aria-label={t("navbar.logout")}
         >
@@ -159,7 +167,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         </Button>
       </div>
 
-      <div className="flex shrink-0 items-center gap-1 border-t border-white/10 py-2.5 [&_button]:text-slate-300 [&_button:hover]:bg-white/10 [&_button:hover]:text-white">
+      <div className="flex shrink-0 items-center gap-1 border-t border-sidebar-border py-2.5 [&_button]:text-sidebar-foreground/70 [&_button:hover]:bg-sidebar-accent [&_button:hover]:text-sidebar-accent-foreground">
         <LanguageSwitcher />
         <ModeToggle />
       </div>

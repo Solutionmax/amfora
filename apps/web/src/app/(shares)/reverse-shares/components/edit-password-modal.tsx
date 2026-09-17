@@ -118,7 +118,7 @@ export function EditPasswordModal({
                       {field.value ? (
                         <IconLock className="h-4 w-4 text-yellow-600" />
                       ) : (
-                        <IconLockOpen className="h-4 w-4 text-green-600" />
+                        <IconLockOpen className="h-4 w-4 text-primary" />
                       )}
                       {t("reverseShares.modals.password.hasPassword")}
                     </FormLabel>

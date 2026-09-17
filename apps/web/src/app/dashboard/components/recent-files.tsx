@@ -13,15 +13,15 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
   const router = useRouter();
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+    <Card className="overflow-hidden">
+      <CardHeader className="border-b border-border/60 py-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <IconCloudUpload className="size-5 text-primary" />
             {t("recentFiles.title")}
           </CardTitle>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button
               className="font-semibold text-sm cursor-pointer"
               variant="outline"
@@ -34,7 +34,7 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         {files.length > 0 ? (
           <DashboardFilesView
             files={files}

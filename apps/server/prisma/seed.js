@@ -19,7 +19,7 @@ const defaultConfigs = [
   },
   {
     key: "appPrimaryColor",
-    value: "oklch(0.5686 0.1630 250.47)",
+    value: "#1757e8",
     type: "string",
     group: "general",
   },
@@ -31,7 +31,7 @@ const defaultConfigs = [
   },
   {
     key: "appRadius",
-    value: "1rem",
+    value: "0.75rem",
     type: "string",
     group: "general",
   },

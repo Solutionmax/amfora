@@ -66,6 +66,7 @@ export function RadiusPickerForm() {
                   ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                   : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
               }`}
+              aria-pressed={selectedRadius === radius.value}
               type="button"
             >
               <div className="flex items-center justify-between gap-3">

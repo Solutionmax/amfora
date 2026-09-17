@@ -26,7 +26,7 @@ export function ReverseSharesSearch({
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-border/70 bg-card/70 p-4 sm:p-5">
+    <div className="flex flex-col gap-5 rounded-xl border border-border/70 bg-card p-4 sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-semibold">{t("reverseShares.search.title")}</h2>
         <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">

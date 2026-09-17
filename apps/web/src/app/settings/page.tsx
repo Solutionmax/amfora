@@ -24,14 +24,14 @@ export default function SettingsPage() {
       <ProtectedRoute requireAdmin>
         <FileManagerLayout title={t("settings.pageTitle")}>
           <div className="flex min-h-[50vh] flex-col items-center justify-center gap-8">
-            <Card className="max-w-md border-destructive/50 bg-destructive/10">
+            <Card className="w-full max-w-md border-destructive/40 bg-card">
               <CardHeader>
                 <CardTitle className="text-destructive flex items-center gap-2">
                   <IconAlertTriangle className="h-5 w-5" />
                   Access Denied
                 </CardTitle>
                 <CardDescription className="text-destructive/80">
-                  {settings.error || "You don't have administrator privileges to access this page."}
+                  {settings.error || t("settings.errors.loadFailed")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -41,7 +41,7 @@ export default function SettingsPage() {
                   className="w-full flex items-center gap-2"
                 >
                   <IconRefresh className="h-4 w-4" />
-                  Refresh Page
+                  {t("storageUsage.retry")}
                 </Button>
               </CardContent>
             </Card>
@@ -56,11 +56,11 @@ export default function SettingsPage() {
       <ProtectedRoute requireAdmin>
         <FileManagerLayout title={t("settings.pageTitle")}>
           <div className="flex min-h-[50vh] flex-col items-center justify-center gap-8">
-            <Card className="max-w-md border-destructive/50 bg-destructive/10">
+            <Card className="w-full max-w-md border-destructive/40 bg-card">
               <CardHeader>
                 <CardTitle className="text-destructive flex items-center gap-2">
                   <IconAlertTriangle className="h-5 w-5" />
-                  Error Loading Settings
+                  {t("settings.errors.loadFailed")}
                 </CardTitle>
                 <CardDescription className="text-destructive/80">{settings.error}</CardDescription>
               </CardHeader>
@@ -71,7 +71,7 @@ export default function SettingsPage() {
                   className="w-full flex items-center gap-2"
                 >
                   <IconRefresh className="h-4 w-4" />
-                  Try Again
+                  {t("storageUsage.retry")}
                 </Button>
               </CardContent>
             </Card>

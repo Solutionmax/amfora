@@ -33,7 +33,7 @@ export default function ProfilePage() {
     <ProtectedRoute>
       <FileManagerLayout title={t("profile.pageTitle")}>
         <SectionLayout sections={sections} activeId={activeId} onSelect={setActiveId} label={t("profile.pageTitle")}>
-          <div className="max-w-3xl space-y-8">
+          <div className="max-w-4xl space-y-8">
             {activeId === "account" && (
               <div className="flex flex-col gap-6">
                 <ProfilePicture

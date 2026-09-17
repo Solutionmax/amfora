@@ -207,7 +207,7 @@ function EditableField({
         <Button
           size="icon"
           variant="ghost"
-          className="h-5 w-5 text-green-600 hover:text-green-700 flex-shrink-0"
+          className="h-5 w-5 text-primary hover:text-primary flex-shrink-0"
           onClick={(e) => {
             e.stopPropagation();
             onSaveEdit();
@@ -219,7 +219,7 @@ function EditableField({
         <Button
           size="icon"
           variant="ghost"
-          className="h-5 w-5 text-red-600 hover:text-red-700 flex-shrink-0"
+          className="h-5 w-5 text-destructive hover:text-destructive/80 flex-shrink-0"
           onClick={(e) => {
             e.stopPropagation();
             onCancelEdit();
@@ -401,10 +401,10 @@ function FileRow({
                 ? t("reverseShares.components.fileActions.copying")
                 : t("reverseShares.components.fileActions.copyToMyFiles")
             }
-            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 disabled:opacity-50"
+            className="text-primary hover:text-primary/80 hover:bg-primary/10 disabled:opacity-50"
           >
             {copyingFile === file.id ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent"></div>
+              <div className="size-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
             ) : (
               <IconClipboardCopy className="h-4 w-4" />
             )}
@@ -422,7 +422,7 @@ function FileRow({
             size="sm"
             onClick={() => onDelete(file)}
             title={t("reverseShares.components.fileActions.delete")}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
           >
             <IconTrash className="h-4 w-4" />
           </Button>
@@ -775,7 +775,7 @@ export function ReceivedFilesModal({
                         disabled={bulkCopying}
                       >
                         {bulkCopying ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent"></div>
+                          <div className="size-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
                         ) : (
                           <IconClipboardCopy className="h-4 w-4" />
                         )}
@@ -787,7 +787,7 @@ export function ReceivedFilesModal({
                         disabled={bulkDeleting}
                       >
                         {bulkDeleting ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-red-600 border-t-transparent"></div>
+                          <div className="size-4 animate-spin rounded-full border-2 border-destructive border-t-transparent"></div>
                         ) : (
                           <IconTrash className="h-4 w-4" />
                         )}

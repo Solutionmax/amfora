@@ -139,7 +139,7 @@ export function ReceivedFilesSection({ files, onFileDeleted }: ReceivedFilesSect
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="h-6 w-6 p-0 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
                       onClick={() => handleDeleteFile(file)}
                       title={t("common.delete")}
                     >

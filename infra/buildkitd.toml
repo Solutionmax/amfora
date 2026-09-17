@@ -1,0 +1,7 @@
+# Dedicated Amfora builder: reclaim unused cache above 4 GB.
+# Active builds can temporarily exceed this target.
+[worker.oci]
+  gc = true
+  reservedSpace = "1GB"
+  maxUsedSpace = "4GB"
+  minFreeSpace = "10GB"

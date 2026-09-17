@@ -194,7 +194,7 @@ export function ReverseShareCard({
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-6 w-6 text-red-600 hover:text-red-700"
+                    className="h-6 w-6 text-destructive hover:text-destructive/80"
                     onClick={cancelEdit}
                   >
                     <IconX className="h-3 w-3" />
@@ -343,7 +343,7 @@ export function ReverseShareCard({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-5 w-5 text-red-600 hover:text-red-700"
+                className="h-5 w-5 text-destructive hover:text-destructive/80"
                 onClick={cancelEdit}
               >
                 <IconX className="h-3 w-3" />
@@ -379,14 +379,14 @@ export function ReverseShareCard({
               <div className="flex items-center gap-2">
                 <IconLink
                   className={`h-3 w-3 shrink-0 ${
-                    reverseShare.isActive && !isExpired ? "text-primary" : "text-red-500"
+                    reverseShare.isActive && !isExpired ? "text-primary" : "text-destructive"
                   }`}
                 />
                 <code
                   className={`text-xs font-mono px-2 py-1 rounded flex-1 truncate ${
                     reverseShare.isActive && !isExpired
                       ? "text-primary bg-primary/10"
-                      : "text-red-500 bg-red-100 dark:bg-red-900/30"
+                      : "text-destructive bg-destructive/10"
                   }`}
                 >
                   {origin}/r/{reverseShare.alias?.alias}
@@ -397,7 +397,7 @@ export function ReverseShareCard({
                   className={`h-5 w-5 p-0 ${
                     reverseShare.isActive && !isExpired
                       ? "text-primary hover:text-primary/80"
-                      : "text-red-500 hover:text-red-600"
+                      : "text-destructive hover:text-destructive/80"
                   }`}
                   onClick={() => onCopyLink(reverseShare)}
                   title={t("reverseShares.card.copyLinkTitle")}
@@ -446,7 +446,7 @@ export function ReverseShareCard({
                     {reverseShare.isActive ? (
                       <IconToggleRight className="h-4 w-4 text-primary" />
                     ) : (
-                      <IconToggleLeft className="h-4 w-4 text-red-600" />
+                      <IconToggleLeft className="h-4 w-4 text-destructive" />
                     )}
                     <p className="text-xs font-medium leading-none">
                       {reverseShare.isActive ? t("reverseShares.status.active") : t("reverseShares.status.inactive")}
@@ -460,7 +460,7 @@ export function ReverseShareCard({
                     {reverseShare.isActive ? (
                       <IconToggleRight className="h-4 w-4 text-primary" />
                     ) : (
-                      <IconToggleLeft className="h-4 w-4 text-red-600" />
+                      <IconToggleLeft className="h-4 w-4 text-destructive" />
                     )}
                     <p className="text-xs font-medium leading-none">
                       {reverseShare.isActive ? t("reverseShares.status.active") : t("reverseShares.status.inactive")}

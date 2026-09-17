@@ -15,7 +15,9 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
   const metadata = GROUP_METADATA[group as keyof typeof GROUP_METADATA] || {
     title: group,
     description: t("settings.groups.defaultDescription"),
+    icon: undefined,
   };
+  const GroupIcon = metadata.icon;
 
   const isEmailGroup = group === "email";
 
@@ -24,6 +26,11 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
       <section className="max-w-4xl">
         <header className="mb-6">
           <div className="flex flex-row items-center gap-3">
+            {GroupIcon && (
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <GroupIcon className="size-4" />
+              </span>
+            )}
             <div className="flex flex-col gap-1">
               <h2 className="text-base font-semibold">
                 {t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title}

@@ -385,7 +385,7 @@ export function ReverseShareDetailsModal({
                         {t("reverseShares.modals.details.protectedByPassword")}
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="bg-green-500/20 text-green-700 border-green-200">
+                      <Badge variant="secondary" className="border-primary/20 bg-primary/10 text-primary">
                         <IconLockOpen className="h-3 w-3 mr-1" />
                         {t("reverseShares.modals.details.publicAccess")}
                       </Badge>
@@ -399,12 +399,12 @@ export function ReverseShareDetailsModal({
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     {reverseShare.isActive ? (
-                      <Badge variant="secondary" className="bg-green-500/20 text-green-700 border-green-200">
+                      <Badge variant="secondary" className="border-primary/20 bg-primary/10 text-primary">
                         <IconToggleRight className="h-3 w-3 mr-1" />
                         {t("reverseShares.status.active")}
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="bg-red-500/20 text-red-700 border-red-200">
+                      <Badge variant="secondary" className="bg-destructive/10 text-destructive border-destructive/20">
                         <IconToggleLeft className="h-3 w-3 mr-1" />
                         {t("reverseShares.status.inactive")}
                       </Badge>
