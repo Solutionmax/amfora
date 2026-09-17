@@ -84,7 +84,7 @@ export default function SettingsPage() {
   return (
     <ProtectedRoute requireAdmin>
       <FileManagerLayout title={t("settings.pageTitle")}>
-        <div className="max-w-4xl">
+        <div className="mx-auto w-full max-w-6xl">
           <SettingsForm
             groupForms={settings.groupForms}
             groupedConfigs={settings.groupedConfigs}

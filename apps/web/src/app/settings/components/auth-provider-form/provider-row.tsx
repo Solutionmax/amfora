@@ -46,8 +46,8 @@ export function ProviderRow({
 
   return (
     <div className={`rounded-lg border border-border/70 ${isDragging ? "border-primary/40 bg-primary/5" : ""}`}>
-      <div className="flex items-center justify-between p-3">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+        <div className="flex min-w-0 items-center gap-3">
           {!isDragDisabled ? (
             <div
               {...dragHandleProps}
@@ -59,23 +59,34 @@ export function ProviderRow({
           ) : null}
 
           <span className="text-lg">{getIcon(provider)}</span>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full ${provider.enabled ? "bg-green-500" : "bg-gray-400"}`}
                 title={provider.enabled ? t("authProviders.enabled") : t("authProviders.disabled")}
               />
-              <span className="font-medium text-sm">{provider.displayName}</span>
+              <span className="break-words font-medium text-sm">{provider.displayName}</span>
             </div>
             <div className="text-xs text-muted-foreground">
-              {provider.type.toUpperCase()} • {provider.name}
-              {provider.isOfficial && <span className="text-primary"> • {t("authProviders.officialProvider")}</span>}
+              {provider.type.toUpperCase()} · {provider.name}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <Switch checked={provider.enabled} onCheckedChange={(enabled) => onUpdate({ enabled })} disabled={saving} />
-          <Button variant="ghost" size="sm" onClick={onEdit} disabled={saving} title={t("authProviders.editProvider")}>
+          <Switch
+            aria-label={`${provider.displayName}: ${t("authProviders.enabled")}`}
+            checked={provider.enabled}
+            onCheckedChange={(enabled) => onUpdate({ enabled })}
+            disabled={saving}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onEdit}
+            disabled={saving}
+            title={t("authProviders.editProvider")}
+            aria-label={`${t("authProviders.editProvider")}: ${provider.displayName}`}
+          >
             <IconEdit className="h-3 w-3" />
           </Button>
           {!provider.isOfficial && (
@@ -86,6 +97,7 @@ export function ProviderRow({
               disabled={saving}
               className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
               title={t("authProviders.deleteProvider")}
+              aria-label={`${t("authProviders.deleteProvider")}: ${provider.displayName}`}
             >
               <IconTrash className="h-3 w-3" />
             </Button>

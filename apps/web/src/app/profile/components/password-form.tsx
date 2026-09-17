@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PasswordFormProps } from "../types";
 
 export function PasswordForm({
@@ -22,17 +23,24 @@ export function PasswordForm({
   } = form;
 
   return (
-    <Card>
-      <CardHeader>
-        <h2 className="text-lg font-semibold">{t("profile.password.title")}</h2>
+    <Card className="gap-0 overflow-hidden p-0">
+      <CardHeader className="border-b bg-secondary/30 px-5 py-4 sm:px-6">
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <IconLock className="size-4" />
+          </span>
+          <h2 className="font-display text-lg font-bold tracking-tight">{t("profile.password.title")}</h2>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-5 sm:p-6">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="relative">
+          <div className="relative space-y-2">
+            <Label htmlFor="profile-new-password">{t("profile.password.newPassword")}</Label>
             <Input
+              id="profile-new-password"
               {...register("newPassword")}
               type={isNewPasswordVisible ? "text" : "password"}
-              className="pr-10"
+              className="h-11 rounded-lg bg-background pr-10"
               placeholder={t("profile.password.newPassword")}
               aria-invalid={!!errors.newPassword}
             />
@@ -46,11 +54,13 @@ export function PasswordForm({
             {errors.newPassword && <p className="text-sm text-destructive mt-1">{errors.newPassword.message}</p>}
           </div>
 
-          <div className="relative">
+          <div className="relative space-y-2">
+            <Label htmlFor="profile-confirm-password">{t("profile.password.confirmPassword")}</Label>
             <Input
+              id="profile-confirm-password"
               {...register("confirmPassword")}
               type={isConfirmPasswordVisible ? "text" : "password"}
-              className="pr-10"
+              className="h-11 rounded-lg bg-background pr-10"
               placeholder={t("profile.password.confirmPassword")}
               aria-invalid={!!errors.confirmPassword}
             />
@@ -67,7 +77,12 @@ export function PasswordForm({
           </div>
 
           <div className="flex justify-end">
-            <Button className="mt-4 font-semibold" variant="default" disabled={isSubmitting} type="submit">
+            <Button
+              className="mt-4 h-11 rounded-lg font-semibold"
+              variant="default"
+              disabled={isSubmitting}
+              type="submit"
+            >
               {!isSubmitting && <IconLock className="h-4 w-4" />}
               {t("profile.password.updateButton")}
             </Button>

@@ -73,14 +73,14 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
-        <div className="relative group">
+    <Card className="gap-0 overflow-hidden p-0">
+      <CardHeader className="flex flex-col items-start gap-4 border-b bg-secondary/30 p-5 sm:flex-row sm:items-center sm:p-6">
+        <div className="relative shrink-0">
           {isLoading ? (
             <Skeleton className="w-25 h-25 rounded-full" />
           ) : (
             <Avatar className="h-24 w-24">
-              <AvatarImage src={userData?.image} />
+              <AvatarImage alt={t("profile.picture.title")} src={userData?.image} />
               <AvatarFallback className="absolute inset-0 rounded-full border text-4xl font-bold">
                 {userData?.firstName
                   ? userData.firstName
@@ -119,9 +119,9 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
           </DropdownMenu>
           <Input ref={fileInputRef} accept="image/*" className="hidden" type="file" onChange={handleFileChange} />
         </div>
-        <div>
-          <h2 className="text-lg font-semibold">{t("profile.picture.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("profile.picture.description")}</p>
+        <div className="min-w-0">
+          <h2 className="font-display text-lg font-bold tracking-tight">{t("profile.picture.title")}</h2>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">{t("profile.picture.description")}</p>
         </div>
       </CardHeader>
 

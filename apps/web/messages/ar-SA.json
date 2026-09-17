@@ -229,7 +229,10 @@
       "availableDescription": "حدد وضع السمة المفضل لديك",
       "reset": "إعادة التعيين إلى النظام"
     },
-    "pageTitle": "التخصيص"
+    "pageTitle": "التخصيص",
+    "preview": {
+      "title": "معاينة"
+    }
   },
   "dashboard": {
     "loadError": "فشل في تحميل بيانات لوحة التحكم",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "فشل في إنشاء رابط الدعوة"
       }
+    },
+    "filters": {
+      "all": "الكل"
     }
   },
   "validation": {

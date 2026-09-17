@@ -108,18 +108,20 @@ export function TwoFactorForm() {
 
   return (
     <>
-      <Card>
-        <CardHeader>
+      <Card className="gap-0 overflow-hidden p-0">
+        <CardHeader className="border-b bg-secondary/30 px-5 py-5 sm:px-6">
           <CardTitle className="flex items-center gap-2">
-            {status.enabled ? <IconShieldCheck className="h-5 w-5 text-primary" /> : <IconShield className="h-5 w-5" />}
+            <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              {status.enabled ? <IconShieldCheck className="size-4" /> : <IconShield className="size-4" />}
+            </span>
             {t("twoFactor.title")}
           </CardTitle>
           <CardDescription>{status.enabled ? t("twoFactor.enabled") : t("twoFactor.description")}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 p-5 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <div>
-              <p className="font-medium">
+              <p className="font-semibold">
                 {t("twoFactor.status.label")}{" "}
                 {status.enabled ? t("twoFactor.status.enabled") : t("twoFactor.status.disabled")}
               </p>
@@ -165,9 +167,11 @@ export function TwoFactorForm() {
               <Separator className="my-6" />
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <IconDevices className="h-5 w-5 text-muted-foreground" />
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-9 items-center justify-center rounded-lg bg-secondary text-primary">
+                      <IconDevices className="size-4" />
+                    </span>
                     <h3 className="text-lg font-semibold">{t("twoFactor.trustedDevices.title")}</h3>
                   </div>
                   {devices.length > 0 && (
@@ -198,8 +202,8 @@ export function TwoFactorForm() {
                     </p>
                   </div>
                 ) : (
-                  <div className="border rounded-lg overflow-hidden">
-                    <Table>
+                  <div className="overflow-x-auto rounded-xl border">
+                    <Table className="min-w-[680px]">
                       <TableHeader>
                         <TableRow className="bg-muted/50">
                           <TableHead className="w-12"></TableHead>

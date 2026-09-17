@@ -229,7 +229,10 @@
       "availableDescription": "Wybierz preferowany tryb motywu",
       "reset": "Przywróć ustawienia systemowe"
     },
-    "pageTitle": "Personalizacja"
+    "pageTitle": "Personalizacja",
+    "preview": {
+      "title": "Podgląd"
+    }
   },
   "dashboard": {
     "loadError": "Nie udało się załadować danych panelu głównego",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Nie udało się wygenerować linku zaproszenia"
       }
+    },
+    "filters": {
+      "all": "Wszystkie"
     }
   },
   "validation": {

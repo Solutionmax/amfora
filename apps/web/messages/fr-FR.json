@@ -229,7 +229,10 @@
       "availableDescription": "Sélectionnez votre mode de thème préféré",
       "reset": "Réinitialiser au Système"
     },
-    "pageTitle": "Personnalisation"
+    "pageTitle": "Personnalisation",
+    "preview": {
+      "title": "Aperçu"
+    }
   },
   "dashboard": {
     "loadError": "Échec du chargement des données du tableau de bord",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Échec de la génération du lien d'invitation"
       }
+    },
+    "filters": {
+      "all": "Tous"
     }
   },
   "validation": {

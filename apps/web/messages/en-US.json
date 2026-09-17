@@ -11,8 +11,8 @@
     }
   },
   "authProviders": {
-    "title": "Authentication Providers",
-    "description": "Configure external authentication providers for SSO",
+    "title": "External sign-in",
+    "description": "Optional: let people sign in with an existing account from another service. Password sign-in works without a provider.",
     "enabledCount": "{count} enabled",
     "loadingProviders": "Loading providers...",
     "providersConfigured": "{count} providers configured",
@@ -28,7 +28,7 @@
     "dragToReorder": "Drag to reorder",
     "dragDisabledMessage": "Drag and drop is disabled when filtering providers. Show all providers to reorder them.",
     "dragEnabledMessage": "Drag providers to reorder them. This order will be reflected on the login page.",
-    "noProvidersEnabled": "No enabled authentication providers",
+    "noProvidersEnabled": "No external sign-in enabled. Add a provider only if you want to use single sign-on.",
     "noProvidersConfigured": "No authentication providers configured",
     "form": {
       "providerName": "Provider Name",
@@ -229,7 +229,10 @@
       "availableDescription": "Select your preferred theme mode",
       "reset": "Reset to System"
     },
-    "pageTitle": "Customization"
+    "pageTitle": "Customization",
+    "preview": {
+      "title": "Preview"
+    }
   },
   "dashboard": {
     "loadError": "Failed to load dashboard data",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Failed to generate invite link"
       }
+    },
+    "filters": {
+      "all": "All"
     }
   },
   "validation": {

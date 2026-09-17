@@ -229,7 +229,10 @@
       "availableDescription": "अपना पसंदीदा थीम मोड चुनें",
       "reset": "सिस्टम पर रीसेट करें"
     },
-    "pageTitle": "अनुकूलन"
+    "pageTitle": "अनुकूलन",
+    "preview": {
+      "title": "पूर्वावलोकन"
+    }
   },
   "dashboard": {
     "loadError": "डैशबोर्ड डेटा लोड करने में त्रुटि",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "आमंत्रण लिंक जनरेट करने में विफल"
       }
+    },
+    "filters": {
+      "all": "सभी"
     }
   },
   "validation": {

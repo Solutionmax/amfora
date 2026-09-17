@@ -229,7 +229,10 @@
       "availableDescription": "选择您喜欢的主题模式",
       "reset": "恢复系统设置"
     },
-    "pageTitle": "自定义"
+    "pageTitle": "自定义",
+    "preview": {
+      "title": "预览"
+    }
   },
   "dashboard": {
     "loadError": "加载仪表盘数据失败",
@@ -2004,6 +2007,9 @@
       "errors": {
         "generateFailed": "生成邀请链接失败"
       }
+    },
+    "filters": {
+      "all": "全部"
     }
   },
   "validation": {

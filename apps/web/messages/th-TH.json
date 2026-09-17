@@ -229,7 +229,10 @@
       "availableDescription": "เลือกโหมดธีมที่คุณชื่นชอบ",
       "reset": "รีเซ็ตเป็นระบบ"
     },
-    "pageTitle": "การปรับแต่ง"
+    "pageTitle": "การปรับแต่ง",
+    "preview": {
+      "title": "ตัวอย่าง"
+    }
   },
   "dashboard": {
     "loadError": "ไม่สามารถโหลดข้อมูลแดชบอร์ด",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "ไม่สามารถสร้างลิงค์เชิญ"
       }
+    },
+    "filters": {
+      "all": "ทั้งหมด"
     }
   },
   "validation": {

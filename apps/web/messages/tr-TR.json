@@ -229,7 +229,10 @@
       "availableDescription": "Tercih ettiğiniz tema modunu seçin",
       "reset": "Sisteme Sıfırla"
     },
-    "pageTitle": "Özelleştirme"
+    "pageTitle": "Özelleştirme",
+    "preview": {
+      "title": "Önizleme"
+    }
   },
   "dashboard": {
     "loadError": "Gösterge paneli verileri yüklenemedi",
@@ -2008,6 +2011,9 @@
       "errors": {
         "generateFailed": "Davet bağlantısı oluşturulamadı"
       }
+    },
+    "filters": {
+      "all": "Tümü"
     }
   },
   "validation": {

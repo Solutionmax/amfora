@@ -4,10 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { IconDeviceLaptop } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { CustomizationCard } from "./customization-card";
 
 const BACKGROUND_OPTIONS = {
   light: [
@@ -66,82 +64,66 @@ export function BackgroundPickerForm() {
   };
 
   return (
-    <Card className="gap-0 p-6">
-      <CardHeader className="flex flex-row items-center justify-between p-0">
-        <div className="flex flex-row items-center gap-8">
-          <IconDeviceLaptop className="text-xl text-muted-foreground" />
-          <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold">{t("customization.background.title")}</h2>
-            <p className="text-sm text-muted-foreground">{t("customization.background.description")}</p>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="px-0">
-        <Separator className="my-6" />
-        <div className="flex flex-col gap-6">
-          <div className="space-y-2 mb-3">
-            <Label className="text-sm font-medium mb-6">{t("customization.background.lightMode")}</Label>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {BACKGROUND_OPTIONS.light.map((bg) => (
-                <button
-                  key={bg.name}
-                  onClick={() => handleBackgroundSelect("light", bg.background)}
-                  className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
-                    selectedBackground.light === bg.background
-                      ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
-                      : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
-                  }`}
-                  type="button"
-                >
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="font-medium text-base">{bg.name}</span>
-                      <span className="text-xs text-muted-foreground">{bg.description}</span>
-                    </div>
-                    <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
+    <CustomizationCard
+      icon={IconDeviceLaptop}
+      title={t("customization.background.title")}
+      description={t("customization.background.description")}
+      resetLabel={t("customization.background.reset")}
+      onReset={resetToDefault}
+    >
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">{t("customization.background.lightMode")}</Label>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {BACKGROUND_OPTIONS.light.map((bg) => (
+              <button
+                key={bg.name}
+                onClick={() => handleBackgroundSelect("light", bg.background)}
+                className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+                  selectedBackground.light === bg.background
+                    ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
+                    : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
+                }`}
+                type="button"
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="font-medium text-base">{bg.name}</span>
+                    <span className="text-xs text-muted-foreground">{bg.description}</span>
                   </div>
-                </button>
-              ))}
-            </div>
+                  <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
+                </div>
+              </button>
+            ))}
           </div>
-
-          <div className="space-y-2 mb-3">
-            <Label className="text-sm font-medium mb-6">{t("customization.background.darkMode")}</Label>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {BACKGROUND_OPTIONS.dark.map((bg) => (
-                <button
-                  key={bg.name}
-                  onClick={() => handleBackgroundSelect("dark", bg.background)}
-                  className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
-                    selectedBackground.dark === bg.background
-                      ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
-                      : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
-                  }`}
-                  type="button"
-                >
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="font-medium text-base">{bg.name}</span>
-                      <span className="text-xs text-muted-foreground">{bg.description}</span>
-                    </div>
-                    <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
+        </div>
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">{t("customization.background.darkMode")}</Label>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {BACKGROUND_OPTIONS.dark.map((bg) => (
+              <button
+                key={bg.name}
+                onClick={() => handleBackgroundSelect("dark", bg.background)}
+                className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+                  selectedBackground.dark === bg.background
+                    ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
+                    : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
+                }`}
+                type="button"
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="font-medium text-base">{bg.name}</span>
+                    <span className="text-xs text-muted-foreground">{bg.description}</span>
                   </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <p className="text-xs text-muted-foreground ml-1">{t("customization.background.availableDescription")}</p>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="flex"></div>
-          <div className="flex">
-            <Button variant="outline" onClick={resetToDefault} className="text-sm">
-              {t("customization.background.reset")}
-            </Button>
+                  <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
+                </div>
+              </button>
+            ))}
           </div>
         </div>
-      </CardContent>
-    </Card>
+        <p className="text-xs leading-5 text-muted-foreground">{t("customization.background.availableDescription")}</p>
+      </div>
+    </CustomizationCard>
   );
 }

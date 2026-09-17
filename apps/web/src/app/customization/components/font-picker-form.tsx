@@ -4,11 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { IconTypography } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useAppearance } from "@/hooks/use-appearance";
+import { CustomizationCard } from "./customization-card";
 
 const PREDEFINED_FONTS = [
   { name: "Outfit", value: "var(--font-outfit), Outfit, sans-serif" },
@@ -59,54 +57,38 @@ export function FontPickerForm() {
   };
 
   return (
-    <Card className="gap-0 p-6">
-      <CardHeader className="flex flex-row items-center justify-between p-0">
-        <div className="flex flex-row items-center gap-8">
-          <IconTypography className="text-xl text-muted-foreground" />
-          <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold">{t("customization.fonts.title")}</h2>
-            <p className="text-sm text-muted-foreground">{t("customization.fonts.description")}</p>
-          </div>
+    <CustomizationCard
+      icon={IconTypography}
+      title={t("customization.fonts.title")}
+      description={t("customization.fonts.description")}
+      resetLabel={t("customization.fonts.reset")}
+      onReset={resetToDefault}
+    >
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">{t("customization.fonts.available")}</Label>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {PREDEFINED_FONTS.map((font) => (
+            <button
+              key={font.name}
+              onClick={() => handleFontSelect(font.value)}
+              className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+                selectedFont === font.value
+                  ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
+                  : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
+              }`}
+              type="button"
+            >
+              <span
+                className="font-medium text-lg group-hover:text-primary transition-colors"
+                style={{ fontFamily: font.value }}
+              >
+                {font.name}
+              </span>
+            </button>
+          ))}
         </div>
-      </CardHeader>
-      <CardContent className="px-0">
-        <Separator className="my-6" />
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2 mb-3">
-            <Label className="text-sm font-medium mb-6">{t("customization.fonts.available")}</Label>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {PREDEFINED_FONTS.map((font) => (
-                <button
-                  key={font.name}
-                  onClick={() => handleFontSelect(font.value)}
-                  className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
-                    selectedFont === font.value
-                      ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
-                      : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
-                  }`}
-                  type="button"
-                >
-                  <span
-                    className="font-medium text-lg group-hover:text-primary transition-colors"
-                    style={{ fontFamily: font.value }}
-                  >
-                    {font.name}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-muted-foreground ml-1 mt-6">{t("customization.fonts.availableDescription")}</p>
-          </div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="flex"></div>
-          <div className="flex">
-            <Button variant="outline" onClick={resetToDefault} className="text-sm">
-              {t("customization.fonts.reset")}
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        <p className="text-xs leading-5 text-muted-foreground">{t("customization.fonts.availableDescription")}</p>
+      </div>
+    </CustomizationCard>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { IconChevronDown, IconChevronUp, IconSettings } from "@tabler/icons-react";
+import { IconSettings, IconShieldCheck } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { renderIconByName } from "@/components/ui/icon-picker";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useAuthProviders } from "../../hooks/use-auth-providers";
 import { AddProviderForm } from "./add-provider-form";
 import { AuthProviderDeleteModal } from "./auth-provider-delete-modal";
@@ -18,7 +17,6 @@ import { ProviderList } from "./provider-list";
 export function AuthProvidersSettings() {
   const t = useTranslations();
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const {
@@ -61,35 +59,20 @@ export function AuthProvidersSettings() {
   };
 
   return (
-    <Card className="gap-0 p-6">
-      <CardHeader
-        className="flex flex-row items-center justify-between cursor-pointer p-0"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        <div className="flex flex-row items-center gap-8">
-          <IconSettings className="text-xl text-muted-foreground" />
-          <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold">{t("authProviders.title")}</h2>
-            <p className="text-sm text-muted-foreground">
-              {t("authProviders.description")}
-              {enabledCount > 0 && (
-                <Badge variant="secondary" className="ml-2">
-                  {t("authProviders.enabledCount", { count: enabledCount })}
-                </Badge>
-              )}
-            </p>
+    <Card className="gap-0 overflow-hidden p-0">
+      <CardHeader className="border-b bg-muted/30 p-6 sm:p-8">
+        <div className="flex items-start gap-4">
+          <div className="rounded-xl border bg-background p-3 text-primary">
+            <IconShieldCheck className="size-5" />
+          </div>
+          <div className="min-w-0 space-y-2">
+            <h2 className="text-xl font-semibold tracking-tight">{t("authProviders.title")}</h2>
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">{t("authProviders.description")}</p>
+            <Badge variant="secondary">{t("authProviders.enabledCount", { count: enabledCount })}</Badge>
           </div>
         </div>
-        {isCollapsed ? (
-          <IconChevronDown className="text-muted-foreground" />
-        ) : (
-          <IconChevronUp className="text-muted-foreground" />
-        )}
       </CardHeader>
-
-      <CardContent className={`${isCollapsed ? "hidden" : "block"} px-0`}>
-        <Separator className="my-6" />
-
+      <CardContent className="p-6 sm:p-8">
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <IconSettings className="h-6 w-6 animate-spin" />
@@ -97,7 +80,7 @@ export function AuthProvidersSettings() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className={showAddForm ? "space-y-4" : "flex justify-between items-center"}>
+            <div className={showAddForm ? "space-y-4" : "flex flex-wrap justify-between items-center gap-3"}>
               <div className="text-sm text-muted-foreground">
                 {hideDisabledProviders
                   ? t("authProviders.enabledOfTotal", { enabled: filteredProviders.length, total: providers.length })
