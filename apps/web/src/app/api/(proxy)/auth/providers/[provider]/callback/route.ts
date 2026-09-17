@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { forwardedProtocol } from "@/lib/forwarded-headers";
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
@@ -8,12 +11,13 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const url = new URL(request.url);
     const queryString = url.search;
     const originalHost = request.headers.get("host") || url.host;
-    const originalProtocol = request.headers.get("x-forwarded-proto") || url.protocol.replace(":", "");
+    const originalProtocol = forwardedProtocol(request.headers.get("x-forwarded-proto"), url.protocol.replace(":", ""));
     const callbackUrl = `${API_BASE_URL}/auth/providers/${provider}/callback${queryString}`;
 
     const apiRes = await fetch(callbackUrl, {
       method: "GET",
       headers: {
+        ...clientAddressHeaders(request.headers),
         "Content-Type": "application/json",
         "x-forwarded-host": originalHost,
         "x-forwarded-proto": originalProtocol,

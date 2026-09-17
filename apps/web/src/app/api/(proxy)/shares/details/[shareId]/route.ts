@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders, SHARE_PASSWORD_HEADER } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ shareId: string }> }) {
+  const sharePassword = req.headers.get(SHARE_PASSWORD_HEADER);
   const cookieHeader = req.headers.get("cookie");
   const url = new URL(req.url);
   const searchParams = url.searchParams.toString();
@@ -13,6 +16,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ shar
     method: "GET",
     headers: {
       cookie: cookieHeader || "",
+      ...(sharePassword ? { [SHARE_PASSWORD_HEADER]: sharePassword } : {}),
+      ...clientAddressHeaders(req.headers),
     },
     redirect: "manual",
   });

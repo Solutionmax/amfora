@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { getSharePassword } from "../../shared/share-password";
 import {
   CreateReverseShareSchema,
   ReverseSharePasswordSchema,
@@ -72,7 +73,7 @@ export class ReverseShareController {
   async getReverseShareForUpload(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { id } = request.params as { id: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
 
       const reverseShare = await this.reverseShareService.getReverseShareForUpload(id, password);
       return reply.send({ reverseShare });
@@ -96,7 +97,7 @@ export class ReverseShareController {
   async getReverseShareForUploadByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
 
       const reverseShare = await this.reverseShareService.getReverseShareForUploadByAlias(alias, password);
       return reply.send({ reverseShare });
@@ -190,7 +191,7 @@ export class ReverseShareController {
   async getPresignedUrl(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { id } = request.params as { id: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const { objectName } = request.body as { objectName: string };
 
       const result = await this.reverseShareService.getPresignedUrl(id, objectName, password);
@@ -216,7 +217,7 @@ export class ReverseShareController {
   async getPresignedUrlByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const { objectName } = request.body as { objectName: string };
 
       const result = await this.reverseShareService.getPresignedUrlByAlias(alias, objectName, password);
@@ -242,7 +243,7 @@ export class ReverseShareController {
   async registerFileUpload(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { id } = request.params as { id: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const fileData = UploadToReverseShareSchema.parse(request.body);
 
       const file = await this.reverseShareService.registerFileUpload(id, fileData, password);
@@ -277,7 +278,7 @@ export class ReverseShareController {
   async registerFileUploadByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const fileData = UploadToReverseShareSchema.parse(request.body);
 
       const file = await this.reverseShareService.registerFileUploadByAlias(alias, fileData, password);
@@ -490,7 +491,7 @@ export class ReverseShareController {
   async createMultipartUploadByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const { filename, extension } = request.body as { filename: string; extension: string };
 
       if (!filename || !extension) {
@@ -524,8 +525,8 @@ export class ReverseShareController {
   async getMultipartPartUrlByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password, uploadId, objectName, partNumber } = request.query as {
-        password?: string;
+      const password = getSharePassword(request);
+      const { uploadId, objectName, partNumber } = request.query as {
         uploadId: string;
         objectName: string;
         partNumber: string;
@@ -569,7 +570,7 @@ export class ReverseShareController {
   async completeMultipartUploadByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const { uploadId, objectName, parts } = request.body as {
         uploadId: string;
         objectName: string;
@@ -609,7 +610,7 @@ export class ReverseShareController {
   async abortMultipartUploadByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
       const { uploadId, objectName } = request.body as {
         uploadId: string;
         objectName: string;

@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { getSharePassword } from "../../shared/share-password";
 import {
   CreateShareSchema,
   UpdateShareItemsSchema,
@@ -50,7 +51,7 @@ export class ShareController {
   async getShare(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { shareId } = request.params as { shareId: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
 
       let userId: string | undefined;
       try {
@@ -257,7 +258,7 @@ export class ShareController {
   async getShareByAlias(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { alias } = request.params as { alias: string };
-      const { password } = request.query as { password?: string };
+      const password = getSharePassword(request);
 
       const share = await this.shareService.getShareByAlias(alias, password);
       return reply.send({ share });

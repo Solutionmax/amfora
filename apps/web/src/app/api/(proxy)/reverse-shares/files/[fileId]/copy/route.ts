@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders, SHARE_PASSWORD_HEADER } from "@/lib/share-password";
+
 export const maxDuration = 600000; // 10 minutes timeout for large file copies
 export const dynamic = "force-dynamic";
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ fileId: string }> }) {
+  const sharePassword = req.headers.get(SHARE_PASSWORD_HEADER);
   const { fileId } = await params;
   const cookieHeader = req.headers.get("cookie");
   const url = `${API_BASE_URL}/reverse-shares/files/${fileId}/copy`;
@@ -29,6 +32,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ fil
       method: "POST",
       headers: {
         cookie: cookieHeader || "",
+        ...(sharePassword ? { [SHARE_PASSWORD_HEADER]: sharePassword } : {}),
+        ...clientAddressHeaders(req.headers),
       },
       redirect: "manual",
       signal: controller.signal,

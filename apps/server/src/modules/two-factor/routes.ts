@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { credentialRateLimit } from "../../config/rate-limit.config";
 import { TwoFactorController } from "./controller";
 
 export async function twoFactorRoutes(app: FastifyInstance) {
@@ -52,6 +53,7 @@ export async function twoFactorRoutes(app: FastifyInstance) {
   app.post(
     "/2fa/verify-setup",
     {
+      config: credentialRateLimit,
       preValidation,
       schema: {
         tags: ["Two-Factor Authentication"],
@@ -78,6 +80,7 @@ export async function twoFactorRoutes(app: FastifyInstance) {
   app.post(
     "/2fa/verify",
     {
+      config: credentialRateLimit,
       preValidation,
       schema: {
         tags: ["Two-Factor Authentication"],

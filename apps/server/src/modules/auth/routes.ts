@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { credentialRateLimit } from "../../config/rate-limit.config";
 import { ConfigService } from "../config/service";
 import { validatePasswordMiddleware } from "../user/middleware";
 import { AuthController } from "./controller";
@@ -25,6 +26,7 @@ export async function authRoutes(app: FastifyInstance) {
   app.post(
     "/auth/login",
     {
+      config: credentialRateLimit,
       schema: {
         tags: ["Authentication"],
         operationId: "login",
@@ -62,6 +64,7 @@ export async function authRoutes(app: FastifyInstance) {
   app.post(
     "/auth/2fa/login",
     {
+      config: credentialRateLimit,
       schema: {
         tags: ["Authentication"],
         operationId: "completeTwoFactorLogin",
@@ -108,6 +111,7 @@ export async function authRoutes(app: FastifyInstance) {
   app.post(
     "/auth/forgot-password",
     {
+      config: credentialRateLimit,
       schema: {
         tags: ["Authentication"],
         operationId: "requestPasswordReset",
@@ -128,6 +132,7 @@ export async function authRoutes(app: FastifyInstance) {
   app.post(
     "/auth/reset-password",
     {
+      config: credentialRateLimit,
       preValidation: validatePasswordMiddleware,
       schema: {
         tags: ["Authentication"],

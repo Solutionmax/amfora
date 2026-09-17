@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function POST(req: NextRequest) {
@@ -11,6 +13,7 @@ export async function POST(req: NextRequest) {
     const apiRes = await fetch(url, {
       method: "POST",
       headers: {
+        ...clientAddressHeaders(req.headers),
         "Content-Type": "application/json",
         cookie: cookieHeader || "",
         ...Object.fromEntries(Array.from(req.headers.entries()).filter(([key]) => key.startsWith("authorization"))),

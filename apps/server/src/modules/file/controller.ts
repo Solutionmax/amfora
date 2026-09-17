@@ -22,6 +22,7 @@ import {
   UpdateFileInput,
   UpdateFileSchema,
 } from "./dto";
+import { isPubliclyEmbeddable } from "./embed-access";
 import { FileService } from "./service";
 
 export class FileController {
@@ -588,9 +589,24 @@ export class FileController {
         return reply.status(400).send({ error: "File ID is required." });
       }
 
-      const fileRecord = await prisma.file.findUnique({ where: { id } });
+      const fileRecord = await prisma.file.findUnique({
+        where: { id },
+        include: {
+          shares: {
+            select: {
+              expiration: true,
+              views: true,
+              security: { select: { password: true, maxViews: true } },
+            },
+          },
+        },
+      });
 
       if (!fileRecord) {
+        return reply.status(404).send({ error: "File not found." });
+      }
+
+      if (!isPubliclyEmbeddable(fileRecord.shares)) {
         return reply.status(404).send({ error: "File not found." });
       }
 
@@ -615,7 +631,7 @@ export class FileController {
       reply.header("Content-Type", contentType);
       reply.header("Content-Disposition", `inline; filename="${encodeURIComponent(fileName)}"`);
       reply.header("Content-Length", fileRecord.size.toString());
-      reply.header("Cache-Control", "public, max-age=31536000"); // Cache por 1 ano
+      reply.header("Cache-Control", "public, max-age=31536000"); // One year
 
       return reply.send(stream);
     } catch (error) {

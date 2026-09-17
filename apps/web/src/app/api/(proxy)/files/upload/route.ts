@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 /**
@@ -27,6 +29,7 @@ async function handleUpload(req: NextRequest, method: "POST" | "PUT") {
     const apiRes = await fetch(url, {
       method: method,
       headers: {
+        ...clientAddressHeaders(req.headers),
         "Content-Type": req.headers.get("content-type") || "application/octet-stream",
         cookie: req.headers.get("cookie") || "",
         ...Object.fromEntries(

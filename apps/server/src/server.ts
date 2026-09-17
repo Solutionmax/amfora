@@ -55,7 +55,9 @@ async function startServer() {
       fieldNameSize: 100,
       fieldSize: 1024 * 1024,
       fields: 10,
-      fileSize: 1024 * 1024 * 1024 * 1024 * 1024, // 1PB (1 petabyte) - practically unlimited
+      // Only the logo and avatar endpoints post a file through the API; real uploads go
+      // straight to storage with a presigned URL and never pass through here.
+      fileSize: Number(process.env.API_MULTIPART_LIMIT_MB || 32) * 1024 * 1024,
       files: 1,
       headerPairs: 2000,
     },
@@ -88,7 +90,7 @@ async function startServer() {
     host: "0.0.0.0",
   });
 
-  console.log(`🌴 Amfora server running on port 3333`);
+  console.log(`Amfora server running on port 3333`);
 
   // Cleanup on shutdown
   process.on("SIGINT", () => process.exit(0));

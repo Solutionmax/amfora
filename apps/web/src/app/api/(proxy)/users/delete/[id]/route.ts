@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -10,6 +12,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   const apiRes = await fetch(url, {
     method: "DELETE",
     headers: {
+      ...clientAddressHeaders(req.headers),
       cookie: cookieHeader || "",
     },
     redirect: "manual",

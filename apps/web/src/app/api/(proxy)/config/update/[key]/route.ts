@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
@@ -11,6 +13,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ke
   const apiRes = await fetch(url, {
     method: "PATCH",
     headers: {
+      ...clientAddressHeaders(req.headers),
       "Content-Type": "application/json",
       cookie: cookieHeader || "",
     },
