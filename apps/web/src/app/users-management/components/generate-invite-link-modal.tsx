@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { generateInviteToken } from "@/http/endpoints/invite";
+import { copyText } from "@/lib/clipboard";
 
 interface GenerateInviteLinkModalProps {
   isOpen: boolean;
@@ -43,13 +44,13 @@ export function GenerateInviteLinkModal({ isOpen, onClose }: GenerateInviteLinkM
     if (!inviteUrl) return;
 
     try {
-      await navigator.clipboard.writeText(inviteUrl);
+      await copyText(inviteUrl);
       setCopied(true);
       toast.success(t("users.invite.linkCopied"));
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error("Failed to copy:", error);
-      toast.error("Failed to copy link");
+      toast.error(t("common.unexpectedError"));
     }
   };
 

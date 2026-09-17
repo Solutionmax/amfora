@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   IconCopy,
   IconDownload,
@@ -13,6 +13,7 @@ import {
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import QRCode from "react-qr-code";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { downloadQrCodeAsPng } from "@/lib/qr-code";
 import { useReverseShareDetails } from "../hooks/use-reverse-share-details";
 import { ReverseShare } from "../hooks/use-reverse-shares";
 import { EditPasswordModal } from "./edit-password-modal";
@@ -64,6 +66,7 @@ export function ReverseShareDetailsModal({
   const t = useTranslations();
   const [pendingChanges, setPendingChanges] = useState<Record<string, any>>({});
   const [isDownloading, setIsDownloading] = useState(false);
+  const qrContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     showAliasModal,
@@ -108,6 +111,20 @@ export function ReverseShareDetailsModal({
     if (reverseShare?.alias?.alias) {
       const link = generateReverseShareLink(reverseShare.alias.alias);
       if (link) window.open(link, "_blank");
+    }
+  };
+
+  const handleDownloadQrCode = async () => {
+    if (!reverseShare) return;
+
+    setIsDownloading(true);
+    try {
+      await downloadQrCodeAsPng(qrContainerRef.current, `${reverseShare.name || "reverse-share"}-qr-code.png`, 100);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+      toast.error(t("common.unexpectedError"));
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -202,38 +219,7 @@ export function ReverseShareDetailsModal({
                       size="icon"
                       variant="ghost"
                       className="h-5 w-5 text-muted-foreground hover:text-foreground"
-                      onClick={() => {
-                        const svg = document.getElementById("reverse-share-details-qr-code");
-                        if (!svg) return;
-
-                        setIsDownloading(true);
-                        const canvas = document.createElement("canvas");
-                        const ctx = canvas.getContext("2d");
-                        const padding = 20;
-                        canvas.width = 200 + padding * 2;
-                        canvas.height = 200 + padding * 2;
-
-                        if (ctx) {
-                          ctx.fillStyle = "#FFFFFF";
-                          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                          const svgData = new XMLSerializer().serializeToString(svg);
-                          const img = new Image();
-
-                          img.onload = () => {
-                            ctx.drawImage(img, padding, padding, 200, 200);
-                            const link = document.createElement("a");
-                            link.download = `${reverseShare?.name?.replace(/[^a-z0-9]/gi, "-").toLowerCase() || "reverse-share"}-qr-code.png`;
-                            link.href = canvas.toDataURL("image/png");
-                            link.click();
-                            setIsDownloading(false);
-                          };
-
-                          img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
-                        } else {
-                          setIsDownloading(false);
-                        }
-                      }}
+                      onClick={handleDownloadQrCode}
                       disabled={isDownloading}
                       title={t("qrCodeModal.download")}
                     >
@@ -242,17 +228,18 @@ export function ReverseShareDetailsModal({
                   </div>
                   <div className="flex flex-col items-start justify-start">
                     <div
+                      ref={qrContainerRef}
                       className="p-2 bg-white rounded-lg cursor-pointer hover:opacity-80 transition-opacity duration-300"
                       onClick={() => onViewQrCode && onViewQrCode(reverseShare)}
                       title={t("reverseShares.actions.viewQrCode")}
                     >
                       <QRCode
-                        id="reverse-share-details-qr-code"
                         value={reverseShareLink}
                         size={100}
                         level="H"
                         fgColor="#000000"
                         bgColor="#FFFFFF"
+                        style={{ maxWidth: "100%", height: "auto" }}
                       />
                     </div>
                   </div>

@@ -122,7 +122,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const isRTL = locale === "ar-SA";
+  const isRTL = ["ar-SA", "fa-IR", "he-IL"].includes(locale);
 
   if (typeof window !== "undefined") {
     useAppInfo.getState().refreshAppInfo();

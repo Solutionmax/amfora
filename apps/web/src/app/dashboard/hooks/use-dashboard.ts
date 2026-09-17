@@ -9,6 +9,7 @@ import { useSecureConfigValue } from "@/hooks/use-secure-configs";
 import { useShareManager } from "@/hooks/use-share-manager";
 import { getDiskSpace, listFiles, listUserShares } from "@/http/endpoints";
 import { Share } from "@/http/endpoints/shares/types";
+import { copyText } from "@/lib/clipboard";
 
 export function useDashboard() {
   const t = useTranslations();
@@ -82,12 +83,16 @@ export function useDashboard() {
   const fileManager = useEnhancedFileManager(loadDashboardData);
   const shareManager = useShareManager(loadDashboardData);
 
-  const handleCopyLink = (share: Share) => {
+  const handleCopyLink = async (share: Share) => {
     if (!share.alias?.alias) return;
     const link = `${window.location.origin}/s/${share.alias.alias}`;
 
-    navigator.clipboard.writeText(link);
-    toast.success(t("dashboard.linkCopied"));
+    try {
+      await copyText(link);
+      toast.success(t("dashboard.linkCopied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
   };
 
   useEffect(() => {

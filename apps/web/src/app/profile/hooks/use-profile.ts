@@ -58,6 +58,7 @@ export function useProfile() {
       const response = await getCurrentUser();
 
       setUserData(response.data.user);
+      setUser(response.data.user);
       profileForm.reset({
         firstName: response.data.user.firstName,
         lastName: response.data.user.lastName,
@@ -69,7 +70,7 @@ export function useProfile() {
     } finally {
       setIsLoading(false);
     }
-  }, [t, profileForm]);
+  }, [t, profileForm, setUser]);
 
   const onProfileSubmit = async (data: z.infer<typeof profileSchema>) => {
     const hasChanges = Object.keys(data).some((key) => data[key as keyof typeof data] !== userData[key]);

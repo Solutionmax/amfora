@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import { IconArrowUpRight, IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -34,12 +33,13 @@ export function ResetPasswordForm({
                     type={isPasswordVisible ? "text" : "password"}
                     placeholder={t("resetPassword.form.newPasswordPlaceholder")}
                     disabled={isSubmitting}
-                    className="h-12 rounded-xl bg-background pr-10"
+                    className="h-12 rounded-xl bg-background pe-10"
                   />
                   <button
                     type="button"
                     onClick={onTogglePassword}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={t("resetPassword.form.newPassword")}
+                    className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {isPasswordVisible ? <IconEye size={20} /> : <IconEyeOff size={20} />}
                   </button>
@@ -63,12 +63,13 @@ export function ResetPasswordForm({
                     type={isConfirmPasswordVisible ? "text" : "password"}
                     placeholder={t("resetPassword.form.confirmPasswordPlaceholder")}
                     disabled={isSubmitting}
-                    className="h-12 rounded-xl bg-background pr-10"
+                    className="h-12 rounded-xl bg-background pe-10"
                   />
                   <button
                     type="button"
                     onClick={onToggleConfirmPassword}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={t("resetPassword.form.confirmPassword")}
+                    className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {isConfirmPasswordVisible ? <IconEye size={20} /> : <IconEyeOff size={20} />}
                   </button>
@@ -79,18 +80,10 @@ export function ResetPasswordForm({
           )}
         />
 
-        <Button className="h-12 w-full rounded-full" disabled={isSubmitting} size="lg" type="submit">
-          {isSubmitting ? t("resetPassword.form.resetting") : t("resetPassword.form.submit")}
+        <Button className="h-12 w-full justify-between rounded-xl px-4" disabled={isSubmitting} size="lg" type="submit">
+          <span>{isSubmitting ? t("resetPassword.form.resetting") : t("resetPassword.form.submit")}</span>
+          <IconArrowUpRight className="size-5" />
         </Button>
-
-        <div className="mt-4 text-center">
-          <Link
-            className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
-            href="/login"
-          >
-            {t("resetPassword.form.backToLogin")}
-          </Link>
-        </div>
       </form>
     </Form>
   );

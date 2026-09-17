@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   IconCalendar,
   IconCopy,
@@ -22,6 +22,8 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { createShare, createShareAlias, listFiles, listFolders } from "@/http/endpoints";
+import { copyText } from "@/lib/clipboard";
+import { downloadQrCodeAsPng } from "@/lib/qr-code";
 import { customNanoid } from "@/lib/utils";
 import { getFileIcon } from "@/utils/file-icons";
 
@@ -86,6 +88,8 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
   const [alias, setAlias] = useState(() => generateCustomId());
   const [generatedLink, setGeneratedLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const qrContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen && ((files && files.length > 0) || (folders && folders.length > 0))) {
@@ -212,21 +216,26 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
     }
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(generatedLink);
-    toast.success(t("generateShareLink.copied"));
+  const handleCopyLink = async () => {
+    try {
+      await copyText(generatedLink);
+      toast.success(t("generateShareLink.copied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
   };
 
-  const downloadQRCode = () => {
-    const qrCodeElement = document.getElementById("share-multiple-files-qr-code");
-    if (qrCodeElement) {
-      const canvas = qrCodeElement.querySelector("canvas");
-      if (canvas) {
-        const link = document.createElement("a");
-        link.download = "share-multiple-files-qr-code.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      }
+  const downloadQRCode = async () => {
+    if (isDownloading) return;
+
+    setIsDownloading(true);
+    try {
+      await downloadQrCodeAsPng(qrContainerRef.current, "share-multiple-files-qr-code.png", 250);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+      toast.error(t("common.unexpectedError"));
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -433,15 +442,14 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
               ) : (
                 <>
                   <div className="flex flex-col items-center justify-center">
-                    <div className="p-4 bg-white rounded-lg">
-                      <svg style={{ display: "none" }} /> {/* For SSR safety */}
+                    <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
                       <QRCode
-                        id="share-multiple-files-qr-code"
                         value={generatedLink}
                         size={250}
                         level="H"
                         fgColor="#000000"
                         bgColor="#FFFFFF"
+                        style={{ maxWidth: "100%", height: "auto" }}
                       />
                     </div>
                   </div>
@@ -491,7 +499,7 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
               <Button variant="outline" onClick={handleSuccess}>
                 {t("common.close")}
               </Button>
-              <Button onClick={downloadQRCode}>
+              <Button onClick={downloadQRCode} disabled={isDownloading}>
                 <IconDownload className="h-4 w-4" />
                 {t("qrCodeModal.download")}
               </Button>

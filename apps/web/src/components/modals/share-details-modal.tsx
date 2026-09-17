@@ -30,6 +30,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/ui/loader";
 import { getShare } from "@/http/endpoints";
+import { copyText } from "@/lib/clipboard";
+import { downloadQrCodeAsPng } from "@/lib/qr-code";
 import { getFileIcon } from "@/utils/file-icons";
 import { GenerateShareLinkModal } from "./generate-share-link-modal";
 import { QrCodeModal } from "./qr-code-modal";
@@ -92,6 +94,7 @@ export function ShareDetailsModal({
   const [showQrCodeModal, setShowQrCodeModal] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const qrContainerRef = useRef<HTMLDivElement>(null);
 
   const loadShareDetails = useCallback(async () => {
     if (!shareId) return;
@@ -199,11 +202,15 @@ export function ShareDetailsModal({
     return field === "name" ? share?.name : share?.description;
   };
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     if (share?.alias?.alias) {
       const link = `${window.location.origin}/s/${share.alias.alias}`;
-      navigator.clipboard.writeText(link);
-      toast.success(t("shareDetails.linkCopied"));
+      try {
+        await copyText(link);
+        toast.success(t("shareDetails.linkCopied"));
+      } catch {
+        toast.error(t("common.unexpectedError"));
+      }
     }
   };
 
@@ -214,42 +221,14 @@ export function ShareDetailsModal({
     }
   };
 
-  const downloadQRCode = () => {
+  const downloadQRCode = async () => {
     setIsDownloading(true);
-
-    const svg = document.getElementById("share-details-qr-code");
-    if (!svg) {
-      setIsDownloading(false);
-      return;
-    }
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    const padding = 20;
-    canvas.width = 200 + padding * 2;
-    canvas.height = 200 + padding * 2;
-
-    if (ctx) {
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const img = new Image();
-
-      img.onload = () => {
-        ctx.drawImage(img, padding, padding, 200, 200);
-
-        const link = document.createElement("a");
-        link.download = `${share?.name?.replace(/[^a-z0-9]/gi, "-").toLowerCase() || "share"}-qr-code.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        setIsDownloading(false);
-      };
-
-      img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
-    } else {
+    try {
+      await downloadQrCodeAsPng(qrContainerRef.current, `${share?.name || "share"}-qr-code.png`, 200);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+      toast.error(t("common.unexpectedError"));
+    } finally {
       setIsDownloading(false);
     }
   };
@@ -444,17 +423,18 @@ export function ShareDetailsModal({
                       </div>
                       <div className="flex flex-col items-start justify-start ">
                         <div
+                          ref={qrContainerRef}
                           className="p-2 bg-white rounded-lg cursor-pointer hover:opacity-80 transition-opacity duration-300"
                           onClick={() => setShowQrCodeModal(true)}
                           title={t("shareDetails.clickToEnlargeQrCode", { defaultValue: "Click to enlarge QR Code" })}
                         >
                           <QRCode
-                            id="share-details-qr-code"
                             value={shareLink}
                             size={100}
                             level="H"
                             fgColor="#000000"
                             bgColor="#FFFFFF"
+                            style={{ maxWidth: "100%", height: "auto" }}
                           />
                         </div>
                       </div>

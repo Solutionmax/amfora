@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconCalendar, IconCopy, IconDownload, IconEye, IconLink, IconLock, IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import QRCode from "react-qr-code";
@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { createShare, createShareAlias, listFiles, listFolders } from "@/http/endpoints";
+import { copyText } from "@/lib/clipboard";
+import { downloadQrCodeAsPng } from "@/lib/qr-code";
 import { customNanoid } from "@/lib/utils";
 
 interface File {
@@ -60,6 +62,8 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
   const [alias, setAlias] = useState(() => generateCustomId());
   const [generatedLink, setGeneratedLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const qrContainerRef = useRef<HTMLDivElement>(null);
 
   const item = file || folder;
   const itemType = file ? "file" : "folder";
@@ -178,20 +182,26 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
     }
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(generatedLink);
-    toast.success(t("generateShareLink.copied"));
+  const handleCopyLink = async () => {
+    try {
+      await copyText(generatedLink);
+      toast.success(t("generateShareLink.copied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
   };
 
-  const downloadQRCode = () => {
-    const canvas = document.getElementById("share-item-qr-code") as HTMLCanvasElement;
-    if (canvas) {
-      const link = document.createElement("a");
-      link.download = `share-${itemType}-qr-code.png`;
-      link.href = canvas.toDataURL("image/png");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  const downloadQRCode = async () => {
+    if (isDownloading) return;
+
+    setIsDownloading(true);
+    try {
+      await downloadQrCodeAsPng(qrContainerRef.current, `share-${itemType}-qr-code.png`, 250);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+      toast.error(t("common.unexpectedError"));
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -336,15 +346,14 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
             ) : (
               <>
                 <div className="flex flex-col items-center justify-center">
-                  <div className="p-4 bg-white rounded-lg">
-                    <svg style={{ display: "none" }} /> {/* For SSR safety */}
+                  <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
                     <QRCode
-                      id="share-item-qr-code"
                       value={generatedLink}
                       size={250}
                       level="H"
                       fgColor="#000000"
                       bgColor="#FFFFFF"
+                      style={{ maxWidth: "100%", height: "auto" }}
                     />
                   </div>
                 </div>
@@ -388,7 +397,7 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
               <Button variant="outline" onClick={handleSuccess}>
                 {t("common.close")}
               </Button>
-              <Button onClick={downloadQRCode}>
+              <Button onClick={downloadQRCode} disabled={isDownloading}>
                 <IconDownload className="h-4 w-4" />
                 {t("qrCodeModal.download")}
               </Button>

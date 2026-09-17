@@ -72,7 +72,7 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
   };
 
   return (
-    <section className="flex flex-col items-start gap-4 border-b pb-6 sm:flex-row sm:items-center">
+    <section className="flex flex-col items-start gap-5 rounded-2xl border bg-secondary/30 p-5 sm:flex-row sm:items-center">
       <div className="relative shrink-0">
         {isLoading ? (
           <Skeleton className="w-25 h-25 rounded-full" />
@@ -94,6 +94,7 @@ export function ProfilePicture({ userData, onImageChange, onImageRemove }: Profi
           <DropdownMenuTrigger asChild>
             <Button
               size="icon"
+              aria-label={t("profile.picture.title")}
               className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-primary text-primary-foreground"
               variant="default"
               disabled={isLoading}

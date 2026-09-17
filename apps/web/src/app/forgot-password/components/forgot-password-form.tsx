@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -33,18 +33,10 @@ export function ForgotPasswordForm({ form, onSubmit }: ForgotPasswordFormProps) 
           )}
         />
 
-        <Button className="h-12 w-full rounded-full" disabled={isSubmitting} size="lg" type="submit">
-          {isSubmitting ? t("forgotPassword.sending") : t("forgotPassword.submit")}
+        <Button className="h-12 w-full justify-between rounded-xl px-4" disabled={isSubmitting} size="lg" type="submit">
+          <span>{isSubmitting ? t("forgotPassword.sending") : t("forgotPassword.submit")}</span>
+          <IconArrowUpRight className="size-5" />
         </Button>
-
-        <div className="mt-4 text-center">
-          <Link
-            className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
-            href="/login"
-          >
-            {t("forgotPassword.backToLogin")}
-          </Link>
-        </div>
       </form>
     </Form>
   );

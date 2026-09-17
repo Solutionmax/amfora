@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconCopy, IconDownload } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import QRCode from "react-qr-code";
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Share } from "@/http/endpoints/shares/types";
+import { copyText } from "@/lib/clipboard";
+import { downloadQrCodeAsPng } from "@/lib/qr-code";
 import { customNanoid } from "@/lib/utils";
 
 interface GenerateShareLinkModalProps {
@@ -35,6 +37,7 @@ export function GenerateShareLinkModal({
   const [generatedLink, setGeneratedLink] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const qrContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (shareId && share?.alias?.alias) {
@@ -65,54 +68,23 @@ export function GenerateShareLinkModal({
     }
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(generatedLink);
-    toast.success(t("generateShareLink.copied"));
+  const handleCopyLink = async () => {
+    try {
+      await copyText(generatedLink);
+      toast.success(t("generateShareLink.copied"));
+    } catch {
+      toast.error(t("common.unexpectedError"));
+    }
   };
 
-  const downloadQRCode = () => {
+  const downloadQRCode = async () => {
     setIsDownloading(true);
-
-    // Get the SVG element
-    const svg = document.getElementById("share-link-qr-code");
-    if (!svg) {
-      setIsDownloading(false);
-      return;
-    }
-
-    // Create a canvas
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    // Set dimensions (with some padding)
-    const padding = 20;
-    canvas.width = 256 + padding * 2;
-    canvas.height = 256 + padding * 2;
-
-    // Fill white background
-    if (ctx) {
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Convert SVG to data URL
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const img = new Image();
-
-      img.onload = () => {
-        // Draw the image in the center of the canvas with padding
-        ctx.drawImage(img, padding, padding, 256, 256);
-
-        // Create a download link
-        const link = document.createElement("a");
-        link.download = `${share?.name?.replace(/[^a-z0-9]/gi, "-").toLowerCase() || "share"}-qr-code.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        setIsDownloading(false);
-      };
-
-      img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
-    } else {
+    try {
+      await downloadQrCodeAsPng(qrContainerRef.current, `${share?.name || "share"}-qr-code.png`, 200);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+      toast.error(t("common.unexpectedError"));
+    } finally {
       setIsDownloading(false);
     }
   };
@@ -145,14 +117,14 @@ export function GenerateShareLinkModal({
               })}
             </p>
             <div className="flex flex-col items-center justify-center">
-              <div className="p-4 bg-white rounded-lg">
+              <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
                 <QRCode
-                  id="share-link-qr-code"
                   value={generatedLink}
                   size={200}
                   level="H"
                   fgColor="#000000"
                   bgColor="#FFFFFF"
+                  style={{ maxWidth: "100%", height: "auto" }}
                 />
               </div>
             </div>

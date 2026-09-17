@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { copyText } from "@/lib/clipboard";
 
 interface EmbedCodeDisplayProps {
   imageUrl: string;
@@ -34,11 +36,12 @@ export function EmbedCodeDisplay({ imageUrl, fileName, fileId }: EmbedCodeDispla
 
   const copyToClipboard = async (text: string, type: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      await copyText(text);
       setCopiedType(type);
       setTimeout(() => setCopiedType(null), 2000);
     } catch (error) {
       console.error("Failed to copy:", error);
+      toast.error(t("common.unexpectedError"));
     }
   };
 

@@ -26,17 +26,17 @@ export default function LoginPage() {
     <div className="grid min-h-screen bg-background lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
       <aside className="relative hidden overflow-hidden border-r bg-[#0b1a2a] lg:block">
         <img
-          src="/art/terrace.jpg"
+          src="/art/amfora-glass.webp"
           alt=""
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[30%_center]"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_center]"
         />
         <div className="absolute inset-0 bg-[#071321]/65" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#071321] via-transparent to-[#071321]/30" />
         <div className="relative flex h-full flex-col justify-between p-12 text-white xl:p-16">
           <div className="flex items-center gap-3">
             {appLogo ? (
-              <img alt="" className="h-9 w-9 rounded object-contain" src={appLogo} />
+              <img alt="" className="h-9 w-9 rounded-lg bg-white/95 p-1 object-contain" src={appLogo} />
             ) : (
               <AmphoraMark className="h-9 w-9 text-white" />
             )}
@@ -68,17 +68,17 @@ export default function LoginPage() {
       <div className="relative flex min-h-screen flex-col bg-background">
         <div className="relative h-36 overflow-hidden lg:hidden">
           <img
-            src="/art/terrace.jpg"
+            src="/art/amfora-glass.webp"
             alt=""
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover object-[30%_center]"
+            className="absolute inset-0 h-full w-full object-cover object-[50%_center]"
           />
           <div className="absolute inset-0 bg-[#071321]/60" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#071321]/20 to-[#071321]/80" />
           <div className="relative flex h-full items-end px-6 pb-5 sm:px-12">
             <div className="flex min-w-0 items-center gap-2.5 text-white">
               {appLogo ? (
-                <img alt="" className="h-8 w-8 shrink-0 rounded object-contain" src={appLogo} />
+                <img alt="" className="h-8 w-8 shrink-0 rounded-lg bg-white/95 p-1 object-contain" src={appLogo} />
               ) : (
                 <AmphoraMark className="h-8 w-8 shrink-0 text-white" />
               )}

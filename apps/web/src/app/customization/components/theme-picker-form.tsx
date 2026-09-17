@@ -42,20 +42,30 @@ export function ThemePickerForm() {
               <button
                 key={themeOption.value}
                 onClick={() => handleThemeSelect(themeOption.value)}
-                className={`group relative rounded-lg border p-3 text-left transition-colors ${
+                aria-pressed={theme === themeOption.value}
+                className={`group relative rounded-2xl border p-4 text-left transition-colors ${
                   theme === themeOption.value
                     ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                     : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
                 }`}
                 type="button"
               >
+                <div
+                  className={`mb-4 flex h-20 gap-2 overflow-hidden rounded-lg border p-2 ${themeOption.value === "dark" ? "border-slate-600 bg-slate-900" : "border-slate-200 bg-slate-50"}`}
+                  aria-hidden="true"
+                >
+                  <div className="w-1/4 rounded bg-[#071827]" />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <div className="h-2 w-2/3 rounded bg-sky-500" />
+                    <div
+                      className={`flex-1 rounded ${themeOption.value === "dark" ? "bg-slate-700" : "bg-white shadow-sm"}`}
+                    />
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <IconComponent className="size-5 shrink-0 text-muted-foreground" />
                   <span className="min-w-0">
-                    <span className="block text-sm font-medium">{themeOption.name}</span>
-                    <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                      {themeOption.description}
-                    </span>
+                    <span className="block text-sm font-medium">{t(`theme.${themeOption.value}`)}</span>
                   </span>
                 </div>
               </button>
