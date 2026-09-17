@@ -44,6 +44,18 @@ if other sites have changed since that backup.
 
 The glass amphora is the original Amfora artwork already used by the app.
 Screenshots are real app captures with demo data in an isolated installation.
-Bricolage Grotesque and Plus Jakarta Sans are self-hosted; their SIL OFL license
+Archivo, Public Sans and JetBrains Mono are self-hosted; their SIL OFL license
 files live beside the font assets. Application and bundled-program attribution
 is available at `/LICENSE`, `/NOTICE` and `/licenses/AGPL-3.0.txt`.
+
+
+## Legal and privacy notice
+
+`/legal.html` identifies the operator and explains technical request data, email
+contact, infrastructure providers, cookie behaviour and the distinction between
+this website and self-hosted Amfora installations. All HTML footers link to it.
+Contact links use email; no contact form, analytics or payment service is embedded.
+
+Review this notice when enabling analytics, forms, checkout or new providers.
+Retention currently uses purpose-based criteria; confirm operational retention
+settings and enquiry handling before replacing these with exact periods.

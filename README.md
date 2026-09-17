@@ -16,10 +16,14 @@
   <a href="https://amfora.solutionmax.net">Website</a> ·
   <a href="https://amfora.solutionmax.net/docs/">Documentation</a> ·
   <a href="https://amfora.solutionmax.net/#install">Install</a> ·
-  <a href="LICENSE">Licence</a>
+  <a href="#what-is-in-the-box">Features</a> ·
+  <a href="LICENSE">Licence</a> ·
+  <a href="https://amfora.solutionmax.net/legal.html">Legal &amp; privacy</a>
 </p>
 
 # Amfora
+
+**Self-hosted file sharing. Send, receive and keep control.**
 
 Amfora is a self-hosted workspace for sending and receiving files. Upload files
 to storage you control, turn them into a guarded share, or give someone a
@@ -85,17 +89,16 @@ set by its owner.
 The sign-in screen supports password authentication, password recovery, and
 two-factor authentication when it is enabled for the account.
 
-## Workspace features
+## What is in the box
 
-- folders, file management, downloads, and shares;
-- public send and receive links with password, expiry, view, size, and type
-  controls, plus recipient email notifications;
-- QR code export for shares;
-- user invitations, roles, deactivation, profile settings, trusted devices,
-  and TOTP two-factor authentication with backup codes;
-- application branding controls for the name, logo, accent colour, font,
-  corner radius, and default language; and
-- optional OAuth2/OIDC sign-in providers configured by an administrator.
+| | |
+|---|---|
+| **Workspace** | Files, folders, downloads and shares, with a dashboard for recent activity and storage usage. |
+| **Send files** | Download links with optional passwords, expiry dates, view limits, recipient email notifications and QR codes. |
+| **Collect files** | Upload requests with optional password, expiry, file count, size and type limits. Senders do not need an account. |
+| **Storage** | Bundled MinIO or an external S3-compatible provider, on infrastructure you control. |
+| **Branding** | Application name, logo, accent colour, font, corner radius and default language. |
+| **Access** | User invitations, roles, deactivation, trusted devices and TOTP two-factor authentication with backup codes. Optional OAuth2/OIDC sign-in. |
 
 ## Run the private source branch
 
@@ -212,3 +215,15 @@ bundled `minio` and `mc` programs are separate, unmodified AGPL-3.0 programs
 redistributed with the image. See [NOTICE](NOTICE) and
 [`LICENSES/AGPL-3.0.txt`](LICENSES/AGPL-3.0.txt) for attribution and source
 information.
+
+---
+
+<sub>Amfora — a <a href="https://solutionmax.net/">SolutionMAX</a> product ·
+<a href="https://amfora.solutionmax.net/">Website</a> ·
+<a href="https://amfora.solutionmax.net/docs/">Documentation</a> ·
+<a href="https://amfora.solutionmax.net/legal.html">Legal &amp; privacy</a></sub>
+
+## Support the work
+
+Built and maintained by [SolutionMAX](https://solutionmax.net/).
+If Amfora helps your team, you can [support the work](https://buymeacoffee.com/solutionmax).
