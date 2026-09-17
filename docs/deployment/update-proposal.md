@@ -1,30 +1,29 @@
-# Amfora update proposal
+# Amfora updates — update-only proposal
 
-Status: feasibility review, not an implemented updater.
+Status: feasibility review, not an implemented updater. User decision: updates only, no automatic backups or backup prerequisite.
 
-## Existing behavior
+## Current implementation
 
-Amfora is a Docker application with SQLite and bundled MinIO data in a persistent mount, or external S3 storage. Startup applies database schema changes. The current CI builds and tests an image but does not publish releases. The build wrapper can explicitly push images; a tested release pipeline is still needed. The website installation command builds from the maintained private branch and requires authenticated source access.
+Amfora runs in Docker, with SQLite and bundled storage on a persistent mount or external S3. Startup applies schema changes. CI tests/builds images but does not publish a release channel. The private-source installation command builds locally.
 
-Pharos checks a signed release manifest and exposes current/latest version information. Its shared-hosting installation can replace its own files; Docker installations are managed on the host. Amfora should follow the Docker model, not copy the PHP archive updater.
+Pharos separates its shared-hosting file updater from host-managed Docker updates. Amfora should use the Docker approach.
 
-## Recommended first version
+## Proposed update flow
 
-1. Publish tested, versioned images and release notes through a controlled release workflow. Pin deployments to an immutable image digest. Authenticate private GHCR pulls on the host; repository and package access are separate concerns.
-2. Add an administrator-only Updates page: installed version, latest compatible version, release notes, last check and explicit unavailable/unauthorized states. Check a signed release manifest with a pinned verification key; no arbitrary image URLs from the browser.
-3. Start with an operator-run host update command. Validate image/manifest, disk space, Docker/Compose versions and supported installation layout. Acquire a lock, download before downtime, drain uploads and stop writes, then take a consistent database/configuration/storage backup. External S3 needs its own coordinated versioning/snapshot plan.
-4. Replace only the Amfora service, apply migrations, and check both application and storage health. Keep the previous image and matching backup. If migrations changed data, reverting only the image is insufficient: restore the compatible database/configuration/storage snapshot before reopening writes. Test failed migrations and failed health checks in staging.
-5. Add an optional narrowly scoped host worker for an admin-triggered update after the command is proven. Use authenticated, fixed operations and persist progress across container restarts. The web app must not get the Docker socket or arbitrary host command execution. Scheduled updates should be opt-in with a maintenance window.
+1. Publish tested versioned images and a signed release manifest containing an immutable image digest, compatibility information and release notes. Keep registry credentials on the host while images remain private.
+2. Show installed/latest versions, release notes and check status in an administrator-only Updates page.
+3. On an explicit update request, a narrowly scoped host updater acquires a lock, verifies the release, checks disk space and compatibility, and downloads the image before interrupting service.
+4. Wait for active transfers or let the administrator choose a maintenance window. Replace only the Amfora service using its existing configuration and data mounts. No snapshots, database copies, storage backups or backup jobs are created.
+5. Apply supported migrations and check application/storage health. Report completion or the exact failed stage. Keep the previous image for diagnostics or a compatible image-only rollback; do not promise data rollback. If a migration changes data incompatibly, recovery requires a forward fix or a separately operator-managed recovery process.
 
-## Before enabling automatic updates
+Start with a host command, then connect the proven operation to the admin button. Do not mount the Docker socket into the web app or accept arbitrary shell commands/image URLs. Scheduled updates remain opt-in.
 
-Prove fresh installation, upgrade with existing users/files/shares, transfer interruption handling, backup restore, concurrent update refusal, invalid signatures, unavailable registry, disk exhaustion, failure recovery and data-preserving rollback. Support the official Compose layout first; custom installations stay operator-managed. Retain only bounded build cache and a documented number of backups/images; never prune user volumes.
+## Verification before enabling
+
+Test a fresh installation and an upgrade with existing users/files/shares; interrupted transfers; concurrent update refusal; signature validation; unavailable registry; low disk; failed migration; unhealthy replacement; and compatibility-gated image rollback. Assert that the updater makes no backups, preserves configured data mounts and never prunes user volumes. Support the official Compose layout first, with custom installations operator-managed.
 
 ## Scope of this change
 
-Website install/source/support links only. No update worker, release publishing, automatic updates or application deployment was enabled.
+The website now leads with installation, and GitHub has a branded README banner. This document replaces the earlier backup-based proposal. No updater, automatic update schedule or image publishing is enabled yet.
 
-References: Pharos `app/Services/Updater.php` and `SelfUpdater.php`; Amfora `infra/server-start.sh`, `infra/build-docker.sh`, `docker-compose.yaml` and `.github/workflows/ci.yml`.
-
-- https://docs.docker.com/engine/security/
-- https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+References: Pharos `app/Services/Updater.php`; Amfora `infra/server-start.sh`, `infra/build-docker.sh`, `docker-compose.yaml` and `.github/workflows/ci.yml`.

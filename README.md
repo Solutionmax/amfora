@@ -1,3 +1,11 @@
+<p align="center"><img src="docs/images/amfora-banner.svg" alt="Amfora — File sharing. On your terms. Self-hosted by SolutionMAX." width="100%" /></p>
+
+<p align="center">
+  <a href="https://amfora.solutionmax.net/#install"><img src="https://img.shields.io/badge/Install-Amfora-1757e8?style=for-the-badge" alt="Install Amfora" /></a>
+  <a href="https://amfora.solutionmax.net/docs/"><img src="https://img.shields.io/badge/Read-the_docs-112638?style=for-the-badge" alt="Read the documentation" /></a>
+  <a href="https://buymeacoffee.com/solutionmax"><img src="https://img.shields.io/badge/Buy_me_a_coffee-SolutionMAX-ffdd00?style=for-the-badge" alt="Buy Me a Coffee" /></a>
+</p>
+
 # Amfora
 
 Amfora is a self-hosted workspace for sending and receiving files. Upload files
