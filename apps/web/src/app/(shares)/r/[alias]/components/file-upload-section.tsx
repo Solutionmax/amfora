@@ -383,7 +383,7 @@ export function FileUploadSection({
           {...getRootProps()}
           className={cn(
             getDropzoneStyles(),
-            "group relative overflow-hidden border-primary/25 bg-primary/[0.035] p-5 text-center hover:border-primary hover:bg-primary/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:p-6"
+            "group relative overflow-hidden border-primary/35 bg-primary/[0.045] p-5 text-center hover:border-primary hover:bg-primary/[0.09] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:p-6"
           )}
         >
           <input {...getInputProps()} />
@@ -481,7 +481,7 @@ export function FileUploadSection({
           type="button"
           onClick={handleUpload}
           disabled={!canUpload}
-          className="h-12 w-full justify-between rounded-xl px-4"
+          className="h-13 w-full justify-between rounded-lg px-4 shadow-lg shadow-primary/15"
           size="lg"
           variant="default"
         >

@@ -2,8 +2,7 @@
 
 import { ReactNode } from "react";
 import Link from "next/link";
-import { IconArrowDownLeft, IconArrowUpRight, IconClock, IconLock, IconNorthStar } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+import { IconArrowDownLeft, IconArrowUpRight, IconFileText, IconFolder, IconNorthStar } from "@tabler/icons-react";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
@@ -26,11 +25,10 @@ export function TransferShell({
   children: ReactNode;
 }) {
   const { appName, appLogo } = useAppInfo();
-  const t = useTranslations();
   const Arrow = direction === "upload" ? IconArrowUpRight : IconArrowDownLeft;
 
   return (
-    <div className={styles.shell}>
+    <div className={styles.shell} data-direction={direction}>
       <header className={styles.header}>
         <Link href="/" className="flex min-w-0 items-center gap-3 text-foreground">
           {appLogo ? (
@@ -53,40 +51,39 @@ export function TransferShell({
       <main className={styles.main}>
         <section className={styles.hero}>
           <div className={styles.headline}>
-            <p className="mb-5 flex items-center gap-3 font-mono text-[10px] font-medium uppercase tracking-[0.24em] text-primary">
-              <span className="h-px w-7 bg-primary/50" />
+            <p className={styles.eyebrow}>
+              <Arrow className="size-4" aria-hidden="true" />
               {label}
             </p>
             <h1 className={styles.title}>{title}</h1>
             <p className={styles.caption}>{caption}</p>
           </div>
-          <div className={styles.journey} aria-hidden="true">
-            <div className={styles.journeyStep}>
-              <span className={styles.journeyIcon}>
-                <Arrow className="size-5" strokeWidth={1.7} />
-              </span>
-              <span>{label}</span>
+          <div className={styles.artwork} aria-hidden="true">
+            <div className={styles.orbit} />
+            <div className={styles.artworkMark}>{appLogo ? <img src={appLogo} alt="" /> : <AmphoraMark />}</div>
+            <div className={styles.fileTile}>
+              <IconFileText strokeWidth={1.3} />
+              <span />
+              <span />
             </div>
-            <span className={styles.journeyLine} />
-            <div className={styles.journeyStep}>
-              <span className={styles.journeyIcon}>
-                <IconLock className="size-5" strokeWidth={1.7} />
-              </span>
-              <span>{t("share.sealed")}</span>
+            <div className={styles.folderTile}>
+              <IconFolder strokeWidth={1.3} />
             </div>
-            <span className={styles.journeyLine} />
-            <div className={styles.journeyStep}>
-              <span className={styles.journeyIcon}>
-                <IconClock className="size-5" strokeWidth={1.7} />
-              </span>
-              <span>{t("home.visual.expires")}</span>
+            <div className={styles.directionBadge}>
+              <Arrow strokeWidth={1.5} />
             </div>
+            <div className={styles.artworkRule} />
+          </div>
+          <div className={styles.signature}>
+            <span>{appName}</span>
+            <span className={styles.signatureLine} />
+            <Arrow className="size-5 shrink-0" aria-hidden="true" />
           </div>
         </section>
 
         <section className={styles.workspace} aria-label={label}>
-          <div className="h-1 w-16 rounded-full bg-primary/70" aria-hidden="true" />
-          <div className="mt-7">{children}</div>
+          <div className={styles.workspaceAccent} aria-hidden="true" />
+          {children}
         </section>
       </main>
 
