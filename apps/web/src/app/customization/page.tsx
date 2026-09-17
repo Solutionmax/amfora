@@ -27,7 +27,7 @@ function CustomizationPreview() {
   const { theme } = useTheme();
 
   return (
-    <aside className="order-last rounded-2xl border bg-card p-5 shadow-sm lg:sticky lg:top-6 lg:self-start">
+    <aside className="order-last min-w-0 rounded-2xl border bg-card p-5 shadow-sm lg:sticky lg:top-6 lg:self-start">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
@@ -99,7 +99,7 @@ export default function CustomizationPage() {
           onSelect={setActiveId}
           label={t("customization.pageTitle")}
         >
-          <div className="grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="grid min-w-0 max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
             <div className="min-w-0">{panels[activeId]}</div>
             <CustomizationPreview />
           </div>
