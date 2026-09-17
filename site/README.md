@@ -18,6 +18,7 @@ Open http://127.0.0.1:18080. No build step or dependencies are needed.
 - `assets/site.css`: responsive product design in the SolutionMAX visual family and self-hosted font faces.
 - `assets/site.js`: mobile navigation, keyboard-accessible walkthrough, example-link copying, docs search and code copying.
 - `assets/screenshots/`: actual app captures using synthetic sample content.
+- `legal.html`: operator details, website privacy, cookies and self-hosted installation responsibilities.
 - `404.html`: missing-page response, wired by Caddy in production.
 
 The repository remains private. The product website is publicly reachable for
@@ -26,4 +27,6 @@ robots.txt disallow rule. These are indexing controls, not access controls.
 No application database, credentials or uploaded user files belong in this tree.
 
 For deployment and rollback see `docs/deployment/product-website.md` at the
-repository root. The site uses no analytics, third-party font requests or cookies.
+repository root. The static pages use no analytics, third-party font requests or application cookies.
+Cloudflare may set strictly necessary cookies for security challenges. The public
+privacy notice distinguishes this website from independently operated installations.

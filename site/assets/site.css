@@ -1,30 +1,31 @@
 @font-face {
-  font-family: Bricolage;
-  src: url("/assets/fonts/bricolage-grotesque-latin.woff2") format("woff2");
+  font-family: Archivo;
+  src: url("/assets/fonts/archivo-latin.woff2") format("woff2");
   font-weight: 200 800;
   font-display: swap;
 }
 @font-face {
-  font-family: Jakarta;
-  src: url("/assets/fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+  font-family: PublicSans;
+  src: url("/assets/fonts/public-sans-latin.woff2") format("woff2");
   font-weight: 200 800;
   font-display: swap;
 }
 :root {
   --ink: #10202b;
   --muted: #53636c;
-  --blue: #1757e8;
+  --blue: #0079d2;
+  --link: #0064ad;
   --paper: #f5f6f2;
   --line: #dce1dd;
-  --display: Bricolage, Arial, sans-serif;
-  --body: Jakarta, Arial, sans-serif;
+  --display: Archivo, Arial, sans-serif;
+  --body: PublicSans, Arial, sans-serif;
 }
 * {
   box-sizing: border-box;
 }
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 35px;
+  scroll-padding-top: 90px;
 }
 body {
   margin: 0;
@@ -88,14 +89,14 @@ h3 {
 }
 em {
   font-style: normal;
-  color: var(--blue);
+  color: var(--link);
 }
 [hidden] {
   display: none !important;
 }
 .wrap {
   max-width: 1320px;
-  width: calc(100% - 100px);
+  width: calc(100% - 42px);
   margin-inline: auto;
 }
 .eyebrow,
@@ -142,10 +143,10 @@ em {
 .brand svg {
   width: 34px;
   height: 43px;
-  color: var(--blue);
+  color: var(--link);
 }
 .brand-dot {
-  color: var(--blue);
+  color: var(--link);
 }
 .site-header nav {
   display: flex;
@@ -155,7 +156,7 @@ em {
   font-weight: 600;
 }
 .site-header nav a:hover {
-  color: var(--blue);
+  color: var(--link);
 }
 .nav-source {
   display: flex;
@@ -218,7 +219,7 @@ em {
   box-shadow: 0 5px 15px #1757e817;
 }
 .button.primary:hover {
-  background: #1348c2;
+  background: #005ea6;
 }
 .button.dark {
   background: var(--ink);
@@ -307,7 +308,7 @@ em {
 }
 .flow-modes button[aria-selected="true"] {
   background: white;
-  color: var(--blue);
+  color: var(--link);
   box-shadow: 0 1px 5px #1a334619;
 }
 .flow-panel {
@@ -424,7 +425,7 @@ em {
 }
 .demo-steps button[aria-current="step"] {
   background: var(--blue);
-  border-color: var(--blue);
+  border-color: var(--link);
   color: white;
 }
 .demo-steps > span {
@@ -517,7 +518,7 @@ em {
 }
 .recipient-icon {
   font-size: 23px;
-  color: var(--blue);
+  color: var(--link);
 }
 .recipient-card > strong {
   font-family: var(--display);
@@ -562,7 +563,7 @@ em {
 }
 .request-icon {
   font-size: 26px;
-  color: var(--blue);
+  color: var(--link);
   line-height: 1;
   margin-bottom: 12px;
 }
@@ -603,7 +604,7 @@ em {
 }
 .demo-drop > span {
   font-size: 22px;
-  color: var(--blue);
+  color: var(--link);
   display: block;
   line-height: 1;
   margin-bottom: 8px;
@@ -781,7 +782,7 @@ em {
   letter-spacing: 0;
 }
 .frame-top a:hover {
-  color: var(--blue);
+  color: var(--link);
 }
 .window-dots {
   letter-spacing: 3px;
@@ -930,7 +931,7 @@ em {
   justify-content: space-between;
 }
 .diagram-person div > span {
-  color: var(--blue);
+  color: var(--link);
   font-size: 20px;
 }
 .diagram-connector {
@@ -1058,7 +1059,7 @@ details > p {
   padding: 0 25px 24px 0;
 }
 details a {
-  color: var(--blue);
+  color: var(--link);
   text-decoration: underline;
 }
 .closing {
@@ -1098,8 +1099,8 @@ details a {
   margin-top: 24px;
 }
 .site-footer {
-  background: #0c1c28;
-  color: #b5c7d3;
+  background: #0a1729;
+  color: #b8c5d5;
   padding-top: 45px;
 }
 .site-footer .brand {
@@ -1285,13 +1286,13 @@ details a {
   gap: 10px;
 }
 .docs-quicklinks a:hover {
-  border-color: var(--blue);
+  border-color: var(--link);
 }
 .docs-content section {
   border-bottom: 1px solid var(--line);
   margin-bottom: 40px;
   padding-bottom: 42px;
-  scroll-margin-top: 30px;
+  scroll-margin-top: 90px;
 }
 .docs-content .section-kicker {
   font-size: 9px;
@@ -1400,7 +1401,7 @@ details a {
   margin: 10px 0 22px;
 }
 .docs-content [id] {
-  scroll-margin-top: 30px;
+  scroll-margin-top: 90px;
 }
 .docs-empty {
   padding: 30px;
@@ -2049,42 +2050,44 @@ details a {
 
 /* Product presentation: the same visual family as the SolutionMAX products. */
 :root {
-  --paper: #f8faff;
-  --ink: #111d2e;
-  --muted: #52617a;
-  --line: #e1e8f2;
+  --paper: #fbfcfe;
+  --ink: #0e1726;
+  --muted: #475467;
+  --line: #e8edf4;
 }
 .wrap {
-  max-width: 1200px;
+  max-width: 1240px;
 }
 .site-header {
-  background: #ffffffed;
+  background: #fbfcfef5;
+  position: sticky;
+  top: 0;
 }
 .header-inner {
-  min-height: 78px;
+  min-height: 58px;
 }
 .brand {
-  font-size: 29px;
+  font-size: 23px;
   font-weight: 750;
 }
 .brand svg {
-  width: 29px;
-  height: 36px;
+  width: 25px;
+  height: 30px;
 }
 .site-header nav {
   font-size: 13px;
-  gap: 28px;
+  gap: 0;
 }
 .site-header .nav-contact {
   background: var(--blue);
   color: white;
   border: 0;
   padding: 10px 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px #1757e820;
+  border-radius: 4px;
+  box-shadow: none;
 }
 .site-header .nav-contact:hover {
-  background: #1045c5;
+  background: #005ea6;
   color: white;
 }
 .product-site h2 {
@@ -2094,16 +2097,16 @@ details a {
   font-weight: 680;
 }
 .product-site .eyebrow {
-  color: var(--blue);
+  color: var(--link);
 }
 .product-site .button {
-  border-radius: 11px;
-  font-size: 13px;
+  border-radius: 4px;
+  font-size: 14px;
   min-height: 52px;
   gap: 16px;
 }
 .product-site .primary {
-  box-shadow: 0 7px 20px #1757e824;
+  box-shadow: none;
 }
 .product-site .secondary {
   background: #fff;
@@ -2116,9 +2119,7 @@ details a {
 }
 .product-hero {
   overflow: clip;
-  background:
-    radial-gradient(ellipse at 95% 5%, #dcedff 0, transparent 43%),
-    radial-gradient(ellipse at 0 90%, #ece6ff 0, transparent 45%), #f9fbff;
+  background: var(--paper);
 }
 .product-hero-grid {
   display: grid;
@@ -2151,10 +2152,8 @@ details a {
 .product-pitch h1 em,
 .product-site .section-head h2 em,
 .product-site .hosting-grid h2 em {
-  color: var(--blue);
-  background: linear-gradient(110deg, #148ee7 0%, #1757e8 60%, #7546ee 100%);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--link);
+  background: none;
 }
 .product-lead {
   font-size: 19px;
@@ -2185,7 +2184,7 @@ details a {
 }
 .product-assurances li::before {
   content: "✓";
-  color: var(--blue);
+  color: var(--link);
   margin-right: 6px;
 }
 .product-visual {
@@ -2203,7 +2202,7 @@ details a {
   margin-bottom: 15px;
 }
 .visual-topline > span:first-child {
-  color: var(--blue);
+  color: var(--link);
 }
 .hero-app-frame {
   display: block;
@@ -2248,7 +2247,7 @@ details a {
   font-weight: 700;
 }
 .product-visual figcaption a {
-  color: var(--blue);
+  color: var(--link);
   white-space: nowrap;
 }
 .handoff-note {
@@ -2271,7 +2270,7 @@ details a {
   flex-shrink: 0;
   border-radius: 10px;
   background: #edf4ff;
-  color: var(--blue);
+  color: var(--link);
   font-size: 22px;
 }
 .handoff-note strong {
@@ -2305,7 +2304,7 @@ details a {
 }
 .product-ribbon .wrap > span:not(:first-child)::before {
   content: "↗";
-  color: var(--blue);
+  color: var(--link);
   padding-right: 12px;
 }
 .product-site .section {
@@ -2451,8 +2450,7 @@ details a {
   line-height: 1.9;
 }
 .product-site .closing {
-  background:
-    radial-gradient(ellipse at top right, #4367f9, transparent 70%), #1549c9;
+  background: #0e2036;
 }
 .product-site .closing h2 {
   font-size: clamp(43px, 5vw, 70px);
@@ -2464,13 +2462,13 @@ details a {
   box-shadow: 0 6px 18px #08226530;
 }
 .product-site .site-footer {
-  background: #fff;
+  background: #0a1729;
 }
 .product-site .footer-bottom {
   font-size: 11px;
 }
 .product-site .footer-bottom a:hover {
-  color: var(--blue);
+  color: white;
 }
 @media (max-width: 1100px) {
   .product-hero-grid {
@@ -2660,7 +2658,7 @@ details a {
   padding-block: 48px;
 }
 .product-pitch h1 {
-  font-size: clamp(43px, 4.2vw, 60px);
+  font-size: clamp(40px, 4.2vw, 60px);
   margin-top: 20px;
 }
 .product-lead {
@@ -2687,8 +2685,287 @@ details a {
 }
 .site-header .nav-github:hover {
   background: #edf3ff;
-  color: var(--blue);
+  color: var(--link);
 }
 .nav-github svg {
   display: block;
+}
+
+/* Shared SolutionMAX typography, navigation and legal pages. */
+@font-face {
+  font-family: JetBrainsMono;
+  src: url("/assets/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  font-weight: 400 500;
+  font-display: swap;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+.site-header nav > a {
+  padding: 6px 14px;
+  border-left: 1px solid var(--line);
+  font-weight: 400;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.site-header nav > a:first-child {
+  border-left: 0;
+}
+.site-header .nav-github {
+  width: auto;
+  border-radius: 0;
+  gap: 6px;
+}
+.site-header .nav-contact {
+  margin-left: 22px;
+  font-weight: 600;
+  color: white;
+}
+.eyebrow,
+.footer-grid h2,
+.footer-bottom {
+  font-family: JetBrainsMono, monospace;
+}
+.product-pitch h1 {
+  letter-spacing: -0.04em;
+}
+.product-description {
+  font-size: 17px;
+  line-height: 1.75;
+}
+.product-site .section-head h2,
+.product-site .hosting-grid h2,
+.product-site .workspace-heading h2,
+.product-site .faq-grid h2 {
+  font-size: clamp(32px, 3.5vw, 46px);
+}
+.product-site .closing h2 {
+  font-size: clamp(36px, 4vw, 54px);
+}
+.product-site .closing .eyebrow {
+  color: #a9c9e6;
+}
+.product-visual {
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(140deg, #e8f3fc, #eef8f5);
+}
+.product-hero-grid {
+  padding-block: 64px;
+}
+.install-section {
+  background: #f2f6fb;
+  border-block: 1px solid var(--line);
+}
+.install-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: center;
+}
+.install-grid h2 {
+  font-size: clamp(32px, 3.5vw, 46px);
+  margin-block: 18px;
+}
+.install-grid > div > p:not(.eyebrow) {
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.install-grid .hero-install {
+  margin: 0;
+  min-width: 0;
+}
+.hero-install .install-command {
+  font-size: 13px;
+  border-radius: 6px;
+}
+.hero-install .install-requirements {
+  font-size: 12px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 36px;
+  padding-bottom: 40px;
+}
+.footer-grid h2 {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9eb6cf;
+  margin-bottom: 20px;
+}
+.footer-grid a {
+  display: block;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-block: 5px;
+}
+.site-footer a:hover {
+  color: white;
+  text-decoration: underline;
+}
+.site-footer a:focus-visible {
+  outline-color: #8dccff;
+}
+.footer-bottom {
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.footer-bottom a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.closing-grid > div:last-child > .contact-privacy {
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 1.8;
+  color: #b8cce0;
+  margin: 20px 0 0;
+}
+.contact-privacy a {
+  text-decoration: underline;
+}
+.docs-sidebar {
+  top: 86px;
+}
+.legal-layout {
+  max-width: 860px;
+  padding-block: 64px 80px;
+}
+.legal-layout h1 {
+  font-size: clamp(36px, 5vw, 58px);
+  margin-block: 18px;
+}
+.legal-intro {
+  font-size: 17px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.legal-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  border-block: 1px solid var(--line);
+  padding-block: 20px;
+}
+.legal-layout a {
+  color: #0064ad;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.legal-layout section {
+  margin-top: 48px;
+  scroll-margin-top: 90px;
+}
+.legal-layout h2 {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+.legal-layout h3 {
+  font-size: 20px;
+  margin-block: 28px 12px;
+}
+.legal-layout p,
+.legal-layout li {
+  font-size: 15px;
+  line-height: 1.85;
+  margin-block: 12px;
+}
+.legal-details {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 12px 24px;
+  padding: 24px;
+  background: #f2f6fb;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.legal-details dt {
+  font-weight: 600;
+}
+.legal-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .header-inner {
+    gap: 12px;
+  }
+  .site-header nav > a {
+    padding-inline: 8px;
+    font-size: 11px;
+  }
+  .site-header .nav-contact {
+    margin-left: 8px;
+    padding-inline: 12px;
+  }
+}
+@media (max-width: 800px) {
+  .site-header nav {
+    gap: 0;
+    max-height: calc(100dvh - 58px);
+    overflow-y: auto;
+  }
+  .site-header nav > a {
+    border-left: 0;
+    padding: 12px;
+    font-size: 14px;
+  }
+  .site-header .nav-contact {
+    margin: 8px 0 0;
+    justify-content: center;
+  }
+  .site-header .nav-github {
+    justify-content: flex-start;
+  }
+  .install-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .product-hero-grid {
+    padding-block: 40px;
+  }
+  .product-visual {
+    padding: 14px;
+  }
+  .docs-sidebar {
+    top: auto;
+  }
+}
+@media (max-width: 560px) {
+  .footer-grid {
+    gap: 30px 20px;
+  }
+  .footer-grid a {
+    font-size: 13px;
+    padding-block: 7px;
+  }
+  .footer-bottom > span:nth-child(2) {
+    display: inline;
+  }
+  .footer-bottom > a {
+    margin-left: 0;
+  }
+  .legal-details {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 18px;
+  }
+  .legal-details dd {
+    margin-bottom: 12px;
+  }
+  .legal-layout {
+    padding-block: 36px 50px;
+  }
 }
