@@ -26,7 +26,7 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="p-6 gap-0">
         <CardHeader className="flex flex-row items-center justify-between p-0">
-          <div className="flex flex-row items-center gap-8">
+          <div className="flex flex-row items-center gap-3">
             {metadata.icon && React.createElement(metadata.icon, { className: "text-xl text-muted-foreground" })}
             <div className="flex flex-col gap-1">
               <h2 className="text-xl font-semibold">
@@ -93,7 +93,7 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
                 );
               })}
           </div>
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex flex-wrap justify-between items-center gap-3 mt-4">
             <div className="flex">
               {isEmailGroup && form.watch("configs.smtpEnabled") === "true" && (
                 <SmtpTestButton

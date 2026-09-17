@@ -8,8 +8,10 @@ import { GlobalDropZone } from "@/components/general/global-drop-zone";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { Button } from "@/components/ui/button";
+import { QuickAccessCards } from "./components/quick-access-cards";
 import { RecentFiles } from "./components/recent-files";
 import { RecentShares } from "./components/recent-shares";
+import { StorageUsage } from "./components/storage-usage";
 import { useDashboard } from "./hooks/use-dashboard";
 import { DashboardModals } from "./modals/dashboard-modals";
 
@@ -18,6 +20,8 @@ export default function DashboardPage() {
 
   const {
     isLoading,
+    diskSpace,
+    diskSpaceError,
 
     recentFiles,
     recentShares,
@@ -50,7 +54,12 @@ export default function DashboardPage() {
             </div>
           }
         >
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
+            <QuickAccessCards />
+            <div className="max-w-3xl">
+              <StorageUsage diskSpace={diskSpace} diskSpaceError={diskSpaceError} onRetry={loadDashboardData} />
+            </div>
+
             <RecentFiles
               fileManager={fileManager}
               files={recentFiles}

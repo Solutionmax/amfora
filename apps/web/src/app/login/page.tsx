@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
-import { Maxim } from "@/components/brand/maxim";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -17,47 +16,56 @@ import { useLogin } from "./hooks/use-login";
 export default function LoginPage() {
   const t = useTranslations();
   const login = useLogin();
-  const { appName, firstAccess } = useAppInfo();
+  const { appName, appLogo, firstAccess } = useAppInfo();
 
   if (login.isAuthenticated === null || login.isAuthenticated === true) {
     return <LoadingScreen />;
   }
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-[1.1fr_minmax(0,520px)]">
-      {/* The artwork carries the left half; the form keeps the right half quiet. */}
-      <aside className="relative hidden overflow-hidden lg:block">
-        <img src="/art/terrace.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/55 to-foreground/30" />
-
-        <div className="relative flex h-full flex-col justify-between p-12 text-background">
+    <div className="grid min-h-screen bg-background lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
+      <aside className="relative hidden overflow-hidden border-r bg-secondary/45 lg:block">
+        <div className="pointer-events-none absolute -right-40 -top-40 size-[34rem] rounded-full bg-primary/[0.08] blur-3xl" />
+        <div className="relative flex h-full flex-col justify-between p-12">
           <div className="flex items-center gap-3">
-            <AmphoraMark className="h-9 w-9" />
+            {appLogo ? (
+              <img alt="" className="h-9 w-9 rounded object-contain" src={appLogo} />
+            ) : (
+              <AmphoraMark className="h-9 w-9 text-primary" />
+            )}
             <span className="font-display text-2xl font-bold tracking-tight">{appName}</span>
           </div>
 
-          <div className="flex flex-col gap-6">
-            <p className="max-w-md font-display text-5xl font-extrabold leading-[1.02] tracking-tight">
-              {t("home.header.fileSharing")}
-              <span className="block text-background/75">{t("home.header.tagline")}</span>
+          <div className="max-w-xl">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">{t("home.pageTitle")}</p>
+            <p className="mt-5 font-display text-6xl font-extrabold leading-[0.95] tracking-[-0.04em]">
+              {t("home.header.fileSharing")} <span className="text-primary">{t("home.header.tagline")}</span>
             </p>
-            <p className="max-w-sm text-sm leading-relaxed opacity-80">{t("home.privacyMessage")}</p>
+            <p className="mt-7 max-w-md text-base leading-7 text-muted-foreground">{t("home.privacyMessage")}</p>
+            <div className="mt-10 flex max-w-sm items-center gap-4 rounded-2xl border bg-background/75 p-4 shadow-sm">
+              <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <AmphoraMark className="size-5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold">{t("home.points.selfHosted")}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t("share.sealed")}</p>
+              </div>
+            </div>
           </div>
-
-          <div className="opacity-90">
-            <Maxim seed="amfora-login" tone="light" />
-          </div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            {t("home.points.selfHosted")}
+          </p>
         </div>
       </aside>
 
-      <div className="relative flex flex-col">
-        <div className="absolute right-4 top-4 z-50">
+      <div className="relative flex flex-col bg-card/35">
+        <div className="absolute right-6 top-6 z-50">
           <LanguageSwitcher />
         </div>
-        <div className="flex flex-1 items-center justify-center px-6 py-16">
+        <div className="flex flex-1 items-center justify-center px-6 py-20 sm:px-12">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="flex w-full max-w-sm flex-col gap-7"
+            className="flex w-full max-w-sm flex-col gap-8"
             initial={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >

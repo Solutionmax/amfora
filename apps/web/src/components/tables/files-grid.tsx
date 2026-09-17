@@ -299,7 +299,7 @@ export function FilesGrid({
   return (
     <div className="space-y-4">
       {shouldShowBulkActions && (
-        <div className="flex items-center justify-between p-4 bg-muted/30 border rounded-lg">
+        <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-foreground">
               {t("filesTable.bulkActions.selected", { count: selectedItems })}
@@ -455,8 +455,8 @@ export function FilesGrid({
                   <ContextMenuTrigger asChild>
                     <div
                       data-card="true"
-                      className={`relative group border rounded-lg p-3 hover:bg-muted/50 transition-all duration-200 cursor-pointer ${
-                        isSelected ? "ring-2 ring-primary bg-muted/50" : ""
+                      className={`group relative cursor-pointer rounded-xl border border-border/70 bg-card p-3 transition-colors hover:border-primary/40 hover:bg-secondary/30 ${
+                        isSelected ? "bg-primary/5 ring-2 ring-primary" : ""
                       } ${isDragOver && !isBeingDragged ? "ring-2 ring-primary bg-primary/10 scale-105" : ""} ${
                         isDraggedOver ? "opacity-50" : ""
                       } ${
@@ -602,7 +602,7 @@ export function FilesGrid({
                       </div>
 
                       <div className="flex flex-col items-center space-y-3">
-                        <div className="w-16 h-16 flex items-center justify-center bg-muted/30 rounded-lg overflow-hidden">
+                        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-secondary/60">
                           <IconFolder className="h-10 w-10 text-primary" />
                         </div>
                         <div className="w-full space-y-1">
@@ -718,8 +718,8 @@ export function FilesGrid({
                   <ContextMenuTrigger asChild>
                     <div
                       data-card="true"
-                      className={`relative group border rounded-lg p-3 hover:bg-muted/50 transition-all duration-200 cursor-pointer ${
-                        isSelected ? "ring-2 ring-primary bg-muted/50" : ""
+                      className={`group relative cursor-pointer rounded-xl border border-border/70 bg-card p-3 transition-colors hover:border-primary/40 hover:bg-secondary/30 ${
+                        isSelected ? "bg-primary/5 ring-2 ring-primary" : ""
                       } ${isDraggedOver ? "opacity-50 scale-95" : ""} ${
                         isBeingDragged || isAnySelectedItemDragged
                           ? "opacity-40 scale-95 transform rotate-2 border-2 border-primary/50 shadow-lg"
@@ -864,7 +864,7 @@ export function FilesGrid({
                       </div>
 
                       <div className="flex flex-col items-center space-y-3">
-                        <div className="w-16 h-16 flex items-center justify-center bg-muted/30 rounded-lg overflow-hidden">
+                        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-secondary/60">
                           {isImage && previewUrl ? (
                             <img src={previewUrl} alt={file.name} className="object-cover w-full h-full" />
                           ) : (

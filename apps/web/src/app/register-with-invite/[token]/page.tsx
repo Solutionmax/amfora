@@ -8,13 +8,14 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { StaticBackgroundLights } from "@/app/login/components/static-background-lights";
+import { AmphoraMark } from "@/components/brand/amphora-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { Button } from "@/components/ui/button";
 import { DefaultFooter } from "@/components/ui/default-footer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAppInfo } from "@/contexts/app-info-context";
 import { registerWithInvite, validateInviteToken } from "@/http/endpoints/invite";
 
 interface RegisterFormData {
@@ -31,6 +32,7 @@ export default function RegisterWithInvitePage() {
   const router = useRouter();
   const params = useParams();
   const token = params.token as string;
+  const { appName, appLogo } = useAppInfo();
 
   const [isValidating, setIsValidating] = useState(true);
   const [tokenValid, setTokenValid] = useState(false);
@@ -128,23 +130,24 @@ export default function RegisterWithInvitePage() {
 
   if (!tokenValid) {
     return (
-      <div className="relative flex flex-col h-screen">
-        <div className="fixed top-4 right-4 z-50">
+      <div className="relative flex min-h-screen flex-col bg-background">
+        <div className="absolute right-6 top-6 z-50">
           <LanguageSwitcher />
         </div>
-        <div className="container mx-auto max-w-7xl px-6 flex-grow">
-          <StaticBackgroundLights />
-          <div className="relative flex h-full w-full items-center justify-center">
+        <div className="container mx-auto flex flex-grow max-w-5xl items-center px-4 py-20 sm:px-6">
+          <div className="relative flex w-full items-center justify-center">
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="flex w-full max-w-sm flex-col gap-4 rounded-lg bg-background/60 backdrop-blur-md px-8 pb-10 pt-6 shadow-lg border"
+              className="flex w-full max-w-sm flex-col gap-4 rounded-[1.75rem] border bg-card px-8 pb-10 pt-8 shadow-sm"
               initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5 }}
             >
               <div className="text-center">
                 <h1 className="text-2xl font-bold mb-2">{t("registerWithInvite.errors.invalidToken")}</h1>
                 <p className="text-muted-foreground mb-4">{tokenError}</p>
-                <Button onClick={() => router.push("/login")}>{t("forgotPassword.backToLogin")}</Button>
+                <Button className="rounded-lg" onClick={() => router.push("/login")}>
+                  {t("forgotPassword.backToLogin")}
+                </Button>
               </div>
             </motion.div>
           </div>
@@ -155,27 +158,34 @@ export default function RegisterWithInvitePage() {
   }
 
   return (
-    <div className="relative flex flex-col h-screen">
-      <div className="fixed top-4 right-4 z-50">
+    <div className="relative flex min-h-screen flex-col bg-background">
+      <div className="absolute right-6 top-6 z-50">
         <LanguageSwitcher />
       </div>
 
-      <div className="container mx-auto max-w-7xl px-6 flex-grow">
-        <StaticBackgroundLights />
-        <div className="relative flex h-full w-full items-center justify-center">
+      <div className="container mx-auto flex flex-grow max-w-5xl items-center px-4 py-20 sm:px-6">
+        <div className="relative flex w-full items-center justify-center">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="flex w-full max-w-md flex-col gap-6 rounded-lg bg-background/60 backdrop-blur-md px-8 pb-10 pt-6 shadow-lg border"
+            className="flex w-full max-w-md flex-col gap-6 rounded-[1.75rem] border bg-card px-8 pb-10 pt-8 shadow-sm"
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
           >
             <div className="text-center">
-              <h1 className="text-2xl font-bold">{t("registerWithInvite.title")}</h1>
+              <div className="mb-3 flex items-center justify-center gap-2.5">
+                {appLogo ? (
+                  <img alt="" className="size-8 rounded object-contain" src={appLogo} />
+                ) : (
+                  <AmphoraMark className="size-8 text-primary" />
+                )}
+                <span className="font-display text-xl font-bold tracking-tight">{appName}</span>
+              </div>
+              <h1 className="font-display text-3xl font-extrabold tracking-tight">{t("registerWithInvite.title")}</h1>
               <p className="text-muted-foreground text-sm mt-2">{t("registerWithInvite.description")}</p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">{t("registerWithInvite.labels.firstName")}</Label>
                   <Input
@@ -283,7 +293,7 @@ export default function RegisterWithInvitePage() {
                 {errors.confirmPassword && <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="h-12 w-full rounded-lg" disabled={isSubmitting}>
                 {isSubmitting
                   ? t("registerWithInvite.buttons.creating")
                   : t("registerWithInvite.buttons.createAccount")}

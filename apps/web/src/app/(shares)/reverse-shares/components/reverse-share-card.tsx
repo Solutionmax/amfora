@@ -169,7 +169,7 @@ export function ReverseShareCard({
 
   return (
     <>
-      <Card className="group relative overflow-hidden hover:shadow-lg transition-all duration-300 bg-background/50 dark:bg-foreground/5 border border-border/50 py-1">
+      <Card className="group relative overflow-hidden border-border/70 bg-card transition-colors hover:border-primary/35">
         <CardContent className="p-4 space-y-3">
           {/* Header: Nome, Status e Ações */}
           <div className="flex items-start justify-between gap-1">
@@ -186,7 +186,7 @@ export function ReverseShareCard({
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-6 w-6 text-green-600 hover:text-green-700"
+                    className="h-6 w-6 text-primary hover:text-primary/80"
                     onClick={saveEdit}
                   >
                     <IconCheck className="h-3 w-3" />
@@ -205,7 +205,7 @@ export function ReverseShareCard({
                   {/* Bolinha de status */}
                   <div
                     className={`w-2 h-2 rounded-full shrink-0 shadow-sm ${
-                      isExpired ? "bg-red-500" : reverseShare.isActive ? "bg-green-500" : "bg-red-500"
+                      isExpired ? "bg-destructive" : reverseShare.isActive ? "bg-primary" : "bg-muted-foreground"
                     }`}
                     title={
                       isExpired
@@ -335,7 +335,7 @@ export function ReverseShareCard({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-5 w-5 text-green-600 hover:text-green-700"
+                className="h-5 w-5 text-primary hover:text-primary/80"
                 onClick={saveEdit}
               >
                 <IconCheck className="h-3 w-3" />
@@ -373,7 +373,7 @@ export function ReverseShareCard({
               className={`rounded-md p-2 ${
                 reverseShare.isActive && !isExpired
                   ? "bg-primary/5 border border-primary/20"
-                  : "bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800"
+                  : "bg-destructive/10 border border-destructive/20"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -409,7 +409,7 @@ export function ReverseShareCard({
           )}
 
           {/* Grid compacto: Estatísticas + Controles */}
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {/* Arquivos */}
             <Button
               variant="ghost"
@@ -418,7 +418,7 @@ export function ReverseShareCard({
               title={t("reverseShares.actions.viewFiles")}
             >
               <div className="flex flex-col items-center gap-1">
-                <IconFile className="h-4 w-4 text-blue-600" />
+                <IconFile className="h-4 w-4 text-primary" />
                 <p className="text-xs font-medium text-foreground leading-none">{fileCount}</p>
                 <p className="text-xs text-muted-foreground">{t("reverseShares.labels.files")}</p>
               </div>
@@ -427,7 +427,7 @@ export function ReverseShareCard({
             {/* Tamanho */}
             <div className="bg-muted/20 rounded-md p-2 text-center border border-border/50">
               <div className="flex items-center justify-center mb-2">
-                <IconFileUnknown className="h-4 w-4 text-green-600" />
+                <IconFileUnknown className="h-4 w-4 text-primary" />
               </div>
               <p className="text-xs font-medium text-foreground leading-none">{formatFileSize(totalSize)}</p>
               <p className="text-xs text-muted-foreground">{t("reverseShares.labels.size")}</p>
@@ -444,7 +444,7 @@ export function ReverseShareCard({
                 >
                   <div className="flex flex-col items-center gap-1">
                     {reverseShare.isActive ? (
-                      <IconToggleRight className="h-4 w-4 text-green-600" />
+                      <IconToggleRight className="h-4 w-4 text-primary" />
                     ) : (
                       <IconToggleLeft className="h-4 w-4 text-red-600" />
                     )}
@@ -458,7 +458,7 @@ export function ReverseShareCard({
                 <div className="p-2 text-center">
                   <div className="flex flex-col items-center gap-1">
                     {reverseShare.isActive ? (
-                      <IconToggleRight className="h-4 w-4 text-green-600" />
+                      <IconToggleRight className="h-4 w-4 text-primary" />
                     ) : (
                       <IconToggleLeft className="h-4 w-4 text-red-600" />
                     )}
@@ -484,7 +484,7 @@ export function ReverseShareCard({
                     {hasPassword ? (
                       <IconLock className="h-4 w-4 text-yellow-600" />
                     ) : (
-                      <IconLockOpen className="h-4 w-4 text-green-600" />
+                      <IconLockOpen className="h-4 w-4 text-primary" />
                     )}
                     <p className="text-xs font-medium leading-none">
                       {hasPassword ? t("reverseShares.status.protected") : t("reverseShares.status.public")}
@@ -498,7 +498,7 @@ export function ReverseShareCard({
                     {hasPassword ? (
                       <IconLock className="h-4 w-4 text-yellow-600" />
                     ) : (
-                      <IconLockOpen className="h-4 w-4 text-green-600" />
+                      <IconLockOpen className="h-4 w-4 text-primary" />
                     )}
                     <p className="text-xs font-medium leading-none">
                       {hasPassword ? t("reverseShares.status.protected") : t("reverseShares.status.public")}

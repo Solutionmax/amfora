@@ -213,7 +213,7 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "uploading":
-        return <IconLoader size={16} className="animate-spin text-blue-500" />;
+        return <IconLoader size={16} className="animate-spin text-primary" />;
       case "success":
         return <IconCheck size={16} className="text-green-500" />;
       case "error":
@@ -264,7 +264,7 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent
-          className="sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col"
+          className="sm:max-w-2xl max-h-[calc(100dvh-2rem)] overflow-hidden flex flex-col"
           onPointerDownOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
@@ -272,12 +272,15 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
             <DialogTitle>{t("uploadFile.multipleTitle")}</DialogTitle>
           </DialogHeader>
 
-          <div className="flex-1 overflow-hidden flex flex-col gap-4">
+          <div className="min-h-0 flex-1 overflow-y-auto flex flex-col gap-5">
             <input ref={fileInputRef} className="hidden" type="file" multiple onChange={handleFileInputChange} />
 
-            <div
-              className={`border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors ${
-                isDragOver ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
+            <button
+              type="button"
+              className={`w-full shrink-0 border border-dashed rounded-xl px-6 py-10 cursor-pointer transition-colors ${
+                isDragOver
+                  ? "border-primary bg-primary/10"
+                  : "border-primary/25 bg-primary/[0.025] hover:bg-primary/5 hover:border-primary/50"
               }`}
               onClick={() => fileInputRef.current?.click()}
               onDragOver={handleDragOver}
@@ -285,16 +288,18 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
               onDrop={handleDrop}
             >
               <div className="flex flex-col items-center gap-2">
-                <IconCloudUpload size={32} className="text-muted-foreground" />
+                <span className="mb-2 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <IconCloudUpload size={24} />
+                </span>
                 <p className="text-foreground text-center">{t("uploadFile.selectMultipleFiles")}</p>
                 <p className="text-sm text-muted-foreground">{t("uploadFile.dragAndDrop")}</p>
               </div>
-            </div>
+            </button>
 
             {fileUploads.length > 0 && (
               <div className="flex-1 overflow-y-auto space-y-2 max-h-96">
                 {fileUploads.map((upload) => (
-                  <div key={upload.id} className="flex items-center gap-3 p-3 border rounded-lg bg-card">
+                  <div key={upload.id} className="flex items-center gap-3 p-4 border rounded-xl bg-background/60">
                     <div className="flex-shrink-0">
                       {upload.previewUrl ? (
                         <img
@@ -331,6 +336,7 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
                         <Button
                           variant="ghost"
                           size="sm"
+                          aria-label={t("common.cancel")}
                           onClick={() => cancelUpload(upload.id)}
                           className="h-8 w-8 p-0"
                         >
@@ -343,6 +349,7 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
                             size="sm"
                             onClick={() => retryUpload(upload.id)}
                             className="h-8 w-8 p-0"
+                            aria-label={t("uploadFile.retry")}
                             title={t("uploadFile.retry")}
                           >
                             <IconLoader size={14} />
@@ -350,6 +357,7 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
                           <Button
                             variant="ghost"
                             size="sm"
+                            aria-label={t("common.delete")}
                             onClick={() => removeFile(upload.id)}
                             className="h-8 w-8 p-0"
                           >
@@ -357,7 +365,13 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
                           </Button>
                         </div>
                       ) : (
-                        <Button variant="ghost" size="sm" onClick={() => removeFile(upload.id)} className="h-8 w-8 p-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          aria-label={t("common.delete")}
+                          onClick={() => removeFile(upload.id)}
+                          className="h-8 w-8 p-0"
+                        >
                           <IconTrash size={14} />
                         </Button>
                       )}

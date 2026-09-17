@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { IconDownload, IconFolder } from "@tabler/icons-react";
+import { IconDownload, IconFolder, IconShieldCheck } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 
@@ -77,12 +77,17 @@ export function ShareStage({
 
   return (
     <Stage
-      object={<Vessel level={level} strata={itemCount} sealed={!opened} className="w-full" />}
+      object={<Vessel level={level} strata={itemCount} sealed={!opened} className="h-10 w-9 opacity-90" />}
       caption={opened ? t("share.opened") : t("share.sealed")}
     >
       <div>
-        <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">{name}</h1>
-        {description && <p className="mt-3 max-w-md text-muted-foreground">{description}</p>}
+        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+          <IconShieldCheck className="size-4" /> {t("share.pageTitle")}
+        </div>
+        <h1 className="mt-4 break-words font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+          {name}
+        </h1>
+        {description && <p className="mt-4 max-w-md break-words leading-7 text-muted-foreground">{description}</p>}
 
         <dl className="mt-8 max-w-md divide-y border-y font-mono text-xs">
           <div className="flex items-center justify-between gap-4 py-3">
@@ -104,16 +109,18 @@ export function ShareStage({
           </div>
         </dl>
 
-        <Button size="lg" className="mt-8 px-8" onClick={download}>
+        <Button size="lg" className="mt-8 h-12 rounded-full px-8" onClick={download}>
           <IconDownload className="size-5" />
           {opened ? (single ? t("share.download") : t("share.downloadAll")) : t("share.breakSeal")}
         </Button>
 
-        {itemCount > 1 && (
-          <ul className="mt-8 max-w-md divide-y border-t">
+        {itemCount > 0 && (
+          <ul className="mt-8 max-w-md divide-y rounded-xl border bg-background px-4">
             {folders.map((folder) => (
-              <li key={folder.id} className="flex items-center gap-3 py-2.5">
-                <IconFolder className="size-4 shrink-0 text-muted-foreground" />
+              <li key={folder.id} className="flex items-center gap-3 py-3">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                  <IconFolder className="size-4 text-primary" />
+                </span>
                 <span className="min-w-0 flex-1 truncate text-sm">{folder.name}</span>
                 <button
                   type="button"
@@ -128,8 +135,10 @@ export function ShareStage({
             {files.map((file) => {
               const { icon: Icon, color } = getFileIcon(file.name);
               return (
-                <li key={file.id} className="flex items-center gap-3 py-2.5">
-                  <Icon className={`size-4 shrink-0 ${color}`} />
+                <li key={file.id} className="flex items-center gap-3 py-3">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                    <Icon className={`size-4 ${color}`} />
+                  </span>
                   <span className="min-w-0 flex-1 truncate text-sm">{file.name}</span>
                   <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
                     {formatFileSize(Number(file.size || 0))}

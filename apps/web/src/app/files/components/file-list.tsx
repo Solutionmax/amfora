@@ -60,7 +60,7 @@ export function FileList({
               }}
             />
           ) : (
-            <div className="text-center py-6 flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border/70 bg-secondary/20 py-10 text-center">
               <p className="text-muted-foreground">{t("files.empty.title")}</p>
             </div>
           )}

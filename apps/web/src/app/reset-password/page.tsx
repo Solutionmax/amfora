@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { DefaultFooter } from "@/components/ui/default-footer";
-import { StaticBackgroundLights } from "../login/components/static-background-lights";
 import { ResetPasswordForm } from "./components/reset-password-form";
 import { ResetPasswordHeader } from "./components/reset-password-header";
 import { useResetPassword } from "./hooks/use-reset-password";
@@ -26,13 +25,12 @@ export default function ResetPasswordPage() {
   }, [resetPassword.token, router, t]);
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <div className="flex flex-1 items-center justify-center">
-        <StaticBackgroundLights />
-        <div className="relative z-10 w-full max-w-md space-y-4 px-4 py-12">
+    <div className="relative flex min-h-screen flex-col bg-background">
+      <div className="flex flex-1 items-center justify-center px-4 py-16">
+        <div className="relative z-10 w-full max-w-md">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-default-200 bg-black/20 p-8"
+            className="rounded-[1.75rem] border bg-card p-8 shadow-sm sm:p-10"
             initial={{ opacity: 0, y: 20 }}
           >
             <ResetPasswordHeader />

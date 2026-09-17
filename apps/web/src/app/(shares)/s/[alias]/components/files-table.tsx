@@ -89,130 +89,132 @@ export function ShareFilesTable({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-lg border shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-b-0">
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
-                {t("filesTable.columns.name")}
-              </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
-                {t("filesTable.columns.size")}
-              </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
-                {t("filesTable.columns.createdAt")}
-              </TableHead>
-              <TableHead className="h-10 w-[110px] text-xs font-bold text-muted-foreground bg-muted/50 px-4">
-                {t("filesTable.columns.actions")}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {allItems.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
-                  <div className="flex flex-col items-center gap-2">
-                    <IconFolderOpen className="h-16 w-16 text-muted-foreground/50" />
-                    <p className="font-medium">
-                      {enableNavigation ? "No files or folders" : "No files or folders shared"}
-                    </p>
-                    <p className="text-sm">{enableNavigation ? "This location is empty" : "This share is empty"}</p>
-                  </div>
-                </TableCell>
+      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+        <div className="overflow-x-auto">
+          <Table className="min-w-[620px]">
+            <TableHeader>
+              <TableRow className="border-b-0">
+                <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-bold text-muted-foreground">
+                  {t("filesTable.columns.name")}
+                </TableHead>
+                <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-bold text-muted-foreground">
+                  {t("filesTable.columns.size")}
+                </TableHead>
+                <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-bold text-muted-foreground">
+                  {t("filesTable.columns.createdAt")}
+                </TableHead>
+                <TableHead className="h-11 w-[110px] bg-secondary/60 px-4 text-xs font-bold text-muted-foreground">
+                  {t("filesTable.columns.actions")}
+                </TableHead>
               </TableRow>
-            ) : (
-              allItems.map((item) => {
-                if (item.type === "folder") {
-                  return (
-                    <TableRow key={`folder-${item.id}`} className="hover:bg-muted/50 transition-colors border-0">
-                      <TableCell className="h-12 px-4 border-0">
-                        <div className="flex items-center gap-2">
-                          <IconFolder className="h-5 w-5 text-blue-600" />
-                          {enableNavigation ? (
-                            <button
-                              className="truncate max-w-[250px] font-medium text-left hover:underline"
-                              onClick={() => handleFolderClick(item.id)}
-                            >
-                              {item.name}
-                            </button>
-                          ) : (
-                            <span className="truncate max-w-[250px] font-medium">{item.name}</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="h-12 px-4">
-                        {item.totalSize ? formatFileSize(Number(item.totalSize)) : "—"}
-                      </TableCell>
-                      <TableCell className="h-12 px-4">{formatDateTime(item.createdAt)}</TableCell>
-                      <TableCell className="h-12 px-4">
-                        <div className="flex items-center gap-1">
-                          {enableNavigation && (
+            </TableHeader>
+            <TableBody>
+              {allItems.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                      <IconFolderOpen className="h-16 w-16 text-muted-foreground/50" />
+                      <p className="font-medium">
+                        {enableNavigation ? "No files or folders" : "No files or folders shared"}
+                      </p>
+                      <p className="text-sm">{enableNavigation ? "This location is empty" : "This share is empty"}</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                allItems.map((item) => {
+                  if (item.type === "folder") {
+                    return (
+                      <TableRow key={`folder-${item.id}`} className="border-0 transition-colors hover:bg-secondary/30">
+                        <TableCell className="h-12 px-4 border-0">
+                          <div className="flex items-center gap-2">
+                            <IconFolder className="h-5 w-5 text-primary" />
+                            {enableNavigation ? (
+                              <button
+                                className="truncate max-w-[250px] font-medium text-left hover:underline"
+                                onClick={() => handleFolderClick(item.id)}
+                              >
+                                {item.name}
+                              </button>
+                            ) : (
+                              <span className="truncate max-w-[250px] font-medium">{item.name}</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="h-12 px-4">
+                          {item.totalSize ? formatFileSize(Number(item.totalSize)) : "—"}
+                        </TableCell>
+                        <TableCell className="h-12 px-4">{formatDateTime(item.createdAt)}</TableCell>
+                        <TableCell className="h-12 px-4">
+                          <div className="flex items-center gap-1">
+                            {enableNavigation && (
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8 hover:bg-muted"
+                                onClick={() => handleFolderClick(item.id)}
+                                title={t("files.openFolder")}
+                              >
+                                <IconFolder className="h-4 w-4" />
+                                <span className="sr-only">{t("files.openFolder")}</span>
+                              </Button>
+                            )}
                             <Button
                               size="icon"
                               variant="ghost"
                               className="h-8 w-8 hover:bg-muted"
-                              onClick={() => handleFolderClick(item.id)}
-                              title={t("files.openFolder")}
+                              onClick={() => handleFolderDownload(item.id, item.name)}
+                              title={t("filesTable.actions.download")}
                             >
-                              <IconFolder className="h-4 w-4" />
-                              <span className="sr-only">{t("files.openFolder")}</span>
+                              <IconDownload className="h-4 w-4" />
+                              <span className="sr-only">Download folder</span>
                             </Button>
-                          )}
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 hover:bg-muted"
-                            onClick={() => handleFolderDownload(item.id, item.name)}
-                            title={t("filesTable.actions.download")}
-                          >
-                            <IconDownload className="h-4 w-4" />
-                            <span className="sr-only">Download folder</span>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                } else {
-                  const { icon: FileIcon, color } = getFileIcon(item.name);
-                  return (
-                    <TableRow key={`file-${item.id}`} className="hover:bg-muted/50 transition-colors border-0">
-                      <TableCell className="h-12 px-4 border-0">
-                        <div className="flex items-center gap-2">
-                          <FileIcon className={`h-5 w-5 ${color}`} />
-                          <span className="truncate max-w-[250px] font-medium">{item.name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="h-12 px-4">{formatFileSize(Number(item.size))}</TableCell>
-                      <TableCell className="h-12 px-4">{formatDateTime(item.createdAt)}</TableCell>
-                      <TableCell className="h-12 px-4">
-                        <div className="flex items-center gap-1">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 hover:bg-muted"
-                            onClick={() => handlePreview({ name: item.name, objectName: item.objectName })}
-                          >
-                            <IconEye className="h-4 w-4" />
-                            <span className="sr-only">{t("filesTable.actions.preview")}</span>
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 hover:bg-muted"
-                            onClick={() => onDownload(item.objectName, item.name)}
-                          >
-                            <IconDownload className="h-4 w-4" />
-                            <span className="sr-only">{t("filesTable.actions.download")}</span>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              })
-            )}
-          </TableBody>
-        </Table>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  } else {
+                    const { icon: FileIcon, color } = getFileIcon(item.name);
+                    return (
+                      <TableRow key={`file-${item.id}`} className="border-0 transition-colors hover:bg-secondary/30">
+                        <TableCell className="h-12 px-4 border-0">
+                          <div className="flex items-center gap-2">
+                            <FileIcon className={`h-5 w-5 ${color}`} />
+                            <span className="truncate max-w-[250px] font-medium">{item.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="h-12 px-4">{formatFileSize(Number(item.size))}</TableCell>
+                        <TableCell className="h-12 px-4">{formatDateTime(item.createdAt)}</TableCell>
+                        <TableCell className="h-12 px-4">
+                          <div className="flex items-center gap-1">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 hover:bg-muted"
+                              onClick={() => handlePreview({ name: item.name, objectName: item.objectName })}
+                            >
+                              <IconEye className="h-4 w-4" />
+                              <span className="sr-only">{t("filesTable.actions.preview")}</span>
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 hover:bg-muted"
+                              onClick={() => onDownload(item.objectName, item.name)}
+                            >
+                              <IconDownload className="h-4 w-4" />
+                              <span className="sr-only">{t("filesTable.actions.download")}</span>
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {selectedFile && (

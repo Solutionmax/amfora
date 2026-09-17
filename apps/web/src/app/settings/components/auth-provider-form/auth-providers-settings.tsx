@@ -61,7 +61,7 @@ export function AuthProvidersSettings() {
   };
 
   return (
-    <Card className="p-6 gap-0">
+    <Card className="gap-0 p-6">
       <CardHeader
         className="flex flex-row items-center justify-between cursor-pointer p-0"
         onClick={() => setIsCollapsed(!isCollapsed)}

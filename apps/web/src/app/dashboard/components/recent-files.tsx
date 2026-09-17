@@ -16,8 +16,8 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
     <Card>
       <CardHeader>
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-          <CardTitle className="text-xl font-semibold flex items-center gap-2">
-            <IconCloudUpload className="text-xl text-gray-500" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <IconCloudUpload className="size-5 text-primary" />
             {t("recentFiles.title")}
           </CardTitle>
 

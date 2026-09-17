@@ -150,23 +150,21 @@ export function EditProviderForm({
   return (
     <div className="space-y-4">
       {isOfficial && (
-        <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-          <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <div className="flex items-center gap-2 text-primary">
             <span>
               <IconInfoCircle className="h-4 w-4" />
             </span>
             <span className="text-sm font-medium">{t("authProviders.info.officialProvider")}</span>
           </div>
-          <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-            {t("authProviders.info.officialProviderDescription")}
-          </p>
+          <p className="mt-1 text-xs text-primary/80">{t("authProviders.info.officialProviderDescription")}</p>
         </div>
       )}
 
       <CallbackUrlDisplay providerName={formData.name || "provider"} />
 
       {!isOfficial && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label className="mb-2 block">{t("authProviders.form.providerName")} *</Label>
             <Input
@@ -187,11 +185,11 @@ export function EditProviderForm({
       )}
 
       {!isOfficial && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label className="mb-2 block">{t("authProviders.form.type")}</Label>
             <select
-              className="w-full rounded-md border border-input bg-background dark:bg-background px-3 py-2 text-sm text-foreground dark:text-foreground"
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
               value={formData.type}
               onChange={(e) => updateFormData({ type: e.target.value as "oidc" | "oauth2" })}
             >
@@ -212,7 +210,7 @@ export function EditProviderForm({
 
       {!isOfficial && (
         <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+          <div className="rounded-lg border border-border/70 bg-secondary/30 p-4">
             <h4 className="text-sm font-medium mb-3">{t("authProviders.form.configurationMethod")}</h4>
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
@@ -313,8 +311,8 @@ export function EditProviderForm({
                   onChange={(e) => updateFormData({ userInfoEndpoint: e.target.value })}
                 />
               </div>
-              <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                <div className="flex items-start gap-2 text-blue-700 dark:text-blue-300">
+              <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                <div className="flex items-start gap-2 text-primary">
                   <IconInfoCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                   <div className="text-xs">
                     <p className="font-medium">{t("authProviders.info.manualConfigTitle")}</p>
@@ -355,7 +353,7 @@ export function EditProviderForm({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-2 block">{t("authProviders.form.clientId")} *</Label>
           <Input

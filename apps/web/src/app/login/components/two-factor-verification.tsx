@@ -45,10 +45,10 @@ export function TwoFactorVerification({
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md rounded-2xl border bg-card shadow-sm">
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
-          <div className="p-3 rounded-full bg-primary/10">
+          <div className="rounded-xl bg-primary/10 p-3">
             <IconShield className="h-8 w-8 text-primary" />
           </div>
         </div>
@@ -105,7 +105,7 @@ export function TwoFactorVerification({
 
           <Button
             type="submit"
-            className="w-full"
+            className="h-12 w-full rounded-full"
             disabled={isSubmitting || twoFactorCode.length < (showBackupCode ? 8 : 6)}
           >
             {isSubmitting ? t("twoFactor.verification.verifying") : t("twoFactor.verification.verify")}

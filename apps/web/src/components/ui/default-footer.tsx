@@ -15,18 +15,19 @@ export function DefaultFooter() {
   const shouldHideVersion = hideVersion === "true";
 
   return (
-    <footer className="w-full flex items-center justify-center py-3 h-16">
+    <footer className="w-full flex items-center justify-center px-5 py-6">
       <div className="flex flex-col items-center">
         <Link
           target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-1 text-current"
           href="https://solutionmax.net"
           title={t("footer.kyanHomepage")}
         >
-          <span className="text-default-600 text-xs sm:text-sm">{t("footer.poweredBy")}</span>
+          <span className="text-muted-foreground text-xs sm:text-sm">{t("footer.poweredBy")}</span>
           <p className="text-primary text-xs sm:text-sm">SolutionMAX</p>
         </Link>
-        {!shouldHideVersion && <span className="text-default-500 text-[11px] mt-1">v{version}</span>}
+        {!shouldHideVersion && <span className="text-muted-foreground text-[11px] mt-1">v{version}</span>}
       </div>
     </footer>
   );

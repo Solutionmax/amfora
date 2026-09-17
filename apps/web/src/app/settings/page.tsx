@@ -84,11 +84,13 @@ export default function SettingsPage() {
   return (
     <ProtectedRoute requireAdmin>
       <FileManagerLayout title={t("settings.pageTitle")}>
-        <SettingsForm
-          groupForms={settings.groupForms}
-          groupedConfigs={settings.groupedConfigs}
-          onGroupSubmit={settings.onGroupSubmit}
-        />
+        <div className="max-w-4xl">
+          <SettingsForm
+            groupForms={settings.groupForms}
+            groupedConfigs={settings.groupedConfigs}
+            onGroupSubmit={settings.onGroupSubmit}
+          />
+        </div>
       </FileManagerLayout>
     </ProtectedRoute>
   );

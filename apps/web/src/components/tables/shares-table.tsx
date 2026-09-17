@@ -203,7 +203,7 @@ export function SharesTable({
   return (
     <div className="space-y-4">
       {showBulkActions && (
-        <div className="flex items-center justify-between p-4 bg-muted/30 border rounded-lg">
+        <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-foreground">
               {t("sharesTable.bulkActions.selected", { count: selectedShares.size })}
@@ -242,42 +242,42 @@ export function SharesTable({
         </div>
       )}
 
-      <div className="rounded-lg shadow-sm overflow-hidden border">
+      <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-none">
         <Table>
           <TableHeader>
             <TableRow className="border-b-0">
-              <TableHead className="h-10 w-[50px] text-xs font-bold text-muted-foreground bg-muted/50 px-4 rounded-tl-lg">
+              <TableHead className="h-11 w-[50px] rounded-tl-lg bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={handleSelectAll}
                   aria-label={t("sharesTable.selectAll")}
                 />
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("sharesTable.columns.name")}
               </TableHead>
-              <TableHead className="hidden 2xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground 2xl:table-cell">
                 {t("sharesTable.columns.description")}
               </TableHead>
-              <TableHead className="hidden 2xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground 2xl:table-cell">
                 {t("sharesTable.columns.createdAt")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("sharesTable.columns.expiresAt")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("sharesTable.columns.status")}
               </TableHead>
-              <TableHead className="h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("sharesTable.columns.security")}
               </TableHead>
-              <TableHead className="hidden xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground xl:table-cell">
                 {t("sharesTable.columns.files")}
               </TableHead>
-              <TableHead className="hidden xl:table-cell h-10 text-xs font-bold text-muted-foreground bg-muted/50 px-4">
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground xl:table-cell">
                 {t("sharesTable.columns.recipients")}
               </TableHead>
-              <TableHead className="h-10 w-[70px] text-xs font-bold text-muted-foreground bg-muted/50 px-4 rounded-tr-lg">
+              <TableHead className="h-11 w-[70px] rounded-tr-lg bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("sharesTable.columns.actions")}
               </TableHead>
             </TableRow>
@@ -297,7 +297,7 @@ export function SharesTable({
               const displayDescription = getDisplayValue(share, "description");
 
               return (
-                <TableRow key={share.id} className="hover:bg-muted/50 transition-colors border-0">
+                <TableRow key={share.id} className="border-border/60 transition-colors hover:bg-secondary/35">
                   <TableCell className="h-12 px-4 border-0">
                     <Checkbox
                       checked={isSelected}
