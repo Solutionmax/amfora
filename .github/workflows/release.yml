@@ -3,6 +3,13 @@ name: Release image
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish
+        required: true
+        default: v1.0.0
+        type: string
 
 permissions:
   contents: read
@@ -10,9 +17,19 @@ permissions:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ inputs.tag || github.ref_name }}
+      - name: Resolve released source revision
+        id: source
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
@@ -24,8 +41,10 @@ jobs:
         id: meta
         with:
           images: ghcr.io/${{ github.repository }}
+          labels: |
+            org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
           tags: |
-            type=semver,pattern={{version}}
+            type=semver,pattern={{version}},value=${{ inputs.tag || github.ref_name }}
             type=raw,value=latest
       - uses: docker/build-push-action@v6
         with:
