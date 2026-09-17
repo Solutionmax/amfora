@@ -170,7 +170,7 @@ export function FilesViewManager({
   return (
     <div className="space-y-4">
       {/* Breadcrumbs, Search and View Controls */}
-      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/70 p-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
         <div className="min-w-0 flex-1">{breadcrumbs}</div>
 
         <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
@@ -186,7 +186,7 @@ export function FilesViewManager({
             />
           </div>
 
-          <div className="flex items-center rounded-lg border border-border/70 bg-background p-1">
+          <div className="flex items-center rounded-lg border border-border/70 bg-secondary/50 p-1">
             <Button
               type="button"
               aria-label={t("files.viewMode.table")}
@@ -223,7 +223,7 @@ export function FilesViewManager({
         EmptyStateComponent ? (
           <EmptyStateComponent />
         ) : (
-          <div className="text-center py-6 flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border/70 bg-card px-6 py-12 text-center">
             <p className="text-muted-foreground">{t("files.empty.title")}</p>
           </div>
         )
@@ -233,7 +233,7 @@ export function FilesViewManager({
 
           {/* No results message */}
           {searchQuery && !hasContent && (
-            <div className="text-center py-8">
+            <div className="rounded-xl border border-dashed border-border/70 bg-card px-6 py-10 text-center">
               <p className="text-muted-foreground">{t("searchBar.noResults", { query: searchQuery })}</p>
             </div>
           )}

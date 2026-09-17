@@ -10,6 +10,7 @@ import { CustomizationCard } from "./customization-card";
 
 const PREDEFINED_COLORS = [
   // Row 1: Standard vibrant colors
+  { name: "Amfora", value: "#1757e8" },
   { name: "Emerald", value: "oklch(0.59 0.18 142)" },
   { name: "Blue", value: "oklch(0.59 0.18 240)" },
   { name: "Violet", value: "oklch(0.59 0.18 270)" },
@@ -107,6 +108,8 @@ export function ColorPickerForm() {
                   backgroundColor: color.value,
                 }}
                 title={color.name}
+                aria-label={color.name}
+                aria-pressed={selectedColor === color.value}
                 type="button"
               >
                 {selectedColor === color.value && (

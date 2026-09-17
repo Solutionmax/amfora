@@ -26,10 +26,7 @@ export function SectionLayout({
 }) {
   return (
     <div className="min-w-0 space-y-8">
-      <nav
-        aria-label={label}
-        className="flex min-w-0 flex-wrap gap-1 rounded-2xl border border-border/70 bg-card p-1.5"
-      >
+      <nav aria-label={label} className="flex min-w-0 flex-wrap gap-1 rounded-xl border border-border bg-card p-1.5">
         {sections.map((section) => {
           const active = section.id === activeId;
 
@@ -40,7 +37,7 @@ export function SectionLayout({
               onClick={() => onSelect(section.id)}
               aria-pressed={active}
               className={cn(
-                "flex items-center gap-2 rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors",
+                "flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors",
                 active
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -53,7 +50,7 @@ export function SectionLayout({
         })}
       </nav>
 
-      <div className="min-w-0 rounded-2xl border border-border/70 bg-card p-5 sm:p-8">{children}</div>
+      <div className="min-w-0 rounded-xl border border-border bg-card p-5 sm:p-8">{children}</div>
     </div>
   );
 }

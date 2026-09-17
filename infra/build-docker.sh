@@ -1,39 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
 
-echo "🏷️  Please enter a tag for the build (e.g., v1.0.0, production, beta):"
-read -p "Tag: " TAG
-
-if [ -z "$TAG" ]; then
-    echo "❌ Error: Tag cannot be empty"
-    echo "Please run the script again and provide a valid tag"
-    exit 1
+# Local builds are the default; registry publishing must be explicit.
+TAG="${1:-}"
+MODE="${2:-local}"
+if [[ -z "$TAG" || ! "$TAG" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}$ || ! "$MODE" =~ ^(local|push)$ ]]; then
+    echo "Usage: $0 TAG [local|push]" >&2
+    exit 2
 fi
-
-echo "🚀 Building Amfora Unified Image for AMD64 and ARM..."
-echo "📦 Building tags: latest and $TAG"
-
-docker buildx create --name amfora-builder --use 2>/dev/null || docker buildx use amfora-builder
-
-docker buildx build \
-    --platform linux/amd64,linux/arm64 \
-    --no-cache \
-    -t ghcr.io/raym0nz82/amfora:latest \
-    -t ghcr.io/raym0nz82/amfora:$TAG \
-    --push \
-    .
-
-if [ $? -eq 0 ]; then
-    echo "✅ Multi-platform build completed successfully!"
-    echo ""
-    echo "Built for platforms: linux/amd64, linux/arm64"
-    echo "Built tags: amfora:latest and amfora:$TAG"
-    echo ""
-    echo "Access points:"
-    echo "- API: http://localhost:3333"
-    echo "- Web App: http://localhost:5487"
-    echo ""
-    echo "Read the docs for more information"
+BUILDER=amfora-builder
+if ! docker buildx inspect "$BUILDER" >/dev/null 2>&1; then
+    docker buildx create --name "$BUILDER" --driver docker-container \
+        --buildkitd-config infra/buildkitd.toml >/dev/null
+fi
+# Bound unused cache after successful and failed builds; never delete images/data.
+cleanup() {
+    docker buildx prune --builder "$BUILDER" --force \
+        --max-used-space 4GB --reserved-space 1GB --min-free-space 10GB || \
+        echo "Warning: cache cleanup failed; run make clean." >&2
+}
+trap cleanup EXIT
+REVISION="${SOURCE_REVISION:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}"
+args=(--builder "$BUILDER" --label "org.opencontainers.image.revision=$REVISION")
+if [[ "$MODE" == push ]]; then
+    args+=(--platform linux/amd64,linux/arm64 --push \
+        -t "ghcr.io/raym0nz82/amfora:$TAG" -t ghcr.io/raym0nz82/amfora:latest)
 else
-    echo "❌ Build failed!"
-    exit 1
-fi 
+    args+=(--load -t "amfora:$TAG")
+fi
+docker buildx build "${args[@]}" .

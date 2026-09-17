@@ -43,7 +43,7 @@ export function ThemePickerForm() {
                 key={themeOption.value}
                 onClick={() => handleThemeSelect(themeOption.value)}
                 aria-pressed={theme === themeOption.value}
-                className={`group relative rounded-2xl border p-4 text-left transition-colors ${
+                className={`group relative rounded-xl border p-3 text-left transition-colors ${
                   theme === themeOption.value
                     ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                     : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
@@ -51,14 +51,14 @@ export function ThemePickerForm() {
                 type="button"
               >
                 <div
-                  className={`mb-4 flex h-20 gap-2 overflow-hidden rounded-lg border p-2 ${themeOption.value === "dark" ? "border-slate-600 bg-slate-900" : "border-slate-200 bg-slate-50"}`}
+                  className={`mb-3 flex h-14 gap-2 overflow-hidden rounded-lg border p-2 ${themeOption.value === "dark" ? "border-sidebar-border bg-sidebar" : "border-border bg-secondary"}`}
                   aria-hidden="true"
                 >
-                  <div className="w-1/4 rounded bg-[#071827]" />
+                  <div className="w-1/4 rounded bg-sidebar" />
                   <div className="flex flex-1 flex-col gap-2">
-                    <div className="h-2 w-2/3 rounded bg-sky-500" />
+                    <div className="h-2 w-2/3 rounded bg-primary" />
                     <div
-                      className={`flex-1 rounded ${themeOption.value === "dark" ? "bg-slate-700" : "bg-white shadow-sm"}`}
+                      className={`flex-1 rounded ${themeOption.value === "dark" ? "bg-muted" : "bg-card shadow-sm"}`}
                     />
                   </div>
                 </div>

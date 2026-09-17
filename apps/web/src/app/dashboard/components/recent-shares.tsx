@@ -13,10 +13,10 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
   const router = useRouter();
 
   return (
-    <Card>
-      <CardContent>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+    <Card className="overflow-hidden">
+      <CardContent className="p-0">
+        <div className="flex flex-col gap-0">
+          <div className="flex flex-col gap-3 border-b border-border/60 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
               <IconShare className="size-5 text-primary" />
               {t("recentShares.title")}
@@ -35,30 +35,32 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
             </div>
           </div>
 
-          {shares.length > 0 ? (
-            <SharesTable
-              shares={shares}
-              onCopyLink={onCopyLink}
-              onDelete={shareManager.setShareToDelete}
-              onBulkDelete={shareManager.handleBulkDelete}
-              onBulkDownload={shareManager.handleBulkDownload}
-              onDownloadShareFiles={shareManager.handleDownloadShareFiles}
-              onEdit={shareManager.setShareToEdit}
-              onUpdateName={shareManager.handleUpdateName}
-              onUpdateDescription={shareManager.handleUpdateDescription}
-              onUpdateSecurity={shareManager.setShareToManageSecurity}
-              onUpdateExpiration={shareManager.setShareToManageExpiration}
-              onGenerateLink={shareManager.setShareToGenerateLink}
-              onManageFiles={shareManager.setShareToManageFiles}
-              onManageRecipients={shareManager.setShareToManageRecipients}
-              onNotifyRecipients={shareManager.handleNotifyRecipients}
-              onViewQrCode={shareManager.setShareToViewQrCode}
-              onViewDetails={shareManager.setShareToViewDetails}
-              setClearSelectionCallback={shareManager.setClearSelectionCallback}
-            />
-          ) : (
-            <EmptySharesState onCreate={onOpenCreateModal} />
-          )}
+          <div className="px-0 py-0">
+            {shares.length > 0 ? (
+              <SharesTable
+                shares={shares}
+                onCopyLink={onCopyLink}
+                onDelete={shareManager.setShareToDelete}
+                onBulkDelete={shareManager.handleBulkDelete}
+                onBulkDownload={shareManager.handleBulkDownload}
+                onDownloadShareFiles={shareManager.handleDownloadShareFiles}
+                onEdit={shareManager.setShareToEdit}
+                onUpdateName={shareManager.handleUpdateName}
+                onUpdateDescription={shareManager.handleUpdateDescription}
+                onUpdateSecurity={shareManager.setShareToManageSecurity}
+                onUpdateExpiration={shareManager.setShareToManageExpiration}
+                onGenerateLink={shareManager.setShareToGenerateLink}
+                onManageFiles={shareManager.setShareToManageFiles}
+                onManageRecipients={shareManager.setShareToManageRecipients}
+                onNotifyRecipients={shareManager.handleNotifyRecipients}
+                onViewQrCode={shareManager.setShareToViewQrCode}
+                onViewDetails={shareManager.setShareToViewDetails}
+                setClearSelectionCallback={shareManager.setClearSelectionCallback}
+              />
+            ) : (
+              <EmptySharesState onCreate={onOpenCreateModal} />
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

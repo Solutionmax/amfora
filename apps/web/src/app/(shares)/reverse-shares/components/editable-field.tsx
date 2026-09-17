@@ -168,7 +168,7 @@ export function EditableField({
             <Button
               size="icon"
               variant="ghost"
-              className="h-6 w-6 text-green-600 hover:text-green-700"
+              className="h-6 w-6 text-primary hover:text-primary"
               onClick={handleSave}
             >
               <IconCheck className="h-3 w-3" />
@@ -176,7 +176,7 @@ export function EditableField({
             <Button
               size="icon"
               variant="ghost"
-              className="h-6 w-6 text-red-600 hover:text-red-700"
+              className="h-6 w-6 text-destructive hover:text-destructive/80"
               onClick={handleCancel}
             >
               <IconX className="h-3 w-3" />

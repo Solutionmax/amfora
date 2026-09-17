@@ -11,7 +11,7 @@ export function EmptyReverseSharesState({ onCreateReverseShare }: EmptyReverseSh
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/70 bg-secondary/20 py-14 text-center">
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/70 bg-secondary/20 px-5 py-14 text-center">
       <div className="mb-6">
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
           <IconUpload className="h-10 w-10 text-primary" />

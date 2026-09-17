@@ -1,6 +1,6 @@
 "use client";
 
-import { IconCloudUpload, IconPlus } from "@tabler/icons-react";
+import { IconCloudUpload, IconPlus, IconSparkles } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
@@ -57,18 +57,17 @@ export default function DashboardPage() {
           }
         >
           <div className="flex flex-col gap-8">
-            <section className="relative isolate overflow-hidden rounded-3xl bg-[#071827] px-6 py-8 text-white sm:px-9 sm:py-10">
-              <img
-                src="/art/amfora-glass.webp"
-                alt=""
-                className="pointer-events-none absolute inset-y-0 end-0 -z-10 h-full w-[45%] object-cover object-center opacity-45 [mask-image:linear-gradient(to_right,transparent,black)]"
-              />
-              <div className="max-w-[70%]">
-                <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-sky-300">{user?.firstName}</p>
-                <h2 className="whitespace-pre-line font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            <section className="relative isolate overflow-hidden rounded-2xl border border-border/70 bg-card px-6 py-7 sm:px-9 sm:py-9">
+              <div className="pointer-events-none absolute -end-16 -top-20 -z-10 size-56 rounded-full bg-primary/8 blur-3xl" />
+              <div className="max-w-2xl">
+                <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                  <IconSparkles className="size-4" aria-hidden="true" />
+                  <span>{user?.firstName}</span>
+                </div>
+                <h2 className="whitespace-pre-line font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
                   {t("publicTransfer.uploadTitle")}
                 </h2>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-300">
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
                   {t("publicTransfer.uploadCaption")}
                 </p>
               </div>

@@ -486,7 +486,7 @@ export function CreateReverseShareModal({
                 )}
 
                 {watchedValues.hasFieldRequirements && (
-                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 space-y-4">
+                  <div className="space-y-4 rounded-lg bg-muted/40 p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -499,26 +499,26 @@ export function CreateReverseShareModal({
                             </FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="bg-white dark:bg-gray-900">
+                                <SelectTrigger className="bg-card">
                                   <SelectValue />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
                                 <SelectItem value="HIDDEN">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-gray-400" />
+                                    <div className="size-2 rounded-full bg-muted-foreground/50" />
                                     {t("reverseShares.labels.fieldOptions.hidden")}
                                   </div>
                                 </SelectItem>
                                 <SelectItem value="OPTIONAL">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                    <div className="size-2 rounded-full bg-primary" />
                                     {t("reverseShares.labels.fieldOptions.optional")}
                                   </div>
                                 </SelectItem>
                                 <SelectItem value="REQUIRED">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                                    <div className="size-2 rounded-full bg-destructive" />
                                     {t("reverseShares.labels.fieldOptions.required")}
                                   </div>
                                 </SelectItem>
@@ -540,26 +540,26 @@ export function CreateReverseShareModal({
                             </FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="bg-white dark:bg-gray-900">
+                                <SelectTrigger className="bg-card">
                                   <SelectValue />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
                                 <SelectItem value="HIDDEN">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-gray-400" />
+                                    <div className="size-2 rounded-full bg-muted-foreground/50" />
                                     {t("reverseShares.labels.fieldOptions.hidden")}
                                   </div>
                                 </SelectItem>
                                 <SelectItem value="OPTIONAL">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                    <div className="size-2 rounded-full bg-primary" />
                                     {t("reverseShares.labels.fieldOptions.optional")}
                                   </div>
                                 </SelectItem>
                                 <SelectItem value="REQUIRED">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                                    <div className="size-2 rounded-full bg-destructive" />
                                     {t("reverseShares.labels.fieldOptions.required")}
                                   </div>
                                 </SelectItem>
@@ -571,12 +571,12 @@ export function CreateReverseShareModal({
                       />
                     </div>
 
-                    <div className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 p-3 rounded-md border border-blue-200 dark:border-blue-800">
+                    <div className="rounded-md border border-primary/20 bg-primary/10 p-3 text-xs text-primary">
                       <div className="flex items-start gap-2">
-                        <IconSettings size={12} className="mt-0.5 text-blue-600 dark:text-blue-400" />
-                        <div className="space-y-1">
-                          <p className="font-medium text-blue-900 dark:text-blue-100">Field Configuration:</p>
-                          <ul className="space-y-0.5 text-blue-800 dark:text-blue-200">
+                        <IconSettings size={12} className="mt-0.5 text-primary" />
+                        <div className="space-y-1 text-primary/80">
+                          <p className="font-medium text-primary">Field Configuration:</p>
+                          <ul className="space-y-0.5">
                             <li>
                               • <strong>Hidden:</strong> Field won't appear in the upload form
                             </li>

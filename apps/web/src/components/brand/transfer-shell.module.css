@@ -1,160 +1,277 @@
 .shell {
   min-height: 100svh;
   overflow-x: clip;
-  background: #071827;
-  background-image: radial-gradient(ellipse at 28% 45%, #102a43 0%, transparent 58%);
   display: flex;
   flex-direction: column;
+  background: var(--background);
+  color: #10202b;
 }
-.header {
+
+:global(.dark) .shell {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.header,
+.footer {
   width: min(100% - 80px, 1280px);
   margin: 0 auto;
+}
+
+.header {
   min-height: 100px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border-bottom: 1px solid rgb(255 255 255 / 10%);
+  border-bottom: 1px solid #dce1dd;
 }
+
+:global(.dark) .header {
+  border-color: var(--border);
+}
+
 .main {
   width: min(100% - 80px, 1280px);
   margin: auto;
-  padding: 40px 0;
+  padding: 56px 0 64px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 510px);
   align-items: center;
-  gap: clamp(32px, 5vw, 80px);
+  gap: clamp(40px, 6vw, 96px);
 }
+
 .hero {
   min-width: 0;
   position: relative;
-  min-height: 660px;
   display: flex;
+  min-height: 520px;
   flex-direction: column;
   justify-content: space-between;
   isolation: isolate;
   overflow: clip;
 }
-.art {
+
+.hero::before,
+.hero::after {
   position: absolute;
   z-index: -1;
-  height: 600px;
-  width: 400px;
-  max-width: 100%;
-  object-fit: cover;
+  content: "";
+  border-radius: 999px;
   pointer-events: none;
-  right: 2%;
-  bottom: -10px;
-  mask-image:
-    linear-gradient(to bottom, transparent, #000 12%, #000 85%, transparent),
-    linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  mask-composite: intersect;
 }
+
+.hero::before {
+  top: 8%;
+  right: 10%;
+  width: 300px;
+  height: 300px;
+  background: rgb(23 87 232 / 8%);
+  filter: blur(12px);
+}
+
+.hero::after {
+  right: 18%;
+  bottom: 5%;
+  width: 160px;
+  height: 160px;
+  border: 1px solid rgb(23 87 232 / 16%);
+}
+
+:global(.dark) .hero::before {
+  background: rgb(60 130 246 / 12%);
+}
+
+:global(.dark) .hero::after {
+  border-color: rgb(147 197 253 / 16%);
+}
+
 .headline {
   position: relative;
   padding-top: 6px;
 }
+
 .title {
+  max-width: 620px;
   white-space: pre-line;
   overflow-wrap: anywhere;
   font-family: var(--font-bricolage), var(--font-sans), sans-serif;
   font-size: clamp(48px, 5.4vw, 76px);
   font-weight: 700;
-  line-height: 1.02;
+  line-height: 0.98;
   letter-spacing: -0.055em;
-  color: #f4f1eb;
+  color: #10202b;
 }
-.signature {
+
+:global(.dark) .title {
+  color: var(--foreground);
+}
+
+.caption {
+  max-width: 410px;
+  margin-top: 28px;
+  color: #5d6b7c;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+:global(.dark) .caption {
+  color: var(--muted-foreground);
+}
+
+.journey {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: auto;
-  padding-top: 32px;
-  position: relative;
+  gap: 12px;
+  padding-top: 48px;
 }
+
+.journeyStep {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+  color: #536377;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+:global(.dark) .journeyStep {
+  color: var(--muted-foreground);
+}
+
+.journeyIcon {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d9e1df;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 75%);
+  color: #1757e8;
+}
+
+:global(.dark) .journeyIcon {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.journeyLine {
+  width: clamp(18px, 5vw, 72px);
+  height: 1px;
+  margin-bottom: 25px;
+  background: #d6dedb;
+}
+
+:global(.dark) .journeyLine {
+  background: var(--border);
+}
+
 .workspace {
   min-width: 0;
   position: relative;
   padding: 32px;
-  border: 1px solid rgb(255 255 255 / 12%);
+  border: 1px solid #dce1dd;
   border-radius: 24px;
-  background: var(--card);
+  background: #fff;
   color: var(--card-foreground);
-  box-shadow: 0 32px 100px -24px rgb(0 0 0 / 55%);
+  box-shadow: 0 28px 80px -42px rgb(17 36 58 / 42%);
 }
+
+:global(.dark) .workspace {
+  border-color: var(--border);
+  background: var(--card);
+  box-shadow: 0 28px 80px -42px rgb(0 0 0 / 60%);
+}
+
 .footer {
-  width: min(100% - 80px, 1280px);
-  margin: 0 auto;
-  padding: 0 0 24px;
   display: flex;
   align-items: center;
   gap: 20px;
-  color: #92a6b7;
+  padding: 0 0 24px;
+  color: #7b8998;
 }
+
+:global(.dark) .footer {
+  color: var(--muted-foreground);
+}
+
 @media (max-width: 1023px) {
-  .header {
+  .header,
+  .footer {
     width: calc(100% - 48px);
+  }
+
+  .header {
     min-height: 80px;
   }
+
   .main {
-    width: min(100% - 48px, 580px);
+    width: min(100% - 48px, 620px);
     grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-    padding: 24px 0 32px;
+    gap: 28px;
+    padding: 36px 0 44px;
   }
+
   .hero {
-    min-height: 225px;
+    min-height: 280px;
   }
+
   .title {
-    font-size: clamp(42px, 8vw, 60px);
-    max-width: 80%;
+    max-width: 580px;
+    font-size: clamp(44px, 8vw, 64px);
   }
-  .art {
-    height: 340px;
-    width: 227px;
-    right: -24px;
-    bottom: -50px;
-    opacity: 0.65;
-    mask-image:
-      linear-gradient(to bottom, transparent, #000 20%, #000 72%, transparent),
-      linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+
+  .caption {
+    margin-top: 20px;
   }
-  .headline {
-    padding-top: 12px;
-  }
-  .signature {
-    display: none;
-  }
-  .footer {
-    width: min(100% - 48px, 580px);
+
+  .journey {
+    padding-top: 28px;
   }
 }
+
 @media (max-width: 479px) {
+  .header,
+  .footer {
+    width: calc(100% - 32px);
+  }
+
   .header {
-    width: calc(100% - 40px);
     min-height: 76px;
   }
+
   .main {
     width: calc(100% - 32px);
-    padding-top: 16px;
+    padding: 28px 0 36px;
   }
+
   .hero {
-    min-height: 200px;
-    padding-left: 8px;
+    min-height: 250px;
   }
+
   .title {
     font-size: 44px;
-    max-width: 88%;
   }
-  .art {
-    right: -16px;
-    opacity: 0.45;
+
+  .journey {
+    gap: 8px;
   }
+
+  .journeyIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .journeyLine {
+    width: 14px;
+  }
+
   .workspace {
     padding: 24px 20px;
     border-radius: 20px;
-  }
-  .footer {
-    width: calc(100% - 40px);
   }
 }
