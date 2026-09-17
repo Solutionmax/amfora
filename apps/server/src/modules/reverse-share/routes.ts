@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { publicUploadRateLimit, sharePasswordRateLimit } from "../../config/rate-limit.config";
 import { ReverseShareController } from "./controller";
 import {
   CreateReverseShareSchema,
@@ -23,7 +24,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
       await request.jwtVerify();
     } catch (err) {
       console.error(err);
-      reply.status(401).send({ error: "Token inválido ou ausente." });
+      reply.status(401).send({ error: "Invalid or missing token." });
     }
   };
 
@@ -175,17 +176,15 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.get(
     "/reverse-shares/:id/upload",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "getReverseShareForUpload",
         summary: "Get Reverse Share for Upload (Public)",
         description:
-          "Get reverse share information for file upload. This is a public endpoint that allows anyone with the link to view upload requirements and restrictions. If password protected, provide password as query parameter.",
+          "Get reverse share information for file upload. This is a public endpoint that allows anyone with the link to view upload requirements and restrictions. If password protected, send the password in the x-share-password header.",
         params: z.object({
           id: z.string().describe("Unique identifier of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         response: {
           200: z.object({
@@ -204,17 +203,15 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.get(
     "/reverse-shares/alias/:alias/upload",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "getReverseShareForUploadByAlias",
         summary: "Get Reverse Share for Upload by Alias (Public)",
         description:
-          "Get reverse share information for file upload using alias. This is a public endpoint that allows anyone with the alias to view upload requirements and restrictions. If password protected, provide password as query parameter.",
+          "Get reverse share information for file upload using alias. This is a public endpoint that allows anyone with the alias to view upload requirements and restrictions. If password protected, send the password in the x-share-password header.",
         params: z.object({
           alias: z.string().describe("Alias of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         response: {
           200: z.object({
@@ -233,6 +230,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/:id/presigned-url",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "getPresignedUrl",
@@ -241,9 +239,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           "Get a presigned URL for direct file upload to storage. This endpoint validates reverse share permissions and generates a temporary upload URL. The presigned URL allows clients to upload files directly to the storage service without going through the API server.",
         params: z.object({
           id: z.string().describe("Unique identifier of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: GetPresignedUrlSchema,
         response: {
@@ -264,6 +259,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/alias/:alias/presigned-url",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "getPresignedUrlByAlias",
@@ -272,9 +268,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           "Get a presigned URL for direct file upload to storage using alias. This endpoint validates reverse share permissions and generates a temporary upload URL. The presigned URL allows clients to upload files directly to the storage service without going through the API server.",
         params: z.object({
           alias: z.string().describe("Alias of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: GetPresignedUrlSchema,
         response: {
@@ -295,6 +288,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/:id/register-file",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "registerFileUpload",
@@ -303,9 +297,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           "Register a completed file upload to the reverse share. This endpoint should be called after successfully uploading a file using the presigned URL to record the file metadata and associate it with the reverse share.",
         params: z.object({
           id: z.string().describe("Unique identifier of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: UploadToReverseShareSchema,
         response: {
@@ -326,6 +317,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/alias/:alias/register-file",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "registerFileUploadByAlias",
@@ -334,9 +326,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           "Register a completed file upload to the reverse share using alias. This endpoint should be called after successfully uploading a file using the presigned URL to record the file metadata and associate it with the reverse share.",
         params: z.object({
           alias: z.string().describe("Alias of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: UploadToReverseShareSchema,
         response: {
@@ -357,6 +346,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/:id/check-password",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "checkReverseSharePassword",
@@ -385,6 +375,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.get(
     "/reverse-shares/files/:fileId/download",
     {
+      config: publicUploadRateLimit,
       preValidation,
       bodyLimit: 1024 * 1024 * 1024 * 1024 * 1024, // 1PB limit for large video files
       schema: {
@@ -597,6 +588,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/alias/:alias/multipart/create",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "createMultipartUploadByAlias",
@@ -605,9 +597,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           "Initializes a multipart upload for large files (≥100MB) to a reverse share. Returns uploadId for subsequent part uploads.",
         params: z.object({
           alias: z.string().describe("Alias of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: z.object({
           filename: z.string().min(1).describe("The filename without extension"),
@@ -634,6 +623,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.get(
     "/reverse-shares/alias/:alias/multipart/part-url",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "getMultipartPartUrlByAlias",
@@ -643,7 +633,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
           alias: z.string().describe("Alias of the reverse share"),
         }),
         querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
           uploadId: z.string().min(1).describe("The multipart upload ID"),
           objectName: z.string().min(1).describe("The object name"),
           partNumber: z.string().min(1).describe("The part number (1-10000)"),
@@ -667,6 +656,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/alias/:alias/multipart/complete",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "completeMultipartUploadByAlias",
@@ -674,9 +664,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
         description: "Completes a multipart upload to a reverse share by combining all uploaded parts",
         params: z.object({
           alias: z.string().describe("Alias of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: z.object({
           uploadId: z.string().min(1).describe("The multipart upload ID"),
@@ -710,6 +697,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.post(
     "/reverse-shares/alias/:alias/multipart/abort",
     {
+      config: publicUploadRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "abortMultipartUploadByAlias",
@@ -717,9 +705,6 @@ export async function reverseShareRoutes(app: FastifyInstance) {
         description: "Aborts a multipart upload to a reverse share and cleans up all uploaded parts",
         params: z.object({
           alias: z.string().describe("Alias of the reverse share"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("Password for accessing password-protected reverse shares"),
         }),
         body: z.object({
           uploadId: z.string().min(1).describe("The multipart upload ID"),
@@ -744,6 +729,7 @@ export async function reverseShareRoutes(app: FastifyInstance) {
   app.get(
     "/reverse-shares/alias/:alias/metadata",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Reverse Share"],
         operationId: "getReverseShareMetadataByAlias",

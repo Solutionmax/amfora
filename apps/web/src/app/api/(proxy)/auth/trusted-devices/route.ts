@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getClientHeaders } from "@/lib/proxy-utils";
+import { clientAddressHeaders } from "@/lib/share-password";
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
@@ -14,6 +15,7 @@ export async function GET(req: NextRequest) {
     const apiRes = await fetch(url, {
       method: "GET",
       headers: {
+        ...clientAddressHeaders(req.headers),
         cookie: cookieHeader || "",
         ...clientHeaders,
         ...Object.fromEntries(Array.from(req.headers.entries()).filter(([key]) => key.startsWith("authorization"))),
@@ -52,6 +54,7 @@ export async function DELETE(req: NextRequest) {
     const apiRes = await fetch(url, {
       method: "DELETE",
       headers: {
+        ...clientAddressHeaders(req.headers),
         cookie: cookieHeader || "",
         ...clientHeaders,
         ...Object.fromEntries(Array.from(req.headers.entries()).filter(([key]) => key.startsWith("authorization"))),

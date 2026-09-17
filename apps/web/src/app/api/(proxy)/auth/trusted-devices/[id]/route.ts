@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getClientHeaders } from "@/lib/proxy-utils";
+import { clientAddressHeaders } from "@/lib/share-password";
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
@@ -14,6 +15,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const apiRes = await fetch(deleteUrl, {
       method: "DELETE",
       headers: {
+        ...clientAddressHeaders(request.headers),
         ...clientHeaders,
         ...Object.fromEntries(
           Array.from(request.headers.entries()).filter(
@@ -28,6 +30,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     return NextResponse.json(data, {
       status: apiRes.status,
       headers: {
+        ...clientAddressHeaders(request.headers),
         "Content-Type": "application/json",
       },
     });

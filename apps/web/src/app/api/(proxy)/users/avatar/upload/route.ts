@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 export const maxDuration = 300; // 5 minutes for avatar uploads
 export const dynamic = "force-dynamic";
 
@@ -13,6 +15,7 @@ export async function POST(req: NextRequest) {
   const apiRes = await fetch(url, {
     method: "POST",
     headers: {
+      ...clientAddressHeaders(req.headers),
       cookie: cookieHeader || "",
     },
     body: formData,

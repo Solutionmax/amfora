@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
@@ -9,6 +11,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
   const apiRes = await fetch(url, {
     method: "GET",
     headers: {
+      ...clientAddressHeaders(req.headers),
       "Content-Type": "application/json",
     },
     redirect: "manual",

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { clientAddressHeaders } from "@/lib/share-password";
+
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -10,6 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const apiRes = await fetch(url, {
     method: "GET",
     headers: {
+      ...clientAddressHeaders(req.headers),
       cookie: cookieHeader || "",
     },
     redirect: "manual",
@@ -40,6 +43,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const apiRes = await fetch(url, {
     method: "PATCH",
     headers: {
+      ...clientAddressHeaders(req.headers),
       "Content-Type": "application/json",
       cookie: cookieHeader || "",
     },
@@ -72,6 +76,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   const apiRes = await fetch(url, {
     method: "DELETE",
     headers: {
+      ...clientAddressHeaders(req.headers),
       cookie: cookieHeader || "",
     },
     redirect: "manual",

@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { sharePasswordRateLimit } from "../../config/rate-limit.config";
 import { ShareController } from "./controller";
 import {
   CreateShareSchema,
@@ -20,7 +21,7 @@ export async function shareRoutes(app: FastifyInstance) {
       await request.jwtVerify();
     } catch (err) {
       console.error(err);
-      reply.status(401).send({ error: "Token inválido ou ausente." });
+      reply.status(401).send({ error: "Invalid or missing token." });
     }
   };
 
@@ -70,6 +71,7 @@ export async function shareRoutes(app: FastifyInstance) {
   app.get(
     "/shares/:shareId",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Share"],
         operationId: "getShare",
@@ -77,9 +79,6 @@ export async function shareRoutes(app: FastifyInstance) {
         description: "Get a share by ID",
         params: z.object({
           shareId: z.string().describe("The share ID"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("The share password"),
         }),
         response: {
           200: z.object({
@@ -298,15 +297,13 @@ export async function shareRoutes(app: FastifyInstance) {
   app.get(
     "/shares/alias/:alias",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Share"],
         operationId: "getShareByAlias",
         summary: "Get share by alias",
         params: z.object({
           alias: z.string().describe("The share alias"),
-        }),
-        querystring: z.object({
-          password: z.string().optional().describe("The share password"),
         }),
         response: {
           200: z.object({
@@ -351,6 +348,7 @@ export async function shareRoutes(app: FastifyInstance) {
   app.get(
     "/shares/alias/:alias/metadata",
     {
+      config: sharePasswordRateLimit,
       schema: {
         tags: ["Share"],
         operationId: "getShareMetadataByAlias",
