@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Documentation — Amfora</title>
+    <meta
+      name="description"
+      content="Install, configure and use Amfora. Guides for self-hosting, storage, file sharing, upload requests, branding and administration."
+    />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#071827" />
+    <link rel="canonical" href="https://amfora.solutionmax.net/docs/" />
+    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Documentation — Amfora" />
+    <meta
+      property="og:description"
+      content="Install, configure and use Amfora. Guides for self-hosting, storage, file sharing, upload requests, branding and administration."
+    />
+    <meta property="og:url" content="https://amfora.solutionmax.net/docs/" />
+    <meta
+      property="og:image"
+      content="https://amfora.solutionmax.net/assets/screenshots/download.webp"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/bricolage-grotesque-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <script src="/assets/site.js" defer></script>
+  </head>
+  <body class="docs-page">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/" aria-label="Amfora home"
+          ><svg
+            aria-hidden="true"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-width="6.5"
+              stroke-linecap="round"
+            >
+              <path d="M45 21 C30 25 22 38 32 52" />
+              <path d="M55 21 C70 25 78 38 68 52" />
+            </g>
+            <g fill="currentColor">
+              <rect x="35" y="9" width="30" height="8" rx="4" />
+              <path d="M44 17 H56 L55 30 H45 Z" />
+              <path
+                d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"
+              />
+              <rect x="41" y="83" width="18" height="7" rx="3.5" />
+            </g></svg
+          ><span>amfora<span class="brand-dot">.</span></span></a
+        ><button
+          class="menu-toggle"
+          aria-controls="navigation"
+          aria-expanded="false"
+        >
+          Menu <span aria-hidden="true">＋</span>
+        </button>
+        <nav id="navigation" aria-label="Main navigation">
+          <a href="/#product">The product</a><a href="/#inside">A closer look</a
+          ><a href="/docs/">Documentation</a
+          ><a class="nav-source" href="https://github.com/raym0nz82/amfora"
+            >GitHub <span class="private-badge">Private</span
+            ><span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <div class="docs-hero">
+        <div class="wrap">
+          <p class="eyebrow">AMFORA / DOCUMENTATION</p>
+          <h1>A good place to start.</h1>
+          <p>
+            From your first local install to a workspace that feels like your
+            own. Practical guides for the people sharing files and the people
+            looking after them.
+          </p>
+        </div>
+      </div>
+      <div class="wrap docs-layout">
+        <aside class="docs-sidebar">
+          <p class="eyebrow">IN THIS GUIDE</p>
+          <nav aria-label="Documentation sections">
+            <a href="#overview">Overview</a
+            ><a href="#getting-started">Getting started</a
+            ><a href="#deployment">HTTPS deployment</a
+            ><a href="#storage">Storage & limits</a
+            ><a href="#sharing">Send & receive</a
+            ><a href="#admin">Administration</a
+            ><a href="#operations">Backups & upgrades</a
+            ><a href="#troubleshooting">Troubleshooting</a
+            ><a href="#about">About this preview</a>
+          </nav>
+          <p>Amfora 1.0 · Private preview<br />Last reviewed September 2026</p>
+        </aside>
+        <div class="docs-content">
+          <section class="docs-section" id="overview">
+            <p class="section-kicker">01 / Start here</p>
+            <h2>A private file workspace you operate</h2>
+            <p>
+              Amfora keeps file metadata in SQLite and stores objects through an
+              S3-compatible storage layer. The image includes a private MinIO
+              service for a zero-configuration starting point, and can use an
+              external S3-compatible provider when that better fits your
+              infrastructure.
+            </p>
+            <div class="docs-grid">
+              <article>
+                <h3>Send</h3>
+                <p>
+                  Upload files, create a share, and send a browser link. Add a
+                  password, expiry, view limit, or recipients.
+                </p>
+              </article>
+              <article>
+                <h3>Receive</h3>
+                <p>
+                  Publish a receive link so people can upload without an Amfora
+                  account. Set limits before sharing it.
+                </p>
+              </article>
+              <article>
+                <h3>Control</h3>
+                <p>
+                  Manage users, folders, links, branding, two-factor
+                  authentication, and optional OAuth2/OIDC providers.
+                </p>
+              </article>
+            </div>
+            <aside class="docs-note">
+              <strong>Data boundary.</strong> Amfora does not promise
+              application-level encryption at rest. Protect the host volume or
+              external storage account with the controls appropriate to your
+              deployment.
+            </aside>
+          </section>
+          <section class="docs-section" id="getting-started">
+            <p class="section-kicker">02 / Install</p>
+            <h2>Start with Docker Compose</h2>
+            <p>
+              You need access to the private repository, Git, and Docker with
+              Compose and BuildKit. Clone the maintained branch, build the
+              application, and open the local web interface:
+            </p>
+            <pre><code>git clone --branch amfora https://github.com/raym0nz82/amfora.git
+cd amfora
+docker compose up -d --build</code></pre>
+            <p>
+              Open <code>http://localhost:5487</code>. The first start creates
+              the SQLite database, seeds configuration, and makes the first
+              account created on an empty database an administrator. Later
+              accounts are ordinary users unless an administrator creates or
+              promotes them.
+            </p>
+            <p>
+              The sample Compose file publishes the web interface on
+              <code>5487</code> and bundled storage on <code>9379</code>. The
+              API listens on <code>3333</code> inside the container and is left
+              unpublished because the bundled web app reaches it through its
+              server-side proxy.
+            </p>
+            <aside>
+              <strong>Private preview.</strong> GitHub access is required. A 404
+              on the repository usually means your GitHub account has not been
+              granted access. There is no public prebuilt image or release
+              download offered by this preview.
+            </aside>
+            <p>
+              For access from another computer, change
+              <code>STORAGE_URL</code> from localhost to the storage address
+              that computer can reach. For public use, complete the HTTPS setup
+              below before sharing the instance.
+            </p>
+          </section>
+          <section class="docs-section" id="deployment">
+            <p class="section-kicker">03 / Production</p>
+            <h2>Give the app and storage clear HTTPS addresses</h2>
+            <p>
+              Use a trusted reverse proxy for both the web interface and the
+              browser-facing storage endpoint. A split-domain deployment can
+              look like this:
+            </p>
+            <pre><code>https://app.example.com    → container port 5487
+https://files.example.com  → container port 9379</code></pre>
+            <p>Set the values that describe that public arrangement:</p>
+            <pre><code>environment:
+  SECURE_SITE: "true"
+  STORAGE_URL: "https://files.example.com"</code></pre>
+            <p>
+              <code>STORAGE_URL</code> is the URL used by a browser, not the
+              address one container uses to reach another. The storage hostname
+              must forward to the internal storage service and accept the
+              browser’s upload and download requests. Keep the API on the
+              private container network unless you operate another authenticated
+              API client.
+            </p>
+            <h3>A minimal Caddy example</h3>
+            <p>
+              For Caddy running on the same host, bind the application ports to
+              localhost in Compose. Replace the domains below with your own and
+              point their DNS records at that host.
+            </p>
+            <pre><code>ports:
+  - "127.0.0.1:5487:5487"
+  - "127.0.0.1:9379:9379"</code></pre>
+            <pre><code>app.example.com {
+    reverse_proxy 127.0.0.1:5487
+}
+files.example.com {
+    reverse_proxy 127.0.0.1:9379
+}</code></pre>
+            <p>
+              The product website at <code>amfora.solutionmax.net</code> is
+              separate from your Amfora application. These example domains do
+              not provide a hosted Amfora service.
+            </p>
+            <p>
+              Forward the original host and protocol through the proxy.
+              <code>SECURE_SITE=true</code> enables secure cookies. Configure
+              HSTS at your HTTPS reverse proxy. Set
+              <code>TRUST_PROXY=false</code> when the API is exposed without a
+              trusted proxy in front of it.
+            </p>
+          </section>
+          <section class="docs-section" id="storage">
+            <p class="section-kicker">04 / Storage</p>
+            <h2>Choose bundled or external S3-compatible storage</h2>
+            <h3>Bundled storage</h3>
+            <p>
+              Leave <code>ENABLE_S3=false</code> (the default) to run the
+              included MinIO service. Set <code>STORAGE_URL</code> to the public
+              URL that browsers can reach. The Compose example uses
+              <code>http://127.0.0.1:9379</code> for local use. The bucket is
+              private and the container writes its generated credentials under
+              the persistent application directory.
+            </p>
+            <h3>External storage</h3>
+            <p>
+              Set <code>ENABLE_S3=true</code> and provide the external endpoint
+              and credentials. The endpoint and bucket must be reachable and
+              permitted for the browser requests represented by generated upload
+              and download URLs.
+            </p>
+            <pre><code>ENABLE_S3=true
+S3_ENDPOINT=s3.example.com
+S3_PORT=443
+S3_USE_SSL=true
+S3_ACCESS_KEY=your-access-key
+S3_SECRET_KEY=your-secret-key
+S3_REGION=us-east-1
+S3_BUCKET_NAME=amfora-files
+S3_FORCE_PATH_STYLE=false</code></pre>
+            <p>
+              Use <code>S3_FORCE_PATH_STYLE=true</code> for providers such as
+              MinIO. If a provider rejects the SDK checksum, set
+              <code>S3_DISABLE_CHECKSUMS=true</code> as documented by that
+              provider. Keep <code>S3_REJECT_UNAUTHORIZED=true</code> unless you
+              have a deliberate certificate exception.
+            </p>
+            <h3>Limits and URL lifetime</h3>
+            <p>
+              A new installation seeds a 1 GiB maximum file size and 10 GiB
+              maximum storage per user. Administrators can adjust those values
+              in Settings. <code>PRESIGNED_URL_EXPIRATION</code> controls the
+              default generated storage URL lifetime in seconds and defaults to
+              <code>3600</code>.
+            </p>
+          </section>
+          <section class="docs-section" id="sharing">
+            <p class="section-kicker">05 / Daily work</p>
+            <h2>Send a link or collect files through one</h2>
+            <h3 id="workspace">Your workspace</h3>
+            <p>
+              The dashboard gives you a starting point for files, shares and
+              upload requests. Use folders to organize files before creating a
+              share. Profile manages your personal details and account security;
+              administration controls are available to administrators.
+            </p>
+            <h3>Send files</h3>
+            <ol>
+              <li>Sign in and open <strong>My files</strong>.</li>
+              <li>Upload files or create folders.</li>
+              <li>
+                Select the items, create a share, and set its restrictions.
+              </li>
+              <li>Copy the generated <code>/s/&lt;alias&gt;</code> link.</li>
+            </ol>
+            <p>
+              A share can have a password, expiration date, maximum view count,
+              and named recipients. Its owner can later edit the contents,
+              recipients, password, expiry, or alias from
+              <strong>Shares</strong>. A recipient opens the link in a browser;
+              a protected share asks for its password before files are
+              available.
+            </p>
+            <h3>Copy a link or export its QR code</h3>
+            <p>
+              Use the share menu to copy its link. Open the QR-code action to
+              display or download a PNG that points to the same URL. After
+              changing an alias or application hostname, generate a new QR code
+              and replace any older copies. Anyone with the link or code can
+              reach the share, subject to its restrictions.
+            </p>
+            <h3 id="receiving">Receive files</h3>
+            <ol>
+              <li>
+                Open <strong>Receive files</strong> and create a receive share.
+              </li>
+              <li>
+                Choose optional file count, size, type, password, expiry, name,
+                and email requirements.
+              </li>
+              <li>Copy the generated <code>/r/&lt;alias&gt;</code> link.</li>
+            </ol>
+            <p>
+              The sender uploads from the public receive page without an Amfora
+              account. The owner reviews the received files in
+              <strong>Reverse shares</strong>.
+            </p>
+          </section>
+          <section class="docs-section" id="admin">
+            <p class="section-kicker">06 / Administration</p>
+            <h2>Keep access and identity in the workspace</h2>
+            <p>
+              Administrators can invite users, list and deactivate accounts,
+              change roles, set storage limits, customize the installation,
+              configure SMTP, and manage external login providers. Invite links
+              are one-time registration links.
+            </p>
+            <h3 id="branding">Make it feel like your brand</h3>
+            <p>
+              Open <strong>Customization</strong> to set the application name,
+              logo, accent color, font and corner radius. Check the result in
+              both light and dark themes, on mobile, and on a public upload and
+              download page. Use <strong>Settings</strong> for storage limits,
+              language, email and authentication configuration.
+            </p>
+            <h3>Two-factor authentication</h3>
+            <p>
+              Each user can enable TOTP in their profile, verify setup with an
+              authenticator, save backup codes, and remove trusted devices. A
+              2FA login verifies the password first and then accepts a TOTP or
+              unused backup code.
+            </p>
+            <h3>OAuth2 and OIDC</h3>
+            <p>
+              External login is optional. The seeded providers are Google,
+              Discord, GitHub, Auth0, Kinde, Zitadel, Authentik, Frontegg and
+              Pocket ID. Additional compatible OIDC providers can be configured.
+              Match callback URLs and client settings at both ends. Keep
+              password authentication enabled until an external provider has
+              been tested; disabling it also disables password reset.
+            </p>
+            <h3>Password recovery</h3>
+            <p>
+              Password reset requires password authentication and a working SMTP
+              configuration. Responses deliberately do not reveal whether an
+              email address exists. For operator recovery, the container
+              includes an interactive reset tool:
+            </p>
+            <pre><code>docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-password.sh'
+docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-password.sh --list'</code></pre>
+          </section>
+          <section class="docs-section" id="operations">
+            <p class="section-kicker">07 / Operate</p>
+            <h2>Back up before you upgrade</h2>
+            <h3>Bundled storage backups</h3>
+            <p>
+              Back up the complete persistent
+              <code>/app/server</code> directory, including
+              <code>prisma/amfora.db</code>, <code>minio-data</code>, and
+              generated storage credentials. Stop the container or use a
+              filesystem snapshot consistent for the database and objects.
+            </p>
+            <h3>External storage backups</h3>
+            <p>
+              Back up the SQLite database and the external S3 bucket through
+              that provider’s supported process. Keep the database and object
+              backup points close enough to restore a consistent workspace.
+            </p>
+            <h3>Upgrade</h3>
+            <p>
+              Keep the persistent volume, replace the image, and start the
+              container. Startup applies the Prisma schema and seeds missing
+              configuration/provider records. An installation created under
+              Palmr is migrated from
+              <code>prisma/palmr.db</code> to <code>prisma/amfora.db</code>; an
+              existing internal bucket is preserved when no explicit bucket
+              override is supplied. Verify a test share and download after the
+              upgrade.
+            </p>
+          </section>
+          <section class="docs-section" id="troubleshooting">
+            <p class="section-kicker">08 / Troubleshooting</p>
+            <h2>Check the boundary where the request stops</h2>
+            <dl class="docs-faq">
+              <dt>The page loads but uploads fail.</dt>
+              <dd>
+                Confirm that <code>STORAGE_URL</code> is browser-reachable,
+                forwards to the storage service, and accepts the storage
+                requests. Then inspect
+                <code>docker compose logs -f amfora</code>.
+              </dd>
+              <dt>The API starts but storage is unavailable.</dt>
+              <dd>
+                For bundled storage, wait for initialization and check for
+                <code>.minio-credentials</code> in the persistent directory. For
+                external S3, verify every <code>S3_*</code> value and bucket
+                permission.
+              </dd>
+              <dt>HTTPS redirects or cookies behave incorrectly.</dt>
+              <dd>
+                Check the forwarded host and protocol, set
+                <code>SECURE_SITE=true</code> for HTTPS, and set
+                <code>TRUST_PROXY=false</code> when no trusted proxy is present.
+              </dd>
+              <dt>Password reset email does not arrive.</dt>
+              <dd>
+                Enable SMTP in Settings, verify the host, port, credentials,
+                sender, and TLS mode, and run the admin SMTP test action.
+              </dd>
+              <dt>An upgrade appears empty.</dt>
+              <dd>
+                Check that the original persistent volume is mounted. Do not
+                create a new bucket or rename the storage directory by hand;
+                preserve the bucket recorded in <code>.minio-credentials</code>.
+              </dd>
+            </dl>
+          </section>
+          <section id="about">
+            <p class="section-kicker">09 / About this preview</p>
+            <h2>A work in progress, ready to explore.</h2>
+            <p>
+              This product website and documentation are available for preview.
+              The application source remains in a private GitHub repository,
+              available to invited collaborators. Screenshots use example
+              content from an isolated test installation.
+            </p>
+            <p>
+              Amfora is a maintained fork of Palmr, with its own visual identity
+              and ongoing improvements. It is licensed under the Apache License
+              2.0. Bundled MinIO and mc are separate, unmodified AGPL-3.0
+              programs. See <a href="/LICENSE">LICENSE</a>,
+              <a href="/NOTICE">NOTICE</a> and the
+              <a href="/licenses/AGPL-3.0.txt">bundled program license</a>.
+            </p>
+            <p>
+              Fonts: Bricolage Grotesque and Plus Jakarta Sans, distributed
+              under the SIL Open Font License. Font license files are included
+              with the
+              <a href="https://github.com/raym0nz82/amfora">source repository</a
+              >.
+            </p>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-top">
+        <div>
+          <a class="brand" href="/" aria-label="Amfora home"
+            ><svg
+              aria-hidden="true"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-width="6.5"
+                stroke-linecap="round"
+              >
+                <path d="M45 21 C30 25 22 38 32 52" />
+                <path d="M55 21 C70 25 78 38 68 52" />
+              </g>
+              <g fill="currentColor">
+                <rect x="35" y="9" width="30" height="8" rx="4" />
+                <path d="M44 17 H56 L55 30 H45 Z" />
+                <path
+                  d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"
+                />
+                <rect x="41" y="83" width="18" height="7" rx="3.5" />
+              </g></svg
+            ><span>amfora<span class="brand-dot">.</span></span></a
+          >
+          <p>
+            A considered home for your files.<br />Built to run on your terms.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="/#inside">Explore the interface</a
+          ><a href="/docs/">Documentation</a
+          ><a href="https://github.com/raym0nz82/amfora"
+            >GitHub · private repository ↗</a
+          >
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>© 2026 SolutionMAX · Amfora</span
+        ><span>Self-hosted. Thoughtfully shared.</span
+        ><a href="/docs/#about">About this preview</a>
+      </div>
+    </footer>
+    <p class="toast" role="status" aria-live="polite"></p>
+  </body>
+</html>
