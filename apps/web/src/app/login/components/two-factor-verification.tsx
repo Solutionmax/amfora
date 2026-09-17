@@ -45,8 +45,8 @@ export function TwoFactorVerification({
   };
 
   return (
-    <Card className="w-full rounded-2xl border border-border/80 bg-card shadow-[0_24px_80px_-40px_rgba(7,24,39,0.55)]">
-      <CardHeader className="gap-3 border-b px-6 pb-5 pt-6 text-left sm:px-7">
+    <Card className="w-full gap-0 border-0 bg-transparent py-0 shadow-none">
+      <CardHeader className="gap-3 border-b px-0 pb-5 pt-0 text-left">
         <div className="flex items-center gap-3">
           <div className="rounded-xl bg-primary/10 p-3">
             <IconShield className="size-5 text-primary" />
@@ -59,7 +59,7 @@ export function TwoFactorVerification({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-6 pb-6 pt-5 sm:px-7">
+      <CardContent className="px-0 pb-0 pt-5">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="twoFactorCode" className="mb-2 block">
@@ -79,15 +79,15 @@ export function TwoFactorVerification({
               <div className="flex justify-center">
                 <InputOTP maxLength={6} value={twoFactorCode} onChange={handleCodeChange}>
                   <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
+                    <InputOTPSlot className="w-7 min-[400px]:w-9" index={0} />
+                    <InputOTPSlot className="w-7 min-[400px]:w-9" index={1} />
+                    <InputOTPSlot className="w-7 min-[400px]:w-9" index={2} />
                   </InputOTPGroup>
                   <InputOTPSeparator />
                   <InputOTPGroup>
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
+                    <InputOTPSlot className="w-7 min-[400px]:w-9" index={3} />
+                    <InputOTPSlot className="w-7 min-[400px]:w-9" index={4} />
+                    <InputOTPSlot className="w-7 min-[400px]:w-9" index={5} />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
