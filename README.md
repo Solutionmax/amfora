@@ -30,7 +30,7 @@ to storage you control, turn them into a guarded share, or give someone a
 browser link where they can send files back without creating an account.
 
 <p align="center">
-  <img src="site/assets/screenshots/dashboard.webp" alt="Amfora workspace dashboard" width="100%" />
+  <img src="site/assets/screenshots/dashboard.webp?v=transfer-refresh-20260917" alt="Amfora workspace dashboard" width="100%" />
 </p>
 
 Amfora is a maintained fork of [Palmr](https://github.com/kyantech/Palmr).
@@ -70,21 +70,21 @@ workspace.
 
 The screenshots show the English interface with demonstration data.
 
-![Amfora dashboard](site/assets/screenshots/dashboard.webp)
+![Amfora dashboard](site/assets/screenshots/dashboard.webp?v=transfer-refresh-20260917)
 
 The dashboard brings uploads, shares, receive links, storage usage, and recent
 files into one starting point.
 
-![Amfora send view](site/assets/screenshots/download.webp)
+![Amfora send view](site/assets/screenshots/download.webp?v=transfer-refresh-20260917)
 
 A share presents its files and delivery rules in a focused download view.
 
-![Amfora receive view](site/assets/screenshots/upload.webp)
+![Amfora receive view](site/assets/screenshots/upload.webp?v=transfer-refresh-20260917)
 
 A receive link gives outside collaborators a simple upload form with the limits
 set by its owner.
 
-![Amfora sign-in](site/assets/screenshots/login.webp)
+![Amfora sign-in](site/assets/screenshots/login.webp?v=transfer-refresh-20260917)
 
 The sign-in screen supports password authentication, password recovery, and
 two-factor authentication when it is enabled for the account.
