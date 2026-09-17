@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { IconLanguage } from "@tabler/icons-react";
+import Cookies from "js-cookie";
 import { useLocale } from "next-intl";
-import { setCookie } from "nookies";
 import ReactCountryFlag from "react-country-flag";
 
 import { Button } from "@/components/ui/button";
@@ -53,8 +53,8 @@ export function LanguageSwitcher() {
     const isRTL = RTL_LANGUAGES.includes(fullLocale);
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
 
-    setCookie(null, COOKIE_LANG_KEY, fullLocale, {
-      maxAge: COOKIE_MAX_AGE,
+    Cookies.set(COOKIE_LANG_KEY, fullLocale, {
+      expires: COOKIE_MAX_AGE / 86400,
       path: "/",
       sameSite: "lax",
       secure: window.location.protocol === "https:",

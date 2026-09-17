@@ -10,9 +10,11 @@ import {
   RegisterFolderSchema,
   UpdateFolderSchema,
 } from "./dto";
+import { FolderShareController } from "./share-controller";
 
 export async function folderRoutes(app: FastifyInstance) {
   const folderController = new FolderController();
+  const folderShareController = new FolderShareController();
 
   const preValidation = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -22,6 +24,63 @@ export async function folderRoutes(app: FastifyInstance) {
       reply.status(401).send({ error: "Invalid or missing token." });
     }
   };
+
+  const publicFolderShareParams = z.object({
+    shareId: z.string().min(1),
+    folderId: z.string().min(1),
+  });
+
+  app.get(
+    "/shares/:shareId/folders/:folderId/contents",
+    {
+      schema: {
+        tags: ["Share"],
+        operationId: "getSharedFolderContents",
+        params: publicFolderShareParams,
+        response: {
+          200: z.object({
+            folder: z.object({
+              id: z.string(),
+              name: z.string(),
+              description: z.string().nullable(),
+              parentId: z.string().nullable(),
+              createdAt: z.date(),
+              updatedAt: z.date(),
+            }),
+            folders: z.array(z.any()),
+            files: z.array(z.any()),
+          }),
+          401: z.object({ error: z.string() }),
+          403: z.object({ error: z.string() }),
+          404: z.object({ error: z.string() }),
+          410: z.object({ error: z.string() }),
+        },
+      },
+    },
+    folderShareController.getFolderContents.bind(folderShareController)
+  );
+
+  app.get(
+    "/shares/:shareId/folders/:folderId/download",
+    {
+      schema: {
+        tags: ["Share"],
+        operationId: "downloadSharedFolder",
+        params: publicFolderShareParams,
+        response: {
+          200: z.object({
+            files: z.array(z.any()),
+            expiresIn: z.number(),
+          }),
+          401: z.object({ error: z.string() }),
+          403: z.object({ error: z.string() }),
+          404: z.object({ error: z.string() }),
+          410: z.object({ error: z.string() }),
+        },
+      },
+    },
+    folderShareController.downloadFolder.bind(folderShareController)
+  );
 
   app.post(
     "/folders",

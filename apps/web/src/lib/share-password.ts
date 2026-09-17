@@ -6,13 +6,9 @@
  */
 export const SHARE_PASSWORD_HEADER = "x-share-password";
 
-/**
- * The API is reached server side, so without this every visitor arrives at the API as the
- * Next.js process itself. Rate limits would then be counted against one shared address:
- * useless against an attacker and able to lock out every user at once. Passing the client
- * address on lets the API count per visitor, as `trustProxy` expects.
- */
+/** Only opt in behind a private ingress that replaces incoming forwarding headers. */
 export function clientAddressHeaders(headers: Headers): Record<string, string> {
+  if (process.env.TRUST_CLIENT_IP_HEADERS !== "true") return {};
   const forwardedFor = headers.get("x-forwarded-for");
   return forwardedFor ? { "x-forwarded-for": forwardedFor } : {};
 }

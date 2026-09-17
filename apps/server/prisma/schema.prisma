@@ -328,3 +328,26 @@ model InviteToken {
 
   @@map("invite_tokens")
 }
+
+// Pending public uploads are scoped to a receive link; browser-chosen object keys are never trusted.
+model ReverseUpload {
+  objectName     String @id
+  filename       String
+  size           BigInt
+  reverseShareId String
+  uploadId       String?
+  expiresAt      DateTime
+  consumed       Boolean @default(false)
+  @@index([reverseShareId, expiresAt])
+  @@map("reverse_uploads")
+}
+
+model LoginChallenge {
+  id          String @id
+  userId      String
+  fingerprint String
+  expiresAt   DateTime
+  attempts    Int @default(0)
+  @@index([expiresAt])
+  @@map("login_challenges")
+}

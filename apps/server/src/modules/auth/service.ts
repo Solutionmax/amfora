@@ -8,6 +8,7 @@ import { TwoFactorService } from "../two-factor/service";
 import { UserResponseSchema } from "../user/dto";
 import { PrismaUserRepository } from "../user/repository";
 import { LoginInput } from "./dto";
+import { challengeHash, createLoginChallenge, credentialFingerprint, validLoginChallenge } from "./login-challenge";
 import { TrustedDeviceService } from "./trusted-device.service";
 
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
   private twoFactorService = new TwoFactorService();
   private trustedDeviceService = new TrustedDeviceService();
 
-  async login(data: LoginInput, userAgent?: string, ipAddress?: string) {
+  async login(data: LoginInput, userAgent?: string, ipAddress?: string, trustedToken?: string) {
     const passwordAuthEnabled = await this.configService.getValue("passwordAuthEnabled");
     if (passwordAuthEnabled === "false") {
       throw new Error("Password authentication is disabled. Please use an external authentication provider.");
@@ -89,18 +90,14 @@ export class AuthService {
     const has2FA = await this.twoFactorService.isEnabled(user.id);
 
     if (has2FA) {
-      if (userAgent && ipAddress) {
-        const isDeviceTrusted = await this.trustedDeviceService.isDeviceTrusted(user.id, userAgent, ipAddress);
-        if (isDeviceTrusted) {
-          // Update last used timestamp for trusted device
-          await this.trustedDeviceService.updateLastUsed(user.id, userAgent, ipAddress);
-          return UserResponseSchema.parse(user);
-        }
+      if (trustedToken && (await this.trustedDeviceService.isDeviceTrusted(user.id, trustedToken))) {
+        return UserResponseSchema.parse(user);
       }
 
       return {
         requiresTwoFactor: true,
         userId: user.id,
+        challengeId: await createLoginChallenge(user),
         message: "Two-factor authentication required",
       };
     }
@@ -113,7 +110,8 @@ export class AuthService {
     token: string,
     rememberDevice: boolean = false,
     userAgent?: string,
-    ipAddress?: string
+    ipAddress?: string,
+    challengeId?: string
   ) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -127,6 +125,17 @@ export class AuthService {
       throw new Error("Account is inactive. Please contact an administrator.");
     }
 
+    if (!challengeId || challengeId.length !== 64) throw new Error("Password verification required");
+    const id = challengeHash(challengeId);
+    const challenge = await prisma.loginChallenge.findUnique({ where: { id } });
+    if (!validLoginChallenge(challenge, userId, credentialFingerprint(user)))
+      throw new Error("Login challenge is invalid or expired");
+    const attempt = await prisma.loginChallenge.updateMany({
+      where: { id, attempts: { lt: 5 }, expiresAt: { gt: new Date() } },
+      data: { attempts: { increment: 1 } },
+    });
+    if (attempt.count !== 1) throw new Error("Login challenge is invalid or expired");
+
     const verificationResult = await this.twoFactorService.verifyToken(userId, token);
 
     if (!verificationResult.success) {
@@ -137,20 +146,13 @@ export class AuthService {
       where: { userId },
     });
 
-    if (rememberDevice && userAgent && ipAddress) {
-      await this.trustedDeviceService.addTrustedDevice(userId, userAgent, ipAddress);
-    } else if (userAgent && ipAddress) {
-      // Update last used timestamp if this is already a trusted device
-      const isDeviceTrusted = await this.trustedDeviceService.isDeviceTrusted(userId, userAgent, ipAddress);
-      if (isDeviceTrusted) {
-        await this.trustedDeviceService.updateLastUsed(userId, userAgent, ipAddress);
-      }
-    }
+    const consumed = await prisma.loginChallenge.deleteMany({ where: { id, expiresAt: { gt: new Date() } } });
+    if (consumed.count !== 1) throw new Error("Login challenge has already been used");
 
     return UserResponseSchema.parse(user);
   }
 
-  async requestPasswordReset(email: string, origin: string) {
+  async requestPasswordReset(email: string) {
     const passwordAuthEnabled = await this.configService.getValue("passwordAuthEnabled");
     if (passwordAuthEnabled === "false") {
       throw new Error("Password authentication is disabled. Password reset is not available.");
@@ -173,7 +175,7 @@ export class AuthService {
     });
 
     try {
-      await this.emailService.sendPasswordResetEmail(email, token, origin);
+      await this.emailService.sendPasswordResetEmail(email, token);
     } catch (error) {
       console.error("Failed to send password reset email:", error);
       throw new Error("Failed to send password reset email");

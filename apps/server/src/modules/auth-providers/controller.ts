@@ -132,7 +132,7 @@ export class AuthProvidersController {
     const sanitizedData: any = {};
 
     for (const field of OFFICIAL_PROVIDER_ALLOWED_FIELDS) {
-      if (data[field] !== undefined) {
+      if (data[field] !== undefined && !(field === "clientSecret" && data[field] === "")) {
         sanitizedData[field] = data[field];
       }
     }

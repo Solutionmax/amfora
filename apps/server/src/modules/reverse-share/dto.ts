@@ -111,7 +111,9 @@ export const UpdateReverseSharePasswordSchema = z.object({
 });
 
 export const GetPresignedUrlSchema = z.object({
-  objectName: z.string().describe("The object name for the file"),
+  filename: z.string().min(1).max(255),
+  extension: z.string().max(32),
+  size: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
 });
 
 export const UpdateReverseShareFileSchema = z.object({

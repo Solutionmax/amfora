@@ -84,18 +84,14 @@ export function FileUploadSection({
         }
       }
     },
-    onBeforeUpload: async (file) => {
-      const timestamp = Date.now();
-      const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-      return `reverse-shares/${alias}/${timestamp}-${sanitizedFileName}`;
-    },
-    getPresignedUrl: async (objectName) => {
+    onBeforeUpload: async (file) => file.name,
+    getPresignedUrl: async (_objectName, extension, file) => {
       const response = await getPresignedUrlForUploadByAlias(
         alias,
-        { objectName },
+        { filename: file.name, extension, size: file.size },
         password ? { password } : undefined
       );
-      return { url: response.data.url, method: "PUT" };
+      return { url: response.data.url, method: "PUT", actualObjectName: response.data.objectName };
     },
     onAfterUpload: async (fileId, file, objectName) => {
       const fileExtension = file.name.split(".").pop() || "";
@@ -129,10 +125,10 @@ export function FileUploadSection({
     },
     // Custom multipart functions for reverse share uploads (no auth required)
     customMultipartFunctions: {
-      createMultipartUpload: async (filename: string, extension: string) => {
+      createMultipartUpload: async (filename: string, extension: string, size: number) => {
         const response = await createMultipartUploadByAlias(
           alias,
-          { filename, extension },
+          { filename, extension, size },
           password ? { password } : undefined
         );
         return response.data;

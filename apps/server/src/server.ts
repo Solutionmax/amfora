@@ -87,7 +87,7 @@ async function startServer() {
 
   await app.listen({
     port: 3333,
-    host: "0.0.0.0",
+    host: process.env.API_HOST || "127.0.0.1",
   });
 
   console.log(`Amfora server running on port 3333`);

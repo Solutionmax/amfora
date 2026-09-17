@@ -227,3 +227,24 @@ information.
 
 Built and maintained by [SolutionMAX](https://solutionmax.net/).
 If Amfora helps your team, you can [support the work](https://buymeacoffee.com/solutionmax).
+
+### Security configuration
+
+Set `APP_URL` to the canonical browser origin (for example `https://files.example.com`)
+before enabling password-reset email. Public deployments must use HTTPS for both app
+and storage and `SECURE_SITE=true`. The API binds to loopback inside the container by
+default; publish only the web and storage services through your TLS ingress.
+
+Client-supplied IP headers are ignored by default. Only behind an ingress that replaces
+incoming forwarding headers and blocks direct web access, set
+`TRUST_CLIENT_IP_HEADERS=true` for the web process and `TRUST_PROXY=127.0.0.1,::1`
+for the API's known proxy hops. Never configure blanket trust of arbitrary proxies.
+Without this opt-in, request rate limits conservatively share the proxy address;
+password failures are additionally limited per account.
+
+Public upload clients must request a server-generated temporary key with filename,
+extension and byte size, then register that same authorized upload. Registration
+checks storage and commits a private copy; old clients that choose arbitrary object
+keys must be updated. Two-factor login now requires the `challengeId` returned by the
+password step; it expires after five minutes and is single-use. Existing remembered
+devices must complete 2FA again to receive a secure random device cookie.

@@ -52,6 +52,7 @@ export interface TwoFactorStatus {
 }
 
 export interface CompleteTwoFactorLoginRequest {
+  challengeId: string;
   userId: string;
   token: string;
   rememberDevice?: boolean;
@@ -71,6 +72,7 @@ export interface LoginResponse {
     updatedAt: string;
   };
   requiresTwoFactor?: boolean;
+  challengeId?: string;
   userId?: string;
   message?: string;
 }

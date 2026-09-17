@@ -23,6 +23,14 @@ const STATE_EXPIRY_TIME = 600000; // 10 minutes
 const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 const DEFAULT_PROVIDER_TYPE = "oidc";
 
+export function redactAuthProvider(provider: Record<string, any>) {
+  const { clientSecret, ...safeProvider } = provider;
+  return {
+    ...safeProvider,
+    hasClientSecret: Boolean(clientSecret),
+  };
+}
+
 const ERROR_MESSAGES = {
   PROVIDER_NOT_FOUND: "Provider not found or disabled",
   CONFIG_NOT_FOUND: "Configuration not found for provider",
@@ -328,10 +336,12 @@ export class AuthProvidersService {
       orderBy: { sortOrder: "asc" },
     });
 
-    return providers.map((provider) => ({
-      ...provider,
-      isOfficial: this.isOfficial(provider.name),
-    }));
+    return providers.map((provider) =>
+      redactAuthProvider({
+        ...provider,
+        isOfficial: this.isOfficial(provider.name),
+      })
+    );
   }
 
   async getProviderByName(name: string) {
@@ -351,20 +361,29 @@ export class AuthProvidersService {
   }
 
   async createProvider(data: any) {
-    return await prisma.authProvider.create({
+    const provider = await prisma.authProvider.create({
       data: {
         ...data,
         type: data.type || DEFAULT_PROVIDER_TYPE,
         displayName: data.displayName || data.name,
       },
     });
+
+    return redactAuthProvider(provider);
   }
 
   async updateProvider(id: string, data: any) {
-    return await prisma.authProvider.update({
+    const updateData = { ...data };
+    if (updateData.clientSecret === "" || updateData.clientSecret === null) {
+      delete updateData.clientSecret;
+    }
+
+    const provider = await prisma.authProvider.update({
       where: { id },
-      data,
+      data: updateData,
     });
+
+    return redactAuthProvider(provider);
   }
 
   async deleteProvider(id: string) {

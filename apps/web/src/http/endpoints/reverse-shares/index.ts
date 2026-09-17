@@ -280,7 +280,7 @@ export const copyReverseShareFileToUserFiles = <TData = any>(
  */
 export const createMultipartUploadByAlias = <TData = any>(
   alias: string,
-  body: { filename: string; extension: string },
+  body: { filename: string; extension: string; size: number },
   params?: { password?: string },
   options?: AxiosRequestConfig
 ): Promise<TData> => {
