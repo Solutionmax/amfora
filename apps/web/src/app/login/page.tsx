@@ -44,7 +44,7 @@ export default function LoginPage() {
           </div>
 
           <div className="max-w-xl">
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-white/70">{t("home.pageTitle")}</p>
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-white/70">{t("login.pageTitle")}</p>
             <p className="mt-5 font-display text-6xl font-extrabold leading-[0.95] tracking-[-0.04em] xl:text-7xl">
               {t("home.header.fileSharing")} <span className="text-[#9ed7f2]">{t("home.header.tagline")}</span>
             </p>
