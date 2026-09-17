@@ -1,56 +1,18 @@
-## **🎯 Please make sure you are opening this Pull Request against the `next` branch!**
+## What changed
 
-## 📝 Description
+A short description of the change.
 
-Please provide a clear and concise description of the changes introduced by this pull request.
+## Why
 
-## 🔗 Related Issue(s)
+The problem this solves, or the issue it closes (`Closes #123`).
 
-If this PR fixes or relates to an issue, please link it here (e.g., `Closes #123`).
+## How it was checked
 
-## 💡 Motivation and Context
+- [ ] `pnpm validate` passes in `apps/server` (lint, types, tests)
+- [ ] `pnpm validate` passes in `apps/web`
+- [ ] New behaviour has a check that fails when the behaviour breaks
+- [ ] No new reference to another product's brand anywhere in the diff
 
-Why is this change required? What problem does it solve?
+## Anything a reviewer should look at first
 
-## 🤖 Use of Artificial Intelligence (AI)
-
-The use of AI tools is absolutely welcome and not an issue. For transparency and continuous improvement, please answer the following:
-
-- Did you use any AI tools (such as GitHub Copilot, ChatGPT, etc.) to help develop this PR?
-    - [ ] No, this PR was developed without the assistance of AI tools.
-    - [ ] Yes, AI tools assisted in the development of this PR (please specify which ones and how they were used):
-        - Tool(s) used:
-        - Brief description of how AI contributed:
-- Was this PR generated entirely by an AI tool (i.e., with minimal human intervention)?  
-    - [ ] No  
-    - [ ] Yes (please provide details):
-
-## 🧪 How Has This Been Tested?
-
-Please describe the tests that you ran to verify your changes. Include details about your test environment, and the test cases you ran.
-
-## 📸 Screenshots (if appropriate)
-
-Add any relevant screenshots to help explain your changes.
-
-## 🔄 Types of Changes
-
-Check the relevant option(s) below:
-
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] ⚠️ Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] 📚 Documentation update
-
-## ✅ Checklist
-
-- [ ] My code follows the code style of this project
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] I have added necessary documentation (if appropriate)
-- [ ] I have rebased and/or merged on top of the latest `next` branch
-
----
-
-🙏 Thank you for your contribution!
+Screenshots for visual changes, or the one file that carries the real risk.

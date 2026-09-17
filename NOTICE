@@ -12,3 +12,27 @@ License 2.0 is included in the LICENSE file.
 
 "Palmr" and the Palmr logo are trademarks of Kyantech Solutions, Inc. and are
 not used as branding for this fork.
+
+--------------------------------------------------------------------------------
+Bundled third party programs
+--------------------------------------------------------------------------------
+
+The container image ships two separate, unmodified programs from the MinIO
+project, which are licensed under the GNU Affero General Public License v3.0:
+
+  - minio (the storage server)   https://github.com/minio/minio
+  - mc (the storage client)      https://github.com/minio/mc
+
+They are aggregated with Amfora on a storage medium, not linked into it, and
+are redistributed without modification. Amfora itself is not a derivative work
+of either program and remains under the Apache License 2.0.
+
+Corresponding source for both programs is available from the projects named
+above under the terms of the AGPL-3.0. A copy of the AGPL-3.0 is included in
+LICENSES/AGPL-3.0.txt.
+
+Note for operators: the storage port of a default installation is reachable by
+the people who use your instance. If you modify minio or mc and run the result
+as a network service, AGPL-3.0 section 13 requires you to offer those users the
+corresponding source of your modified version. Running them unmodified, as this
+image does, carries no such obligation beyond the notices above.
