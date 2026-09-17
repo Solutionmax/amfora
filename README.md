@@ -43,6 +43,8 @@ reach storage, not the address the container uses. On a LAN that is something li
 docker buildx build --load -t amfora:local .
 ```
 
+Storage binaries come directly from official MinIO images, pinned by digest.
+
 `buildx` is required: the Dockerfile uses heredoc `COPY`, which the classic builder
 does not understand.
 
@@ -80,7 +82,9 @@ The full list of S3 variables is in `docker-compose.yaml`.
 ## Upgrading from an installation named Palmr
 
 The container renames `prisma/palmr.db` to `prisma/amfora.db` on first start and
-keeps using an existing `palmr-files` bucket rather than creating an empty new one.
+preserves the bucket recorded in existing storage credentials rather than creating an empty new one.
+New installations use `amfora-files`. To migrate an existing bucket, copy and verify all objects
+before setting `MINIO_BUCKET=amfora-files`; never rename the storage directory directly.
 Set `AMFORA_UID` and `AMFORA_GID` where you previously set `PALMR_UID` and `PALMR_GID`.
 
 ## Development

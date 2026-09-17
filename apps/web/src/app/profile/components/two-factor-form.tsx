@@ -21,7 +21,6 @@ import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -94,31 +93,33 @@ export function TwoFactorForm() {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconShield className="h-5 w-5" />
-            {t("twoFactor.title")}
-          </CardTitle>
-          <CardDescription>{t("common.loadingSimple")}</CardDescription>
-        </CardHeader>
-      </Card>
+      <section className="space-y-1 border-b pb-6">
+        <h2 className="flex items-center gap-3 border-b pb-4 font-display text-lg font-bold tracking-tight">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
+            <IconShield className="size-4" />
+          </span>
+          {t("twoFactor.title")}
+        </h2>
+        <p className="pt-3 text-sm text-muted-foreground">{t("common.loadingSimple")}</p>
+      </section>
     );
   }
 
   return (
     <>
-      <Card className="gap-0 overflow-hidden p-0">
-        <CardHeader className="border-b bg-secondary/30 px-5 py-5 sm:px-6">
-          <CardTitle className="flex items-center gap-2">
+      <section className="space-y-5 border-b pb-6">
+        <header className="space-y-1 border-b pb-4">
+          <h2 className="flex items-center gap-3 font-display text-lg font-bold tracking-tight">
             <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
               {status.enabled ? <IconShieldCheck className="size-4" /> : <IconShield className="size-4" />}
             </span>
             {t("twoFactor.title")}
-          </CardTitle>
-          <CardDescription>{status.enabled ? t("twoFactor.enabled") : t("twoFactor.description")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-5 p-5 sm:p-6">
+          </h2>
+          <p className="text-sm leading-6 text-muted-foreground">
+            {status.enabled ? t("twoFactor.enabled") : t("twoFactor.description")}
+          </p>
+        </header>
+        <div className="space-y-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <div>
               <p className="font-semibold">
@@ -299,8 +300,8 @@ export function TwoFactorForm() {
               </div>
             </>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* Setup Modal */}
       <Dialog open={isSetupModalOpen} onOpenChange={setIsSetupModalOpen}>

@@ -20,7 +20,8 @@ MINIO_DATA_DIR="${MINIO_DATA_DIR:-/app/server/minio-data}"
 MINIO_ROOT_USER="amfora-storage-admin"
 MINIO_ROOT_PASSWORD="$(cat /app/server/.minio-root-password 2>/dev/null || echo 'password-not-generated')"
 MINIO_BUCKET="${MINIO_BUCKET:-amfora-files}"
-LEGACY_BUCKET="palmr-files"
+# Preserve an existing installation's configured bucket when no override is supplied.
+LEGACY_BUCKET="$(sed -n 's/^S3_BUCKET_NAME=//p' /app/server/.minio-credentials 2>/dev/null || true)"
 MINIO_INITIALIZED_FLAG="/app/server/.minio-initialized"
 MINIO_CREDENTIALS="/app/server/.minio-credentials"
 
@@ -84,7 +85,7 @@ fi
 # An installation created before the rename keeps its files in the old bucket. Never
 # create a second, empty bucket next to it: that would hide every existing upload.
 if [ -z "$MINIO_BUCKET_EXPLICIT" ] && ! run_as_target mc ls amfora-local/$MINIO_BUCKET > /dev/null 2>&1; then
-    if run_as_target mc ls amfora-local/$LEGACY_BUCKET > /dev/null 2>&1; then
+    if [ -n "$LEGACY_BUCKET" ] && run_as_target mc ls "amfora-local/$LEGACY_BUCKET" > /dev/null 2>&1; then
         echo "[STORAGE-SYSTEM-SETUP]   Found existing bucket '$LEGACY_BUCKET', keeping it"
         MINIO_BUCKET="$LEGACY_BUCKET"
     fi

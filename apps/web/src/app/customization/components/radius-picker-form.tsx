@@ -56,25 +56,25 @@ export function RadiusPickerForm() {
     >
       <div className="space-y-3">
         <Label className="text-sm font-medium">{t("customization.radius.available")}</Label>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {PREDEFINED_RADIUS.map((radius) => (
             <button
               key={radius.name}
               onClick={() => handleRadiusSelect(radius.value)}
-              className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+              className={`group relative rounded-lg border p-3 text-left transition-colors ${
                 selectedRadius === radius.value
                   ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                   : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
               }`}
               type="button"
             >
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex flex-col items-center gap-2">
-                  <span className="font-medium text-base">{radius.name}</span>
-                  <span className="text-xs text-muted-foreground">{radius.description}</span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="block text-sm font-medium">{radius.name}</span>
+                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">{radius.description}</span>
                 </div>
                 <div
-                  className="w-12 h-8 bg-primary/20 border border-primary/30"
+                  className="h-7 w-10 shrink-0 border border-primary/30 bg-primary/20"
                   style={{ borderRadius: radius.value }}
                 />
               </div>

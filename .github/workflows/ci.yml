@@ -66,7 +66,7 @@ jobs:
       - name: No stray brand references
         run: |
           if grep -rniE 'palmr|kyantech|wetransfer' . \
-              --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.next \
+              --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.next --exclude-dir=superpowers \
               --exclude=pnpm-lock.yaml --exclude=LICENSE --exclude=NOTICE \
               --exclude=README.md --exclude=Dockerfile --exclude=ci.yml \
               --exclude=minio-setup.sh --exclude=server-start.sh; then

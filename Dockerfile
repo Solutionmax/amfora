@@ -1,9 +1,7 @@
-# Binary source only, not a base image and not branding: MinIO took its public binaries
-# offline (dl.min.io returns 410 Gone), so the minio server and mc client are copied out of
-# the last image that still shipped them, at exactly the versions this app was tested on.
-# Both are AGPL-3.0 and are redistributed unmodified as separate programs; see NOTICE.
-# Upgrade path: the github.com/minio/minio and github.com/minio/mc releases.
-FROM kyantech/palmr:v3.3.2-beta AS vendor
+# Pin the official MinIO images to the exact binaries used by this release.
+# Both programs remain unmodified; their licensing and source are documented in NOTICE.
+FROM quay.io/minio/minio:RELEASE.2024-10-13T13-34-11Z@sha256:9535594ad4122b7a78c6632788a989b96d9199b483d3bd71a5ceae73a922cdfa AS storage-server
+FROM quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727 AS storage-client
 
 FROM node:24-alpine AS base
 
@@ -19,9 +17,9 @@ RUN apk add --no-cache \
 # Enable pnpm
 RUN corepack enable pnpm
 
-# Install storage system (minio) and client (mc), vendored from the upstream image
-COPY --from=vendor /usr/local/bin/minio /usr/local/bin/minio
-COPY --from=vendor /usr/local/bin/mc /usr/local/bin/mc
+# Install storage system and client from their official images
+COPY --from=storage-server /usr/bin/minio /usr/local/bin/minio
+COPY --from=storage-client /usr/bin/mc /usr/local/bin/mc
 RUN chmod +x /usr/local/bin/minio /usr/local/bin/mc && minio --version && mc --version
 
 # Set working directory

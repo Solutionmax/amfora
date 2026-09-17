@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { IconSettings, IconShieldCheck } from "@tabler/icons-react";
+import { IconSettings } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { renderIconByName } from "@/components/ui/icon-picker";
 import { Label } from "@/components/ui/label";
@@ -59,20 +58,17 @@ export function AuthProvidersSettings() {
   };
 
   return (
-    <Card className="gap-0 overflow-hidden p-0">
-      <CardHeader className="border-b bg-muted/30 p-6 sm:p-8">
+    <section className="max-w-4xl">
+      <header className="mb-6">
         <div className="flex items-start gap-4">
-          <div className="rounded-xl border bg-background p-3 text-primary">
-            <IconShieldCheck className="size-5" />
-          </div>
           <div className="min-w-0 space-y-2">
-            <h2 className="text-xl font-semibold tracking-tight">{t("authProviders.title")}</h2>
+            <h2 className="text-base font-semibold">{t("authProviders.title")}</h2>
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">{t("authProviders.description")}</p>
             <Badge variant="secondary">{t("authProviders.enabledCount", { count: enabledCount })}</Badge>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="p-6 sm:p-8">
+      </header>
+      <div>
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <IconSettings className="h-6 w-6 animate-spin" />
@@ -134,7 +130,7 @@ export function AuthProvidersSettings() {
           onClose={() => setProviderToDelete(null)}
           isDeleting={isDeleting}
         />
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }
