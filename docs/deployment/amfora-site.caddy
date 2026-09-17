@@ -1,0 +1,26 @@
+
+# Amfora product website — static English preview, separate from the application.
+amfora.solutionmax.net {
+    encode zstd gzip
+    root * /var/www/amfora/current
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        Content-Security-Policy "default-src 'self'; img-src 'self'; font-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+        Strict-Transport-Security "max-age=31536000"
+        X-Robots-Tag "noindex, nofollow"
+        Cache-Control "no-cache"
+        -Server
+    }
+    @assets path /assets/*
+    header @assets Cache-Control "public, max-age=3600, must-revalidate"
+    @plain path /LICENSE /NOTICE
+    header @plain Content-Type "text/plain; charset=utf-8"
+    file_server
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
+}

@@ -10,6 +10,6 @@ Architecture: plain HTML, shared CSS and small progressive-enhancement JavaScrip
 - [x] Capture sanitized screenshots from an isolated application clone.
 - [x] Verify documentation against implementation; update README and deployment guide.
 - [x] Browser-check desktop/mobile, navigation, docs anchors, clipboard, assets and accessibility basics.
-- [ ] Deploy isolated static release; validate Caddy, HTTPS and existing hosts.
-- [ ] Commit and push amfora branch; set it as default; preserve private visibility.
-- [ ] Update project status and record verification/rollback instructions.
+- [x] Deploy isolated static release; validate Caddy, HTTPS and existing hosts.
+- [x] Commit and push amfora branch; set it as default; preserve private visibility.
+- [x] Update project status and record verification/rollback instructions.
