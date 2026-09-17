@@ -4,7 +4,6 @@ import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler
 import { useTranslations } from "next-intl";
 
 import { TransferShell } from "@/components/brand/transfer-shell";
-import { formatFileSize } from "@/utils/format-file-size";
 import { MESSAGE_TYPES } from "../constants";
 import { VesselLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
@@ -92,53 +91,24 @@ export function VesselLayout({
     );
   };
 
-  const maxFiles = reverseShare?.maxFiles ?? 0;
-  const showLimits =
+  if (
     reverseShare &&
     !hasUploadedSuccessfully &&
     !isLinkInactive &&
     !isLinkNotFound &&
     !isLinkExpired &&
-    !isMaxFilesReached;
+    !isMaxFilesReached
+  ) {
+    return uploadSection();
+  }
 
   return (
     <TransferShell
       direction="upload"
       title={t("publicTransfer.uploadTitle")}
-      caption={t("publicTransfer.uploadCaption")}
       label={t("reverseShares.upload.layout.defaultTitle")}
     >
-      <header className="mb-6">
-        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          {t("reverseShares.pageTitle")}
-        </p>
-        <h2 className="mt-2 break-words font-display text-3xl font-bold leading-tight tracking-tight">
-          {reverseShare?.name || t("reverseShares.upload.layout.defaultTitle")}
-        </h2>
-        {reverseShare?.description && (
-          <p className="mt-3 break-words text-sm leading-6 text-muted-foreground">{reverseShare.description}</p>
-        )}
-      </header>
       {uploadSection()}
-      {showLimits && (
-        <dl className="mt-6 flex flex-wrap justify-between gap-x-5 gap-y-3 border-t border-border/70 pt-5 text-xs">
-          <div className="flex items-center gap-2">
-            <dt className="text-muted-foreground">{t("reverseShares.labels.filesReceived")}</dt>
-            <dd className="font-medium tabular-nums">
-              {reverseShare.currentFileCount}
-              {maxFiles ? ` / ${maxFiles}` : ""}
-            </dd>
-          </div>
-          <div className="flex items-center gap-2">
-            <dt className="text-muted-foreground">{t("reverseShares.labels.maxFileSize")}</dt>
-            <dd className="font-medium">
-              {reverseShare.maxFileSize
-                ? formatFileSize(reverseShare.maxFileSize)
-                : t("reverseShares.labels.noSizeLimit")}
-            </dd>
-          </div>
-        </dl>
-      )}
     </TransferShell>
   );
 }

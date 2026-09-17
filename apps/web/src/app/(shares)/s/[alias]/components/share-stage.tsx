@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { IconArrowDownLeft, IconDownload, IconFolder, IconLoader2 } from "@tabler/icons-react";
+import { IconDownload, IconFolder, IconLoader2 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 
@@ -70,45 +70,34 @@ export function ShareStage({
 
   return (
     <div className="w-full space-y-7">
-      <div className="flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-        <span className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <IconArrowDownLeft className="size-6" />
-        </span>
-        <span>{t("share.pageTitle")}</span>
-      </div>
-
       <header className="space-y-3">
         <h2 className="break-words font-display text-3xl font-extrabold leading-tight tracking-tight">{name}</h2>
         {description && <p className="break-words leading-7 text-muted-foreground">{description}</p>}
       </header>
 
-      <div className="grid grid-cols-2 gap-4 rounded-xl border bg-secondary/60 p-4 text-xs">
-        <div className="min-w-0">
-          <p className="text-muted-foreground">{t("share.itemCount", { count: itemCount })}</p>
-          <p className="mt-1 text-base font-medium text-foreground">{formatFileSize(totalBytes)}</p>
-        </div>
-        <div className="min-w-0">
-          <p className="text-muted-foreground">{t("home.visual.downloads")}</p>
-          <p className="mt-1 text-base font-medium text-foreground">
-            {views}
-            {maxViews ? ` / ${maxViews}` : ""}
-          </p>
-        </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
+        <span>
+          {t("share.itemCount", { count: itemCount })} · {formatFileSize(totalBytes)}
+        </span>
+        {maxViews ? (
+          <span>
+            {t("home.visual.downloads")}: {views} / {maxViews}
+          </span>
+        ) : null}
         {expiration && (
-          <div className="col-span-2 flex min-w-0 items-center justify-between gap-3 border-t pt-3">
-            <p className="text-muted-foreground">{t("home.visual.expires")}</p>
-            <p className="mt-1 text-sm font-medium text-foreground">{format(new Date(expiration), "dd-MM-yyyy")}</p>
-          </div>
+          <span>
+            {t("home.visual.expires")}: {format(new Date(expiration), "dd-MM-yyyy")}
+          </span>
         )}
       </div>
 
       {itemCount > 0 && (
         <section aria-label={t("share.itemCount", { count: itemCount })}>
-          <ul className="divide-y rounded-xl border bg-card">
+          <ul className="divide-y border-y border-border">
             {folders.map((folder) => (
               <li
                 key={folder.id}
-                className="flex min-w-0 items-center gap-3 px-4 py-4 transition-colors hover:bg-secondary/50"
+                className="flex min-w-0 items-center gap-3 py-4 transition-colors hover:bg-secondary/50"
               >
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <IconFolder className="size-5" />
@@ -119,7 +108,7 @@ export function ShareStage({
                   onClick={() => runDownload(() => onDownloadFolder(folder.id, folder.name))}
                   disabled={isDownloading}
                   aria-label={`${t("share.download")} ${folder.name}`}
-                  className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                  className="shrink-0 rounded-full border border-border p-2.5 text-primary transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                 >
                   <IconDownload className="size-4" />
                 </button>
@@ -130,7 +119,7 @@ export function ShareStage({
               return (
                 <li
                   key={file.id}
-                  className="flex min-w-0 items-center gap-3 px-4 py-4 transition-colors hover:bg-secondary/50"
+                  className="flex min-w-0 items-center gap-3 py-4 transition-colors hover:bg-secondary/50"
                 >
                   <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary">
                     <FileTypeIcon className={`size-5 ${color}`} />
@@ -146,7 +135,7 @@ export function ShareStage({
                     onClick={() => runDownload(() => onDownload(file.objectName, file.name))}
                     disabled={isDownloading}
                     aria-label={`${t("share.download")} ${file.name}`}
-                    className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    className="shrink-0 rounded-full border border-border p-2.5 text-primary transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                   >
                     <IconDownload className="size-4" />
                   </button>

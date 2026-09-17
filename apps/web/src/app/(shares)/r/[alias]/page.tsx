@@ -39,7 +39,6 @@ export default function ReverseShareUploadPage() {
       <TransferShell
         direction="upload"
         title={t("publicTransfer.uploadTitle")}
-        caption={t("publicTransfer.uploadCaption")}
         label={t("reverseShares.upload.layout.defaultTitle")}
       >
         <h2 className="font-display text-2xl font-bold">{t("reverseShares.upload.password.title")}</h2>
