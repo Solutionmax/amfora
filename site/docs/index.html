@@ -2,23 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Documentation — Amfora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Amfora Docs — Installation, sharing and administration</title>
     <meta
       name="description"
-      content="Install, configure and use Amfora. Guides for self-hosting, storage, file sharing, upload requests, branding and administration."
+      content="A practical guide to self-hosting Amfora, sending files, collecting uploads and managing your workspace."
     />
     <meta name="robots" content="noindex,nofollow" />
-    <meta name="theme-color" content="#071827" />
+    <meta name="theme-color" content="#f5f6f2" />
     <link rel="canonical" href="https://amfora.solutionmax.net/docs/" />
     <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Documentation — Amfora" />
+    <meta
+      property="og:title"
+      content="Amfora Docs — Installation, sharing and administration"
+    />
     <meta
       property="og:description"
-      content="Install, configure and use Amfora. Guides for self-hosting, storage, file sharing, upload requests, branding and administration."
+      content="A practical guide to self-hosting Amfora, sending files, collecting uploads and managing your workspace."
     />
-    <meta property="og:url" content="https://amfora.solutionmax.net/docs/" />
     <meta
       property="og:image"
       content="https://amfora.solutionmax.net/assets/screenshots/download.webp"
@@ -30,8 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css" />
-    <script src="/assets/site.js" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=product-20260917-2" />
+    <script src="/assets/site.js?v=product-20260917-2" defer></script>
   </head>
   <body class="docs-page">
     <a class="skip" href="#main">Skip to content</a>
@@ -69,43 +71,57 @@
           Menu <span aria-hidden="true">＋</span>
         </button>
         <nav id="navigation" aria-label="Main navigation">
-          <a href="/#product">The product</a><a href="/#inside">A closer look</a
-          ><a href="/docs/">Documentation</a
+          <a href="/#how-it-works">How it works</a
+          ><a href="/#features">Features</a><a href="/docs/">Documentation</a
           ><a class="nav-source" href="https://github.com/raym0nz82/amfora"
-            >GitHub <span class="private-badge">Private</span
+            >GitHub <span class="badge">Private</span
             ><span aria-hidden="true">↗</span></a
           >
         </nav>
       </div>
     </header>
-    <main id="main">
-      <div class="docs-hero">
-        <div class="wrap">
-          <p class="eyebrow">AMFORA / DOCUMENTATION</p>
-          <h1>A good place to start.</h1>
-          <p>
-            From your first local install to a workspace that feels like your
-            own. Practical guides for the people sharing files and the people
-            looking after them.
-          </p>
+    <main id="main" class="wrap docs-layout">
+      <aside class="docs-sidebar">
+        <a class="docs-home" href="/docs/">AMFORA / DOCS</a
+        ><label class="search-label" for="docs-search">Find in this guide</label
+        ><input
+          id="docs-search"
+          type="search"
+          placeholder="Search topics…"
+          autocomplete="off"
+        />
+        <p class="search-status" role="status" aria-live="polite"></p>
+        <nav aria-label="Documentation sections">
+          <a href="#overview"><span>01</span>Overview</a
+          ><a href="#getting-started"><span>02</span>Getting started</a
+          ><a href="#deployment"><span>03</span>HTTPS deployment</a
+          ><a href="#storage"><span>04</span>Storage & limits</a
+          ><a href="#sharing"><span>05</span>Send & receive</a
+          ><a href="#admin"><span>06</span>Administration</a
+          ><a href="#operations"><span>07</span>Backups & upgrades</a
+          ><a href="#troubleshooting"><span>08</span>Troubleshooting</a
+          ><a href="#about"><span>09</span>About this preview</a>
+        </nav>
+        <div class="docs-sidebar-bottom">
+          <span class="badge">Private preview</span>
+          <p>Amfora 1.0<br />Reviewed September 2026</p>
+          <a href="https://github.com/raym0nz82/amfora">Source repository ↗</a>
         </div>
-      </div>
-      <div class="wrap docs-layout">
-        <aside class="docs-sidebar">
-          <p class="eyebrow">IN THIS GUIDE</p>
-          <nav aria-label="Documentation sections">
-            <a href="#overview">Overview</a
-            ><a href="#getting-started">Getting started</a
-            ><a href="#deployment">HTTPS deployment</a
-            ><a href="#storage">Storage & limits</a
-            ><a href="#sharing">Send & receive</a
-            ><a href="#admin">Administration</a
-            ><a href="#operations">Backups & upgrades</a
-            ><a href="#troubleshooting">Troubleshooting</a
-            ><a href="#about">About this preview</a>
-          </nav>
-          <p>Amfora 1.0 · Private preview<br />Last reviewed September 2026</p>
-        </aside>
+      </aside>
+      <div class="docs-main">
+        <header class="docs-intro">
+          <p class="eyebrow">THE FIELD GUIDE</p>
+          <h1>From first install<br />to final handoff.</h1>
+          <p>
+            Practical documentation for running Amfora and using it to send,
+            collect and manage files.
+          </p>
+          <div class="docs-quicklinks">
+            <a href="#getting-started">Set up Amfora <span>↗</span></a
+            ><a href="#sharing">Send & collect files <span>↗</span></a
+            ><a href="#admin">Manage your workspace <span>↗</span></a>
+          </div>
+        </header>
         <div class="docs-content">
           <section class="docs-section" id="overview">
             <p class="section-kicker">01 / Start here</p>
@@ -122,7 +138,8 @@
                 <h3>Send</h3>
                 <p>
                   Upload files, create a share, and send a browser link. Add a
-                  password, expiry, view limit, or recipients.
+                  password, expiry or view limit, and send recipient email
+                  notifications.
                 </p>
               </article>
               <article>
@@ -284,10 +301,12 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             <h2>Send a link or collect files through one</h2>
             <h3 id="workspace">Your workspace</h3>
             <p>
-              The dashboard gives you a starting point for files, shares and
-              upload requests. Use folders to organize files before creating a
-              share. Profile manages your personal details and account security;
-              administration controls are available to administrators.
+              The application opens at sign-in, or your dashboard when you are
+              already signed in. The dashboard gives you a starting point for
+              files, shares and upload requests. Use folders to organize files
+              before creating a share. Profile manages your personal details and
+              account security; administration controls are available to
+              administrators.
             </p>
             <h3>Send files</h3>
             <ol>
@@ -300,8 +319,9 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             </ol>
             <p>
               A share can have a password, expiration date, maximum view count,
-              and named recipients. Its owner can later edit the contents,
-              recipients, password, expiry, or alias from
+              and recipient email notifications. Recipient entries do not
+              restrict access to a public share. Its owner can later edit the
+              contents, notification recipients, password, expiry, or alias from
               <strong>Shares</strong>. A recipient opens the link in a browser;
               a protected share asks for its password before files are
               available.
@@ -464,6 +484,9 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
             </p>
           </section>
         </div>
+        <p class="docs-empty" hidden>
+          No matching topics. Try “storage”, “password” or “upload”.
+        </p>
       </div>
     </main>
     <footer class="site-footer">
@@ -495,20 +518,18 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
             ><span>amfora<span class="brand-dot">.</span></span></a
           >
           <p>
-            A considered home for your files.<br />Built to run on your terms.
+            File sharing. On your terms.<br />A self-hosted project by
+            SolutionMAX.
           </p>
         </div>
         <div class="footer-links">
-          <a href="/#inside">Explore the interface</a
+          <a href="/#how-it-works">How it works</a
           ><a href="/docs/">Documentation</a
-          ><a href="https://github.com/raym0nz82/amfora"
-            >GitHub · private repository ↗</a
-          >
+          ><a href="https://github.com/raym0nz82/amfora">GitHub · private ↗</a>
         </div>
       </div>
       <div class="wrap footer-bottom">
-        <span>© 2026 SolutionMAX · Amfora</span
-        ><span>Self-hosted. Thoughtfully shared.</span
+        <span>© 2026 SolutionMAX</span><span>Built for a better handoff.</span
         ><a href="/docs/#about">About this preview</a>
       </div>
     </footer>

@@ -26,7 +26,7 @@ validation must leave the running configuration and active site untouched.
 Check HTTP redirects to HTTPS, the landing page, `/docs/`, all local assets,
 `/robots.txt`, and a random missing URL (404). Check the certificate and
 noindex/CSP headers. Browser-check desktop, tablet and mobile navigation,
-all screenshot tabs, keyboard navigation, FAQ disclosure and code copying.
+all send/collect walkthrough stages, keyboard navigation, example-link copying, documentation search, FAQ disclosure and code copying.
 Confirm other Caddy sites still respond normally after configuration changes.
 
 The site is public for testing. `noindex` is not authentication. GitHub remains

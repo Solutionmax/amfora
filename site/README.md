@@ -13,10 +13,10 @@ python3 -m http.server 18080 --bind 127.0.0.1 --directory site
 
 Open http://127.0.0.1:18080. No build step or dependencies are needed.
 
-- `index.html`: product presentation, screenshot gallery and FAQ.
+- `index.html`: product presentation, interactive send/collect walkthrough, screenshot stories and FAQ.
 - `docs/index.html`: installation, configuration and user documentation.
 - `assets/site.css`: shared responsive design and self-hosted font faces.
-- `assets/site.js`: mobile navigation, accessible gallery tabs and code copying.
+- `assets/site.js`: mobile navigation, keyboard-accessible walkthrough, example-link copying, docs search and code copying.
 - `assets/screenshots/`: actual app captures using synthetic sample content.
 - `404.html`: missing-page response, wired by Caddy in production.
 
