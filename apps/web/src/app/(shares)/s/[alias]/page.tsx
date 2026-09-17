@@ -32,12 +32,7 @@ export default function PublicSharePage() {
   }
 
   return (
-    <TransferShell
-      direction="download"
-      title={t("publicTransfer.downloadTitle")}
-      caption={t("publicTransfer.downloadCaption")}
-      label={t("share.download")}
-    >
+    <TransferShell direction="download" title={t("publicTransfer.downloadTitle")} label={t("share.download")}>
       {!isPasswordModalOpen && !share && <ShareNotFound />}
       {share && (
         <ShareStage
