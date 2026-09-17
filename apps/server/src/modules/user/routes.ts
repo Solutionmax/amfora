@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { prisma } from "../../shared/prisma";
 import { createPasswordSchema } from "../auth/dto";
+import { canUpdateUser } from "./authorization";
 import { UserController } from "./controller";
 import { UpdateUserSchema, UserResponseSchema } from "./dto";
 import { validatePasswordMiddleware } from "./middleware";
@@ -28,6 +29,22 @@ export async function userRoutes(app: FastifyInstance) {
     } catch (err) {
       console.error(err);
       return reply.status(500).send({ error: "Internal server error" });
+    }
+  };
+
+  const updateUserPreValidation = async (request: any, reply: any) => {
+    try {
+      await request.jwtVerify();
+    } catch (authErr) {
+      console.error(authErr);
+      return reply.status(401).send({ error: "Unauthorized: a valid token is required to access this resource." });
+    }
+
+    const body = request.body as { id?: string; isAdmin?: boolean } | undefined;
+    const authenticatedUser = request.user as { userId?: string; isAdmin?: boolean };
+
+    if (!canUpdateUser(authenticatedUser, { id: body?.id ?? "", isAdmin: body?.isAdmin })) {
+      return reply.status(403).send({ error: "You can only update your own profile" });
     }
   };
 
@@ -154,12 +171,12 @@ export async function userRoutes(app: FastifyInstance) {
   app.put(
     "/users",
     {
-      preValidation,
+      preValidation: updateUserPreValidation,
       schema: {
         tags: ["User"],
         operationId: "updateUser",
         summary: "Update User Data",
-        description: "Update user data (admin only)",
+        description: "Update your own profile or manage users as an administrator",
         body: await createUpdateSchema(),
         response: {
           200: z.object({
