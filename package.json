@@ -1,7 +1,7 @@
 {
-  "name": "palmr-monorepo",
+  "name": "amfora-monorepo",
   "version": "1.0.0",
-  "description": "Palmr monorepo with Husky configuration",
+  "description": "Amfora monorepo with Husky configuration",
   "private": true,
   "packageManager": "pnpm@10.6.0",
   "scripts": {

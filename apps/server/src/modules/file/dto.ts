@@ -1,26 +1,26 @@
 import { z } from "zod";
 
 export const RegisterFileSchema = z.object({
-  name: z.string().min(1, "O nome do arquivo é obrigatório"),
+  name: z.string().min(1, "A file name is required"),
   description: z.string().optional(),
-  extension: z.string().min(1, "A extensão é obrigatória"),
+  extension: z.string().min(1, "A file extension is required"),
   size: z.number({
-    required_error: "O tamanho é obrigatório",
+    required_error: "A file size is required",
     invalid_type_error: "O tamanho deve ser um número",
   }),
-  objectName: z.string().min(1, "O objectName é obrigatório"),
+  objectName: z.string().min(1, "An object name is required"),
   folderId: z.string().optional(),
 });
 
 export const CheckFileSchema = z.object({
-  name: z.string().min(1, "O nome do arquivo é obrigatório"),
+  name: z.string().min(1, "A file name is required"),
   description: z.string().optional(),
-  extension: z.string().min(1, "A extensão é obrigatória"),
+  extension: z.string().min(1, "A file extension is required"),
   size: z.number({
-    required_error: "O tamanho é obrigatório",
+    required_error: "A file size is required",
     invalid_type_error: "O tamanho deve ser um número",
   }),
-  objectName: z.string().min(1, "O objectName é obrigatório"),
+  objectName: z.string().min(1, "An object name is required"),
   folderId: z.string().optional(),
 });
 

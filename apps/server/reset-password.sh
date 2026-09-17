@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# Palmr Password Reset Script
+# Amfora Password Reset Script
 # This script allows resetting user passwords from within the Docker container
 
-echo "🔐 Palmr Password Reset Tool"
+echo "🔐 Amfora Password Reset Tool"
 echo "============================="
 
 # Check if we're in the right directory and set DATABASE_URL
@@ -16,7 +16,7 @@ fi
 
 # Set DATABASE_URL if not already set
 if [ -z "$DATABASE_URL" ]; then
-    export DATABASE_URL="file:/app/server/prisma/palmr.db"
+    export DATABASE_URL="file:/app/server/prisma/amfora.db"
 fi
 
 # Ensure database directory exists

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { applyAppearance } from "@/hooks/use-appearance";
 
-const BACKGROUND_STORAGE_KEY = "palmr-custom-background";
+const BACKGROUND_STORAGE_KEY = "amfora-custom-background";
 
 export function ThemeColorProvider({ children }: { children: React.ReactNode }) {
   const { appPrimaryColor, appFontFamily, appRadius } = useAppInfo();

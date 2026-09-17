@@ -1,6 +1,8 @@
-# ponytail: MinIO haalde zijn publieke binaries offline (dl.min.io geeft 410 Gone),
-# dus minio + mc komen uit de laatste gepubliceerde upstream image. Exact de versies
-# waar de app op getest is. Upgradepad: github.com/minio/{minio,mc} releases.
+# Binary source only, not a base image and not branding: MinIO took its public binaries
+# offline (dl.min.io returns 410 Gone), so the minio server and mc client are copied out of
+# the last image that still shipped them, at exactly the versions this app was tested on.
+# Both are AGPL-3.0 and are redistributed unmodified as separate programs; see NOTICE.
+# Upgrade path: the github.com/minio/minio and github.com/minio/mc releases.
 FROM kyantech/palmr:v3.3.2-beta AS vendor
 
 FROM node:24-alpine AS base
@@ -86,42 +88,42 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV API_BASE_URL=http://127.0.0.1:3333
 
 # Define build arguments for user/group configuration (defaults to current values)
-ARG PALMR_UID=1001
-ARG PALMR_GID=1001
+ARG AMFORA_UID=1001
+ARG AMFORA_GID=1001
 
 # Create application user with configurable UID/GID
-RUN addgroup --system --gid ${PALMR_GID} nodejs
-RUN adduser --system --uid ${PALMR_UID} --ingroup nodejs palmr
+RUN addgroup --system --gid ${AMFORA_GID} nodejs
+RUN adduser --system --uid ${AMFORA_UID} --ingroup nodejs amfora
 
 # Create application directories 
-RUN mkdir -p /app/palmr-app /app/web /app/infra /home/palmr/.npm /home/palmr/.cache
-RUN chown -R palmr:nodejs /app /home/palmr
+RUN mkdir -p /app/amfora-app /app/web /app/infra /home/amfora/.npm /home/amfora/.cache
+RUN chown -R amfora:nodejs /app /home/amfora
 
-# === Copy Server Files to /app/palmr-app (separate from /app/server for bind mounts) ===
-WORKDIR /app/palmr-app
+# === Copy Server Files to /app/amfora-app (separate from /app/server for bind mounts) ===
+WORKDIR /app/amfora-app
 
 # Copy server production files
-COPY --from=server-builder --chown=palmr:nodejs /app/server/dist ./dist
-COPY --from=server-builder --chown=palmr:nodejs /app/server/node_modules ./node_modules
-COPY --from=server-builder --chown=palmr:nodejs /app/server/prisma ./prisma
-COPY --from=server-builder --chown=palmr:nodejs /app/server/package.json ./
+COPY --from=server-builder --chown=amfora:nodejs /app/server/dist ./dist
+COPY --from=server-builder --chown=amfora:nodejs /app/server/node_modules ./node_modules
+COPY --from=server-builder --chown=amfora:nodejs /app/server/prisma ./prisma
+COPY --from=server-builder --chown=amfora:nodejs /app/server/package.json ./
 
 # Copy password reset script and make it executable
-COPY --from=server-builder --chown=palmr:nodejs /app/server/reset-password.sh ./
-COPY --from=server-builder --chown=palmr:nodejs /app/server/src/scripts/ ./src/scripts/
+COPY --from=server-builder --chown=amfora:nodejs /app/server/reset-password.sh ./
+COPY --from=server-builder --chown=amfora:nodejs /app/server/src/scripts/ ./src/scripts/
 RUN chmod +x ./reset-password.sh
 
 # Copy seed file to the shared location for bind mounts
 RUN mkdir -p /app/server/prisma
-COPY --from=server-builder --chown=palmr:nodejs /app/server/prisma/seed.js /app/server/prisma/seed.js
+COPY --from=server-builder --chown=amfora:nodejs /app/server/prisma/seed.js /app/server/prisma/seed.js
 
 # === Copy Web Files ===
 WORKDIR /app/web
 
 # Copy web production files
-COPY --from=web-builder --chown=palmr:nodejs /app/web/public ./public
-COPY --from=web-builder --chown=palmr:nodejs /app/web/.next/standalone ./
-COPY --from=web-builder --chown=palmr:nodejs /app/web/.next/static ./.next/static
+COPY --from=web-builder --chown=amfora:nodejs /app/web/public ./public
+COPY --from=web-builder --chown=amfora:nodejs /app/web/.next/standalone ./
+COPY --from=web-builder --chown=amfora:nodejs /app/web/.next/static ./.next/static
 
 # === Setup Supervisor ===
 WORKDIR /app
@@ -138,7 +140,7 @@ COPY infra/configs.json /app/infra/configs.json
 COPY infra/providers.json /app/infra/providers.json
 COPY infra/check-missing.js /app/infra/check-missing.js
 RUN chmod +x /app/server-start.sh /app/start-minio.sh /app/minio-setup.sh /app/load-minio-credentials.sh
-RUN chown -R palmr:nodejs /app/server-start.sh /app/start-minio.sh /app/minio-setup.sh /app/load-minio-credentials.sh /app/infra
+RUN chown -R amfora:nodejs /app/server-start.sh /app/start-minio.sh /app/minio-setup.sh /app/load-minio-credentials.sh /app/infra
 
 # Copy supervisor configuration
 COPY infra/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -155,21 +157,30 @@ echo "Encryption: \${DISABLE_FILESYSTEM_ENCRYPTION:-true}"
 echo "Database: SQLite"
 
 # Set global environment variables
-export DATABASE_URL="file:/app/server/prisma/palmr.db"
+export DATABASE_URL="file:/app/server/prisma/amfora.db"
 export NEXT_PUBLIC_DEFAULT_LANGUAGE=\${DEFAULT_LANGUAGE:-en-US}
 
 # Ensure /app/server directory exists for bind mounts
 mkdir -p /app/server/uploads /app/server/temp-uploads /app/server/prisma /app/server/minio-data
+
+# Installations created before the rename carry the database under its old file name.
+# Move it across once so that an upgrade keeps its data instead of seeding an empty app.
+if [ ! -f /app/server/prisma/amfora.db ] && [ -f /app/server/prisma/palmr.db ]; then
+    echo "   📦 Migrating database file to its new name..."
+    mv /app/server/prisma/palmr.db /app/server/prisma/amfora.db
+    [ -f /app/server/prisma/palmr.db-wal ] && mv /app/server/prisma/palmr.db-wal /app/server/prisma/amfora.db-wal
+    [ -f /app/server/prisma/palmr.db-shm ] && mv /app/server/prisma/palmr.db-shm /app/server/prisma/amfora.db-shm
+fi
 
 # CRITICAL: Fix permissions BEFORE starting any services
 # This runs on EVERY startup to handle updates and corrupted metadata
 echo "🔐 Fixing permissions for internal storage..."
 
 # USE ENVIRONMENT VARIABLES: Allow runtime UID/GID configuration
-# Falls back to palmr user's UID/GID if not specified
-TARGET_UID=\${PALMR_UID:-\$(id -u palmr 2>/dev/null || echo "1001")}
-TARGET_GID=\${PALMR_GID:-\$(id -g palmr 2>/dev/null || echo "1001")}
-echo "   Target user: palmr (UID:\$TARGET_UID, GID:\$TARGET_GID)"
+# Falls back to amfora user's UID/GID if not specified
+TARGET_UID=\${AMFORA_UID:-\$(id -u amfora 2>/dev/null || echo "1001")}
+TARGET_GID=\${AMFORA_GID:-\$(id -g amfora 2>/dev/null || echo "1001")}
+echo "   Target user: amfora (UID:\$TARGET_UID, GID:\$TARGET_GID)"
 
 # ALWAYS remove storage system metadata to prevent corruption issues
 # This is safe - storage system recreates it automatically
@@ -181,7 +192,7 @@ fi
 
 # SMART CHOWN: Only run expensive recursive chown when UID/GID changed
 # This dramatically speeds up subsequent starts
-UIDGID_MARKER="/app/server/.palmr-uidgid"
+UIDGID_MARKER="/app/server/.amfora-uidgid"
 CURRENT_OWNER="\$TARGET_UID:\$TARGET_GID"
 NEEDS_CHOWN=false
 

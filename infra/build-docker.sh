@@ -12,13 +12,13 @@ fi
 echo "🚀 Building Amfora Unified Image for AMD64 and ARM..."
 echo "📦 Building tags: latest and $TAG"
 
-docker buildx create --name palmr-builder --use 2>/dev/null || docker buildx use palmr-builder
+docker buildx create --name amfora-builder --use 2>/dev/null || docker buildx use amfora-builder
 
 docker buildx build \
     --platform linux/amd64,linux/arm64 \
     --no-cache \
-    -t kyantech/palmr:latest \
-    -t kyantech/palmr:$TAG \
+    -t ghcr.io/raym0nz82/amfora:latest \
+    -t ghcr.io/raym0nz82/amfora:$TAG \
     --push \
     .
 
@@ -26,7 +26,7 @@ if [ $? -eq 0 ]; then
     echo "✅ Multi-platform build completed successfully!"
     echo ""
     echo "Built for platforms: linux/amd64, linux/arm64"
-    echo "Built tags: palmr:latest and palmr:$TAG"
+    echo "Built tags: amfora:latest and amfora:$TAG"
     echo ""
     echo "Access points:"
     echo "- API: http://localhost:3333"

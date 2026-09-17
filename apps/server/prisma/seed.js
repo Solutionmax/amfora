@@ -130,13 +130,13 @@ const defaultConfigs = [
   },
   {
     key: "smtpFromName",
-    value: "Palmr",
+    value: "Amfora",
     type: "string",
     group: "email",
   },
   {
     key: "smtpFromEmail",
-    value: "noreply@palmr.app",
+    value: "noreply@example.com",
     type: "string",
     group: "email",
   },

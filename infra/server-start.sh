@@ -31,19 +31,19 @@ if [ -f "/app/load-minio-credentials.sh" ]; then
     . /app/load-minio-credentials.sh
 fi
 
-TARGET_UID=${PALMR_UID:-1000}
-TARGET_GID=${PALMR_GID:-1000}
+TARGET_UID=${AMFORA_UID:-1000}
+TARGET_GID=${AMFORA_GID:-1000}
 
-if [ -n "$PALMR_UID" ] || [ -n "$PALMR_GID" ]; then
+if [ -n "$AMFORA_UID" ] || [ -n "$AMFORA_GID" ]; then
     echo "🔧 Runtime UID/GID: $TARGET_UID:$TARGET_GID"
     
     echo "🔐 Updating file ownership..."
     
     # Only chown application files (these are small and fast)
-    find /app/palmr-app -maxdepth 2 -exec chown $TARGET_UID:$TARGET_GID {} + 2>/dev/null || echo "⚠️ Some app ownership changes may have failed"
+    find /app/amfora-app -maxdepth 2 -exec chown $TARGET_UID:$TARGET_GID {} + 2>/dev/null || echo "⚠️ Some app ownership changes may have failed"
     
     # Home directory is small, safe to chown
-    chown -R $TARGET_UID:$TARGET_GID /home/palmr 2>/dev/null || echo "⚠️ Some home directory ownership changes may have failed"
+    chown -R $TARGET_UID:$TARGET_GID /home/amfora 2>/dev/null || echo "⚠️ Some home directory ownership changes may have failed"
     
     # /app/server is handled by the main startup script with smart marker
     # No need to duplicate the work here
@@ -51,9 +51,9 @@ if [ -n "$PALMR_UID" ] || [ -n "$PALMR_GID" ]; then
     echo "✅ UID/GID configuration completed"
 fi
 
-cd /app/palmr-app
+cd /app/amfora-app
 
-export DATABASE_URL="file:/app/server/prisma/palmr.db"
+export DATABASE_URL="file:/app/server/prisma/amfora.db"
 
 echo "📂 Data directory: /app/server"
 echo "💾 Database: $DATABASE_URL"
@@ -70,11 +70,11 @@ if [ "$(id -u)" = "0" ]; then
     # Critical: Database files need read+write permissions
     if [ -d "/app/server/prisma" ]; then
         chown -R $TARGET_UID:$TARGET_GID /app/server/prisma 2>/dev/null || true
-        chmod -R 755 /app/server/prisma 2>/dev/null || true
-        # Ensure database file is writable
-        if [ -f "/app/server/prisma/palmr.db" ]; then
-            chmod 644 /app/server/prisma/palmr.db 2>/dev/null || true
-        fi
+        chmod 750 /app/server/prisma 2>/dev/null || true
+        # The database holds password hashes and the JWT secret, so it stays owner only.
+        for dbfile in /app/server/prisma/amfora.db /app/server/prisma/amfora.db-wal /app/server/prisma/amfora.db-shm; do
+            [ -f "$dbfile" ] && chmod 600 "$dbfile" 2>/dev/null || true
+        done
     fi
 fi
 
@@ -97,7 +97,7 @@ if [ ! -f "/app/server/prisma/configs.json" ]; then
     fi
 fi
 
-if [ ! -f "/app/server/prisma/palmr.db" ]; then
+if [ ! -f "/app/server/prisma/amfora.db" ]; then
     echo "🚀 First run detected - setting up database..."
     
     echo "🗄️ Creating database schema..."
@@ -109,7 +109,17 @@ if [ ! -f "/app/server/prisma/palmr.db" ]; then
     echo "✅ Database setup completed!"
 else
     echo "♻️ Existing database found"
-    
+
+    # The reverse share layout was renamed. Rewrite the stored value before the schema
+    # push, so that existing receive pages keep the layout their owner chose.
+    echo "🔁 Applying data migrations..."
+    if echo "UPDATE reverse_shares SET pageLayout = 'VESSEL' WHERE pageLayout = 'WETRANSFER';" \
+        | run_as_user npx prisma db execute --schema=./prisma/schema.prisma --stdin > /dev/null 2>&1; then
+        echo "   ✓ Data migrations applied"
+    else
+        echo "   ⚠️ Data migration skipped (nothing to migrate, or the table does not exist yet)"
+    fi
+
     echo "🔧 Checking for schema updates..."
     run_as_user npx prisma db push --schema=./prisma/schema.prisma --skip-generate
     
@@ -136,6 +146,12 @@ else
         echo "✅ All tables have data, no seeding needed"
     fi
 fi
+
+# Run again now that the database definitely exists: on a first boot the block above ran
+# before Prisma created the file, so it would have been left at the default mode.
+for dbfile in /app/server/prisma/amfora.db /app/server/prisma/amfora.db-wal /app/server/prisma/amfora.db-shm; do
+    [ -f "$dbfile" ] && chmod 600 "$dbfile" 2>/dev/null || true
+done
 
 echo "🚀 Starting Amfora server..."
 

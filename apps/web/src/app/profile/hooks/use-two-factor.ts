@@ -151,7 +151,7 @@ export function useTwoFactor() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "palmr-backup-codes.txt";
+    a.download = "amfora-backup-codes.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

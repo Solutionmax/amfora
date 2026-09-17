@@ -22,7 +22,7 @@ const BACKGROUND_OPTIONS = {
   ],
 };
 
-const STORAGE_KEY = "palmr-custom-background";
+const STORAGE_KEY = "amfora-custom-background";
 
 export function BackgroundPickerForm() {
   const t = useTranslations();

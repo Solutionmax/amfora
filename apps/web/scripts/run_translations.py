@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main script to run Palmr translation management operations.
+Main script to run Amfora translation management operations.
 Makes it easy to run scripts without remembering specific names.
 """
 
@@ -61,7 +61,7 @@ def filter_args_for_script(script_name: str, args: list) -> list:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Main script to manage Palmr translations',
+        description='Main script to manage Amfora translations',
         epilog='Examples:\n'
                '  python3 run_translations.py check\n'
                '  python3 run_translations.py sync --dry-run\n'
@@ -83,7 +83,7 @@ def main():
     args, remaining_args = parser.parse_known_args()
     
     if args.command == 'help':
-        print("🌍 PALMR TRANSLATION MANAGER")
+        print("🌍 AMFORA TRANSLATION MANAGER")
         print("=" * 50)
         print()
         print("📋 AVAILABLE COMMANDS:")
