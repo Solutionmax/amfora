@@ -19,10 +19,10 @@
 - [x] Public (Luna live_version): home/navbar, login/recovery/invite/callbacks, share and reverse upload visual surfaces and brand stage. Maintain hooks and translated labels.
 - [x] Workspace (Luna design_inventory): dashboard/files/shares/reverse-shares/profile/customization/settings/users-management contents and tables. Preserve all interactions.
 - [x] Integrate/review: inspect diffs, pnpm lint/type-check/test; fix any regressions.
-- [ ] Build: docker buildx build --load -t amfora:1.0.0-redesign-20260917 .; test with isolated data copy and local ports before live switch.
-- [ ] Deploy: consistent stopped-container backup of /data/palmr plus compose; switch image preserving environment and mounts; retain old image.
-- [ ] Verify: health, image identity, ownership, migration, browser public/auth/admin/mobile/dark, upload/download.
-- [ ] Document deployed commit/image, backup and verification in /root/projects/homelab/AMFORA.md.
+- [x] Build: docker buildx build --load -t amfora:1.0.0-redesign-20260917 .; test with isolated data copy and local ports before live switch.
+- [x] Deploy: consistent stopped-container backup of /data/palmr plus compose; switch image preserving environment and mounts; retain old image.
+- [x] Verify: health, image identity, ownership, migration, browser public/auth/admin/mobile/dark, upload/download.
+- [x] Document deployed commit/image, backup and verification in /root/projects/homelab/AMFORA.md.
 
 ## Verification record
 - Pre-change tests: web 8/8, server 17/17.
@@ -31,3 +31,7 @@
 - Browser: authenticated upload created 40-byte check file on isolated staging data. Public download returned existing 69-byte demo PDF. Desktop/mobile/dark snapshots inspected.
 - Browser findings fixed: mobile action visibility, narrow dashboard overview cards, mobile file table columns, raw appearance settings, oversized transfer identity panel, unlabeled file-view controls.
 - Both Luna cross-reviews completed. Final small fixes: accessible table/grid controls, long custom name wrapping/truncation, single-column narrow forms. Scoped lint and full web validation passed.
+
+- Production image f4cf6b9 deployed as amfora:1.0.0-redesign-20260917; healthy. Local stopped-container backup retained.
+- All 20 browser checks also passed against live URL. Live demo download SHA-256 matches staging. Host exposes only 5487/9379; original data counts preserved.
+- Staging public 52 MiB multipart upload completed with 201 registration; reverse_share_files records 54,525,952 bytes.
