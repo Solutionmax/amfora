@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, amfora]
+  pull_request:
+
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile
+      - run: npx prisma generate
+      - run: pnpm lint
+      - run: pnpm type-check
+      - run: pnpm test
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm type-check
+      - run: pnpm test
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      # The Dockerfile uses heredoc COPY, so it only builds with buildx.
+      # Build only: publishing happens from a tag, not from every push.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  brand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # LICENSE, NOTICE, README and the vendor stage are allowed to name the upstream
+      # project. Nothing else may, and no competitor brand may appear anywhere.
+      - name: No stray brand references
+        run: |
+          if grep -rniE 'palmr|kyantech|wetransfer' . \
+              --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.next \
+              --exclude=pnpm-lock.yaml --exclude=LICENSE --exclude=NOTICE \
+              --exclude=README.md --exclude=Dockerfile --exclude=ci.yml \
+              --exclude=minio-setup.sh --exclude=server-start.sh; then
+            echo "::error::Found a brand reference that should not be there"
+            exit 1
+          fi
+          echo "Clean."

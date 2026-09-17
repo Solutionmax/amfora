@@ -1,162 +1,101 @@
-
-> ## ⚠️ Project Archived
-> After deep reflection, I have decided to focus my limited time and energy on my other projects. As a solo developer, I have struggled to actively maintain multiple projects with the care and attention they deserve. Without enough sponsors, it became unfeasible to maintain Palmr.
-> If you are interested in continuing this work through a fork, I will be happy to add a link to it here in the README.
-> We thank all the contributors and users who have supported Palmr over time!
-
-
-# 🌴 Palmr. - Open-Source File Transfer
-
 <p align="center">
-  <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749825361/Group_47_1_bcx8gw.png" alt="Palmr Banner" style="width: 100%;"/>
+  <img src="apps/web/public/art/vault.jpg" alt="" width="100%" />
 </p>
 
-**Palmr.** is a **flexible** and **open-source** alternative to file transfer services like **WeTransfer**, **SendGB**, **Send Anywhere**, and **Files.fm**.
+# Amfora
 
-<div align="center">
-  <div style="background: linear-gradient(135deg, #ff4757, #ff3838); padding: 20px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3); border: 2px solid #ff3838;">
-    <h3 style="color: white; margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">
-      ⚠️ BETA VERSION
-    </h3>
-    <p style="color: white; margin: 0; font-size: 14px; opacity: 0.95;">
-      <strong>This project is currently in beta phase.</strong><br>
-      Not recommended for production environments.
-    </p>
-  </div>
-</div>
+Amfora is a self hosted place to send and receive files. You run it on your own
+server, you keep the files, and the people you send a link to need nothing but a
+browser. No account, no app, no upload limit set by somebody else.
 
-🔗 **For detailed documentation visit:** [Palmr. - Documentation](https://palmr.kyantech.com.br)
+It is a maintained fork of [Palmr](https://github.com/kyantech/Palmr), which its
+author archived in February 2026. See [NOTICE](NOTICE) for the attribution.
 
-## 📌 Why Choose Palmr.?
+## What it does
 
-- **Self-hosted** – Deploy on your own server or VPS.
-- **Full control** – No third-party dependencies, ensuring privacy and security.
-- **No artificial limits** – Share files without hidden restrictions or fees.
-- **Folder organization** – Create folders to organize and share files.
-- **Simple deployment** – SQLite database and filesystem storage for easy setup.
-- **Scalable storage** – Optional S3-compatible object storage for enterprise needs.
+- **Send.** Put files in a vessel, share one link. Set a password, an expiry date
+  or a maximum number of views if the link should not live forever.
+- **Receive.** Publish a receive link and let somebody send files to you, without
+  giving them an account on your server.
+- **Keep.** Files live in your own storage: built in, or any S3 compatible bucket
+  you already pay for.
+- **Look like you.** Name, logo, accent colour, font and corner radius are set per
+  installation, on the server, so every visitor sees the same thing.
 
-## 🚀 Technologies Used
+## Run it
 
-### **Palmr.** is built with a focus on **performance**, **scalability**, and **security**.
+```bash
+git clone https://github.com/raym0nz82/amfora.git
+cd amfora
+docker compose up -d
+```
 
-<div align="center">
-  <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1745548231/Palmr./Captura_de_Tela_2025-04-24_a%CC%80s_23.24.26_kr4hsl.png" style="width: 100%; border-radius: 15px;" />
-</div>
+Then open <http://localhost:5487>. The first run creates the database, seeds the
+default settings and prints the initial administrator credentials in the log.
 
+`STORAGE_URL` in `docker-compose.yaml` must be the address the **browser** uses to
+reach storage, not the address the container uses. On a LAN that is something like
+`http://192.168.1.10:9379`; behind a reverse proxy it is your public HTTPS URL.
 
-### **Backend & API**
-- **Fastify (Node.js)** – High-performance API framework with built-in schema validation.
-- **SQLite** – Lightweight, reliable database with zero-configuration setup.
-- **Filesystem Storage** – Direct file storage with optional S3-compatible object storage.
+### Building the image yourself
 
-### **Frontend**
-- **NextJS 15 + TypeScript + Shadcn/ui** – Modern and fast web interface.
+```bash
+docker buildx build --load -t amfora:local .
+```
 
+`buildx` is required: the Dockerfile uses heredoc `COPY`, which the classic builder
+does not understand.
 
-## 🛠️ How It Works
+## Configuration
 
-1. **Web Interface** → Built with Next, React and TypeScript for a seamless user experience.
-2. **Backend API** → Fastify handles requests and manages file operations.
-3. **Database** → SQLite stores metadata and transactional data with zero configuration.
-4. **Storage** → Filesystem storage ensures reliable file storage with optional S3-compatible object storage for scalability.
+Everything is optional except `STORAGE_URL`.
 
-## 📸 Screenshots
+| Variable | Default | What it does |
+|---|---|---|
+| `STORAGE_URL` | none | Address the browser uses for storage. Required with internal storage. |
+| `SECURE_SITE` | `false` | Set to `true` behind an HTTPS reverse proxy. Also enables HSTS. |
+| `DEFAULT_LANGUAGE` | `en-US` | Interface language for new visitors. |
+| `AMFORA_UID` / `AMFORA_GID` | `1001` | User and group the container writes files as. |
+| `ENABLE_S3` | `false` | Use an external S3 bucket instead of internal storage. |
+| `S3_DISABLE_CHECKSUMS` | `false` | Set to `true` for Cloudflare R2, which rejects the default checksum. |
+| `CORS_ORIGINS` | empty | Origins allowed to call the API from a browser. Leave empty unless you built your own frontend. |
+| `TRUST_PROXY` | `true` | Set to `false` when the server is exposed without a reverse proxy in front of it. |
+| `RATE_LIMIT_MAX` | `600` | Requests per minute per IP across all routes. |
+| `RATE_LIMIT_SHARE_PASSWORD` | `10` | Password attempts per minute per IP on a share. |
+| `RATE_LIMIT_CREDENTIALS` | `10` | Login, two factor and reset attempts per minute per IP. |
+| `PRESIGNED_URL_EXPIRATION` | `3600` | Seconds an upload or download URL stays valid. |
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824929/Login_veq6e7.png" alt="Login Page" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Login Page</strong>
-    </td>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824929/Home_lzvfzu.png" alt="Home Page" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Home Page</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/Dashboard_uycmxb.png" alt="Dashboard" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Dashboard</strong>
-    </td>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824929/Profile_wvnlzw.png" alt="Profile Page" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Profile Page</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/Files_List_ztwr1e.png" alt="Files List View" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Files List View</strong>
-    </td>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/Files_Cards_pwsh5e.png" alt="Files Card View" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Files Card View</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824927/Shares_cgplgw.png" alt="Shares Management" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Shares Management</strong>
-    </td>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/Reive_Files_uhkeyc.png" alt="Receive Files" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Receive Files</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824927/Default_Reverse_xedmhw.png" alt="Reverse Share" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Reverse Share</strong>
-    </td>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/Settings_oampxr.png" alt="Settings Panel" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Settings Panel</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/User_Management_xjbfhn.png" alt="User Management" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>User Management</strong>
-    </td>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/Forgot_Password_jcz9ad.png" alt="Forgot Password" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Forgot Password</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://res.cloudinary.com/technical-intelligence/image/upload/v1749824928/WeTransfer_Reverse_u0g7eb.png" alt="Forgot Password" style="width: 100%; border-radius: 8px;" />
-      <br /><strong>Reverse Share (WeTransfer Style)</strong>
-    </td>
-  </tr>
-</table>
+The full list of S3 variables is in `docker-compose.yaml`.
 
+## Security notes for operators
 
-## 👨‍💻 Core Maintainers
+- Put the instance behind HTTPS and set `SECURE_SITE=true`.
+- Do not publish port `3333`. The API is reached from inside the container.
+- Share passwords travel in the `x-share-password` header, never in a URL, so they
+  stay out of your proxy's access logs.
+- The database holds password hashes and the JWT secret and is written `0600`. Keep
+  it that way if you move the data directory around.
+- Back up `/app/server` from the volume. It holds the database and every uploaded file.
 
-| [**Daniel Luiz Alves**](https://github.com/danielalves96) |
-|------------------|
-| <img src="https://github.com/danielalves96.png" width="150px" alt="Daniel Luiz Alves" /> |
+## Upgrading from an installation named Palmr
 
-</br>
+The container renames `prisma/palmr.db` to `prisma/amfora.db` on first start and
+keeps using an existing `palmr-files` bucket rather than creating an empty new one.
+Set `AMFORA_UID` and `AMFORA_GID` where you previously set `PALMR_UID` and `PALMR_GID`.
 
-## 🤝 Supporters
+## Development
 
-[<img src="https://i.ibb.co/nMN40STL/Repoflow.png" width="200px" alt="Daniel Luiz Alves" />](https://www.repoflow.io/)
+```bash
+pnpm install                      # in apps/web and apps/server
+cd apps/server && pnpm dev        # API on :3333
+cd apps/web    && pnpm dev        # web on :3000
+cd apps/server && pnpm test       # server checks
+```
 
-## ⭐ Star History
+Run `pnpm prettier --write "src/**/*.tsx"` in `apps/web` before building: the build
+runs ESLint with the Prettier rule and fails on formatting.
 
-  <a href="https://www.star-history.com/#kyantech/Palmr&Date">
-   <picture>
-     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=kyantech/Palmr&type=Date&theme=dark" />
-     <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=kyantech/Palmr&type=Date" />
-     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kyantech/Palmr&type=Date" />
-   </picture>
-  </a>
+## Licence
 
-## 🛠️ Contributing
-
-For contribution guidelines, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-
+Apache 2.0, see [LICENSE](LICENSE). The bundled `minio` and `mc` binaries are
+AGPL-3.0 and are redistributed unmodified; see [NOTICE](NOTICE).
