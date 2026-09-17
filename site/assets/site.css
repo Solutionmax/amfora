@@ -247,12 +247,12 @@ em {
   transform: translateY(-2px);
 }
 .button.primary {
-  background: #168de2;
+  background: #0074c7;
   color: white;
   box-shadow: 0 4px 20px #0079d222;
 }
 .button.primary:hover {
-  background: #067bcc;
+  background: #0065ad;
 }
 .button.dark {
   background: var(--ink);
