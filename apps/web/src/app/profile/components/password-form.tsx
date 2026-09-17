@@ -2,7 +2,6 @@ import { IconEye, IconEyeClosed, IconLock } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordFormProps } from "../types";
@@ -23,16 +22,14 @@ export function PasswordForm({
   } = form;
 
   return (
-    <Card className="gap-0 overflow-hidden p-0">
-      <CardHeader className="border-b bg-secondary/30 px-5 py-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <IconLock className="size-4" />
-          </span>
-          <h2 className="font-display text-lg font-bold tracking-tight">{t("profile.password.title")}</h2>
-        </div>
-      </CardHeader>
-      <CardContent className="p-5 sm:p-6">
+    <section className="border-b pb-6">
+      <header className="flex items-center gap-3 border-b pb-4">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
+          <IconLock className="size-4" />
+        </span>
+        <h2 className="font-display text-lg font-bold tracking-tight">{t("profile.password.title")}</h2>
+      </header>
+      <div className="pt-5">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="relative space-y-2">
             <Label htmlFor="profile-new-password">{t("profile.password.newPassword")}</Label>
@@ -88,7 +85,7 @@ export function PasswordForm({
             </Button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

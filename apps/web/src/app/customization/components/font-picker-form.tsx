@@ -66,12 +66,12 @@ export function FontPickerForm() {
     >
       <div className="space-y-3">
         <Label className="text-sm font-medium">{t("customization.fonts.available")}</Label>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {PREDEFINED_FONTS.map((font) => (
             <button
               key={font.name}
               onClick={() => handleFontSelect(font.value)}
-              className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+              className={`group relative rounded-lg border p-3 text-left transition-colors ${
                 selectedFont === font.value
                   ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                   : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
@@ -79,7 +79,7 @@ export function FontPickerForm() {
               type="button"
             >
               <span
-                className="font-medium text-lg group-hover:text-primary transition-colors"
+                className="font-medium text-base group-hover:text-primary transition-colors"
                 style={{ fontFamily: font.value }}
               >
                 {font.name}

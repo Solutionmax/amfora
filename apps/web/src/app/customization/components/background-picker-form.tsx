@@ -74,24 +74,27 @@ export function BackgroundPickerForm() {
       <div className="space-y-6">
         <div className="space-y-3">
           <Label className="text-sm font-medium">{t("customization.background.lightMode")}</Label>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {BACKGROUND_OPTIONS.light.map((bg) => (
               <button
                 key={bg.name}
                 onClick={() => handleBackgroundSelect("light", bg.background)}
-                className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+                className={`group relative rounded-lg border p-3 text-left transition-colors ${
                   selectedBackground.light === bg.background
                     ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                     : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
                 }`}
                 type="button"
               >
-                <div className="flex flex-col items-center gap-3">
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="font-medium text-base">{bg.name}</span>
-                    <span className="text-xs text-muted-foreground">{bg.description}</span>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="block text-sm font-medium">{bg.name}</span>
+                    <span className="mt-0.5 block truncate text-xs text-muted-foreground">{bg.description}</span>
                   </div>
-                  <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
+                  <div
+                    className="h-7 w-10 shrink-0 rounded border border-border"
+                    style={{ backgroundColor: bg.background }}
+                  />
                 </div>
               </button>
             ))}
@@ -99,24 +102,27 @@ export function BackgroundPickerForm() {
         </div>
         <div className="space-y-3">
           <Label className="text-sm font-medium">{t("customization.background.darkMode")}</Label>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {BACKGROUND_OPTIONS.dark.map((bg) => (
               <button
                 key={bg.name}
                 onClick={() => handleBackgroundSelect("dark", bg.background)}
-                className={`group relative rounded-xl border-2 p-4 text-center transition-colors ${
+                className={`group relative rounded-lg border p-3 text-left transition-colors ${
                   selectedBackground.dark === bg.background
                     ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
                     : "border-border/70 hover:border-primary/40 hover:bg-secondary/30"
                 }`}
                 type="button"
               >
-                <div className="flex flex-col items-center gap-3">
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="font-medium text-base">{bg.name}</span>
-                    <span className="text-xs text-muted-foreground">{bg.description}</span>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="block text-sm font-medium">{bg.name}</span>
+                    <span className="mt-0.5 block truncate text-xs text-muted-foreground">{bg.description}</span>
                   </div>
-                  <div className="h-8 w-12 rounded border border-border" style={{ backgroundColor: bg.background }} />
+                  <div
+                    className="h-7 w-10 shrink-0 rounded border border-border"
+                    style={{ backgroundColor: bg.background }}
+                  />
                 </div>
               </button>
             ))}

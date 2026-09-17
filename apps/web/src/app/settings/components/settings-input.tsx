@@ -20,6 +20,7 @@ export function isFieldHidden(fieldKey: string): boolean {
 
 export interface ConfigInputProps {
   config: Config;
+  description?: string;
   register: UseFormRegister<any>;
   setValue: UseFormSetValue<any>;
   watch: UseFormWatch<any>;
@@ -30,6 +31,7 @@ export interface ConfigInputProps {
 
 export function SettingsInput({
   config,
+  description,
   register,
   setValue,
   watch,
@@ -140,12 +142,17 @@ export function SettingsInput({
   };
 
   return (
-    <div className={config.type === "boolean" ? "flex items-center justify-between gap-6" : "space-y-2.5"}>
-      <Label htmlFor={config.key} className={isDisabled ? "text-muted-foreground" : ""}>
-        {t(`settings.fields.${config.key}.title`)}
-      </Label>
-      {renderInput()}
-      {error && <p className="text-sm text-destructive">{error.message}</p>}
+    <div className="grid min-w-0 items-start gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] sm:gap-8">
+      <div className="space-y-1.5">
+        <Label htmlFor={config.key} className={isDisabled ? "text-muted-foreground" : ""}>
+          {t(`settings.fields.${config.key}.title`)}
+        </Label>
+        {description && <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{description}</p>}
+      </div>
+      <div className="min-w-0 space-y-2">
+        {renderInput()}
+        {error && <p className="text-sm text-destructive">{error.message}</p>}
+      </div>
     </div>
   );
 }

@@ -1,9 +1,7 @@
-import React from "react";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { createFieldDescriptions, createGroupMetadata } from "../constants";
 import { SettingsGroupProps } from "../types";
 import { isFieldHidden, SettingsInput } from "./settings-input";
@@ -23,15 +21,11 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Card className="gap-0 overflow-hidden p-0">
-        <CardHeader className="border-b bg-muted/30 p-6 sm:p-8">
+      <section className="max-w-4xl">
+        <header className="mb-6">
           <div className="flex flex-row items-center gap-3">
-            {metadata.icon &&
-              React.createElement(metadata.icon, {
-                className: "size-10 shrink-0 rounded-xl border bg-background p-2.5 text-primary",
-              })}
             <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-semibold tracking-tight">
+              <h2 className="text-base font-semibold">
                 {t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title}
               </h2>
               <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
@@ -41,8 +35,8 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
               </p>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="p-6 sm:p-8">
+        </header>
+        <div>
           <div className="divide-y">
             {configs
               .filter((config) => !isFieldHidden(config.key))
@@ -72,9 +66,16 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
                 }
 
                 return (
-                  <div key={config.key} className="space-y-2 py-5 first:pt-0 last:pb-0">
+                  <div key={config.key} className="py-5 first:pt-0 last:pb-0">
                     <SettingsInput
                       config={config}
+                      description={
+                        t.has(`settings.fields.${config.key}.description`)
+                          ? t(`settings.fields.${config.key}.description`)
+                          : FIELD_DESCRIPTIONS[config.key as keyof typeof FIELD_DESCRIPTIONS] ||
+                            config.description ||
+                            t("settings.fields.noDescription")
+                      }
                       error={form.formState.errors.configs?.[config.key]}
                       register={form.register}
                       setValue={form.setValue}
@@ -82,13 +83,6 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
                       authProvidersEnabled={form.watch("configs.authProvidersEnabled")}
                       watch={form.watch}
                     />
-                    <p className="text-xs text-muted-foreground ml-1">
-                      {t.has(`settings.fields.${config.key}.description`)
-                        ? t(`settings.fields.${config.key}.description`)
-                        : FIELD_DESCRIPTIONS[config.key as keyof typeof FIELD_DESCRIPTIONS] ||
-                          config.description ||
-                          t("settings.fields.noDescription")}
-                    </p>
                   </div>
                 );
               })}
@@ -125,8 +119,8 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
     </form>
   );
 }
