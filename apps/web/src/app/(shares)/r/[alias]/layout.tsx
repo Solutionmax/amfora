@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
+import { firstForwardedValue, forwardedProtocol } from "@/lib/forwarded-headers";
+
 async function getReverseShareMetadata(alias: string) {
   try {
     const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
@@ -40,8 +42,8 @@ async function getAppInfo() {
 
 async function getBaseUrl(): Promise<string> {
   const headersList = await headers();
-  const protocol = headersList.get("x-forwarded-proto") || "http";
-  const host = headersList.get("x-forwarded-host") || headersList.get("host") || "localhost:3000";
+  const protocol = forwardedProtocol(headersList.get("x-forwarded-proto"), "http");
+  const host = firstForwardedValue(headersList.get("x-forwarded-host")) || headersList.get("host") || "localhost:3000";
   return `${protocol}://${host}`;
 }
 
