@@ -25,7 +25,7 @@ REVISION="${SOURCE_REVISION:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}"
 args=(--builder "$BUILDER" --label "org.opencontainers.image.revision=$REVISION")
 if [[ "$MODE" == push ]]; then
     args+=(--platform linux/amd64,linux/arm64 --push \
-        -t "ghcr.io/raym0nz82/amfora:$TAG" -t ghcr.io/raym0nz82/amfora:latest)
+        -t "ghcr.io/solutionmax/amfora:$TAG" -t ghcr.io/solutionmax/amfora:latest)
 else
     args+=(--load -t "amfora:$TAG")
 fi

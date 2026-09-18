@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/raym0nz82/amfora/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/badge/CI-GitHub_Actions-2088ff?logo=githubactions&amp;logoColor=white"></a>
+  <a href="https://github.com/Solutionmax/amfora/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/badge/CI-GitHub_Actions-2088ff?logo=githubactions&amp;logoColor=white"></a>
   <a href="LICENSE"><img alt="Licence: Apache-2.0" src="https://img.shields.io/badge/licence-Apache--2.0-0079d2"></a>
   <img alt="Node.js 24" src="https://img.shields.io/badge/Node.js-24-339933">
   <img alt="SQLite" src="https://img.shields.io/badge/database-SQLite-0079d2">

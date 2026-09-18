@@ -10,7 +10,7 @@ something that does not fit, and it saves me reviewing it.
 ## Setting up
 
 ```bash
-git clone https://github.com/raym0nz82/amfora.git
+git clone https://github.com/Solutionmax/amfora.git
 cd amfora
 (cd apps/server && pnpm install)
 (cd apps/web && pnpm install)
