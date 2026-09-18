@@ -3087,3 +3087,230 @@ h3 {
   outline: 3px solid var(--link);
   outline-offset: -3px;
 }
+
+/* Downloads and release notes. */
+.releases-page {
+  background: #fbfcfe;
+}
+.release-hero {
+  background: #f1f6fc;
+  border-bottom: 1px solid var(--line);
+}
+.release-hero-grid,
+.release-upgrade-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 70px;
+}
+.release-intro h1 {
+  font-size: clamp(42px, 4.5vw, 64px);
+  line-height: 1.06;
+  margin-block: 24px;
+}
+.release-intro h1 em {
+  color: var(--link);
+  font-style: normal;
+}
+.release-intro > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 420px;
+  margin-bottom: 26px;
+}
+.latest-release {
+  background: white;
+  border: 1px solid #cce1f6;
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 16px 45px -25px #21477845;
+}
+.latest-release .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.latest-release h2 {
+  font-size: 40px;
+  margin-top: 20px;
+}
+.releases-page .release-date {
+  font-size: 12px;
+  margin: 6px 0 22px;
+}
+.latest-release > p:not(.eyebrow),
+.release-option-grid p:not(.eyebrow),
+.release-entry > p,
+.release-entry li,
+.release-upgrade p:not(.eyebrow) {
+  color: var(--muted);
+}
+.release-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: center;
+  margin-top: 24px;
+}
+.release-secondary {
+  border: 1px solid #cce1f6;
+  color: var(--link);
+  background: #f8faff;
+}
+.releases-page .release-detail {
+  font-size: 12px;
+  margin-top: 20px;
+}
+.release-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px;
+}
+.release-option-grid h2 {
+  font-size: 27px;
+  line-height: 1.2;
+  margin: 18px 0;
+}
+.release-option-grid article {
+  min-width: 0;
+}
+.release-option-grid .text-link {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 12px;
+}
+.release-history {
+  background: white;
+  border-block: 1px solid var(--line);
+}
+.release-history-grid {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 70px;
+  align-items: start;
+}
+.release-index {
+  position: sticky;
+  top: 100px;
+}
+.release-index nav {
+  margin: 24px 0;
+}
+.release-index nav a {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #cce1f6;
+  border-radius: 8px;
+  color: var(--link);
+  background: #f1f6fc;
+}
+.release-index time,
+.release-index .text-link {
+  font-size: 12px;
+}
+.release-entry {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 36px;
+}
+.release-entry-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.release-entry-heading h2 {
+  margin-top: 12px;
+  font-size: 38px;
+}
+.release-entry-heading time {
+  font-size: 12px;
+  color: var(--muted);
+}
+.release-entry h3 {
+  font-size: 22px;
+  margin: 28px 0 12px;
+}
+.release-entry ul {
+  padding-left: 20px;
+  margin: 0;
+}
+.release-entry li + li {
+  margin-top: 12px;
+}
+.release-entry > p + p {
+  margin-top: 16px;
+}
+.release-entry .text-link {
+  font-size: 12px;
+}
+.release-validation {
+  margin-top: 30px;
+  padding: 24px;
+  background: #f1f6fc;
+  border-radius: 10px;
+}
+.release-validation h3 {
+  margin-top: 0;
+}
+.release-validation p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.release-upgrade h2 {
+  font-size: clamp(32px, 3.5vw, 46px);
+  line-height: 1.1;
+  margin-block: 22px;
+}
+.release-upgrade .text-link {
+  display: inline-block;
+  margin-top: 24px;
+}
+.release-upgrade-steps {
+  min-width: 0;
+}
+@media (max-width: 1100px) {
+  .release-hero-grid,
+  .release-upgrade-grid,
+  .release-history-grid {
+    gap: 35px;
+  }
+  .release-option-grid {
+    gap: 24px;
+  }
+}
+@media (max-width: 850px) {
+  .release-hero-grid,
+  .release-option-grid,
+  .release-history-grid,
+  .release-upgrade-grid {
+    grid-template-columns: 1fr;
+  }
+  .release-index {
+    position: static;
+  }
+  .release-option-grid {
+    gap: 40px;
+  }
+}
+@media (max-width: 560px) {
+  .latest-release,
+  .release-entry {
+    padding: 24px;
+  }
+  .release-entry-heading {
+    display: block;
+  }
+  .release-entry-heading time {
+    display: block;
+    margin-top: 12px;
+  }
+  .release-actions .button {
+    width: 100%;
+  }
+}
