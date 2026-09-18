@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://amfora.solutionmax.net"><img src="docs/images/amfora-logo.svg" alt="Amfora — self-hosted file sharing" width="300"></a>
+  <a href="https://amfora.solutionmax.net"><img src="docs/images/amfora-logo.svg" alt="Amfora: self hosted file sharing" width="300"></a>
 </p>
 
 <p align="center">
@@ -7,7 +7,7 @@
   <a href="LICENSE"><img alt="Licence: Apache-2.0" src="https://img.shields.io/badge/licence-Apache--2.0-0079d2"></a>
   <img alt="Node.js 24" src="https://img.shields.io/badge/Node.js-24-339933">
   <img alt="SQLite" src="https://img.shields.io/badge/database-SQLite-0079d2">
-  <img alt="S3-compatible storage" src="https://img.shields.io/badge/storage-S3--compatible-0e1726">
+  <img alt="S3 compatible storage" src="https://img.shields.io/badge/storage-S3%20compatible-0e1726">
   <img alt="Runs on Docker" src="https://img.shields.io/badge/runs%20on-Docker-475467">
   <a href="https://buymeacoffee.com/solutionmax"><img alt="Buy me a coffee" src="https://img.shields.io/badge/Buy%20me%20a%20coffee-ffdd00?logo=buymeacoffee&amp;logoColor=000"></a>
 </p>
@@ -23,9 +23,9 @@
 
 # Amfora
 
-**Self-hosted file sharing. Send, receive and keep control.**
+**Self hosted file sharing. Send, receive and keep control.**
 
-Amfora is a self-hosted workspace for sending and receiving files. Upload files
+Amfora is a self hosted workspace for sending and receiving files. Upload files
 to storage you control, turn them into a guarded share, or give someone a
 browser link where they can send files back without creating an account.
 
@@ -84,10 +84,10 @@ A share presents its files and delivery rules in a focused download view.
 A receive link gives outside collaborators a simple upload form with the limits
 set by its owner.
 
-![Amfora sign-in](site/assets/screenshots/login.webp?v=login-post-20260917)
+![Amfora sign in](site/assets/screenshots/login.webp?v=login-post-20260917)
 
-The sign-in screen supports password authentication, password recovery, and
-two-factor authentication when it is enabled for the account.
+The sign in screen supports password authentication, password recovery, and
+two factor authentication when it is enabled for the account.
 
 ## What is in the box
 
@@ -96,14 +96,15 @@ two-factor authentication when it is enabled for the account.
 | **Workspace** | Files, folders, downloads and shares, with a dashboard for recent activity and storage usage. |
 | **Send files** | Download links with optional passwords, expiry dates, view limits, recipient email notifications and QR codes. |
 | **Collect files** | Upload requests with optional password, expiry, file count, size and type limits. Senders do not need an account. |
-| **Storage** | Bundled MinIO or an external S3-compatible provider, on infrastructure you control. |
+| **Storage** | Bundled MinIO or an external S3 compatible provider, on infrastructure you control. |
 | **Branding** | Application name, logo, accent colour, font, corner radius and default language. |
-| **Access** | User invitations, roles, deactivation, trusted devices and TOTP two-factor authentication with backup codes. Optional OAuth2/OIDC sign-in. |
+| **Access** | User invitations, roles, deactivation, trusted devices and TOTP two factor authentication with backup codes. Optional OAuth2/OIDC sign in. |
 
-## Run the private source branch
+## Install Amfora
 
-The repository is currently private. You need authenticated GitHub access, curl, Git, Bash, and Docker
-with Compose and Buildx 0.30 or later. The installer checks these requirements,
+The source repository is public. No GitHub account is required to download it.
+You need curl, Git, Bash, and Docker with Compose and Buildx 0.30 or later.
+The installer checks these requirements,
 builds from source, and starts Amfora in a new `amfora` directory. It refuses
 existing installations; it does not install Docker or enable automatic updates.
 
@@ -112,7 +113,7 @@ curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker
 ```
 
 Open <http://localhost:5487>. On a new database, the first account created
-through the first-run screen becomes the administrator. Later accounts are
+through the first run screen becomes the administrator. Later accounts are
 ordinary users unless an administrator invites or promotes them.
 
 The sample Compose file publishes the web interface on `5487` and bundled
@@ -134,8 +135,8 @@ image and a tested rollback image when upgrading.
 
 ## Storage and deployment
 
-The image includes a private MinIO-backed storage service. You can use an
-external S3-compatible provider instead:
+The image includes a private MinIO storage service. You can use an
+external S3 compatible provider instead:
 
 ```yaml
 environment:
@@ -148,7 +149,7 @@ environment:
   S3_USE_SSL: "true"
 ```
 
-`STORAGE_URL` is the browser-facing URL used for generated upload and download
+`STORAGE_URL` is the browser facing URL used for generated upload and download
 requests. Put both the app and that storage endpoint behind HTTPS, keep the API
 on the private container network, and set `SECURE_SITE=true` for secure cookies.
 Configure HSTS at the HTTPS reverse proxy.
@@ -157,9 +158,9 @@ The seeded workspace defaults to a 1 GiB maximum file size and 10 GiB maximum
 storage per user; an administrator can change those limits in Settings. See
 [`docker-compose.yaml`](docker-compose.yaml) and
 [`apps/server/.env.example`](apps/server/.env.example) for the complete
-configuration, including S3, proxy, CORS, and rate-limit settings.
+configuration, including S3, proxy, CORS, and rate limit settings.
 
-Amfora does not promise application-level encryption at rest or end-to-end
+Amfora does not promise application level encryption at rest or end to end
 encryption. Protect the host or S3 account with the controls appropriate to the
 deployment. Passwords are stored as bcrypt hashes, and share passwords are sent
 in a request header rather than in a URL.
@@ -172,9 +173,9 @@ providers. The seeded provider choices are Google, Discord, GitHub, Auth0,
 Kinde, Zitadel, Authentik, Frontegg, and Pocket ID; additional compatible OIDC
 providers can be configured.
 
-Each user can enable TOTP two-factor authentication, download backup codes, and
+Each user can enable TOTP two factor authentication, download backup codes, and
 remove trusted devices. Password reset requires password authentication and a
-working SMTP configuration. Invite links are one-time registration links.
+working SMTP configuration. Invite links are one time registration links.
 
 ## Backups and upgrades
 
@@ -218,7 +219,7 @@ information.
 
 ---
 
-<sub>Amfora — a <a href="https://solutionmax.net/">SolutionMAX</a> product ·
+<sub>Amfora, a <a href="https://solutionmax.net/">SolutionMAX</a> product ·
 <a href="https://amfora.solutionmax.net/">Website</a> ·
 <a href="https://amfora.solutionmax.net/docs/">Documentation</a> ·
 <a href="https://amfora.solutionmax.net/legal.html">Legal &amp; privacy</a></sub>
@@ -231,20 +232,20 @@ If Amfora helps your team, you can [support the work](https://buymeacoffee.com/s
 ### Security configuration
 
 Set `APP_URL` to the canonical browser origin (for example `https://files.example.com`)
-before enabling password-reset email. Public deployments must use HTTPS for both app
+before enabling password reset email. Public deployments must use HTTPS for both app
 and storage and `SECURE_SITE=true`. The API binds to loopback inside the container by
 default; publish only the web and storage services through your TLS ingress.
 
-Client-supplied IP headers are ignored by default. Only behind an ingress that replaces
+Client supplied IP headers are ignored by default. Only behind an ingress that replaces
 incoming forwarding headers and blocks direct web access, set
 `TRUST_CLIENT_IP_HEADERS=true` for the web process and `TRUST_PROXY=127.0.0.1,::1`
 for the API's known proxy hops. Never configure blanket trust of arbitrary proxies.
-Without this opt-in, request rate limits conservatively share the proxy address;
+Without this opt in, request rate limits conservatively share the proxy address;
 password failures are additionally limited per account.
 
-Public upload clients must request a server-generated temporary key with filename,
+Public upload clients must request a server generated temporary key with filename,
 extension and byte size, then register that same authorized upload. Registration
 checks storage and commits a private copy; old clients that choose arbitrary object
-keys must be updated. Two-factor login now requires the `challengeId` returned by the
-password step; it expires after five minutes and is single-use. Existing remembered
+keys must be updated. Two factor login now requires the `challengeId` returned by the
+password step; it expires after five minutes and is single use. Existing remembered
 devices must complete 2FA again to receive a secure random device cookie.

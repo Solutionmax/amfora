@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Amfora Docs — Installation, sharing and administration</title>
+    <title>Amfora Docs: Installation, sharing and administration</title>
     <meta
       name="description"
-      content="A practical guide to self-hosting Amfora, sending files, collecting uploads and managing your workspace."
+      content="A practical guide to self hosting Amfora, sending files, collecting uploads and managing your workspace."
     />
     <meta name="robots" content="noindex,nofollow" />
     <meta name="theme-color" content="#fbfcfe" />
@@ -15,11 +15,11 @@
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
-      content="Amfora Docs — Installation, sharing and administration"
+      content="Amfora Docs: Installation, sharing and administration"
     />
     <meta
       property="og:description"
-      content="A practical guide to self-hosting Amfora, sending files, collecting uploads and managing your workspace."
+      content="A practical guide to self hosting Amfora, sending files, collecting uploads and managing your workspace."
     />
     <meta
       property="og:image"
@@ -32,8 +32,11 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=screenshot-review-20260917" />
-    <script src="/assets/site.js?v=pharos-style-20260917-1" defer></script>
+    <link
+      rel="stylesheet"
+      href="/assets/site.css?v=screenshot-review-20260917"
+    />
+    <script src="/assets/site.js?v=public-copy-20260918" defer></script>
   </head>
   <body class="docs-page">
     <a class="skip" href="#main">Skip to content</a>
@@ -79,8 +82,8 @@
           <a
             class="nav-github"
             href="https://github.com/raym0nz82/amfora"
-            title="Private repository — access required"
-            >GitHub <span class="badge">Private</span></a
+            title="Public source repository"
+            >GitHub <span class="badge">Public</span></a
           >
           <a class="nav-source nav-contact" href="/#install"
             >Install Amfora <span aria-hidden="true">↓</span></a
@@ -111,9 +114,9 @@
           ><a href="#about"><span>09</span>About Amfora</a>
         </nav>
         <div class="docs-sidebar-bottom">
-          <span class="badge">Self-hosted installation</span>
+          <span class="badge">Self hosted installation</span>
           <p>Current guide<br />Updated September 2026</p>
-          <a href="https://solutionmax.net/#start">Arrange access ↗</a>
+          <a href="https://github.com/raym0nz82/amfora">View source ↗</a>
         </div>
       </aside>
       <div class="docs-main">
@@ -136,9 +139,9 @@
             <h2>A private file workspace you operate</h2>
             <p>
               Amfora keeps file metadata in SQLite and stores objects through an
-              S3-compatible storage layer. The image includes a private MinIO
-              service for a zero-configuration starting point, and can use an
-              external S3-compatible provider when that better fits your
+              S3 compatible storage layer. The image includes a private MinIO
+              service for a zero configuration starting point, and can use an
+              external S3 compatible provider when that better fits your
               infrastructure.
             </p>
             <div class="docs-grid">
@@ -160,14 +163,14 @@
               <article>
                 <h3>Control</h3>
                 <p>
-                  Manage users, folders, links, branding, two-factor
+                  Manage users, folders, links, branding, two factor
                   authentication, and optional OAuth2/OIDC providers.
                 </p>
               </article>
             </div>
             <aside class="docs-note">
               <strong>Data boundary.</strong> Amfora does not promise
-              application-level encryption at rest. Protect the host volume or
+              application level encryption at rest. Protect the host volume or
               external storage account with the controls appropriate to your
               deployment.
             </aside>
@@ -176,13 +179,12 @@
             <p class="section-kicker">02 / Install</p>
             <h2>Start with Docker Compose</h2>
             <p>
-              You need curl, access to the private repository, Git, and Docker
-              with Compose and Buildx 0.30 or later, plus Bash and a running
-              Docker engine. Authenticate Git with an account that has
-              repository access first. Run the one-line command from a directory
-              without an existing <code>amfora</code> folder. Clone the
-              maintained branch, build the application, and open the local web
-              interface:
+              You need curl, Git, and Docker with Compose and Buildx 0.30 or
+              later, plus Bash and a running Docker engine. The repository is
+              public and requires no GitHub account. Run this command from a
+              directory without an existing <code>amfora</code> folder. Clone
+              the maintained branch, build the application, and open the local
+              web interface:
             </p>
             <pre><code>curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker</code></pre>
             <p>
@@ -216,14 +218,18 @@ sh amfora-get.sh --docker</code></pre>
               <code>5487</code> and bundled storage on <code>9379</code>. The
               API listens on <code>3333</code> inside the container and is left
               unpublished because the bundled web app reaches it through its
-              server-side proxy.
+              server side proxy.
             </p>
             <aside>
-              <strong>Repository access.</strong> The Amfora GitHub repository
-              is private. Arrange access through
-              <a href="https://solutionmax.net/#start">SolutionMAX</a> before
-              cloning. A 404 on the repository usually means your GitHub account
-              has not been granted access.
+              <strong>Public source.</strong> Browse or clone the
+              <a href="https://github.com/raym0nz82/amfora"
+                >Amfora repository</a
+              >
+              without signing in. Published versions and release notes are
+              available on the
+              <a href="https://github.com/raym0nz82/amfora/releases"
+                >releases page</a
+              >.
             </aside>
             <p>
               For access from another computer, change
@@ -237,7 +243,7 @@ sh amfora-get.sh --docker</code></pre>
             <h2>Give the app and storage clear HTTPS addresses</h2>
             <p>
               Use a trusted reverse proxy for both the web interface and the
-              browser-facing storage endpoint. A split-domain deployment can
+              browser facing storage endpoint. A split domain deployment can
               look like this:
             </p>
             <pre><code>https://app.example.com    → container port 5487
@@ -284,7 +290,7 @@ files.example.com {
           </section>
           <section class="docs-section" id="storage">
             <p class="section-kicker">04 / Storage</p>
-            <h2>Choose bundled or external S3-compatible storage</h2>
+            <h2>Choose bundled or external S3 compatible storage</h2>
             <h3>Bundled storage</h3>
             <p>
               Leave <code>ENABLE_S3=false</code> (the default) to run the
@@ -331,7 +337,7 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             <h2>Send a link or collect files through a form</h2>
             <h3 id="workspace">Your workspace</h3>
             <p>
-              The application opens at sign-in, or your dashboard when you are
+              The application opens at sign in, or your dashboard when you are
               already signed in. The dashboard gives you a starting point for
               files, shares and upload requests. Use folders to organize files
               before creating a share. Profile manages your personal details and
@@ -358,7 +364,7 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             </p>
             <h3>Copy a link or export its QR code</h3>
             <p>
-              Use the share menu to copy its link. Open the QR-code action to
+              Use the share menu to copy its link. Open the QR code action to
               display or download a PNG that points to the same URL. After
               changing an alias or application hostname, generate a new QR code
               and replace any older copies. Anyone with the link or code can
@@ -388,7 +394,7 @@ S3_FORCE_PATH_STYLE=false</code></pre>
               Administrators can invite users, list and deactivate accounts,
               change roles, set storage limits, customize the installation,
               configure SMTP, and manage external login providers. Invite links
-              are one-time registration links.
+              are one time registration links.
             </p>
             <h3 id="branding">Make it feel like your brand</h3>
             <p>
@@ -398,7 +404,7 @@ S3_FORCE_PATH_STYLE=false</code></pre>
               download page. Use <strong>Settings</strong> for storage limits,
               language, email and authentication configuration.
             </p>
-            <h3>Two-factor authentication</h3>
+            <h3>Two factor authentication</h3>
             <p>
               Each user can enable TOTP in their profile, verify setup with an
               authenticator, save backup codes, and remove trusted devices. A
@@ -457,7 +463,7 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
             <dl class="docs-faq">
               <dt>The page loads but uploads fail.</dt>
               <dd>
-                Confirm that <code>STORAGE_URL</code> is browser-reachable,
+                Confirm that <code>STORAGE_URL</code> is browser reachable,
                 forwards to the storage service, and accepts the storage
                 requests. Then inspect
                 <code>docker compose logs -f amfora</code>.
@@ -490,21 +496,21 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
           </section>
           <section id="about">
             <p class="section-kicker">09 / About Amfora</p>
-            <h2>A self-hosted workspace for the handoff.</h2>
+            <h2>A self hosted workspace for the handoff.</h2>
             <p>
-              Amfora is a self-hosted file workspace for sending files,
+              Amfora is a self hosted file workspace for sending files,
               collecting uploads, and managing access. This guide covers the
               installation, storage, sharing, and administration workflows that
               keep a handoff moving.
             </p>
             <p>
-              The application source is maintained in a private GitHub
-              repository. Arrange access through
-              <a href="https://solutionmax.net/#start">SolutionMAX</a>. Amfora
-              has its own visual identity and ongoing improvements. Its upstream
-              attribution is preserved in NOTICE. It is licensed under the
-              Apache License 2.0. Bundled MinIO and mc are separate, unmodified
-              AGPL-3.0 programs. See <a href="/LICENSE">LICENSE</a>,
+              The application source is publicly available on
+              <a href="https://github.com/raym0nz82/amfora">GitHub</a>. No
+              account or access request is required. Amfora has its own visual
+              identity and ongoing improvements. Its upstream attribution is
+              preserved in NOTICE. It is licensed under the Apache License 2.0.
+              Bundled MinIO and mc are separate, unmodified AGPL-3.0 programs.
+              See <a href="/LICENSE">LICENSE</a>,
               <a href="/NOTICE">NOTICE</a> and the
               <a href="/licenses/AGPL-3.0.txt">bundled program license</a>.
             </p>
@@ -545,10 +551,9 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
           ><a href="/docs/#sharing">Sharing files</a
           ><a href="/docs/#receiving">Upload requests</a
           ><a href="/docs/#branding">Your branding</a
-          ><a href="https://github.com/raym0nz82/amfora"
-            >GitHub repository (private)</a
-          ><a href="/LICENSE">Licence — Apache-2.0</a
-          ><a href="/NOTICE">Third-party notices</a>
+          ><a href="https://github.com/raym0nz82/amfora">GitHub repository</a
+          ><a href="/LICENSE">Licence: Apache License 2.0</a
+          ><a href="/NOTICE">Third party notices</a>
         </div>
         <div>
           <h2>SolutionMAX</h2>
@@ -563,10 +568,10 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
       </div>
       <div class="wrap footer-bottom">
         <span
-          >Amfora — a
+          >Amfora, a
           <a href="https://solutionmax.net/">SolutionMAX</a> product</span
         ><a href="/legal.html">Legal &amp; privacy</a
-        ><span>Self-hosted file sharing</span
+        ><span>Self hosted file sharing</span
         ><span>© 2026 SolutionMAX · ES</span>
       </div>
     </footer>

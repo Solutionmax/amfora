@@ -1,12 +1,12 @@
 # Building Amfora without accumulating unused cache
 
-Use `make build TAG=1.0.0-example` for a local, native-platform image. Publishing is explicit: `make build TAG=1.0.0-example MODE=push` builds AMD64/ARM64 and pushes the version tag and `latest` to GHCR. Neither command changes package versions.
+Use `make build TAG=1.0.0-example` for a local, native platform image. Publishing is explicit: `make build TAG=1.0.0-example MODE=push` builds AMD64/ARM64 and pushes the version tag and `latest` to GHCR. Neither command changes package versions.
 
 The script uses a dedicated `amfora-builder` with `infra/buildkitd.toml`. Native BuildKit garbage collection targets **4 GB of unused cache**, reserves 1 GB for useful cache, and aims to retain 10 GB of free disk space. Active builds can temporarily exceed these targets. Cached layers are reused; builds no longer force `--no-cache`.
 
 After successful and failed builds, the wrapper also runs a bounded cache prune. `make clean` runs the same operation manually. It never stops the application, deletes application volumes, or removes images. Buildx must support `--max-used-space`, `--reserved-space`, and `--min-free-space` (validated with Buildx 0.30.1).
 
-For an existing builder, the TOML configuration is only applied when it is created. Post-build pruning still applies on every build. Finish active builds before deliberately recreating a builder to replace its configuration; this discards its cache, not application data.
+For an existing builder, the TOML configuration is only applied when it is created. Post build pruning still applies on every build. Finish active builds before deliberately recreating a builder to replace its configuration; this discards its cache, not application data.
 
 Inspect storage with:
 

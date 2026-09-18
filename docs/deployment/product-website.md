@@ -6,13 +6,13 @@ site does not expose the separately hosted Amfora application or its storage.
 
 ## Files and releases
 
-- Source: `site/` in the private `raym0nz82/amfora` repository, branch `amfora`.
+- Source: `site/` in the public `raym0nz82/amfora` repository, branch `amfora`.
 - Caddy: `/etc/caddy/Caddyfile`, isolated `amfora.solutionmax.net` block.
 - Releases: `/var/www/amfora/releases/<release>`.
 - Active site: `/var/www/amfora/current`, a symlink to an immutable release.
 - A deployment receipt in each release records the source revision and date.
 
-Build-free deployment: copy only the public site tree into a new release
+Build free deployment: copy only the public site tree into a new release
 folder, verify its files, then atomically replace the `current` symlink. Keep
 previous releases for rollback. Do not copy Git metadata, application data,
 operator notes, secrets or local browser artifacts into the public tree.
@@ -25,17 +25,18 @@ validation must leave the running configuration and active site untouched.
 
 Check HTTP redirects to HTTPS, the landing page, `/docs/`, all local assets,
 `/robots.txt`, and a random missing URL (404). Check the certificate and
-noindex/CSP headers. Browser-check desktop, tablet and mobile navigation,
-all send/collect walkthrough stages, keyboard navigation, example-link copying, documentation search, FAQ disclosure and code copying.
+noindex/CSP headers. Browser check desktop, tablet and mobile navigation,
+all send/collect walkthrough stages, keyboard navigation, example link copying, documentation search, FAQ disclosure and code copying.
 Confirm other Caddy sites still respond normally after configuration changes.
 
-The site is public for testing. `noindex` is not authentication. GitHub remains
-private and a visitor without repository access may see GitHub's 404 page.
+The website and GitHub repository are public. Source downloads do not require
+a GitHub account. The website currently retains its indexing controls; `noindex`
+is not authentication.
 
 ## Rollback
 
 Point `current` back at the previous release using a temporary symlink and
-an atomic rename. No Caddy reload is needed for a content-only rollback.
+an atomic rename. No Caddy reload is needed for a content only rollback.
 For the first deployment, remove only the Amfora host block from the current
 Caddyfile, validate, then reload. Do not blindly restore an old full Caddyfile
 if other sites have changed since that backup.
@@ -44,8 +45,8 @@ if other sites have changed since that backup.
 
 The glass amphora is the original Amfora artwork already used by the app.
 Screenshots are real app captures with demo data in an isolated installation.
-Archivo, Public Sans and JetBrains Mono are self-hosted; their SIL OFL license
-files live beside the font assets. Application and bundled-program attribution
+Archivo, Public Sans and JetBrains Mono are self hosted; their SIL OFL license
+files live beside the font assets. Application and bundled program attribution
 is available at `/LICENSE`, `/NOTICE` and `/licenses/AGPL-3.0.txt`.
 
 
@@ -53,9 +54,9 @@ is available at `/LICENSE`, `/NOTICE` and `/licenses/AGPL-3.0.txt`.
 
 `/legal.html` identifies the operator and explains technical request data, email
 contact, infrastructure providers, cookie behaviour and the distinction between
-this website and self-hosted Amfora installations. All HTML footers link to it.
+this website and self hosted Amfora installations. All HTML footers link to it.
 Contact links use email; no contact form, analytics or payment service is embedded.
 
 Review this notice when enabling analytics, forms, checkout or new providers.
-Retention currently uses purpose-based criteria; confirm operational retention
+Retention currently uses purpose based criteria; confirm operational retention
 settings and enquiry handling before replacing these with exact periods.
