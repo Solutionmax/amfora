@@ -32,11 +32,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="stylesheet"
-      href="/assets/site.css?v=screenshot-review-20260917"
-    />
-    <script src="/assets/site.js?v=public-copy-20260918" defer></script>
+    <link rel="stylesheet" href="/assets/site.css?v=real-screens-20260918" />
+    <script src="/assets/site.js?v=real-screens-20260918" defer></script>
   </head>
   <body class="product-site">
     <a class="skip" href="#main">Skip to content</a>
@@ -434,37 +431,35 @@
               >Read the deployment guide ↗</a
             >
           </div>
-          <div
-            class="hosting-diagram"
-            aria-label="Amfora runs on your server and connects to bundled or external S3 storage"
-          >
-            <div class="diagram-caption">A SMALL, CLEAR SETUP</div>
-            <div class="diagram-person">
-              <span>YOU & YOUR COLLABORATORS</span>
-              <div>Web browser <span aria-hidden="true">↗</span></div>
+          <figure class="screen-frame hosting-preview">
+            <div class="frame-top">
+              <span class="window-dots" aria-hidden="true">● ● ●</span>
+              <span>AMFORA / SIGN IN</span>
+              <a
+                href="/assets/screenshots/login.webp?v=login-post-20260917"
+                target="_blank"
+                rel="noopener"
+                aria-label="View full login screenshot"
+                >Expand ↗</a
+              >
             </div>
-            <div class="diagram-connector" aria-hidden="true">
-              ↕ <span>HTTPS</span>
-            </div>
-            <div class="diagram-server">
-              <div class="server-label">
-                <span class="status-dot"></span> YOUR SERVER
-              </div>
-              <strong>Amfora</strong
-              ><span>Workspace · Share links · Upload requests</span>
-              <div class="storage-options">
-                <div>
-                  <span aria-hidden="true">▤</span
-                  ><strong>Bundled storage</strong><span>Included MinIO</span>
-                </div>
-                <span class="storage-or">or</span>
-                <div>
-                  <span aria-hidden="true">☁</span><strong>External S3</strong
-                  ><span>Your provider</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            <a
+              class="screenshot-link"
+              href="/assets/screenshots/login.webp?v=login-post-20260917"
+              target="_blank"
+              rel="noopener"
+              aria-label="View full login screenshot"
+            >
+              <img
+                src="/assets/screenshots/login.webp?v=login-post-20260917"
+                width="1440"
+                height="1000"
+                alt="The Amfora login page with its blue envelope, email and password fields"
+                loading="lazy"
+              />
+            </a>
+            <figcaption>Your team's front door. Hosted by you.</figcaption>
+          </figure>
         </div>
       </section>
       <section class="section walkthrough-section" id="walkthrough-guide">
@@ -473,8 +468,8 @@
             <p class="eyebrow">A SMALL WORKFLOW. A BETTER HANDOFF.</p>
             <h2>From your files<br />to their next step.</h2>
             <p>
-              Follow a delivery or an upload request, one step at a time. Choose
-              what to share, set the conditions and send the link.
+              Your workspace, their download, their upload. Explore the actual
+              Amfora screens on both sides of a handoff.
             </p>
             <a class="text-link" href="/docs/#sharing"
               >Read the sharing guide ↗</a
@@ -487,228 +482,165 @@
               </p>
             </div>
           </div>
-          <div class="walkthrough" id="walkthrough">
-            <div class="demo-toolbar">
-              <span class="demo-label"
-                ><span class="status-dot"></span> INTERACTIVE WALKTHROUGH</span
-              ><span class="demo-counter" aria-live="polite">01 / 03</span>
-            </div>
+          <div class="product-tour" id="walkthrough">
             <div
-              class="flow-modes"
+              class="tour-tabs"
               role="tablist"
-              aria-label="Explore a workflow"
+              aria-label="Explore the Amfora app"
             >
               <button
-                id="mode-send"
+                id="tour-tab-workspace"
                 role="tab"
                 aria-selected="true"
-                aria-controls="flow-send"
-                data-flow="send"
+                aria-controls="tour-workspace"
               >
-                ↗ <span>Send files</span></button
-              ><button
-                id="mode-receive"
+                <span aria-hidden="true">01</span>Workspace
+              </button>
+              <button
+                id="tour-tab-download"
                 role="tab"
                 aria-selected="false"
-                aria-controls="flow-receive"
-                data-flow="receive"
+                aria-controls="tour-download"
                 tabindex="-1"
               >
-                ↙ <span>Collect files</span>
+                <span aria-hidden="true">02</span>Download
+              </button>
+              <button
+                id="tour-tab-upload"
+                role="tab"
+                aria-selected="false"
+                aria-controls="tour-upload"
+                tabindex="-1"
+              >
+                <span aria-hidden="true">03</span>Upload
               </button>
             </div>
             <div
-              class="flow-panel"
-              id="flow-send"
+              class="tour-panel"
+              id="tour-workspace"
               role="tabpanel"
-              aria-labelledby="mode-send"
+              aria-labelledby="tour-tab-workspace"
+              tabindex="0"
             >
-              <div class="demo-stage" data-stage="0">
-                <div class="stage-heading">
-                  <span class="mini-label">YOUR WORKSPACE</span>
-                  <h3>Good work. Ready to go.</h3>
-                  <p>Choose the files you want to share.</p>
-                </div>
-                <div class="demo-files">
-                  <div class="demo-file">
-                    <span class="file-icon blue">PDF</span>
-                    <div>
-                      <strong>Brand-guide.pdf</strong><span>1.8 MB</span>
-                    </div>
-                    <span class="file-check" aria-hidden="true">✓</span>
-                  </div>
-                  <div class="demo-file">
-                    <span class="file-icon amber">ZIP</span>
-                    <div>
-                      <strong>Campaign-assets.zip</strong><span>24.6 MB</span>
-                    </div>
-                    <span class="file-check" aria-hidden="true">✓</span>
-                  </div>
-                  <div class="demo-file">
-                    <span class="file-icon green">TXT</span>
-                    <div>
-                      <strong>Launch-notes.txt</strong><span>2 KB</span>
-                    </div>
-                    <span class="file-check" aria-hidden="true">✓</span>
-                  </div>
-                </div>
-                <div class="demo-total">
-                  <span>3 files selected</span><strong>26.4 MB</strong>
-                </div>
-              </div>
-              <div class="demo-stage" data-stage="1" hidden>
-                <div class="stage-heading">
-                  <span class="mini-label">SHARE SETTINGS</span>
-                  <h3>You set the boundaries.</h3>
-                  <p>Add the controls this handoff needs.</p>
-                </div>
-                <div class="setting-row">
-                  <span class="setting-symbol">◷</span>
-                  <div>
-                    <strong>Expires after 7 days</strong
-                    ><span>Keep the link available for a limited time.</span>
-                  </div>
-                  <span class="on-toggle" aria-label="Example: enabled"></span>
-                </div>
-                <div class="setting-row">
-                  <span class="setting-symbol">⌑</span>
-                  <div>
-                    <strong>Password protected</strong
-                    ><span>Share the password separately.</span>
-                  </div>
-                  <span class="on-toggle" aria-label="Example: enabled"></span>
-                </div>
-                <div class="setting-row">
-                  <span class="setting-symbol">↗</span>
-                  <div>
-                    <strong>A link that feels like you</strong
-                    ><span>Your logo. Your colors. Your domain.</span>
-                  </div>
-                </div>
-                <p class="demo-setting-note">
-                  Illustrative settings. Configure these in your Amfora app.
-                </p>
-              </div>
-              <div class="demo-stage" data-stage="2" hidden>
-                <div class="stage-heading">
-                  <span class="mini-label">THE RECIPIENT’S VIEW</span>
-                  <h3>One link. Everything inside.</h3>
-                  <p>Open the link, enter the password, download.</p>
-                </div>
-                <div class="recipient-card">
-                  <span class="recipient-icon" aria-hidden="true">↓</span
-                  ><strong>Brand kit</strong><span>3 files · 26.4 MB</span>
-                  <div class="recipient-download">↓ &nbsp; Download files</div>
-                </div>
-                <button
-                  class="example-copy"
-                  data-copy="https://your-amfora.example/s/brand-kit"
+              <figure>
+                <a
+                  class="tour-image"
+                  href="/assets/screenshots/dashboard.webp?v=blue-post-details-20260917"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="View full workspace screenshot"
                 >
-                  Copy example link <span aria-hidden="true">↗</span>
-                </button>
-              </div>
+                  <img
+                    src="/assets/screenshots/dashboard.webp?v=blue-post-details-20260917"
+                    width="1425"
+                    height="1475"
+                    alt="Amfora dashboard with My Files, My Shares, Receive Files and recent activity"
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <div>
+                    <h3>Start in your workspace.</h3>
+                    <p>
+                      Manage files, create shares and keep track of upload
+                      requests.
+                    </p>
+                  </div>
+                  <a
+                    href="/assets/screenshots/dashboard.webp?v=blue-post-details-20260917"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="View full workspace screenshot"
+                    >Expand ↗</a
+                  >
+                </figcaption>
+              </figure>
             </div>
             <div
-              class="flow-panel"
-              id="flow-receive"
+              class="tour-panel"
+              id="tour-download"
               role="tabpanel"
-              aria-labelledby="mode-receive"
+              aria-labelledby="tour-tab-download"
+              tabindex="0"
               hidden
             >
-              <div class="demo-stage" data-stage="0">
-                <div class="stage-heading">
-                  <span class="mini-label">YOUR WORKSPACE</span>
-                  <h3>Ask for the files you need.</h3>
-                  <p>Create an upload request for your next handoff.</p>
-                </div>
-                <div class="request-card">
-                  <div class="request-icon" aria-hidden="true">↙</div>
-                  <span class="mini-label">UPLOAD REQUEST</span>
-                  <h4>Project handoff</h4>
-                  <p>“Drop your final documents and artwork here.”</p>
-                  <div class="request-chips">
-                    <span>PDF & images</span><span>Limit set by you</span>
-                  </div>
-                </div>
-              </div>
-              <div class="demo-stage" data-stage="1" hidden>
-                <div class="stage-heading">
-                  <span class="mini-label">THE SENDER’S VIEW</span>
-                  <h3>Drop in. Send. Done.</h3>
-                  <p>They open your link. No account required.</p>
-                </div>
-                <div class="demo-drop">
-                  <span aria-hidden="true">↥</span
-                  ><strong>A dedicated place to upload</strong>
-                  <p>Files go to your Amfora storage.</p>
-                </div>
-                <div class="demo-file">
-                  <span class="file-icon blue">PDF</span>
-                  <div>
-                    <strong>Final-artwork.pdf</strong><span>8.2 MB</span>
-                  </div>
-                  <span class="file-check" aria-hidden="true">✓</span>
-                </div>
-                <div class="demo-file">
-                  <span class="file-icon green">TXT</span>
-                  <div><strong>Project-notes.txt</strong><span>4 KB</span></div>
-                  <span class="file-check" aria-hidden="true">✓</span>
-                </div>
-              </div>
-              <div class="demo-stage" data-stage="2" hidden>
-                <div class="stage-heading">
-                  <span class="mini-label">BACK IN YOUR WORKSPACE</span>
-                  <h3>The handoff, complete.</h3>
-                  <p>Review and download the received files.</p>
-                </div>
-                <div class="received-banner">
-                  <span aria-hidden="true">✓</span>
-                  <div>
-                    <strong>2 files received</strong
-                    ><span>Project handoff · Example request</span>
-                  </div>
-                </div>
-                <div class="demo-files">
-                  <div class="demo-file">
-                    <span class="file-icon blue">PDF</span>
-                    <div>
-                      <strong>Final-artwork.pdf</strong><span>8.2 MB</span>
-                    </div>
-                    <span class="file-check" aria-hidden="true">✓</span>
-                  </div>
-                  <div class="demo-file">
-                    <span class="file-icon green">TXT</span>
-                    <div>
-                      <strong>Project-notes.txt</strong><span>4 KB</span>
-                    </div>
-                    <span class="file-check" aria-hidden="true">✓</span>
-                  </div>
-                </div>
-                <button
-                  class="example-copy"
-                  data-copy="https://your-amfora.example/r/project-handoff"
+              <figure>
+                <a
+                  class="tour-image"
+                  href="/assets/screenshots/download.webp?v=blue-post-details-20260917"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="View full download screenshot"
                 >
-                  Copy example request link <span aria-hidden="true">↗</span>
-                </button>
-              </div>
+                  <img
+                    src="/assets/screenshots/download.webp?v=blue-post-details-20260917"
+                    width="1440"
+                    height="1000"
+                    alt="Amfora download page with the Project handoff share and Download All button"
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <div>
+                    <h3>What they receive.</h3>
+                    <p>
+                      A shared link opens this download page with your files and
+                      a Download All button.
+                    </p>
+                  </div>
+                  <a
+                    href="/assets/screenshots/download.webp?v=blue-post-details-20260917"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="View full download screenshot"
+                    >Expand ↗</a
+                  >
+                </figcaption>
+              </figure>
             </div>
-            <div class="demo-bottom">
-              <div class="demo-steps" aria-label="Walkthrough steps">
-                <button data-step="0" aria-label="Step 1" aria-current="step">
-                  1</button
-                ><span></span
-                ><button data-step="1" aria-label="Step 2">2</button
-                ><span></span
-                ><button data-step="2" aria-label="Step 3">3</button>
-              </div>
-              <button class="demo-next">
-                Set your rules <span aria-hidden="true">→</span>
-              </button>
+            <div
+              class="tour-panel"
+              id="tour-upload"
+              role="tabpanel"
+              aria-labelledby="tour-tab-upload"
+              tabindex="0"
+              hidden
+            >
+              <figure>
+                <a
+                  class="tour-image"
+                  href="/assets/screenshots/upload.webp?v=blue-post-details-20260917"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="View full upload screenshot"
+                >
+                  <img
+                    src="/assets/screenshots/upload.webp?v=blue-post-details-20260917"
+                    width="1440"
+                    height="1000"
+                    alt="Amfora upload page with the blue envelope drop area and optional sender details"
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <div>
+                    <h3>What they send back.</h3>
+                    <p>
+                      An upload request opens this page. Senders select files
+                      and add optional details.
+                    </p>
+                  </div>
+                  <a
+                    href="/assets/screenshots/upload.webp?v=blue-post-details-20260917"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="View full upload screenshot"
+                    >Expand ↗</a
+                  >
+                </figcaption>
+              </figure>
             </div>
-            <p class="demo-disclaimer">
-              Illustrative workflow, not an app screenshot. Nothing is uploaded
-              or shared.
-            </p>
+            <p class="tour-note">Actual app screenshots with sample content.</p>
           </div>
         </div>
       </section>

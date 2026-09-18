@@ -35,74 +35,35 @@
       throw new Error("Clipboard unavailable");
     await navigator.clipboard.writeText(text);
   }
-  let flow = "send";
-  let step = 0;
-  const modeTabs = [...document.querySelectorAll("[data-flow]")];
-  const steps = [...document.querySelectorAll("[data-step]")];
-  const nextLabels = {
-    send: ["Set your rules", "See the handoff", "Start over"],
-    receive: ["See their view", "See what arrives", "Start over"],
-  };
-  const renderFlow = () => {
-    modeTabs.forEach((tab) => {
-      const selected = tab.dataset.flow === flow;
-      tab.setAttribute("aria-selected", String(selected));
-      tab.tabIndex = selected ? 0 : -1;
+  const tourTabs = [...document.querySelectorAll(".tour-tabs [role=tab]")];
+  const selectTour = (selected) => {
+    tourTabs.forEach((tab) => {
+      const active = tab === selected;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
       document.getElementById(tab.getAttribute("aria-controls")).hidden =
-        !selected;
+        !active;
     });
-    document.querySelectorAll(".demo-stage").forEach((panel) => {
-      panel.hidden = Number(panel.dataset.stage) !== step;
-    });
-    steps.forEach((button) => {
-      if (Number(button.dataset.step) === step)
-        button.setAttribute("aria-current", "step");
-      else button.removeAttribute("aria-current");
-    });
-    document.querySelector(".demo-counter").textContent = `0${step + 1} / 03`;
-    const next = document.querySelector(".demo-next");
-    next.replaceChildren(document.createTextNode(nextLabels[flow][step] + " "));
-    const arrow = document.createElement("span");
-    arrow.textContent = "→";
-    arrow.setAttribute("aria-hidden", "true");
-    next.append(arrow);
   };
-  modeTabs.forEach((tab, index) => {
-    tab.addEventListener("click", () => {
-      flow = tab.dataset.flow;
-      step = 0;
-      renderFlow();
-    });
+  tourTabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => selectTour(tab));
     tab.addEventListener("keydown", (event) => {
-      if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
-        event.preventDefault();
-        const next =
-          event.key === "Home" ? 0 : event.key === "End" ? 1 : 1 - index;
-        modeTabs[next].click();
-        modeTabs[next].focus();
-      }
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+        return;
+      event.preventDefault();
+      const next =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? tourTabs.length - 1
+            : (index +
+                (event.key === "ArrowRight" ? 1 : -1) +
+                tourTabs.length) %
+              tourTabs.length;
+      selectTour(tourTabs[next]);
+      tourTabs[next].focus();
     });
   });
-  steps.forEach((button) =>
-    button.addEventListener("click", () => {
-      step = Number(button.dataset.step);
-      renderFlow();
-    }),
-  );
-  document.querySelector(".demo-next")?.addEventListener("click", () => {
-    step = (step + 1) % 3;
-    renderFlow();
-  });
-  document.querySelectorAll("[data-copy]").forEach((button) =>
-    button.addEventListener("click", async () => {
-      try {
-        await copy(button.dataset.copy);
-        notify("Example link copied. This is not a live share.");
-      } catch {
-        notify("Copy unavailable. Example: " + button.dataset.copy);
-      }
-    }),
-  );
   document
     .querySelectorAll(".docs-content pre, .install-command")
     .forEach((pre) => {
