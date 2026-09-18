@@ -1,4 +1,4 @@
-# Amfora — één visuele familie
+# Amfora: één visuele familie
 
 Goedgekeurde richting: publieke transferpagina’s blijven de referentie. Homepage en authenticatie gebruiken hetzelfde inktblauwe canvas, glazen amfora, kobaltaccent en displaytypografie. Beheer krijgt donkere navigatie en heldere compacte werkpanelen; geen grote decoratie tussen dagelijks werk.
 

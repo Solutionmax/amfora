@@ -1,8 +1,8 @@
-# Product website verification — September 17, 2026
+# Product website verification: September 17, 2026
 
 The English product website and documentation are deployed at
-https://amfora.solutionmax.net. The GitHub repository remains private and
-`amfora` is its default branch. The website and file-sharing application are
+https://amfora.solutionmax.net. The GitHub repository became public on September 18, 2026;
+`amfora` is its default branch. The website and file sharing application are
 separate deployments.
 
 ## Verified
@@ -26,9 +26,10 @@ separate deployments.
 
 ## Scope
 
-This checks the product website. It does not re-run all file-sharing app
+This checks the product website. It does not re-run all file sharing app
 workflows; that application's previous UI and API verification is separate.
-There is no public hosted app demo or public prebuilt image in this preview.
+There is no public hosted app demo. Version 1.0.0 and container images were
+published after this website review; see the GitHub releases page.
 `noindex` discourages indexing but does not restrict access to the website.
 
 ## Operations

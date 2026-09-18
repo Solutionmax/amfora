@@ -1,5 +1,5 @@
 
-# Amfora product website — static English preview, separate from the application.
+# Amfora product website: static English preview, separate from the application.
 amfora.solutionmax.net {
     encode zstd gzip
     root * /var/www/amfora/current

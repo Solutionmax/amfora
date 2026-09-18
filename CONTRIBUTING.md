@@ -31,7 +31,7 @@ cd apps/server && pnpm validate && pnpm test
 ```
 
 The build runs ESLint with the Prettier rule, so unformatted code fails the build
-rather than the linter. The pre-push hook runs the validation for you.
+rather than the linter. The pre push hook runs the validation for you.
 
 ## Commits and pull requests
 

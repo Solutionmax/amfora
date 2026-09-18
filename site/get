@@ -5,7 +5,7 @@ main() {
     set -eu
     case "${1:---docker}" in
         --help|-h)
-            printf '%s\n' 'Amfora installer: sh get --docker' 'Creates ./amfora and builds with Docker. Requires Git, Bash, Docker Compose, Buildx 0.30+ and repository access.'
+            printf '%s\n' 'Amfora installer: sh get --docker' 'Creates ./amfora and builds with Docker. Requires Git, Bash, Docker Compose, Buildx 0.30+ and an internet connection.'
             return 0 ;;
         --docker) ;;
         *) printf '%s\n' 'Unsupported option. Amfora uses Docker; use --docker or --help.' >&2; return 2 ;;
@@ -30,10 +30,10 @@ main() {
     fi
     export GIT_TERMINAL_PROMPT=0
     repo=https://github.com/raym0nz82/amfora.git
-    printf '%s\n' 'Checking source access...'
-    git ls-remote --exit-code "$repo" refs/heads/amfora </dev/null >/dev/null 2>&1 || fail 'Source access failed. The repository is private: arrange access at https://solutionmax.net/#start and authenticate Git on this host. Also check your network connection.'
+    printf '%s\n' 'Checking source availability...'
+    git ls-remote --exit-code "$repo" refs/heads/amfora </dev/null >/dev/null 2>&1 || fail 'Could not reach the public Amfora repository. Check your network connection and try again. No GitHub account is required.'
     printf '%s\n' 'Downloading Amfora into ./amfora...'
-    git clone --branch amfora --single-branch "$repo" amfora </dev/null || fail 'Clone failed. Check Git access and disk space; inspect any partial ./amfora directory before retrying.'
+    git clone --branch amfora --single-branch "$repo" amfora </dev/null || fail 'Clone failed. Check your network connection and disk space; inspect any partial ./amfora directory before retrying.'
     cd amfora || fail 'Cannot enter the installation directory.'
     printf '%s\n' 'Building Amfora. The first build can take several minutes...'
     bash infra/build-docker.sh local </dev/null || fail 'Build failed; the application was not started. Source files remain in ./amfora. Review the build output before retrying.'

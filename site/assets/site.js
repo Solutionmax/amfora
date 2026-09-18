@@ -97,7 +97,7 @@
     button.addEventListener("click", async () => {
       try {
         await copy(button.dataset.copy);
-        notify("Example link copied — this is not a live share.");
+        notify("Example link copied. This is not a live share.");
       } catch {
         notify("Copy unavailable. Example: " + button.dataset.copy);
       }
