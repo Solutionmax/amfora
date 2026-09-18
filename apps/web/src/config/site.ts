@@ -15,7 +15,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/raym0nz82/amfora",
+    github: "https://github.com/Solutionmax/amfora",
     docs: "https://solutionmax.net",
   },
 };

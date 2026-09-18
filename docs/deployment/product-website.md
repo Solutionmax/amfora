@@ -6,7 +6,7 @@ site does not expose the separately hosted Amfora application or its storage.
 
 ## Files and releases
 
-- Source: `site/` in the public `raym0nz82/amfora` repository, branch `amfora`.
+- Source: `site/` in the public `Solutionmax/amfora` repository, branch `amfora`.
 - Caddy: `/etc/caddy/Caddyfile`, isolated `amfora.solutionmax.net` block.
 - Releases: `/var/www/amfora/releases/<release>`.
 - Active site: `/var/www/amfora/current`, a symlink to an immutable release.

@@ -29,7 +29,7 @@ main() {
         fail 'An Amfora container or data volume already exists. This installer only handles fresh installations.'
     fi
     export GIT_TERMINAL_PROMPT=0
-    repo=https://github.com/raym0nz82/amfora.git
+    repo=https://github.com/Solutionmax/amfora.git
     printf '%s\n' 'Checking source availability...'
     git ls-remote --exit-code "$repo" refs/heads/amfora </dev/null >/dev/null 2>&1 || fail 'Could not reach the public Amfora repository. Check your network connection and try again. No GitHub account is required.'
     printf '%s\n' 'Downloading Amfora into ./amfora...'
