@@ -258,10 +258,10 @@ export function SharesTable({
               <TableHead className="hidden 2xl:table-cell">{t("sharesTable.columns.createdAt")}</TableHead>
               <TableHead className="">{t("sharesTable.columns.expiresAt")}</TableHead>
               <TableHead className="">{t("sharesTable.columns.status")}</TableHead>
-              <TableHead className="">{t("sharesTable.columns.security")}</TableHead>
-              <TableHead className="hidden xl:table-cell">{t("sharesTable.columns.files")}</TableHead>
-              <TableHead className="hidden xl:table-cell">{t("sharesTable.columns.recipients")}</TableHead>
-              <TableHead className="w-[70px]">{t("sharesTable.columns.actions")}</TableHead>
+              <TableHead className="hidden xl:table-cell">{t("sharesTable.columns.security")}</TableHead>
+              <TableHead className="hidden 2xl:table-cell">{t("sharesTable.columns.files")}</TableHead>
+              <TableHead className="hidden 2xl:table-cell">{t("sharesTable.columns.recipients")}</TableHead>
+              <TableHead className="sticky right-0 w-[70px] bg-surface">{t("sharesTable.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -464,7 +464,7 @@ export function SharesTable({
                           : t("sharesTable.status.expired")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="">
+                  <TableCell className="hidden xl:table-cell">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "security" })}
@@ -504,7 +504,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="hidden xl:table-cell h-12 px-4">
+                  <TableCell className="hidden 2xl:table-cell h-12 px-4">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "files" })}
@@ -531,7 +531,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="hidden xl:table-cell h-12 px-4">
+                  <TableCell className="hidden 2xl:table-cell h-12 px-4">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "recipients" })}
@@ -557,7 +557,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="sticky right-0 bg-inherit text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted cursor-pointer">
