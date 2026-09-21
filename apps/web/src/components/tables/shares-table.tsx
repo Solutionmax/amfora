@@ -203,7 +203,7 @@ export function SharesTable({
   return (
     <div className="space-y-4">
       {showBulkActions && (
-        <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-[var(--radius)] bg-primary-soft p-3 text-primary sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-foreground">
               {t("sharesTable.bulkActions.selected", { count: selectedShares.size })}
@@ -242,44 +242,26 @@ export function SharesTable({
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-none">
+      <div className="card-soft overflow-x-auto rounded-[calc(var(--radius)+4px)] border border-line bg-surface">
         <Table>
           <TableHeader>
             <TableRow className="border-b-0">
-              <TableHead className="h-11 w-[50px] rounded-tl-lg bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <TableHead className="w-[50px]">
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={handleSelectAll}
                   aria-label={t("sharesTable.selectAll")}
                 />
               </TableHead>
-              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {t("sharesTable.columns.name")}
-              </TableHead>
-              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground 2xl:table-cell">
-                {t("sharesTable.columns.description")}
-              </TableHead>
-              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground 2xl:table-cell">
-                {t("sharesTable.columns.createdAt")}
-              </TableHead>
-              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {t("sharesTable.columns.expiresAt")}
-              </TableHead>
-              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {t("sharesTable.columns.status")}
-              </TableHead>
-              <TableHead className="h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {t("sharesTable.columns.security")}
-              </TableHead>
-              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground xl:table-cell">
-                {t("sharesTable.columns.files")}
-              </TableHead>
-              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground xl:table-cell">
-                {t("sharesTable.columns.recipients")}
-              </TableHead>
-              <TableHead className="h-11 w-[70px] rounded-tr-lg bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {t("sharesTable.columns.actions")}
-              </TableHead>
+              <TableHead className="">{t("sharesTable.columns.name")}</TableHead>
+              <TableHead className="hidden 2xl:table-cell">{t("sharesTable.columns.description")}</TableHead>
+              <TableHead className="hidden 2xl:table-cell">{t("sharesTable.columns.createdAt")}</TableHead>
+              <TableHead className="">{t("sharesTable.columns.expiresAt")}</TableHead>
+              <TableHead className="">{t("sharesTable.columns.status")}</TableHead>
+              <TableHead className="">{t("sharesTable.columns.security")}</TableHead>
+              <TableHead className="hidden xl:table-cell">{t("sharesTable.columns.files")}</TableHead>
+              <TableHead className="hidden xl:table-cell">{t("sharesTable.columns.recipients")}</TableHead>
+              <TableHead className="w-[70px]">{t("sharesTable.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -298,14 +280,14 @@ export function SharesTable({
 
               return (
                 <TableRow key={share.id} className="border-border/60 transition-colors hover:bg-secondary/35">
-                  <TableCell className="h-12 px-4 border-0">
+                  <TableCell className="border-0">
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={(checked: boolean) => handleSelectShare(share.id, checked)}
                       aria-label={t("sharesTable.selectShare", { shareName: share.name })}
                     />
                   </TableCell>
-                  <TableCell className="h-12 px-4 border-0">
+                  <TableCell className="border-0">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "name" })}
@@ -438,7 +420,7 @@ export function SharesTable({
                   <TableCell className="hidden 2xl:table-cell h-12 px-4">
                     {format(new Date(share.createdAt), "MM/dd/yyyy HH:mm")}
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "expiration" })}
@@ -466,7 +448,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="">
                     <Badge
                       variant="secondary"
                       className={
@@ -482,7 +464,7 @@ export function SharesTable({
                           : t("sharesTable.status.expired")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="h-12 px-4">
+                  <TableCell className="">
                     <div
                       className="flex items-center gap-1 min-w-0"
                       onMouseEnter={() => setHoveredField({ shareId: share.id, field: "security" })}
@@ -575,7 +557,7 @@ export function SharesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="h-12 px-4 text-right">
+                  <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted cursor-pointer">

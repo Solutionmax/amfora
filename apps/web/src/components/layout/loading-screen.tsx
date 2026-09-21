@@ -12,11 +12,11 @@ export function LoadingScreen() {
       role="status"
       aria-live="polite"
     >
-      <div className="flex flex-col items-center gap-5">
-        <div className="flex size-16 items-center justify-center rounded-2xl border border-border bg-card">
-          <BrandMark className="size-8 text-primary" />
-        </div>
-        <span className="text-sm font-medium text-muted-foreground">{t("common.loading")}</span>
+      <div className="flex flex-col items-center gap-4">
+        <span className="tile size-14 rounded-2xl">
+          <BrandMark className="size-7" />
+        </span>
+        <span className="text-sm font-medium text-ink-3">{t("common.loading")}</span>
       </div>
     </div>
   );

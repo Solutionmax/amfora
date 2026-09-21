@@ -242,6 +242,31 @@
     "recentFiles": {
       "title": "Recent Files",
       "description": "Your most recently uploaded files"
+    },
+    "greeting": {
+      "morning": "Good morning, {name}.",
+      "afternoon": "Good afternoon, {name}.",
+      "evening": "Good evening, {name}.",
+      "night": "Still up, {name}?"
+    },
+    "subline": "{shares, plural, =0 {No shares yet} =1 {# share} other {# shares}}, {files, plural, =0 {no files} =1 {# file} other {# files}}.",
+    "hero": {
+      "send": {
+        "title": "Send files",
+        "text": "Pick files, set a password and an end date, share the link."
+      },
+      "receive": {
+        "title": "Receive files",
+        "text": "Create a link anyone can upload to, no account needed."
+      }
+    },
+    "stats": {
+      "storage": "Storage used",
+      "storageOf": "of {total}",
+      "shares": "Shares",
+      "downloads": "Downloads",
+      "downloadsDetail": "across all files",
+      "files": "Files"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +439,8 @@
       "table": "Table",
       "grid": "Grid",
       "label": "View"
-    }
+    },
+    "subline": "{count, plural, =0 {No files yet} =1 {# file} other {# files}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Files table",
@@ -601,7 +627,12 @@
     "customization": "Customization",
     "settings": "Settings",
     "usersManagement": "User Management",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "admin": "Admin",
+    "account": "Account",
+    "roleAdmin": "Administrator",
+    "roleUser": "Member",
+    "storage": "Storage"
   },
   "navigation": {
     "dashboard": "Dashboard"

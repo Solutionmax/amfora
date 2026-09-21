@@ -20,20 +20,17 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
   const { items: pageShares, page, totalPages } = paginate(shares, requestedPage, SHARES_PER_PAGE);
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="card-soft gap-0 overflow-hidden py-0">
       <CardContent className="p-0">
         <div className="flex flex-col gap-0">
-          <div className="flex flex-col gap-3 border-b border-border/60 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <IconShare className="size-5 text-primary" />
-              {t("recentShares.title")}
-            </h2>
+          <div className="flex items-center justify-between gap-3 border-b border-line px-[18px] py-3.5">
+            <h2 className="flex items-center gap-2 font-display text-sm font-semibold">{t("recentShares.title")}</h2>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <Button
-                className="font-semibold text-sm cursor-pointer"
-                variant="outline"
-                size="default"
+                className="h-8 px-2 text-[13px] font-semibold text-primary hover:bg-primary-soft"
+                variant="ghost"
+                size="sm"
                 onClick={() => router.push("/shares")}
               >
                 <IconShare className="h-4 w-4" />

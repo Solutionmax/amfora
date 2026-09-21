@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { IconCloudUpload, IconFolderOpen } from "@tabler/icons-react";
+import { IconFolderOpen } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -20,19 +20,18 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
   const { items: pageFiles, page, totalPages } = paginate(files, requestedPage, FILES_PER_PAGE);
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="border-b border-border/60 py-5">
+    <Card className="card-soft gap-0 overflow-hidden py-0">
+      <CardHeader className="border-b border-line px-[18px] py-3.5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-            <IconCloudUpload className="size-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 font-display text-sm font-semibold">
             {t("recentFiles.title")}
           </CardTitle>
 
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button
-              className="font-semibold text-sm cursor-pointer"
-              variant="outline"
-              size="default"
+              className="h-8 px-2 text-[13px] font-semibold text-primary hover:bg-primary-soft"
+              variant="ghost"
+              size="sm"
               onClick={() => router.push("/files")}
             >
               <IconFolderOpen className="h-4 w-4" />
