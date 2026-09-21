@@ -1408,7 +1408,24 @@
         "cancelEdit": "Bewerken annuleren"
       }
     },
-    "defaultLinkName": "Ontvangen bestanden"
+    "defaultLinkName": "Ontvangen bestanden",
+    "v2": {
+      "subline": "{links, plural, =0 {Nog geen ontvangstlinks} =1 {# ontvangstlink} other {# ontvangstlinks}} · {files, plural, =0 {niets ontvangen} =1 {# bestand ontvangen} other {# bestanden ontvangen}}",
+      "filesOf": "{count} van {max} bestanden",
+      "filesReceived": "{count, plural, =0 {Nog geen bestanden} =1 {# bestand} other {# bestanden}}",
+      "maxSize": "Tot {size} per bestand",
+      "openLink": "Geen wachtwoord",
+      "expiresOn": "Verloopt {date}",
+      "expiredOn": "Verlopen op {date}",
+      "noEndDate": "Geen einddatum",
+      "actions": "Acties",
+      "activate": "Activeren",
+      "deactivate": "Deactiveren",
+      "received": "{count, plural, =0 {Ontvangen} =1 {Ontvangen · # bestand} other {Ontvangen · # bestanden}}",
+      "noFiles": "Er is nog niets binnengekomen. Deel de link en bestanden verschijnen hier.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Toon alle {count} bestanden"
+    }
   },
   "searchBar": {
     "placeholder": "Bestanden zoeken...",

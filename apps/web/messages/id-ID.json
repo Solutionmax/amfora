@@ -1408,6 +1408,23 @@
         "saveChanges": "Simpan perubahan",
         "cancelEdit": "Batal edit"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {Belum ada tautan terima} =1 {# tautan terima} other {# tautan terima}} · {files, plural, =0 {belum ada yang diterima} =1 {# file diterima} other {# file diterima}}",
+      "filesOf": "{count} dari {max} file",
+      "filesReceived": "{count, plural, =0 {Belum ada file} =1 {# file} other {# file}}",
+      "maxSize": "Hingga {size} per file",
+      "openLink": "Tanpa kata sandi",
+      "expiresOn": "Kedaluwarsa {date}",
+      "expiredOn": "Sudah kedaluwarsa {date}",
+      "noEndDate": "Tidak ada tanggal akhir",
+      "actions": "Tindakan",
+      "activate": "Aktifkan",
+      "deactivate": "Nonaktifkan",
+      "received": "{count, plural, =0 {Diterima} =1 {Diterima · # file} other {Diterima · # file}}",
+      "noFiles": "Belum ada yang masuk. Bagikan tautan dan file akan muncul di sini.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Tampilkan semua {count} file"
     }
   },
   "searchBar": {

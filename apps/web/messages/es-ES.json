@@ -1408,7 +1408,24 @@
         "cancelEdit": "Cancelar edición"
       }
     },
-    "defaultLinkName": "Archivos recibidos"
+    "defaultLinkName": "Archivos recibidos",
+    "v2": {
+      "subline": "{links, plural, =0 {Aún sin enlaces de recepción} =1 {# enlace de recepción} other {# enlaces de recepción}} · {files, plural, =0 {nada recibido} =1 {# archivo recibido} other {# archivos recibidos}}",
+      "filesOf": "{count} de {max} archivos",
+      "filesReceived": "{count, plural, =0 {Aún sin archivos} =1 {# archivo} other {# archivos}}",
+      "maxSize": "Hasta {size} por archivo",
+      "openLink": "Sin contraseña",
+      "expiresOn": "Caduca el {date}",
+      "expiredOn": "Caducó el {date}",
+      "noEndDate": "Sin fecha de expiración",
+      "actions": "Acciones",
+      "activate": "Activar",
+      "deactivate": "Desactivar",
+      "received": "{count, plural, =0 {Recibido} =1 {Recibido · # archivo} other {Recibido · # archivos}}",
+      "noFiles": "Aún no ha llegado nada. Comparte el enlace y los archivos aparecerán aquí.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Mostrar los {count} archivos"
+    }
   },
   "searchBar": {
     "placeholder": "Buscar archivos...",

@@ -1408,6 +1408,23 @@
         "saveChanges": "Spara ändringar",
         "cancelEdit": "Avbryt redigering"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {Inga mottagningslänkar än} =1 {# mottagningslänk} other {# mottagningslänkar}} · {files, plural, =0 {inget mottaget} =1 {# fil mottagen} other {# filer mottagna}}",
+      "filesOf": "{count} av {max} filer",
+      "filesReceived": "{count, plural, =0 {Inga filer än} =1 {# fil} other {# filer}}",
+      "maxSize": "Upp till {size} per fil",
+      "openLink": "Inget lösenord",
+      "expiresOn": "Går ut {date}",
+      "expiredOn": "Gick ut {date}",
+      "noEndDate": "Inget slutdatum",
+      "actions": "Åtgärder",
+      "activate": "Aktivera",
+      "deactivate": "Avaktivera",
+      "received": "{count, plural, =0 {Mottaget} =1 {Mottaget · # fil} other {Mottaget · # filer}}",
+      "noFiles": "Inget har kommit in än. Dela länken så visas filerna här.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Visa alla {count} filer"
     }
   },
   "searchBar": {

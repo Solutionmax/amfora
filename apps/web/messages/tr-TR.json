@@ -1408,7 +1408,24 @@
         "cancelEdit": "Düzenlemeyi iptal et"
       }
     },
-    "defaultLinkName": "Alınan Dosyalar"
+    "defaultLinkName": "Alınan Dosyalar",
+    "v2": {
+      "subline": "{links, plural, =0 {Henüz alma bağlantısı yok} =1 {# alma bağlantısı} other {# alma bağlantısı}} · {files, plural, =0 {hiçbir şey alınmadı} =1 {# dosya alındı} other {# dosya alındı}}",
+      "filesOf": "{count} / {max} dosya",
+      "filesReceived": "{count, plural, =0 {Henüz dosya yok} =1 {# dosya} other {# dosya}}",
+      "maxSize": "Dosya başına en fazla {size}",
+      "openLink": "Şifresiz",
+      "expiresOn": "Son Kullanma Tarihi: {date}",
+      "expiredOn": "Süresi Doldu: {date}",
+      "noEndDate": "Bitiş Tarihi Yok",
+      "actions": "İşlemler",
+      "activate": "Etkinleştir",
+      "deactivate": "Devre Dışı Bırak",
+      "received": "{count, plural, =0 {Alındı} =1 {Alındı · # dosya} other {Alındı · # dosya}}",
+      "noFiles": "Henüz bir şey gelmedi. Bağlantıyı paylaşın, dosyalar burada görünecek.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "{count} dosyanın tümünü göster"
+    }
   },
   "searchBar": {
     "placeholder": "Dosya ara...",

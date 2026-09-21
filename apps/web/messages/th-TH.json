@@ -1408,6 +1408,23 @@
         "saveChanges": "บันทึกการเปลี่ยนแปลง",
         "cancelEdit": "ยกเลิกการแก้ไข"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {ยังไม่มีลิงค์การรับ} =1 {ลิงค์การรับ # ลิงก์} other {ลิงค์การรับ # ลิงก์}} · {files, plural, =0 {ยังไม่มีการรับไฟล์} =1 {ได้รับ # ไฟล์} other {ได้รับ # ไฟล์}}",
+      "filesOf": "{count} จาก {max} ไฟล์",
+      "filesReceived": "{count, plural, =0 {ยังไม่มีไฟล์} =1 {# ไฟล์} other {# ไฟล์}}",
+      "maxSize": "สูงสุด {size} ต่อไฟล์",
+      "openLink": "ไม่มีรหัสผ่าน",
+      "expiresOn": "หมดอายุ {date}",
+      "expiredOn": "หมดอายุแล้ว {date}",
+      "noEndDate": "ไม่มีวันที่สิ้นสุด",
+      "actions": "การกระทำ",
+      "activate": "เปิดใช้งาน",
+      "deactivate": "ปิดใช้งาน",
+      "received": "{count, plural, =0 {ได้รับแล้ว} =1 {ได้รับแล้ว · # ไฟล์} other {ได้รับแล้ว · # ไฟล์}}",
+      "noFiles": "ยังไม่มีอะไรเข้ามา แชร์ลิงก์แล้วไฟล์จะแสดงที่นี่",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "แสดงทั้งหมด {count} ไฟล์"
     }
   },
   "searchBar": {

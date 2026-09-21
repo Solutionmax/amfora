@@ -1408,6 +1408,23 @@
         "saveChanges": "שמור שינויים",
         "cancelEdit": "ביטול עריכה"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {אין עדיין קישורי קבלה} =1 {# קישור קבלה} other {# קישורי קבלה}} · {files, plural, =0 {לא התקבל כלום} =1 {# קובץ התקבל} other {# קבצים התקבלו}}",
+      "filesOf": "{count} מתוך {max} קבצים",
+      "filesReceived": "{count, plural, =0 {אין עדיין קבצים} =1 {# קובץ} other {# קבצים}}",
+      "maxSize": "עד {size} לקובץ",
+      "openLink": "ללא סיסמה",
+      "expiresOn": "יפוג בתאריך {date}",
+      "expiredOn": "פג תוקף בתאריך {date}",
+      "noEndDate": "ללא תאריך סיום",
+      "actions": "פעולות",
+      "activate": "הפעל",
+      "deactivate": "השבת",
+      "received": "{count, plural, =0 {התקבל} =1 {התקבל · # קובץ} other {התקבל · # קבצים}}",
+      "noFiles": "עדיין לא התקבל כלום. שתפו את הקישור והקבצים יופיעו כאן.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "הצג את כל {count} הקבצים"
     }
   },
   "searchBar": {

@@ -1408,7 +1408,24 @@
         "cancelEdit": "取消编辑"
       }
     },
-    "defaultLinkName": "已接收文件"
+    "defaultLinkName": "已接收文件",
+    "v2": {
+      "subline": "{links, plural, =0 {暂无接收链接} =1 {# 个接收链接} other {# 个接收链接}} · {files, plural, =0 {尚未收到任何内容} =1 {收到 # 个文件} other {收到 # 个文件}}",
+      "filesOf": "{max} 个文件中的 {count} 个",
+      "filesReceived": "{count, plural, =0 {暂无文件} =1 {# 个文件} other {# 个文件}}",
+      "maxSize": "每个文件最多 {size}",
+      "openLink": "无密码",
+      "expiresOn": "过期：{date}",
+      "expiredOn": "已过期：{date}",
+      "noEndDate": "无结束日期",
+      "actions": "操作",
+      "activate": "启用",
+      "deactivate": "停用",
+      "received": "{count, plural, =0 {已接收} =1 {已接收 · # 个文件} other {已接收 · # 个文件}}",
+      "noFiles": "还没有收到任何内容。分享链接后，文件会显示在这里。",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "显示全部 {count} 个文件"
+    }
   },
   "searchBar": {
     "placeholder": "搜索文件...",
@@ -1919,7 +1936,11 @@
       "copyToClipboard": "复制到剪贴板",
       "savedMessage": "我已保存备用码",
       "available": "可用备用码：{count}个",
-      "instructions": ["• 将这些代码保存在安全的位置", "• 每个备用码只能使用一次", "• 您可以随时生成新的备用码"]
+      "instructions": [
+        "• 将这些代码保存在安全的位置",
+        "• 每个备用码只能使用一次",
+        "• 您可以随时生成新的备用码"
+      ]
     },
     "verification": {
       "title": "双重认证",

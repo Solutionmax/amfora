@@ -1408,7 +1408,24 @@
         "cancelEdit": "Отменить редактирование"
       }
     },
-    "defaultLinkName": "Полученные файлы"
+    "defaultLinkName": "Полученные файлы",
+    "v2": {
+      "subline": "{links, plural, =0 {Пока нет ссылок для получения} =1 {# ссылка для получения} other {# ссылок для получения}} · {files, plural, =0 {ничего не получено} =1 {# файл получен} other {# файлов получено}}",
+      "filesOf": "{count} из {max} файлов",
+      "filesReceived": "{count, plural, =0 {Файлов пока нет} =1 {# файл} other {# файлов}}",
+      "maxSize": "До {size} на файл",
+      "openLink": "Без пароля",
+      "expiresOn": "Истекает {date}",
+      "expiredOn": "Истекло {date}",
+      "noEndDate": "Без даты окончания",
+      "actions": "Действия",
+      "activate": "Активировать",
+      "deactivate": "Деактивировать",
+      "received": "{count, plural, =0 {Получено} =1 {Получено · # файл} other {Получено · # файлов}}",
+      "noFiles": "Пока ничего не поступило. Поделитесь ссылкой, и файлы появятся здесь.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Показать все файлы ({count})"
+    }
   },
   "searchBar": {
     "placeholder": "Поиск файлов...",

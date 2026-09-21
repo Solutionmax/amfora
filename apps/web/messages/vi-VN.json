@@ -1408,6 +1408,23 @@
         "saveChanges": "Lưu thay đổi",
         "cancelEdit": "Hủy chỉnh sửa"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {Chưa có liên kết nhận nào} =1 {# liên kết nhận} other {# liên kết nhận}} · {files, plural, =0 {chưa nhận được gì} =1 {# tệp đã nhận} other {# tệp đã nhận}}",
+      "filesOf": "{count} trong số {max} tệp",
+      "filesReceived": "{count, plural, =0 {Chưa có tệp nào} =1 {# tệp} other {# tệp}}",
+      "maxSize": "Tối đa {size} mỗi tệp",
+      "openLink": "Không cần mật khẩu",
+      "expiresOn": "Hết hạn {date}",
+      "expiredOn": "Đã hết hạn {date}",
+      "noEndDate": "Không có ngày kết thúc",
+      "actions": "Hành động",
+      "activate": "Kích hoạt",
+      "deactivate": "Hủy kích hoạt",
+      "received": "{count, plural, =0 {Đã nhận} =1 {Đã nhận · # tệp} other {Đã nhận · # tệp}}",
+      "noFiles": "Chưa có gì đến cả. Chia sẻ liên kết và tệp sẽ hiển thị ở đây.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Hiển thị tất cả {count} tệp"
     }
   },
   "searchBar": {

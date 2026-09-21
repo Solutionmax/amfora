@@ -1408,7 +1408,24 @@
         "cancelEdit": "編集をキャンセル"
       }
     },
-    "defaultLinkName": "受信したファイル"
+    "defaultLinkName": "受信したファイル",
+    "v2": {
+      "subline": "{links, plural, =0 {受信リンクはまだありません} =1 {受信リンク#件} other {受信リンク#件}} · {files, plural, =0 {まだ受信していません} =1 {#件のファイルを受信} other {#件のファイルを受信}}",
+      "filesOf": "{max}件中{count}件のファイル",
+      "filesReceived": "{count, plural, =0 {まだファイルがありません} =1 {#件のファイル} other {#件のファイル}}",
+      "maxSize": "ファイルごとに最大{size}",
+      "openLink": "パスワードなし",
+      "expiresOn": "有効期限: {date}",
+      "expiredOn": "期限切れ: {date}",
+      "noEndDate": "終了日なし",
+      "actions": "アクション",
+      "activate": "有効化",
+      "deactivate": "無効化",
+      "received": "{count, plural, =0 {受信済み} =1 {受信済み · #件} other {受信済み · #件}}",
+      "noFiles": "まだ何も届いていません。リンクを共有すると、ここにファイルが表示されます。",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "{count}件のファイルをすべて表示"
+    }
   },
   "searchBar": {
     "placeholder": "ファイルを検索...",

@@ -1408,7 +1408,24 @@
         "cancelEdit": "إلغاء التحرير"
       }
     },
-    "defaultLinkName": "الملفات المستلمة"
+    "defaultLinkName": "الملفات المستلمة",
+    "v2": {
+      "subline": "{links, plural, =0 {لا روابط استلام بعد} =1 {# رابط استلام} other {# روابط استلام}} · {files, plural, =0 {لم يُستلم شيء} =1 {# ملف مستلم} other {# ملفات مستلمة}}",
+      "filesOf": "{count} من {max} ملفات",
+      "filesReceived": "{count, plural, =0 {لا ملفات بعد} =1 {# ملف} other {# ملفات}}",
+      "maxSize": "حتى {size} لكل ملف",
+      "openLink": "بدون كلمة مرور",
+      "expiresOn": "تنتهي الصلاحية في {date}",
+      "expiredOn": "انتهت الصلاحية في {date}",
+      "noEndDate": "بدون تاريخ انتهاء",
+      "actions": "إجراءات",
+      "activate": "تفعيل",
+      "deactivate": "تعطيل",
+      "received": "{count, plural, =0 {تم الاستلام} =1 {تم الاستلام · # ملف} other {تم الاستلام · # ملفات}}",
+      "noFiles": "لم يصل شيء بعد. شارك الرابط وستظهر الملفات هنا.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "عرض كل {count} ملف"
+    }
   },
   "searchBar": {
     "placeholder": "ابحث عن الملفات...",
