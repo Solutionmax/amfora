@@ -1,57 +1,21 @@
 import { ReverseShare } from "../hooks/use-reverse-shares";
 import { EmptyReverseSharesState } from "./empty-reverse-shares-state";
-import { ReverseShareCard } from "./reverse-share-card";
+import { ReverseShareRow, type ReverseShareRowProps } from "./reverse-share-row";
 
-interface ReverseSharesCardsContainerProps {
+type Props = Omit<ReverseShareRowProps, "reverseShare"> & {
   reverseShares: ReverseShare[];
-  onCopyLink: (reverseShare: ReverseShare) => void;
-  onDelete: (reverseShare: ReverseShare) => void;
-  onEdit: (reverseShare: ReverseShare) => void;
-  onGenerateLink: (reverseShare: ReverseShare) => void;
-  onViewDetails: (reverseShare: ReverseShare) => void;
-  onViewFiles: (reverseShare: ReverseShare) => void;
-  onViewQrCode?: (reverseShare: ReverseShare) => void;
   onCreateReverseShare: () => void;
-  onUpdateReverseShare?: (id: string, data: any) => Promise<any>;
-  onToggleActive?: (id: string, isActive: boolean) => Promise<any>;
-  onUpdatePassword?: (id: string, data: { hasPassword: boolean; password?: string }) => Promise<any>;
-}
+};
 
-export function ReverseSharesCardsContainer({
-  reverseShares,
-  onCopyLink,
-  onDelete,
-  onEdit,
-  onGenerateLink,
-  onViewDetails,
-  onViewFiles,
-  onViewQrCode,
-  onCreateReverseShare,
-  onUpdateReverseShare,
-  onToggleActive,
-  onUpdatePassword,
-}: ReverseSharesCardsContainerProps) {
+export function ReverseSharesCardsContainer({ reverseShares, onCreateReverseShare, ...rowProps }: Props) {
   if (reverseShares.length === 0) {
     return <EmptyReverseSharesState onCreateReverseShare={onCreateReverseShare} />;
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="flex flex-col gap-4">
       {reverseShares.map((reverseShare) => (
-        <ReverseShareCard
-          key={reverseShare.id}
-          reverseShare={reverseShare}
-          onCopyLink={onCopyLink}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onGenerateLink={onGenerateLink}
-          onViewDetails={onViewDetails}
-          onViewFiles={onViewFiles}
-          onViewQrCode={onViewQrCode}
-          onUpdateReverseShare={onUpdateReverseShare}
-          onToggleActive={onToggleActive}
-          onUpdatePassword={onUpdatePassword}
-        />
+        <ReverseShareRow key={reverseShare.id} reverseShare={reverseShare} {...rowProps} />
       ))}
     </div>
   );
