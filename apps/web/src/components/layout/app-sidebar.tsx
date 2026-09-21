@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  IconDownload,
   IconFolder,
-  IconLayoutDashboard,
+  IconInbox,
+  IconLayoutGrid,
   IconLogout,
   IconPalette,
   IconSettings,
@@ -32,6 +32,7 @@ import packageJson from "../../../package.json";
 const { version } = packageJson;
 
 type DiskSpace = { diskSizeGB: number; diskUsedGB: number; diskAvailableGB: number };
+type NavEntry = { href: string; label: string; icon: typeof IconFolder };
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations();
@@ -60,27 +61,26 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
     }
   };
 
-  const main = [
-    { href: "/dashboard", label: t("dashboard.pageTitle"), icon: IconLayoutDashboard },
+  const main: NavEntry[] = [
+    { href: "/dashboard", label: t("dashboard.pageTitle"), icon: IconLayoutGrid },
     { href: "/files", label: t("files.pageTitle"), icon: IconFolder },
     { href: "/shares", label: t("shares.pageTitle"), icon: IconShare },
-    { href: "/reverse-shares", label: t("reverseShares.pageTitle"), icon: IconDownload },
+    { href: "/reverse-shares", label: t("reverseShares.pageTitle"), icon: IconInbox },
   ];
 
-  const manage = [
-    ...(isAdmin
-      ? [
-          { href: "/customization", label: t("customization.pageTitle"), icon: IconPalette },
-          { href: "/settings", label: t("settings.pageTitle"), icon: IconSettings },
-          { href: "/users-management", label: t("navbar.usersManagement"), icon: IconUsers },
-        ]
-      : []),
-    { href: "/profile", label: t("navbar.profile"), icon: IconUser },
-  ];
+  const admin: NavEntry[] = isAdmin
+    ? [
+        { href: "/users-management", label: t("navbar.usersManagement"), icon: IconUsers },
+        { href: "/customization", label: t("customization.pageTitle"), icon: IconPalette },
+        { href: "/settings", label: t("settings.pageTitle"), icon: IconSettings },
+      ]
+    : [];
+
+  const account: NavEntry[] = [{ href: "/profile", label: t("navbar.profile"), icon: IconUser }];
 
   const used = disk ? Math.min(disk.diskUsedGB / Math.max(disk.diskSizeGB, 1), 1) : 0;
 
-  const item = (entry: { href: string; label: string; icon: typeof IconFolder }) => {
+  const item = (entry: NavEntry) => {
     const active = pathname === entry.href || pathname.startsWith(`${entry.href}/`);
     return (
       <Link
@@ -89,88 +89,83 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         onClick={onNavigate}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "group flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
+          "relative flex h-9 items-center gap-2.5 rounded-[var(--radius)] px-2.5 text-[13.5px] font-medium transition-colors duration-150",
           active
-            ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-            : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            ? "bg-surface font-semibold text-primary shadow-[0_1px_0_var(--line),0_8px_18px_-12px_rgba(12,22,38,.35)] before:absolute before:bottom-[9px] before:left-0 before:top-[9px] before:w-[3px] before:rounded-full before:bg-primary dark:bg-surface-2 dark:shadow-none"
+            : "text-ink-2 hover:bg-surface-2 hover:text-ink"
         )}
       >
-        <entry.icon className="size-[18px]" aria-hidden="true" />
+        <entry.icon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
         {entry.label}
       </Link>
     );
   };
 
+  const group = (label: string) => (
+    <span className="px-2.5 pb-1.5 pt-[18px] text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3">
+      {label}
+    </span>
+  );
+
   return (
-    <div className="flex h-full flex-col border-r border-sidebar-border bg-sidebar px-4 text-sidebar-foreground">
-      <Link
-        href="/dashboard"
-        onClick={onNavigate}
-        className="flex min-h-20 min-w-0 shrink-0 items-center gap-3 border-b border-sidebar-border px-3"
-      >
-        <BrandMark className="h-9 w-9 shrink-0 text-sidebar-primary" />
-        <span className="truncate font-display text-[22px] font-bold tracking-tight">{appName}</span>
+    <div className="flex h-full flex-col border-r border-[color-mix(in_oklab,var(--line)_80%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--primary)_7%,var(--surface))_0%,var(--surface)_160px)] px-3 pb-3 pt-4 text-ink">
+      <Link href="/dashboard" onClick={onNavigate} className="flex min-w-0 items-center gap-2.5 px-2 pb-[18px] pt-1.5">
+        <BrandMark className="size-8 shrink-0 text-primary" />
+        <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{appName}</span>
       </Link>
 
-      <nav aria-label={appName} className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto py-6">
+      <nav aria-label={appName} className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
         {main.map(item)}
-        <span className="mt-8 px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/50">
-          {t("navbar.settings")}
-        </span>
-        {manage.map(item)}
+        {admin.length > 0 && group(t("navbar.admin"))}
+        {admin.map(item)}
+        {group(t("navbar.account"))}
+        {account.map(item)}
       </nav>
 
-      <div className="mb-5 shrink-0 rounded-lg border border-sidebar-border bg-sidebar-accent/40 p-4">
-        <div className="mb-3 flex items-center justify-between text-xs">
-          <span className="font-medium text-sidebar-foreground/60">{t("storageUsage.total")}</span>
-          <span className="font-mono text-[11px]">{disk ? formatStorageSize(disk.diskSizeGB) : "—"}</span>
+      <div className="mt-auto flex flex-col gap-3.5 pt-4">
+        <div className="rounded-[var(--radius)] bg-surface-2 p-3 text-xs text-ink-3">
+          <div className="flex items-baseline justify-between gap-2 whitespace-nowrap">
+            <span>{t("navbar.storage")}</span>
+            <span className="mono text-[11px]">
+              {disk ? formatStorageSize(disk.diskUsedGB) : "—"} / {disk ? formatStorageSize(disk.diskSizeGB) : "—"}
+            </span>
+          </div>
+          <div
+            role="progressbar"
+            aria-label={t("storageUsage.title")}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={disk ? Math.round(used * 100) : undefined}
+            className="mt-1.5 h-1 overflow-hidden rounded-sm bg-line"
+          >
+            <div className="h-full rounded-sm bg-primary" style={{ width: `${used * 100}%` }} />
+          </div>
         </div>
-        <div
-          role="progressbar"
-          aria-label={t("storageUsage.total")}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={disk ? Math.round(used * 100) : undefined}
-          className="h-1.5 overflow-hidden rounded-full bg-sidebar-border"
-        >
-          <div className="h-full rounded-full bg-primary" style={{ width: `${used * 100}%` }} />
-        </div>
-        <p className="mt-2.5 font-mono text-[11px] text-sidebar-foreground/60">
-          {disk ? formatStorageSize(disk.diskUsedGB) : "—"} / {disk ? formatStorageSize(disk.diskSizeGB) : "—"}
-        </p>
-      </div>
 
-      <div className="flex shrink-0 items-center gap-2.5 border-t border-sidebar-border py-4">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src={user?.image as string | undefined} />
-          <AvatarFallback className="bg-sidebar-primary/10 text-xs font-semibold text-sidebar-primary">
-            {user?.firstName?.[0]}
-            {user?.lastName?.[0]}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium">
-            {user?.firstName} {user?.lastName}
-          </p>
-          <p className="truncate text-xs text-sidebar-foreground/60">{user?.email}</p>
+        <div className="flex items-center gap-2.5 border-t border-line px-1.5 pt-3">
+          <Avatar className="size-[30px]">
+            <AvatarImage src={user?.image as string | undefined} />
+            <AvatarFallback className="bg-primary-soft text-xs font-semibold text-primary">
+              {user?.firstName?.[0]}
+              {user?.lastName?.[0]}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[13px] font-semibold">
+              {user?.firstName} {user?.lastName}
+            </p>
+            <p className="truncate text-xs text-ink-3">{isAdmin ? t("navbar.roleAdmin") : t("navbar.roleUser")}</p>
+          </div>
+          <Button variant="ghost" size="icon" className="size-8" onClick={handleLogout} aria-label={t("navbar.logout")}>
+            <IconLogout className="size-[18px]" />
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          onClick={handleLogout}
-          aria-label={t("navbar.logout")}
-        >
-          <IconLogout className="size-[18px]" />
-        </Button>
-      </div>
 
-      <div className="flex shrink-0 items-center gap-1 border-t border-sidebar-border py-2.5 [&_button]:text-sidebar-foreground/70 [&_button:hover]:bg-sidebar-accent [&_button:hover]:text-sidebar-accent-foreground">
-        <LanguageSwitcher />
-        <ModeToggle />
-        {hideVersion !== "true" && (
-          <span className="ml-auto pr-1 font-mono text-[11px] text-sidebar-foreground/50">v{version}</span>
-        )}
+        <div className="flex items-center gap-0.5 px-0.5 text-[11px] text-ink-3 [&_button]:size-7 [&_button]:text-ink-3 [&_button:hover]:text-ink">
+          <LanguageSwitcher />
+          <ModeToggle />
+          {hideVersion !== "true" && <span className="mono ml-auto pr-1">v{version}</span>}
+        </div>
       </div>
     </div>
   );

@@ -1,41 +1,38 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { IconChevronRight, IconMenu2 } from "@tabler/icons-react";
+import { IconMenu2 } from "@tabler/icons-react";
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useAppInfo } from "@/contexts/app-info-context";
 
 interface FileManagerLayoutProps {
   children: ReactNode;
   title: string;
+  subline?: ReactNode;
+  actions?: ReactNode;
+  /** Kept for callers that still pass them; the frame no longer renders a breadcrumb. */
   icon?: ReactNode;
   breadcrumbLabel?: string;
   showBreadcrumb?: boolean;
-  actions?: ReactNode;
 }
 
-export function FileManagerLayout({ children, title, actions }: FileManagerLayoutProps) {
-  const { appName } = useAppInfo();
+/** The signed-in frame: sidebar, soft colour wash, page header with title, subline and actions. */
+export function FileManagerLayout({ children, title, subline, actions }: FileManagerLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="workspace-shell flex min-h-dvh w-full">
+    <div className="flex min-h-dvh w-full">
       <aside className="sticky top-0 hidden h-dvh w-[240px] shrink-0 lg:block">
         <AppSidebar />
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="sticky top-0 z-30 flex min-h-16 items-center gap-3 border-b border-sidebar-border bg-sidebar px-4 text-sidebar-foreground backdrop-blur-sm lg:hidden">
+      <div className="stage-soft flex min-w-0 flex-1 flex-col">
+        <div className="sticky top-0 z-30 flex min-h-14 items-center gap-2 border-b border-line bg-surface/90 px-3 backdrop-blur-sm lg:hidden">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              >
+              <Button variant="ghost" size="icon">
                 <IconMenu2 className="size-5" />
                 <span className="sr-only">Menu</span>
               </Button>
@@ -45,22 +42,20 @@ export function FileManagerLayout({ children, title, actions }: FileManagerLayou
               <AppSidebar onNavigate={() => setIsMenuOpen(false)} />
             </SheetContent>
           </Sheet>
-          <h1 className="min-w-0 truncate font-display text-lg font-semibold tracking-tight">{title}</h1>
+          <h1 className="min-w-0 truncate font-display text-base font-semibold tracking-tight">{title}</h1>
         </div>
 
-        <header className="hidden h-20 shrink-0 items-center gap-3 border-b border-border/60 bg-card/70 px-8 text-xs lg:flex xl:px-10">
-          <span className="font-semibold text-muted-foreground">{appName}</span>
-          <IconChevronRight className="size-3 text-muted-foreground/60" aria-hidden="true" />
-          <span className="text-foreground">{title}</span>
-        </header>
-        <main className="mx-auto w-full max-w-[1440px] flex-1 bg-background px-4 py-6 sm:px-6 lg:px-8 lg:py-9 xl:px-10">
-          <div className={actions ? "mb-7 flex flex-wrap items-center justify-between gap-4" : "mb-7 hidden lg:flex"}>
-            <h1 className="hidden font-display text-[38px] font-semibold leading-tight tracking-tight lg:block">
-              {title}
-            </h1>
+        <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="hidden font-display text-[34px] font-semibold leading-tight tracking-[-0.025em] lg:block">
+                {title}
+              </h1>
+              {subline && <p className="mt-1 text-[15px] text-ink-3">{subline}</p>}
+            </div>
             {actions && <div className="flex max-w-full flex-wrap items-center gap-2 [&>div]:flex-wrap">{actions}</div>}
           </div>
-          <div className="flex min-w-0 flex-col gap-7">{children}</div>
+          <div className="flex min-w-0 flex-col gap-6">{children}</div>
         </main>
       </div>
     </div>

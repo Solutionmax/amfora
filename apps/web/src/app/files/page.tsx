@@ -20,6 +20,7 @@ import {
 import { moveFile } from "@/http/endpoints/files";
 import { listFolders, moveFolder } from "@/http/endpoints/folders";
 import { getCachedDownloadUrl } from "@/lib/download-url-cache";
+import { formatFileSize } from "@/utils/format-file-size";
 import { FilesViewManager } from "./components/files-view-manager";
 import { Header } from "./components/header";
 import { useFileBrowser } from "./hooks/use-file-browser";
@@ -188,6 +189,12 @@ export default function FilesPage() {
       >
         <FileManagerLayout
           title={t("files.pageTitle")}
+          subline={t("files.subline", {
+            count: allFiles.length,
+            size: formatFileSize(
+              allFiles.reduce((sum: number, file: { size?: number | string }) => sum + Number(file.size || 0), 0)
+            ),
+          })}
           actions={
             <Header
               onUpload={modals.onOpenUploadModal}

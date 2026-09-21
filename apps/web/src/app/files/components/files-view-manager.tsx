@@ -170,45 +170,44 @@ export function FilesViewManager({
 
   return (
     <div className="space-y-4">
-      {/* Breadcrumbs, Search and View Controls */}
-      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">{breadcrumbs}</div>
 
-        <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
-          <div className="relative min-w-0 flex-1 sm:w-64 sm:flex-none">
-            <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <div className="relative min-w-0 flex-1 sm:w-72 sm:flex-none">
+            <IconSearch className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
             <Input
               type="search"
               aria-label={t("searchBar.placeholder")}
               placeholder={t("searchBar.placeholder")}
               value={searchQuery}
               onChange={(e) => onSearch(e.target.value)}
-              className="w-full pl-10"
+              className="w-full pl-9"
             />
           </div>
 
-          <div className="flex items-center rounded-lg border border-border/70 bg-secondary/50 p-1">
+          <div className="flex items-center gap-0.5 rounded-[var(--radius)] border border-line-2 bg-surface p-0.5">
             <Button
               type="button"
               aria-label={t("files.viewMode.table")}
               aria-pressed={viewMode === "table"}
-              variant={viewMode === "table" ? "default" : "ghost"}
+              variant={viewMode === "table" ? "secondary" : "ghost"}
               size="sm"
-              className="h-8 px-3"
+              className="h-8 px-2.5"
               onClick={() => setViewMode("table")}
             >
-              <IconTable className="h-4 w-4" />
+              <IconTable className="size-4" />
             </Button>
             <Button
               type="button"
               aria-label={t("files.viewMode.grid")}
               aria-pressed={viewMode === "grid"}
-              variant={viewMode === "grid" ? "default" : "ghost"}
+              variant={viewMode === "grid" ? "secondary" : "ghost"}
               size="sm"
-              className="h-8 px-3"
+              className="h-8 px-2.5"
               onClick={() => setViewMode("grid")}
             >
-              <IconLayoutGrid className="h-4 w-4" />
+              <IconLayoutGrid className="size-4" />
             </Button>
           </div>
         </div>
@@ -224,8 +223,8 @@ export function FilesViewManager({
         EmptyStateComponent ? (
           <EmptyStateComponent />
         ) : (
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border/70 bg-card px-6 py-12 text-center">
-            <p className="text-muted-foreground">{t("files.empty.title")}</p>
+          <div className="card-soft flex flex-col items-center gap-2 rounded-[calc(var(--radius)+4px)] border border-line bg-surface px-6 py-14 text-center">
+            <p className="text-ink-3">{t("files.empty.title")}</p>
           </div>
         )
       ) : (
@@ -234,8 +233,8 @@ export function FilesViewManager({
 
           {/* No results message */}
           {searchQuery && !hasContent && (
-            <div className="rounded-xl border border-dashed border-border/70 bg-card px-6 py-10 text-center">
-              <p className="text-muted-foreground">{t("searchBar.noResults", { query: searchQuery })}</p>
+            <div className="rounded-[calc(var(--radius)+4px)] border border-dashed border-line-2 bg-surface px-6 py-10 text-center">
+              <p className="text-ink-3">{t("searchBar.noResults", { query: searchQuery })}</p>
             </div>
           )}
         </div>

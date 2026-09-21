@@ -300,7 +300,7 @@ export function FilesGrid({
   return (
     <div className="space-y-4">
       {shouldShowBulkActions && (
-        <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-[var(--radius)] bg-primary-soft p-3 text-primary sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-foreground">
               {t("filesTable.bulkActions.selected", { count: selectedItems })}
