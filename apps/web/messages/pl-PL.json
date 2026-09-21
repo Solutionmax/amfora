@@ -1408,7 +1408,24 @@
         "cancelEdit": "Anuluj edycję"
       }
     },
-    "defaultLinkName": "Otrzymane pliki"
+    "defaultLinkName": "Otrzymane pliki",
+    "v2": {
+      "subline": "{links, plural, =0 {Brak linków do odbierania} =1 {# link do odbierania} other {# linków do odbierania}} · {files, plural, =0 {nic nie odebrano} =1 {# plik odebrano} other {# plików odebrano}}",
+      "filesOf": "{count} z {max} plików",
+      "filesReceived": "{count, plural, =0 {Brak plików} =1 {# plik} other {# plików}}",
+      "maxSize": "Do {size} na plik",
+      "openLink": "Bez hasła",
+      "expiresOn": "Wygasa {date}",
+      "expiredOn": "Wygasło {date}",
+      "noEndDate": "Brak daty zakończenia",
+      "actions": "Akcje",
+      "activate": "Aktywuj",
+      "deactivate": "Dezaktywuj",
+      "received": "{count, plural, =0 {Odebrano} =1 {Odebrano · # plik} other {Odebrano · # plików}}",
+      "noFiles": "Jeszcze nic nie dotarło. Udostępnij link, a pliki pojawią się tutaj.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Pokaż wszystkie pliki ({count})"
+    }
   },
   "searchBar": {
     "placeholder": "Szukaj plików...",

@@ -1408,6 +1408,23 @@
         "saveChanges": "ذخیره تغییرات",
         "cancelEdit": "انصراف از ویرایش"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {هنوز لینک دریافتی نیست} =1 {# لینک دریافت} other {# لینک دریافت}} · {files, plural, =0 {چیزی دریافت نشده} =1 {# فایل دریافت شد} other {# فایل دریافت شد}}",
+      "filesOf": "{count} از {max} فایل",
+      "filesReceived": "{count, plural, =0 {هنوز فایلی نیست} =1 {# فایل} other {# فایل}}",
+      "maxSize": "تا {size} برای هر فایل",
+      "openLink": "بدون گذرواژه",
+      "expiresOn": "انقضا در {date}",
+      "expiredOn": "منقضی‌شده در {date}",
+      "noEndDate": "بدون تاریخ پایان",
+      "actions": "اقدامات",
+      "activate": "فعال کردن",
+      "deactivate": "غیرفعال کردن",
+      "received": "{count, plural, =0 {دریافت شد} =1 {دریافت شد · # فایل} other {دریافت شد · # فایل}}",
+      "noFiles": "هنوز چیزی دریافت نشده است. لینک را به اشتراک بگذارید تا فایل‌ها اینجا نمایش داده شوند.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "نمایش همه {count} فایل"
     }
   },
   "searchBar": {

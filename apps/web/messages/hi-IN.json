@@ -1408,7 +1408,24 @@
         "cancelEdit": "संपादन रद्द करें"
       }
     },
-    "defaultLinkName": "प्राप्त फ़ाइलें"
+    "defaultLinkName": "प्राप्त फ़ाइलें",
+    "v2": {
+      "subline": "{links, plural, =0 {अभी तक कोई प्राप्ति लिंक नहीं} =1 {# प्राप्ति लिंक} other {# प्राप्ति लिंक}} · {files, plural, =0 {कुछ प्राप्त नहीं हुआ} =1 {# फ़ाइल प्राप्त हुई} other {# फ़ाइलें प्राप्त हुईं}}",
+      "filesOf": "{max} में से {count} फ़ाइलें",
+      "filesReceived": "{count, plural, =0 {अभी तक कोई फ़ाइल नहीं} =1 {# फ़ाइल} other {# फ़ाइलें}}",
+      "maxSize": "प्रति फ़ाइल {size} तक",
+      "openLink": "बिना पासवर्ड",
+      "expiresOn": "समाप्ति: {date}",
+      "expiredOn": "समाप्त हो गया: {date}",
+      "noEndDate": "कोई समाप्ति तिथि नहीं",
+      "actions": "कार्रवाइयां",
+      "activate": "सक्रिय करें",
+      "deactivate": "निष्क्रिय करें",
+      "received": "{count, plural, =0 {प्राप्त हुआ} =1 {प्राप्त हुआ · # फ़ाइल} other {प्राप्त हुआ · # फ़ाइलें}}",
+      "noFiles": "अभी तक कुछ नहीं आया है। लिंक साझा करें और फ़ाइलें यहां दिखाई देंगी।",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "सभी {count} फ़ाइलें दिखाएं"
+    }
   },
   "searchBar": {
     "placeholder": "फाइलें खोजें...",

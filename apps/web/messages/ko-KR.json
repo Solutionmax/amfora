@@ -1408,7 +1408,24 @@
         "cancelEdit": "편집 취소"
       }
     },
-    "defaultLinkName": "받은 파일"
+    "defaultLinkName": "받은 파일",
+    "v2": {
+      "subline": "{links, plural, =0 {아직 수신 링크 없음} =1 {수신 링크 #개} other {수신 링크 #개}} · {files, plural, =0 {받은 파일 없음} =1 {파일 #개 받음} other {파일 #개 받음}}",
+      "filesOf": "{max}개 중 {count}개 파일",
+      "filesReceived": "{count, plural, =0 {아직 파일 없음} =1 {파일 #개} other {파일 #개}}",
+      "maxSize": "파일당 최대 {size}",
+      "openLink": "비밀번호 없음",
+      "expiresOn": "만료: {date}",
+      "expiredOn": "만료됨: {date}",
+      "noEndDate": "종료일 없음",
+      "actions": "작업",
+      "activate": "활성화",
+      "deactivate": "비활성화",
+      "received": "{count, plural, =0 {수신됨} =1 {수신됨 · 파일 #개} other {수신됨 · 파일 #개}}",
+      "noFiles": "아직 들어온 파일이 없습니다. 링크를 공유하면 파일이 여기에 표시됩니다.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "{count}개 파일 모두 보기"
+    }
   },
   "searchBar": {
     "placeholder": "파일 검색...",
