@@ -232,6 +232,56 @@
     "pageTitle": "Tùy chỉnh",
     "preview": {
       "title": "Xem trước"
+    },
+    "v2": {
+      "subline": "Những gì mọi khách truy cập nhìn thấy. Thay đổi áp dụng cho mọi trang, kể cả các liên kết công khai.",
+      "save": "Lưu thay đổi",
+      "saved": "Đã lưu.",
+      "saveFailed": "Không thể lưu. Vui lòng thử lại.",
+      "brand": {
+        "title": "Thương hiệu",
+        "name": "Tên",
+        "description": "Mô tả",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG hoặc WebP. Thay thế biểu tượng ở mọi nơi và được dùng làm favicon."
+      },
+      "appearance": {
+        "title": "Màu sắc và hình dạng",
+        "accent": "Màu nhấn",
+        "accentHex": "Màu nhấn dạng mã hex",
+        "accentHint": "Các nút, liên kết, điều hướng đang hoạt động và các lớp phủ màu đều theo màu này.",
+        "radius": "Độ bo góc",
+        "radiusHint": "{px} px. Càng sắc càng có cảm giác kỹ thuật, càng bo tròn càng có cảm giác thân thiện.",
+        "font": "Phông chữ",
+        "fontDefault": "Mặc định (Archivo và Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Trả phí",
+        "unlockTitle": "Mở khóa white label đầy đủ",
+        "unlockText": "Nền riêng, CSS tùy chỉnh, và không còn ghi công Amfora. Một tổ chức, không giới hạn số bản cài đặt, không bao giờ hết hạn.",
+        "buy": "Mua brandpack · €79",
+        "paste": "Dán brandpack của bạn vào đây",
+        "activate": "Kích hoạt",
+        "activated": "Đã kích hoạt brandpack.",
+        "removed": "Đã gỡ brandpack.",
+        "active": "Brandpack đang hoạt động cho {organisation} · cấp ngày {date}",
+        "remove": "Gỡ bỏ",
+        "credit": "Hiển thị \"Cung cấp bởi Amfora\"",
+        "creditHint": "Tắt sẽ ẩn dòng ghi công trên mọi trang. Thông báo mã nguồn mở vẫn giữ nguyên trong mã nguồn.",
+        "background": "Ảnh nền trang công khai",
+        "backgroundHint": "Hiển thị phía sau các trang đăng nhập, tải xuống và nhận tệp. Tối đa 3 MB; được lưu dưới dạng WebP.",
+        "backgroundUpload": "Tải ảnh lên",
+        "backgroundReplace": "Thay ảnh khác",
+        "backgroundRemove": "Gỡ bỏ",
+        "css": "CSS tùy chỉnh",
+        "cssHint": "Được tải sau cùng, trên mọi trang. Các lệnh import và URL bên ngoài sẽ bị loại bỏ.",
+        "cssSave": "Lưu CSS"
+      },
+      "preview": {
+        "title": "Xem trước",
+        "page": "Trang tải xuống"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "Tệp gần đây",
       "description": "Các tệp được tải lên gần đây nhất của bạn"
+    },
+    "greeting": {
+      "morning": "Chào buổi sáng, {name}.",
+      "afternoon": "Chào buổi chiều, {name}.",
+      "evening": "Chào buổi tối, {name}.",
+      "night": "Vẫn còn thức à, {name}?"
+    },
+    "subline": "{shares, plural, =0 {Chưa có chia sẻ nào} =1 {# chia sẻ} other {# chia sẻ}}, {files, plural, =0 {chưa có tệp nào} =1 {# tệp} other {# tệp}}.",
+    "hero": {
+      "send": {
+        "title": "Gửi tệp",
+        "text": "Chọn tệp, đặt mật khẩu và ngày hết hạn, rồi chia sẻ liên kết."
+      },
+      "receive": {
+        "title": "Nhận tệp",
+        "text": "Tạo một liên kết để bất kỳ ai cũng có thể tải lên, không cần tài khoản."
+      }
+    },
+    "stats": {
+      "storage": "Dung lượng đã dùng",
+      "storageOf": "trên {total}",
+      "shares": "Chia sẻ",
+      "downloads": "Lượt tải xuống",
+      "downloadsDetail": "trên tất cả các tệp",
+      "files": "Tệp"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "table": "Bảng",
       "grid": "Lưới",
       "label": "Chế độ xem"
-    }
+    },
+    "subline": "{count, plural, =0 {Chưa có tệp nào} =1 {# tệp} other {# tệp}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Bảng tệp",
@@ -586,7 +662,12 @@
     "customization": "Tùy chỉnh",
     "settings": "Cài đặt",
     "usersManagement": "Quản lý người dùng",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "admin": "Quản trị",
+    "account": "Tài khoản",
+    "roleAdmin": "Quản trị viên",
+    "roleUser": "Thành viên",
+    "storage": "Dung lượng"
   },
   "navigation": {
     "dashboard": "Bảng điều khiển"
@@ -655,6 +736,97 @@
       "imageRemoved": "Đã xóa ảnh hồ sơ thành công"
     },
     "pageTitle": "Hồ sơ"
+  },
+  "public": {
+    "login": {
+      "title": "Chào mừng",
+      "accent": "trở lại.",
+      "firstTitle": "Thiết lập",
+      "firstAccent": "mọi thứ nào.",
+      "sub": "Sử dụng tài khoản {app} của bạn hoặc một nhà cung cấp đã liên kết.",
+      "firstSub": "Tạo tài khoản quản trị viên đầu tiên cho bản cài đặt này.",
+      "or": "hoặc bằng email",
+      "trust": {
+        "server": {
+          "title": "Ở lại trên máy chủ này",
+          "text": "Không có gì rời khỏi bản cài đặt bạn đang đăng nhập."
+        },
+        "expire": {
+          "title": "Liên kết có thời hạn",
+          "text": "Mật khẩu, giới hạn tải xuống và ngày hết hạn cho mỗi lượt chia sẻ."
+        },
+        "receive": {
+          "title": "Nhận tệp không cần tài khoản",
+          "text": "Bất kỳ ai có liên kết nhận đều có thể gửi tệp cho bạn."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Không có gì ở đây,} =1 {Một tệp,} other {# tệp,}}",
+      "accent": "đã sẵn sàng cho bạn.",
+      "via": "qua {app}",
+      "passwordVerified": "Đã xác minh mật khẩu",
+      "expires": "Hết hạn {date}",
+      "downloaded": "đã tải xuống {count, plural, =1 {một lần} other {# lần}}",
+      "preview": "Xem trước",
+      "noteZip": "Tải xuống dưới dạng một tệp ZIP.",
+      "noteSingle": "Tải trực tiếp xuống thiết bị của bạn.",
+      "folder": "Thư mục"
+    },
+    "kind": {
+      "video": "Video",
+      "image": "Hình ảnh",
+      "document": "Tài liệu",
+      "archive": "Tệp nén",
+      "other": "Tệp"
+    },
+    "receive": {
+      "eyebrow": "Liên kết nhận tệp",
+      "title": "Gửi tệp của bạn",
+      "accent": "cho {name}.",
+      "uploading": "Đang tải lên · {percent}%",
+      "limits": {
+        "size": "Tối đa {size}",
+        "files": "{count, plural, =1 {# tệp} other {# tệp}} mỗi lượt tải lên",
+        "until": "Mở đến {date}",
+        "encrypted": "Được mã hóa trong quá trình truyền"
+      },
+      "drop": {
+        "text": "hoặc chọn từ máy tính của bạn.",
+        "choose": "Chọn tệp"
+      },
+      "progress": {
+        "keepOpen": "Giữ tab này mở cho đến khi tải lên xong.",
+        "ready": "Sẵn sàng gửi."
+      },
+      "send": "Gửi {count, plural, =0 {tệp} =1 {# tệp} other {# tệp}}"
+    },
+    "recover": {
+      "title": "Quên",
+      "accent": "mật khẩu?",
+      "text": "Nhập email của bạn và chúng tôi sẽ gửi cho bạn một liên kết để chọn mật khẩu mới."
+    },
+    "reset": {
+      "title": "Chọn",
+      "accent": "mật khẩu mới.",
+      "text": "Hãy chọn một mật khẩu dài. Một câu sẽ tốt hơn là các ký hiệu."
+    },
+    "invite": {
+      "title": "Bạn đã",
+      "accent": "được mời.",
+      "text": "Tạo tài khoản để bắt đầu gửi và nhận tệp."
+    },
+    "state": {
+      "backHome": "Về trang chủ",
+      "password": {
+        "title": "Liên kết này được",
+        "text": "bảo vệ bằng mật khẩu. Hãy hỏi người đã gửi cho bạn."
+      },
+      "missing": {
+        "title": "Không có gì ở đây.",
+        "text": "Liên kết này không tồn tại, hoặc đã bị gỡ bỏ."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "Chia sẻ mã QR",

@@ -232,6 +232,56 @@
     "pageTitle": "Personalizacja",
     "preview": {
       "title": "Podgląd"
+    },
+    "v2": {
+      "subline": "To, co widzi każdy odwiedzający. Zmiany dotyczą wszystkich stron, w tym linków publicznych.",
+      "save": "Zapisz zmiany",
+      "saved": "Zapisano.",
+      "saveFailed": "Nie udało się zapisać. Spróbuj ponownie.",
+      "brand": {
+        "title": "Marka",
+        "name": "Nazwa",
+        "description": "Opis",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG lub WebP. Zastępuje znak wszędzie i jest używane jako favicon."
+      },
+      "appearance": {
+        "title": "Kolor i kształt",
+        "accent": "Kolor akcentu",
+        "accentHex": "Kolor akcentu w formacie hex",
+        "accentHint": "Dotyczy przycisków, linków, aktywnej nawigacji i kolorowych teł.",
+        "radius": "Zaokrąglenie rogów",
+        "radiusHint": "{px} px. Ostrzejsze wygląda bardziej technicznie, bardziej zaokrąglone — przyjaźniej.",
+        "font": "Czcionka",
+        "fontDefault": "Domyślna (Archivo i Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Płatne",
+        "unlockTitle": "Odblokuj pełny white-label",
+        "unlockText": "Własne tło, niestandardowy CSS i bez wzmianki marki Amfora. Jedna organizacja, nieograniczona liczba instalacji, bez terminu ważności.",
+        "buy": "Kup brandpack · 79 €",
+        "paste": "Wklej tutaj swój brandpack",
+        "activate": "Aktywuj",
+        "activated": "Brandpack aktywowany.",
+        "removed": "Brandpack usunięty.",
+        "active": "Brandpack aktywny dla {organisation} · wydany {date}",
+        "remove": "Usuń",
+        "credit": "Pokaż \"Zasilane przez Amfora\"",
+        "creditHint": "Wyłączenie ukrywa napis \"Zasilane przez Amfora\" na każdej stronie. Informacja o otwartym kodzie źródłowym pozostaje w kodzie.",
+        "background": "Tło stron publicznych",
+        "backgroundHint": "Wyświetlane w tle stron logowania, pobierania i odbierania. Do 3 MB; zapisywane jako WebP.",
+        "backgroundUpload": "Prześlij obraz",
+        "backgroundReplace": "Zamień obraz",
+        "backgroundRemove": "Usuń",
+        "css": "Niestandardowy CSS",
+        "cssHint": "Ładowany jako ostatni, na każdej stronie. Importy i zewnętrzne adresy URL są usuwane.",
+        "cssSave": "Zapisz CSS"
+      },
+      "preview": {
+        "title": "Podgląd",
+        "page": "Strona pobierania"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "Ostatnie pliki",
       "description": "Twoje ostatnio przesłane pliki"
+    },
+    "greeting": {
+      "morning": "Dzień dobry, {name}.",
+      "afternoon": "Miłego popołudnia, {name}.",
+      "evening": "Dobry wieczór, {name}.",
+      "night": "Jeszcze nie śpisz, {name}?"
+    },
+    "subline": "{shares, plural, =0 {Brak udostępnień} =1 {# udostępnienie} other {# udostępnień}}, {files, plural, =0 {brak plików} =1 {# plik} other {# plików}}.",
+    "hero": {
+      "send": {
+        "title": "Wyślij pliki",
+        "text": "Wybierz pliki, ustaw hasło i datę wygaśnięcia, udostępnij link."
+      },
+      "receive": {
+        "title": "Odbieraj pliki",
+        "text": "Utwórz link, na który każdy może przesłać pliki, bez konieczności zakładania konta."
+      }
+    },
+    "stats": {
+      "storage": "Wykorzystane miejsce",
+      "storageOf": "z {total}",
+      "shares": "Udostępnienia",
+      "downloads": "Pobrania",
+      "downloadsDetail": "we wszystkich plikach",
+      "files": "Pliki"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "moveItemsFailed": "Nie udało się przenieść elementów. Spróbuj ponownie.",
       "cannotMoveHere": "Nie można przenieść elementów do tej lokalizacji"
     },
-    "openFolder": "Otwórz folder"
+    "openFolder": "Otwórz folder",
+    "subline": "{count, plural, =0 {Brak plików} =1 {# plik} other {# plików}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Tabela plików",
@@ -586,7 +662,12 @@
     "settings": "Ustawienia",
     "usersManagement": "Zarządzanie użytkownikami",
     "logout": "Wyloguj się",
-    "customization": "Dostosowanie"
+    "customization": "Dostosowanie",
+    "admin": "Administracja",
+    "account": "Konto",
+    "roleAdmin": "Administrator",
+    "roleUser": "Członek",
+    "storage": "Przechowywanie"
   },
   "navigation": {
     "dashboard": "Panel główny"
@@ -655,6 +736,97 @@
       "imageRemoved": "Obraz profilowy usunięty pomyślnie"
     },
     "pageTitle": "Profil"
+  },
+  "public": {
+    "login": {
+      "title": "Witaj",
+      "accent": "ponownie.",
+      "firstTitle": "Skonfigurujmy",
+      "firstAccent": "wszystko.",
+      "sub": "Użyj swojego konta {app} lub połączonego dostawcy.",
+      "firstSub": "Utwórz pierwsze konto administratora dla tej instalacji.",
+      "or": "lub za pomocą e-maila",
+      "trust": {
+        "server": {
+          "title": "Zostaje na tym serwerze",
+          "text": "Nic nie opuszcza instalacji, do której się logujesz."
+        },
+        "expire": {
+          "title": "Linki z datą ważności",
+          "text": "Hasła, limity pobrań i daty wygaśnięcia dla każdego udostępnienia."
+        },
+        "receive": {
+          "title": "Odbieraj bez kont",
+          "text": "Każdy, kto ma link do odbierania, może wysłać Ci pliki."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Nic tutaj,} =1 {Jeden plik,} other {# plików,}}",
+      "accent": "do pobrania.",
+      "via": "przez {app}",
+      "passwordVerified": "Hasło zweryfikowane",
+      "expires": "Wygasa {date}",
+      "downloaded": "pobrano {count, plural, =1 {raz} other {# razy}}",
+      "preview": "Podgląd",
+      "noteZip": "Pobiera się jako jeden plik ZIP.",
+      "noteSingle": "Pobiera się bezpośrednio na Twoje urządzenie.",
+      "folder": "Folder"
+    },
+    "kind": {
+      "video": "Wideo",
+      "image": "Obraz",
+      "document": "Dokument",
+      "archive": "Archiwum",
+      "other": "Plik"
+    },
+    "receive": {
+      "eyebrow": "Link odbioru",
+      "title": "Wyślij swoje pliki",
+      "accent": "odbiorcy {name}.",
+      "uploading": "Przesyłanie · {percent}%",
+      "limits": {
+        "size": "Do {size}",
+        "files": "{count, plural, =1 {# plik} other {# plików}} na jedno przesłanie",
+        "until": "Otwarte do {date}",
+        "encrypted": "Szyfrowane podczas przesyłania"
+      },
+      "drop": {
+        "text": "lub wybierz z komputera.",
+        "choose": "Wybierz pliki"
+      },
+      "progress": {
+        "keepOpen": "Nie zamykaj tej karty, dopóki przesyłanie się nie zakończy.",
+        "ready": "Gotowe do wysłania."
+      },
+      "send": "Wyślij {count, plural, =0 {pliki} =1 {# plik} other {# plików}}"
+    },
+    "recover": {
+      "title": "Zapomniałeś",
+      "accent": "hasła?",
+      "text": "Podaj swój e-mail, a wyślemy Ci link do wyboru nowego hasła."
+    },
+    "reset": {
+      "title": "Wybierz nowe",
+      "accent": "hasło.",
+      "text": "Wybierz coś długiego. Zdanie sprawdza się lepiej niż symbole."
+    },
+    "invite": {
+      "title": "Zostałeś",
+      "accent": "zaproszony.",
+      "text": "Utwórz konto, aby zacząć wysyłać i odbierać pliki."
+    },
+    "state": {
+      "backHome": "Powrót do początku",
+      "password": {
+        "title": "Ten link jest",
+        "text": "chroniony hasłem. Zapytaj osobę, która go wysłała."
+      },
+      "missing": {
+        "title": "Nic tutaj nie ma.",
+        "text": "Ten link nie istnieje albo został usunięty."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "Udostępnij kod QR",

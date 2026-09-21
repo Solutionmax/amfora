@@ -232,6 +232,56 @@
     "pageTitle": "Personnalisation",
     "preview": {
       "title": "Aperçu"
+    },
+    "v2": {
+      "subline": "Ce que voit chaque visiteur. Les modifications s'appliquent à toutes les pages, y compris les liens publics.",
+      "save": "Enregistrer les modifications",
+      "saved": "Enregistré.",
+      "saveFailed": "Impossible d'enregistrer. Réessayez.",
+      "brand": {
+        "title": "Marque",
+        "name": "Nom",
+        "description": "Description",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG ou WebP. Remplace le symbole partout et sert de favicon."
+      },
+      "appearance": {
+        "title": "Couleur et forme",
+        "accent": "Couleur d'accent",
+        "accentHex": "Couleur d'accent en hexadécimal",
+        "accentHint": "Les boutons, les liens, la navigation active et les dégradés de couleur suivent cette teinte.",
+        "radius": "Rayon des angles",
+        "radiusHint": "{px} px. Plus anguleux paraît plus technique, plus arrondi paraît plus convivial.",
+        "font": "Police",
+        "fontDefault": "Par défaut (Archivo et Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Payant",
+        "unlockTitle": "Débloquez la marque blanche complète",
+        "unlockText": "Votre propre arrière-plan, du CSS personnalisé et sans mention Amfora. Une organisation, installations illimitées, sans expiration.",
+        "buy": "Obtenez un brandpack · 79 €",
+        "paste": "Collez votre brandpack ici",
+        "activate": "Activer",
+        "activated": "Brandpack activé.",
+        "removed": "Brandpack supprimé.",
+        "active": "Brandpack actif pour {organisation} · émis le {date}",
+        "remove": "Supprimer",
+        "credit": "Afficher \"Propulsé par Amfora\"",
+        "creditHint": "Désactivé, il masque la mention sur toutes les pages. La mention open source reste dans le code source.",
+        "background": "Arrière-plan des pages publiques",
+        "backgroundHint": "Affiché derrière les pages de connexion, de téléchargement et de réception. Jusqu'à 3 Mo ; enregistré au format WebP.",
+        "backgroundUpload": "Télécharger une image",
+        "backgroundReplace": "Remplacer l'image",
+        "backgroundRemove": "Supprimer",
+        "css": "CSS personnalisé",
+        "cssHint": "Chargé en dernier, sur toutes les pages. Les imports et les URL externes sont supprimés.",
+        "cssSave": "Enregistrer le CSS"
+      },
+      "preview": {
+        "title": "Aperçu",
+        "page": "Page de téléchargement"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "description": "Vos fichiers téléchargés les plus récents",
       "title": "Fichiers Récents"
+    },
+    "greeting": {
+      "morning": "Bonjour, {name}.",
+      "afternoon": "Bon après-midi, {name}.",
+      "evening": "Bonsoir, {name}.",
+      "night": "Encore debout, {name} ?"
+    },
+    "subline": "{shares, plural, =0 {Aucun partage pour l'instant} =1 {# partage} other {# partages}}, {files, plural, =0 {aucun fichier} =1 {# fichier} other {# fichiers}}.",
+    "hero": {
+      "send": {
+        "title": "Envoyer des fichiers",
+        "text": "Choisissez des fichiers, définissez un mot de passe et une date de fin, puis partagez le lien."
+      },
+      "receive": {
+        "title": "Recevoir des fichiers",
+        "text": "Créez un lien sur lequel n'importe qui peut envoyer des fichiers, sans compte."
+      }
+    },
+    "stats": {
+      "storage": "Stockage utilisé",
+      "storageOf": "sur {total}",
+      "shares": "Partages",
+      "downloads": "Téléchargements",
+      "downloadsDetail": "sur l'ensemble des fichiers",
+      "files": "Fichiers"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "moveItemsFailed": "Échec du déplacement des éléments. Veuillez réessayer.",
       "cannotMoveHere": "Impossible de déplacer les éléments vers cet emplacement"
     },
-    "openFolder": "Ouvrir le dossier"
+    "openFolder": "Ouvrir le dossier",
+    "subline": "{count, plural, =0 {Aucun fichier pour l'instant} =1 {# fichier} other {# fichiers}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Tableau des fichiers",
@@ -586,7 +662,12 @@
     "settings": "Paramètres",
     "usersManagement": "Gestion des Utilisateurs",
     "logout": "Déconnexion",
-    "customization": "Personnalisation"
+    "customization": "Personnalisation",
+    "admin": "Admin",
+    "account": "Compte",
+    "roleAdmin": "Administrateur",
+    "roleUser": "Membre",
+    "storage": "Stockage"
   },
   "navigation": {
     "dashboard": "Tableau de bord"
@@ -655,6 +736,97 @@
       "imageRemoved": "Image de profil supprimée avec succès"
     },
     "pageTitle": "Profil"
+  },
+  "public": {
+    "login": {
+      "title": "Bon",
+      "accent": "retour.",
+      "firstTitle": "Configurons",
+      "firstAccent": "tout.",
+      "sub": "Utilisez votre compte {app} ou un fournisseur connecté.",
+      "firstSub": "Créez le premier compte administrateur pour cette installation.",
+      "or": "ou par e-mail",
+      "trust": {
+        "server": {
+          "title": "Reste sur ce serveur",
+          "text": "Rien ne quitte l'installation à laquelle vous vous connectez."
+        },
+        "expire": {
+          "title": "Des liens qui expirent",
+          "text": "Mots de passe, limites de téléchargement et dates de fin sur chaque partage."
+        },
+        "receive": {
+          "title": "Recevez sans compte",
+          "text": "Toute personne disposant d'un lien de réception peut vous envoyer des fichiers."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Rien ici,} =1 {Un fichier,} other {# fichiers,}}",
+      "accent": "tout est prêt pour vous.",
+      "via": "via {app}",
+      "passwordVerified": "Mot de passe vérifié",
+      "expires": "Expire le {date}",
+      "downloaded": "téléchargé {count, plural, =1 {une fois} other {# fois}}",
+      "preview": "Aperçu",
+      "noteZip": "Se télécharge sous forme d'un seul ZIP.",
+      "noteSingle": "Se télécharge directement sur votre appareil.",
+      "folder": "Dossier"
+    },
+    "kind": {
+      "video": "Vidéo",
+      "image": "Image",
+      "document": "Document",
+      "archive": "Archive",
+      "other": "Fichier"
+    },
+    "receive": {
+      "eyebrow": "Lien de réception",
+      "title": "Envoyez vos fichiers",
+      "accent": "à {name}.",
+      "uploading": "Envoi en cours · {percent}%",
+      "limits": {
+        "size": "Jusqu'à {size}",
+        "files": "{count, plural, =1 {# fichier} other {# fichiers}} par envoi",
+        "until": "Ouvert jusqu'au {date}",
+        "encrypted": "Chiffré pendant le transfert"
+      },
+      "drop": {
+        "text": "ou choisissez depuis votre ordinateur.",
+        "choose": "Choisir des fichiers"
+      },
+      "progress": {
+        "keepOpen": "Gardez cet onglet ouvert jusqu'à la fin de l'envoi.",
+        "ready": "Prêt à envoyer."
+      },
+      "send": "Envoyer {count, plural, =0 {fichiers} =1 {# fichier} other {# fichiers}}"
+    },
+    "recover": {
+      "title": "Mot de passe",
+      "accent": "oublié ?",
+      "text": "Saisissez votre e-mail et nous vous enverrons un lien pour en choisir un nouveau."
+    },
+    "reset": {
+      "title": "Choisissez un nouveau",
+      "accent": "mot de passe.",
+      "text": "Optez pour quelque chose de long. Une phrase fonctionne mieux que des symboles."
+    },
+    "invite": {
+      "title": "Vous êtes",
+      "accent": "invité.",
+      "text": "Créez votre compte pour commencer à envoyer et recevoir des fichiers."
+    },
+    "state": {
+      "backHome": "Retour à l'accueil",
+      "password": {
+        "title": "Ce lien est",
+        "text": "protégé par un mot de passe. Demandez-le à la personne qui vous l'a envoyé."
+      },
+      "missing": {
+        "title": "Rien ici.",
+        "text": "Ce lien n'existe pas, ou il a été supprimé."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "Code QR de Partage",

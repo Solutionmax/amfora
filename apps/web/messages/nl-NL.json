@@ -232,6 +232,56 @@
     "pageTitle": "Aanpassing",
     "preview": {
       "title": "Voorbeeld"
+    },
+    "v2": {
+      "subline": "Wat elke bezoeker ziet. Wijzigingen gelden voor alle pagina's, inclusief de publieke links.",
+      "save": "Wijzigingen opslaan",
+      "saved": "Opgeslagen.",
+      "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
+      "brand": {
+        "title": "Merk",
+        "name": "Naam",
+        "description": "Beschrijving",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG of WebP. Vervangt het beeldmerk overal en wordt gebruikt als favicon."
+      },
+      "appearance": {
+        "title": "Kleur en vorm",
+        "accent": "Accentkleur",
+        "accentHex": "Accentkleur als hex",
+        "accentHint": "Knoppen, links, actieve navigatie en de kleurvlakken volgen deze kleur.",
+        "radius": "Randradius",
+        "radiusHint": "{px} px. Scherper voelt technischer, ronder voelt vriendelijker.",
+        "font": "Lettertype",
+        "fontDefault": "Standaard (Archivo en Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Betaald",
+        "unlockTitle": "Ontgrendel volledige white-label",
+        "unlockText": "Je eigen achtergrond, eigen CSS en geen Amfora-vermelding. Eén organisatie, onbeperkt aantal installaties, verloopt nooit.",
+        "buy": "Brandpack aanschaffen · € 79",
+        "paste": "Plak je brandpack hier",
+        "activate": "Activeren",
+        "activated": "Brandpack geactiveerd.",
+        "removed": "Brandpack verwijderd.",
+        "active": "Brandpack actief voor {organisation} · uitgegeven op {date}",
+        "remove": "Verwijderen",
+        "credit": "Toon \"Mogelijk gemaakt door Amfora\"",
+        "creditHint": "Uit verbergt de vermelding op elke pagina. De open source-vermelding blijft in de broncode staan.",
+        "background": "Achtergrond van publieke pagina's",
+        "backgroundHint": "Wordt getoond achter de inlog-, download- en ontvangstpagina's. Tot 3 MB; opgeslagen als WebP.",
+        "backgroundUpload": "Afbeelding uploaden",
+        "backgroundReplace": "Afbeelding vervangen",
+        "backgroundRemove": "Verwijderen",
+        "css": "Aangepaste CSS",
+        "cssHint": "Wordt als laatste geladen, op elke pagina. Imports en externe URL's worden verwijderd.",
+        "cssSave": "CSS opslaan"
+      },
+      "preview": {
+        "title": "Voorbeeld",
+        "page": "Downloadpagina"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "description": "Uw meest recent geüploade bestanden",
       "title": "Recente Bestanden"
+    },
+    "greeting": {
+      "morning": "Goedemorgen, {name}.",
+      "afternoon": "Goedemiddag, {name}.",
+      "evening": "Goedenavond, {name}.",
+      "night": "Nog wakker, {name}?"
+    },
+    "subline": "{shares, plural, =0 {Nog geen delen} =1 {# deel} other {# delen}}, {files, plural, =0 {geen bestanden} =1 {# bestand} other {# bestanden}}.",
+    "hero": {
+      "send": {
+        "title": "Bestanden versturen",
+        "text": "Kies bestanden, stel een wachtwoord en einddatum in, deel de link."
+      },
+      "receive": {
+        "title": "Bestanden ontvangen",
+        "text": "Maak een link waar iedereen bestanden naartoe kan uploaden, geen account nodig."
+      }
+    },
+    "stats": {
+      "storage": "Gebruikte opslag",
+      "storageOf": "van {total}",
+      "shares": "Delen",
+      "downloads": "Downloads",
+      "downloadsDetail": "over alle bestanden",
+      "files": "Bestanden"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "moveItemsFailed": "Verplaatsen van items mislukt. Probeer het opnieuw.",
       "cannotMoveHere": "Kan items niet naar deze locatie verplaatsen"
     },
-    "openFolder": "Map openen"
+    "openFolder": "Map openen",
+    "subline": "{count, plural, =0 {Nog geen bestanden} =1 {# bestand} other {# bestanden}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Bestanden tabel",
@@ -586,7 +662,12 @@
     "settings": "Instellingen",
     "usersManagement": "Gebruikersbeheer",
     "logout": "Uitloggen",
-    "customization": "Aanpassen"
+    "customization": "Aanpassen",
+    "admin": "Beheer",
+    "account": "Account",
+    "roleAdmin": "Beheerder",
+    "roleUser": "Lid",
+    "storage": "Opslag"
   },
   "navigation": {
     "dashboard": "Controlepaneel"
@@ -655,6 +736,97 @@
       "imageRemoved": "Profielafbeelding succesvol verwijderd"
     },
     "pageTitle": "Profiel"
+  },
+  "public": {
+    "login": {
+      "title": "Welkom",
+      "accent": "terug.",
+      "firstTitle": "Laten we",
+      "firstAccent": "alles instellen.",
+      "sub": "Gebruik je {app}-account of een gekoppelde provider.",
+      "firstSub": "Maak het eerste beheerdersaccount voor deze installatie aan.",
+      "or": "of met e-mail",
+      "trust": {
+        "server": {
+          "title": "Blijft op deze server",
+          "text": "Niets verlaat de installatie waar je op inlogt."
+        },
+        "expire": {
+          "title": "Links die verlopen",
+          "text": "Wachtwoorden, downloadlimieten en einddatums bij elk deel."
+        },
+        "receive": {
+          "title": "Ontvangen zonder account",
+          "text": "Iedereen met een ontvangstlink kan je bestanden sturen."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Niets hier,} =1 {Eén bestand,} other {# bestanden,}}",
+      "accent": "klaar voor je.",
+      "via": "via {app}",
+      "passwordVerified": "Wachtwoord geverifieerd",
+      "expires": "Verloopt {date}",
+      "downloaded": "gedownload {count, plural, =1 {1 keer} other {# keer}}",
+      "preview": "Voorbeeld",
+      "noteZip": "Wordt gedownload als één ZIP-bestand.",
+      "noteSingle": "Wordt direct naar je apparaat gedownload.",
+      "folder": "Map"
+    },
+    "kind": {
+      "video": "Video",
+      "image": "Afbeelding",
+      "document": "Document",
+      "archive": "Archief",
+      "other": "Bestand"
+    },
+    "receive": {
+      "eyebrow": "Ontvangstlink",
+      "title": "Stuur je bestanden",
+      "accent": "naar {name}.",
+      "uploading": "Uploaden · {percent}%",
+      "limits": {
+        "size": "Tot {size}",
+        "files": "{count, plural, =1 {# bestand} other {# bestanden}} per upload",
+        "until": "Open tot {date}",
+        "encrypted": "Versleuteld tijdens verzending"
+      },
+      "drop": {
+        "text": "of kies bestanden op je computer.",
+        "choose": "Bestanden kiezen"
+      },
+      "progress": {
+        "keepOpen": "Houd dit tabblad open tot de upload klaar is.",
+        "ready": "Klaar om te versturen."
+      },
+      "send": "Verstuur {count, plural, =0 {bestanden} =1 {# bestand} other {# bestanden}}"
+    },
+    "recover": {
+      "title": "Wachtwoord",
+      "accent": "vergeten?",
+      "text": "Vul je e-mailadres in en we sturen je een link om een nieuw wachtwoord te kiezen."
+    },
+    "reset": {
+      "title": "Kies een nieuw",
+      "accent": "wachtwoord.",
+      "text": "Kies iets langs. Een zin werkt beter dan symbolen."
+    },
+    "invite": {
+      "title": "Je bent",
+      "accent": "uitgenodigd.",
+      "text": "Maak je account aan om bestanden te versturen en te ontvangen."
+    },
+    "state": {
+      "backHome": "Terug naar start",
+      "password": {
+        "title": "Deze link is",
+        "text": "beveiligd met een wachtwoord. Vraag het aan de afzender."
+      },
+      "missing": {
+        "title": "Niets hier.",
+        "text": "Deze link bestaat niet, of is verwijderd."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "QR Code Delen",

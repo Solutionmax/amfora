@@ -232,6 +232,56 @@
     "pageTitle": "カスタマイズ",
     "preview": {
       "title": "プレビュー"
+    },
+    "v2": {
+      "subline": "すべての訪問者に表示される内容です。変更は公開リンクを含むすべてのページに適用されます。",
+      "save": "変更を保存",
+      "saved": "保存しました。",
+      "saveFailed": "保存できませんでした。もう一度お試しください。",
+      "brand": {
+        "title": "ブランド",
+        "name": "名前",
+        "description": "説明",
+        "logo": "ロゴ",
+        "logoHint": "PNG、SVG、WebPに対応。すべての箇所のロゴマークを置き換え、faviconとしても使用されます。"
+      },
+      "appearance": {
+        "title": "色と形",
+        "accent": "アクセントカラー",
+        "accentHex": "アクセントカラー（16進数）",
+        "accentHint": "ボタン、リンク、アクティブなナビゲーション、配色全体にこの色が反映されます。",
+        "radius": "角丸",
+        "radiusHint": "{px}px。鋭角ほどテクニカルな印象に、丸みが強いほど親しみやすい印象になります。",
+        "font": "フォント",
+        "fontDefault": "デフォルト（ArchivoとPublic Sans）"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "有料",
+        "unlockTitle": "フルホワイトラベルを解放",
+        "unlockText": "独自の背景画像、カスタムCSS、Amforaのクレジット表示なし。1組織につき、インストール数無制限、有効期限なし。",
+        "buy": "Brandpackを購入 · €79",
+        "paste": "Brandpackをここに貼り付け",
+        "activate": "有効化",
+        "activated": "Brandpackを有効化しました。",
+        "removed": "Brandpackを削除しました。",
+        "active": "{organisation}向けにBrandpackが有効です · 発行日 {date}",
+        "remove": "削除",
+        "credit": "「提供: Amfora」を表示",
+        "creditHint": "オフにするとすべてのページでクレジットが非表示になります。オープンソースの表示はソースコードに残ります。",
+        "background": "公開ページの背景",
+        "backgroundHint": "ログイン、ダウンロード、受信ページの背景に表示されます。最大3MB、WebPとして保存されます。",
+        "backgroundUpload": "画像をアップロード",
+        "backgroundReplace": "画像を変更",
+        "backgroundRemove": "削除",
+        "css": "カスタムCSS",
+        "cssHint": "すべてのページで最後に読み込まれます。importや外部URLは削除されます。",
+        "cssSave": "CSSを保存"
+      },
+      "preview": {
+        "title": "プレビュー",
+        "page": "ダウンロードページ"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "最近のファイル",
       "description": "最近アップロードされたファイル"
+    },
+    "greeting": {
+      "morning": "おはようございます、{name}さん。",
+      "afternoon": "こんにちは、{name}さん。",
+      "evening": "こんばんは、{name}さん。",
+      "night": "まだ起きていますか、{name}さん？"
+    },
+    "subline": "{shares, plural, =0 {共有はまだありません} =1 {#件の共有} other {#件の共有}}、{files, plural, =0 {ファイルなし} =1 {#件のファイル} other {#件のファイル}}。",
+    "hero": {
+      "send": {
+        "title": "ファイルを送信",
+        "text": "ファイルを選び、パスワードと終了日を設定して、リンクを共有しましょう。"
+      },
+      "receive": {
+        "title": "ファイルを受信",
+        "text": "誰でもアップロードできるリンクを作成できます。アカウントは不要です。"
+      }
+    },
+    "stats": {
+      "storage": "使用中のストレージ",
+      "storageOf": "{total}中",
+      "shares": "共有",
+      "downloads": "ダウンロード",
+      "downloadsDetail": "全ファイル合計",
+      "files": "ファイル"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "moveItemsFailed": "アイテムの移動に失敗しました。もう一度お試しください。",
       "cannotMoveHere": "この場所にアイテムを移動できません"
     },
-    "openFolder": "フォルダを開く"
+    "openFolder": "フォルダを開く",
+    "subline": "{count, plural, =0 {ファイルはまだありません} =1 {#件のファイル} other {#件のファイル}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "ファイルテーブル",
@@ -586,7 +662,12 @@
     "settings": "設定",
     "usersManagement": "ユーザー管理",
     "logout": "ログアウト",
-    "customization": "カスタマイズ"
+    "customization": "カスタマイズ",
+    "admin": "管理",
+    "account": "アカウント",
+    "roleAdmin": "管理者",
+    "roleUser": "メンバー",
+    "storage": "ストレージ"
   },
   "navigation": {
     "dashboard": "ダッシュボード"
@@ -655,6 +736,97 @@
       "imageRemoved": "プロフィール画像が正常に削除されました"
     },
     "pageTitle": "プロフィール"
+  },
+  "public": {
+    "login": {
+      "title": "ようこそ、",
+      "accent": "戻ってきましたね。",
+      "firstTitle": "さあ、",
+      "firstAccent": "セットアップを始めましょう。",
+      "sub": "{app}アカウントまたは連携済みのプロバイダーでログインしてください。",
+      "firstSub": "このインストールの最初の管理者アカウントを作成してください。",
+      "or": "またはメールアドレスで",
+      "trust": {
+        "server": {
+          "title": "このサーバーだけで完結",
+          "text": "ログイン先のインストール環境の外部にデータが出ることはありません。"
+        },
+        "expire": {
+          "title": "期限付きリンク",
+          "text": "すべての共有にパスワード、ダウンロード回数の上限、終了日を設定できます。"
+        },
+        "receive": {
+          "title": "アカウント不要で受信",
+          "text": "受信リンクを持っている人なら誰でもファイルを送信できます。"
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {ここには何もありません、} =1 {1つのファイル、} other {#件のファイル、}}",
+      "accent": "準備できました。",
+      "via": "{app}経由",
+      "passwordVerified": "パスワードを確認しました",
+      "expires": "有効期限: {date}",
+      "downloaded": "{count, plural, =1 {1回} other {#回}}ダウンロード済み",
+      "preview": "プレビュー",
+      "noteZip": "1つのZIPファイルとしてダウンロードされます。",
+      "noteSingle": "お使いの端末に直接ダウンロードされます。",
+      "folder": "フォルダ"
+    },
+    "kind": {
+      "video": "動画",
+      "image": "画像",
+      "document": "ドキュメント",
+      "archive": "アーカイブ",
+      "other": "ファイル"
+    },
+    "receive": {
+      "eyebrow": "受信リンク",
+      "title": "ファイルを送信",
+      "accent": "{name}へ。",
+      "uploading": "アップロード中 · {percent}%",
+      "limits": {
+        "size": "最大{size}",
+        "files": "1回のアップロードにつき{count, plural, =1 {#件} other {#件}}",
+        "until": "{date}まで受付",
+        "encrypted": "転送時は暗号化"
+      },
+      "drop": {
+        "text": "またはお使いのコンピューターから選択してください。",
+        "choose": "ファイルを選択"
+      },
+      "progress": {
+        "keepOpen": "アップロードが完了するまでこのタブを閉じないでください。",
+        "ready": "送信準備ができました。"
+      },
+      "send": "{count, plural, =0 {ファイルを送信} =1 {#件のファイルを送信} other {#件のファイルを送信}}"
+    },
+    "recover": {
+      "title": "パスワードを",
+      "accent": "お忘れですか？",
+      "text": "メールアドレスを入力すると、新しいパスワードを設定するためのリンクをお送りします。"
+    },
+    "reset": {
+      "title": "新しい",
+      "accent": "パスワードを設定してください。",
+      "text": "長めのものを選んでください。記号より文章のほうが安全です。"
+    },
+    "invite": {
+      "title": "あなたは",
+      "accent": "招待されています。",
+      "text": "アカウントを作成して、ファイルの送受信を始めましょう。"
+    },
+    "state": {
+      "backHome": "トップに戻る",
+      "password": {
+        "title": "このリンクは",
+        "text": "パスワードで保護されています。送信者にお問い合わせください。"
+      },
+      "missing": {
+        "title": "何もありません。",
+        "text": "このリンクは存在しないか、削除されました。"
+      }
+    }
   },
   "qrCodeModal": {
     "title": "QRコードを共有",

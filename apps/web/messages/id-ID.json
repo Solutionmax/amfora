@@ -232,6 +232,56 @@
     "pageTitle": "Kustomisasi",
     "preview": {
       "title": "Pratinjau"
+    },
+    "v2": {
+      "subline": "Yang dilihat setiap pengunjung. Perubahan berlaku untuk semua halaman, termasuk tautan publik.",
+      "save": "Simpan perubahan",
+      "saved": "Tersimpan.",
+      "saveFailed": "Gagal menyimpan. Silakan coba lagi.",
+      "brand": {
+        "title": "Merek",
+        "name": "Nama",
+        "description": "Deskripsi",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG, atau WebP. Menggantikan lambang di semua tempat dan digunakan sebagai favicon."
+      },
+      "appearance": {
+        "title": "Warna dan bentuk",
+        "accent": "Warna aksen",
+        "accentHex": "Warna aksen dalam format hex",
+        "accentHint": "Tombol, tautan, navigasi aktif, dan gradasi warna mengikuti warna ini.",
+        "radius": "Radius sudut",
+        "radiusHint": "{px} px. Semakin tajam terasa lebih teknis, semakin bulat terasa lebih ramah.",
+        "font": "Font",
+        "fontDefault": "Default (Archivo dan Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Berbayar",
+        "unlockTitle": "Buka white label penuh",
+        "unlockText": "Latar belakang Anda sendiri, CSS kustom, dan tanpa kredit Amfora. Satu organisasi, instalasi tanpa batas, tidak pernah kedaluwarsa.",
+        "buy": "Dapatkan brandpack · €79",
+        "paste": "Tempel brandpack Anda di sini",
+        "activate": "Aktifkan",
+        "activated": "Brandpack diaktifkan.",
+        "removed": "Brandpack dihapus.",
+        "active": "Brandpack aktif untuk {organisation} · diterbitkan {date}",
+        "remove": "Hapus",
+        "credit": "Tampilkan \"Ditenagai oleh Amfora\"",
+        "creditHint": "Nonaktifkan untuk menyembunyikan kredit di semua halaman. Pemberitahuan open-source tetap ada di source code.",
+        "background": "Latar belakang halaman publik",
+        "backgroundHint": "Ditampilkan di belakang halaman masuk, unduhan, dan terima. Hingga 3 MB; disimpan sebagai WebP.",
+        "backgroundUpload": "Unggah gambar",
+        "backgroundReplace": "Ganti gambar",
+        "backgroundRemove": "Hapus",
+        "css": "CSS Kustom",
+        "cssHint": "Dimuat paling akhir, di setiap halaman. Import dan URL eksternal akan dihapus.",
+        "cssSave": "Simpan CSS"
+      },
+      "preview": {
+        "title": "Pratinjau",
+        "page": "Halaman unduhan"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "File Terbaru",
       "description": "File yang baru saja Anda unggah"
+    },
+    "greeting": {
+      "morning": "Selamat pagi, {name}.",
+      "afternoon": "Selamat siang, {name}.",
+      "evening": "Selamat malam, {name}.",
+      "night": "Masih belum tidur, {name}?"
+    },
+    "subline": "{shares, plural, =0 {Belum ada bagikan} =1 {# bagikan} other {# bagikan}}, {files, plural, =0 {tidak ada file} =1 {# file} other {# file}}.",
+    "hero": {
+      "send": {
+        "title": "Kirim file",
+        "text": "Pilih file, atur kata sandi dan tanggal berakhir, lalu bagikan tautannya."
+      },
+      "receive": {
+        "title": "Terima file",
+        "text": "Buat tautan yang bisa diunggahi siapa saja, tanpa perlu akun."
+      }
+    },
+    "stats": {
+      "storage": "Penyimpanan terpakai",
+      "storageOf": "dari {total}",
+      "shares": "Bagikan",
+      "downloads": "Unduhan",
+      "downloadsDetail": "di semua file",
+      "files": "File"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "table": "Tabel",
       "grid": "Grid",
       "label": "Tampilan"
-    }
+    },
+    "subline": "{count, plural, =0 {Belum ada file} =1 {# file} other {# file}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Tabel file",
@@ -586,7 +662,12 @@
     "customization": "Kustomisasi",
     "settings": "Pengaturan",
     "usersManagement": "Manajemen Pengguna",
-    "logout": "Keluar"
+    "logout": "Keluar",
+    "admin": "Admin",
+    "account": "Akun",
+    "roleAdmin": "Administrator",
+    "roleUser": "Anggota",
+    "storage": "Penyimpanan"
   },
   "navigation": {
     "dashboard": "Dasbor"
@@ -655,6 +736,97 @@
       "imageRemoved": "Gambar profil berhasil dihapus"
     },
     "pageTitle": "Profil"
+  },
+  "public": {
+    "login": {
+      "title": "Selamat datang",
+      "accent": "kembali.",
+      "firstTitle": "Ayo",
+      "firstAccent": "siapkan semuanya.",
+      "sub": "Gunakan akun {app} Anda atau penyedia yang terhubung.",
+      "firstSub": "Buat akun administrator pertama untuk instalasi ini.",
+      "or": "atau dengan email",
+      "trust": {
+        "server": {
+          "title": "Tetap di server ini",
+          "text": "Tidak ada yang keluar dari instalasi tempat Anda masuk."
+        },
+        "expire": {
+          "title": "Tautan yang kedaluwarsa",
+          "text": "Kata sandi, batas unduhan, dan tanggal berakhir pada setiap berbagi."
+        },
+        "receive": {
+          "title": "Menerima tanpa akun",
+          "text": "Siapa pun yang memiliki tautan terima dapat mengirimkan file kepada Anda."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Tidak ada apa-apa di sini,} =1 {Satu file,} other {# file,}}",
+      "accent": "siap untuk Anda.",
+      "via": "melalui {app}",
+      "passwordVerified": "Kata sandi terverifikasi",
+      "expires": "Kedaluwarsa {date}",
+      "downloaded": "diunduh {count, plural, =1 {sekali} other {# kali}}",
+      "preview": "Pratinjau",
+      "noteZip": "Diunduh sebagai satu file ZIP.",
+      "noteSingle": "Diunduh langsung ke perangkat Anda.",
+      "folder": "Folder"
+    },
+    "kind": {
+      "video": "Video",
+      "image": "Gambar",
+      "document": "Dokumen",
+      "archive": "Arsip",
+      "other": "File"
+    },
+    "receive": {
+      "eyebrow": "Tautan terima",
+      "title": "Kirim file Anda",
+      "accent": "ke {name}.",
+      "uploading": "Mengunggah · {percent}%",
+      "limits": {
+        "size": "Hingga {size}",
+        "files": "{count, plural, =1 {# file} other {# file}} per unggahan",
+        "until": "Terbuka hingga {date}",
+        "encrypted": "Dienkripsi selama pengiriman"
+      },
+      "drop": {
+        "text": "atau pilih dari komputer Anda.",
+        "choose": "Pilih file"
+      },
+      "progress": {
+        "keepOpen": "Biarkan tab ini terbuka sampai unggahan selesai.",
+        "ready": "Siap dikirim."
+      },
+      "send": "Kirim {count, plural, =0 {file} =1 {# file} other {# file}}"
+    },
+    "recover": {
+      "title": "Lupa",
+      "accent": "kata sandi?",
+      "text": "Masukkan email Anda dan kami akan mengirimkan tautan untuk memilih kata sandi baru."
+    },
+    "reset": {
+      "title": "Pilih",
+      "accent": "kata sandi baru.",
+      "text": "Pilih kata sandi yang panjang. Sebuah kalimat lebih baik daripada sekadar simbol."
+    },
+    "invite": {
+      "title": "Anda",
+      "accent": "diundang.",
+      "text": "Buat akun Anda untuk mulai mengirim dan menerima file."
+    },
+    "state": {
+      "backHome": "Kembali ke awal",
+      "password": {
+        "title": "Tautan ini",
+        "text": "dilindungi dengan kata sandi. Tanyakan kepada orang yang mengirimkannya."
+      },
+      "missing": {
+        "title": "Tidak ada apa-apa di sini.",
+        "text": "Tautan ini tidak ada, atau telah dihapus."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "Bagikan Kode QR",

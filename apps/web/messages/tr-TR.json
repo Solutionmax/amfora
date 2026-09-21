@@ -232,6 +232,56 @@
     "pageTitle": "Özelleştirme",
     "preview": {
       "title": "Önizleme"
+    },
+    "v2": {
+      "subline": "Her ziyaretçinin gördüğü şey. Değişiklikler, herkese açık bağlantılar dahil tüm sayfalara uygulanır.",
+      "save": "Değişiklikleri Kaydet",
+      "saved": "Kaydedildi.",
+      "saveFailed": "Kaydedilemedi. Tekrar deneyin.",
+      "brand": {
+        "title": "Marka",
+        "name": "Ad",
+        "description": "Açıklama",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG veya WebP. İşareti her yerde değiştirir ve favicon olarak kullanılır."
+      },
+      "appearance": {
+        "title": "Renk ve Şekil",
+        "accent": "Vurgu Rengi",
+        "accentHex": "Vurgu Rengi (Hex)",
+        "accentHint": "Düğmeler, bağlantılar, etkin gezinme ve renk geçişleri buna göre belirlenir.",
+        "radius": "Köşe Yuvarlaklığı",
+        "radiusHint": "{px} px. Daha keskin köşeler daha teknik, daha yuvarlak köşeler daha samimi hissettirir.",
+        "font": "Yazı Tipi",
+        "fontDefault": "Varsayılan (Archivo ve Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Ücretli",
+        "unlockTitle": "Tam White-Label Erişimini Açın",
+        "unlockText": "Kendi arka planınız, özel CSS ve Amfora ibaresi olmadan. Tek organizasyon, sınırsız kurulum, asla sona ermez.",
+        "buy": "Brandpack Satın Al · 79 €",
+        "paste": "Brandpack'inizi buraya yapıştırın",
+        "activate": "Etkinleştir",
+        "activated": "Brandpack Etkinleştirildi.",
+        "removed": "Brandpack Kaldırıldı.",
+        "active": "{organisation} İçin Brandpack Etkin · {date} Tarihinde Verildi",
+        "remove": "Kaldır",
+        "credit": "\"Tarafından destekleniyor: Amfora\" Yazısını Göster",
+        "creditHint": "Kapatıldığında \"Tarafından destekleniyor: Amfora\" ifadesi her sayfada gizlenir. Açık kaynak bildirimi kaynak kodunda kalmaya devam eder.",
+        "background": "Genel Sayfa Arka Planı",
+        "backgroundHint": "Giriş, indirme ve alma sayfalarının arkasında gösterilir. En fazla 3 MB; WebP olarak saklanır.",
+        "backgroundUpload": "Görsel Yükle",
+        "backgroundReplace": "Görseli Değiştir",
+        "backgroundRemove": "Kaldır",
+        "css": "Özel CSS",
+        "cssHint": "Her sayfada en son yüklenir. İçe aktarmalar ve dış URL'ler kaldırılır.",
+        "cssSave": "CSS'i Kaydet"
+      },
+      "preview": {
+        "title": "Önizleme",
+        "page": "İndirme Sayfası"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "Son Dosyalar",
       "description": "En son yüklediğiniz dosyalar"
+    },
+    "greeting": {
+      "morning": "Günaydın, {name}.",
+      "afternoon": "İyi günler, {name}.",
+      "evening": "İyi akşamlar, {name}.",
+      "night": "Hâlâ ayakta mısınız, {name}?"
+    },
+    "subline": "{shares, plural, =0 {Henüz paylaşım yok} =1 {# paylaşım} other {# paylaşım}}, {files, plural, =0 {dosya yok} =1 {# dosya} other {# dosya}}.",
+    "hero": {
+      "send": {
+        "title": "Dosya Gönder",
+        "text": "Dosyaları seçin, bir şifre ve bitiş tarihi belirleyin, bağlantıyı paylaşın."
+      },
+      "receive": {
+        "title": "Dosya Al",
+        "text": "Herkesin dosya yükleyebileceği bir bağlantı oluşturun, hesap gerekmez."
+      }
+    },
+    "stats": {
+      "storage": "Kullanılan Depolama",
+      "storageOf": "{total} üzerinden",
+      "shares": "Paylaşımlar",
+      "downloads": "İndirmeler",
+      "downloadsDetail": "tüm dosyalarda",
+      "files": "Dosyalar"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "moveItemsFailed": "Öğeler taşınamadı. Lütfen tekrar deneyin.",
       "cannotMoveHere": "Öğeler bu konuma taşınamaz"
     },
-    "openFolder": "Klasörü aç"
+    "openFolder": "Klasörü aç",
+    "subline": "{count, plural, =0 {Henüz dosya yok} =1 {# dosya} other {# dosya}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Dosya Tablosu",
@@ -586,7 +662,12 @@
     "settings": "Ayarlar",
     "usersManagement": "Kullanıcı Yönetimi",
     "logout": "Oturumu Kapat",
-    "customization": "Özelleştirme"
+    "customization": "Özelleştirme",
+    "admin": "Yönetim",
+    "account": "Hesap",
+    "roleAdmin": "Yönetici",
+    "roleUser": "Üye",
+    "storage": "Depolama"
   },
   "navigation": {
     "dashboard": "Gösterge Paneli"
@@ -655,6 +736,97 @@
       "imageRemoved": "Profil resmi başarıyla kaldırıldı"
     },
     "pageTitle": "Profil"
+  },
+  "public": {
+    "login": {
+      "title": "Tekrar",
+      "accent": "Hoş Geldiniz.",
+      "firstTitle": "Hadi",
+      "firstAccent": "Kurulumu Yapalım.",
+      "sub": "{app} hesabınızı veya bağlı bir sağlayıcıyı kullanın.",
+      "firstSub": "Bu kurulum için ilk yönetici hesabını oluşturun.",
+      "or": "veya e-posta ile",
+      "trust": {
+        "server": {
+          "title": "Bu Sunucuda Kalır",
+          "text": "Hiçbir veri, giriş yaptığınız kurulumun dışına çıkmaz."
+        },
+        "expire": {
+          "title": "Süresi Dolan Bağlantılar",
+          "text": "Her paylaşımda şifreler, indirme limitleri ve bitiş tarihleri bulunur."
+        },
+        "receive": {
+          "title": "Hesapsız Dosya Alın",
+          "text": "Alma bağlantısına sahip herkes size dosya gönderebilir."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Burada Hiçbir Şey Yok,} =1 {Bir Dosya,} other {# Dosya,}}",
+      "accent": "Sizin İçin Hazır.",
+      "via": "{app} aracılığıyla",
+      "passwordVerified": "Şifre Doğrulandı",
+      "expires": "Son Kullanma Tarihi: {date}",
+      "downloaded": "{count, plural, =1 {bir kez} other {# kez}} indirildi",
+      "preview": "Önizleme",
+      "noteZip": "Tek bir ZIP olarak indirilir.",
+      "noteSingle": "Doğrudan cihazınıza indirilir.",
+      "folder": "Klasör"
+    },
+    "kind": {
+      "video": "Video",
+      "image": "Görsel",
+      "document": "Belge",
+      "archive": "Arşiv",
+      "other": "Dosya"
+    },
+    "receive": {
+      "eyebrow": "Alma Bağlantısı",
+      "title": "Dosyalarınızı Gönderin",
+      "accent": "{name} İçin.",
+      "uploading": "Yükleniyor · %{percent}",
+      "limits": {
+        "size": "En Fazla {size}",
+        "files": "Yükleme Başına {count, plural, =1 {# dosya} other {# dosya}}",
+        "until": "{date} Tarihine Kadar Açık",
+        "encrypted": "Aktarım Sırasında Şifrelenir"
+      },
+      "drop": {
+        "text": "veya bilgisayarınızdan seçin.",
+        "choose": "Dosya Seçin"
+      },
+      "progress": {
+        "keepOpen": "Yükleme tamamlanana kadar bu sekmeyi açık tutun.",
+        "ready": "Göndermeye Hazır."
+      },
+      "send": "{count, plural, =0 {Dosyaları} =1 {# dosyayı} other {# dosyayı}} Gönder"
+    },
+    "recover": {
+      "title": "Şifrenizi mi",
+      "accent": "Unuttunuz?",
+      "text": "E-posta adresinizi girin, size yeni bir şifre belirlemeniz için bir bağlantı gönderelim."
+    },
+    "reset": {
+      "title": "Yeni Bir",
+      "accent": "Şifre Seçin.",
+      "text": "Uzun bir şey seçin; semboller yerine bir cümle daha iyi sonuç verir."
+    },
+    "invite": {
+      "title": "Davet",
+      "accent": "Edildiniz.",
+      "text": "Dosya göndermeye ve almaya başlamak için hesabınızı oluşturun."
+    },
+    "state": {
+      "backHome": "Başa Dön",
+      "password": {
+        "title": "Bu Bağlantı",
+        "text": "bir şifreyle korunuyor. Gönderen kişiye sorun."
+      },
+      "missing": {
+        "title": "Burada Bir Şey Yok.",
+        "text": "Bu bağlantı mevcut değil veya kaldırılmış."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "QR Kodu Paylaş",

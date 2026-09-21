@@ -232,6 +232,56 @@
     "pageTitle": "התאמה אישית",
     "preview": {
       "title": "תצוגה מקדימה"
+    },
+    "v2": {
+      "subline": "מה שכל מבקר רואה. השינויים חלים על כל הדפים, כולל הקישורים הציבוריים.",
+      "save": "שמור שינויים",
+      "saved": "נשמר.",
+      "saveFailed": "לא ניתן היה לשמור. נסה שוב.",
+      "brand": {
+        "title": "מותג",
+        "name": "שם",
+        "description": "תיאור",
+        "logo": "לוגו",
+        "logoHint": "PNG, SVG או WebP. מחליף את הסימן בכל מקום ומשמש כפייביקון."
+      },
+      "appearance": {
+        "title": "צבע וצורה",
+        "accent": "צבע הדגשה",
+        "accentHex": "צבע הדגשה כ-hex",
+        "accentHint": "כפתורים, קישורים, ניווט פעיל ושכבות הצבע מתאימים לצבע הזה.",
+        "radius": "רדיוס פינות",
+        "radiusHint": "{px} פיקסלים. פינות חדות מרגישות טכניות יותר, פינות עגולות מרגישות ידידותיות יותר.",
+        "font": "גופן",
+        "fontDefault": "ברירת מחדל (Archivo ו-Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "בתשלום",
+        "unlockTitle": "פתח וייט-לייבל מלא",
+        "unlockText": "רקע משלך, CSS מותאם אישית, וללא קרדיט ל-Amfora. ארגון אחד, התקנות ללא הגבלה, לעולם לא פג תוקף.",
+        "buy": "קבל Brandpack · 79 €",
+        "paste": "הדבק כאן את ה-Brandpack שלך",
+        "activate": "הפעל",
+        "activated": "ה-Brandpack הופעל.",
+        "removed": "ה-Brandpack הוסר.",
+        "active": "Brandpack פעיל עבור {organisation} · הונפק ב-{date}",
+        "remove": "הסר",
+        "credit": "הצג \"מופעל על ידי Amfora\"",
+        "creditHint": "כיבוי מסתיר את הקרדיט בכל דף. הודעת הקוד הפתוח נשארת בקוד המקור.",
+        "background": "רקע לדפים ציבוריים",
+        "backgroundHint": "מוצג מאחורי דפי הכניסה, ההורדה והקבלה. עד 3MB; נשמר כ-WebP.",
+        "backgroundUpload": "העלה תמונה",
+        "backgroundReplace": "החלף תמונה",
+        "backgroundRemove": "הסר",
+        "css": "CSS מותאם אישית",
+        "cssHint": "נטען אחרון, בכל דף. ייבוא וכתובות URL חיצוניות מוסרים.",
+        "cssSave": "שמור CSS"
+      },
+      "preview": {
+        "title": "תצוגה מקדימה",
+        "page": "דף הורדה"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "קבצים אחרונים",
       "description": "הקבצים שהועלו לאחרונה"
+    },
+    "greeting": {
+      "morning": "בוקר טוב, {name}.",
+      "afternoon": "צהריים טובים, {name}.",
+      "evening": "ערב טוב, {name}.",
+      "night": "עדיין ער, {name}?"
+    },
+    "subline": "{shares, plural, =0 {אין שיתופים עדיין} =1 {# שיתוף} other {# שיתופים}}, {files, plural, =0 {ללא קבצים} =1 {# קובץ} other {# קבצים}}.",
+    "hero": {
+      "send": {
+        "title": "שלח קבצים",
+        "text": "בחר קבצים, הגדר סיסמה ותאריך סיום, ושתף את הקישור."
+      },
+      "receive": {
+        "title": "קבל קבצים",
+        "text": "צור קישור שכל אחד יכול להעלות אליו, ללא צורך בחשבון."
+      }
+    },
+    "stats": {
+      "storage": "אחסון בשימוש",
+      "storageOf": "מתוך {total}",
+      "shares": "שיתופים",
+      "downloads": "הורדות",
+      "downloadsDetail": "בכל הקבצים",
+      "files": "קבצים"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "table": "טבלה",
       "grid": "רשת",
       "label": "תצוגה"
-    }
+    },
+    "subline": "{count, plural, =0 {אין קבצים עדיין} =1 {# קובץ} other {# קבצים}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "טבלת קבצים",
@@ -586,7 +662,12 @@
     "customization": "התאמה אישית",
     "settings": "הגדרות",
     "usersManagement": "ניהול משתמשים",
-    "logout": "התנתק"
+    "logout": "התנתק",
+    "admin": "ניהול",
+    "account": "חשבון",
+    "roleAdmin": "מנהל",
+    "roleUser": "חבר",
+    "storage": "אחסון"
   },
   "navigation": {
     "dashboard": "לוח בקרה"
@@ -655,6 +736,97 @@
       "imageRemoved": "תמונת הפרופיל הוסרה בהצלחה"
     },
     "pageTitle": "פרופיל"
+  },
+  "public": {
+    "login": {
+      "title": "ברוכים",
+      "accent": "השבים.",
+      "firstTitle": "בואו נתחיל",
+      "firstAccent": "בהגדרה.",
+      "sub": "השתמש בחשבון {app} שלך או בספק מחובר.",
+      "firstSub": "צור את חשבון המנהל הראשון להתקנה זו.",
+      "or": "או עם דוא\"ל",
+      "trust": {
+        "server": {
+          "title": "נשאר בשרת הזה",
+          "text": "שום דבר לא יוצא מההתקנה שאליה אתה נכנס."
+        },
+        "expire": {
+          "title": "קישורים עם תפוגה",
+          "text": "סיסמאות, מגבלות הורדה ותאריכי סיום לכל שיתוף."
+        },
+        "receive": {
+          "title": "קבלה ללא חשבונות",
+          "text": "כל מי שיש לו קישור קבלה יכול לשלוח לך קבצים."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {אין כלום כאן,} =1 {קובץ אחד,} other {# קבצים,}}",
+      "accent": "מוכנים בשבילך.",
+      "via": "דרך {app}",
+      "passwordVerified": "הסיסמה אומתה",
+      "expires": "פג תוקף ב-{date}",
+      "downloaded": "הורד {count, plural, =1 {פעם אחת} other {# פעמים}}",
+      "preview": "תצוגה מקדימה",
+      "noteZip": "יורד כקובץ ZIP אחד.",
+      "noteSingle": "יורד ישירות למכשיר שלך.",
+      "folder": "תיקייה"
+    },
+    "kind": {
+      "video": "וידאו",
+      "image": "תמונה",
+      "document": "מסמך",
+      "archive": "ארכיון",
+      "other": "קובץ"
+    },
+    "receive": {
+      "eyebrow": "קישור קבלה",
+      "title": "שלח את הקבצים שלך",
+      "accent": "אל {name}.",
+      "uploading": "מעלה · {percent}%",
+      "limits": {
+        "size": "עד {size}",
+        "files": "{count, plural, =1 {# קובץ} other {# קבצים}} לכל העלאה",
+        "until": "פתוח עד {date}",
+        "encrypted": "מוצפן בזמן ההעברה"
+      },
+      "drop": {
+        "text": "או בחר מהמחשב שלך.",
+        "choose": "בחר קבצים"
+      },
+      "progress": {
+        "keepOpen": "השאר את הכרטיסייה הזו פתוחה עד לסיום ההעלאה.",
+        "ready": "מוכן לשליחה."
+      },
+      "send": "שלח {count, plural, =0 {קבצים} =1 {# קובץ} other {# קבצים}}"
+    },
+    "recover": {
+      "title": "שכחת",
+      "accent": "סיסמה?",
+      "text": "הזן את הדוא\"ל שלך ואנחנו נשלח לך קישור לבחירת סיסמה חדשה."
+    },
+    "reset": {
+      "title": "בחר",
+      "accent": "סיסמה חדשה.",
+      "text": "בחר משהו ארוך. משפט עובד טוב יותר מסימנים."
+    },
+    "invite": {
+      "title": "קיבלת",
+      "accent": "הזמנה.",
+      "text": "צור חשבון כדי להתחיל לשלוח ולקבל קבצים."
+    },
+    "state": {
+      "backHome": "חזרה להתחלה",
+      "password": {
+        "title": "הקישור הזה",
+        "text": "מוגן בסיסמה. בקש אותה ממי ששלח לך אותו."
+      },
+      "missing": {
+        "title": "אין כאן כלום.",
+        "text": "הקישור הזה לא קיים, או שהוסר."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "קוד QR לשיתוף",
