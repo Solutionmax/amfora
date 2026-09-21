@@ -10,7 +10,8 @@ async function forward(req: NextRequest, method: "PUT" | "DELETE") {
     headers: {
       ...clientAddressHeaders(req.headers),
       cookie: req.headers.get("cookie") || "",
-      "Content-Type": "application/json",
+      // A DELETE carries no body; a JSON content type on an empty body is a 400 in Fastify.
+      ...(method === "PUT" ? { "Content-Type": "application/json" } : {}),
     },
     body: method === "PUT" ? await req.text() : undefined,
   });
