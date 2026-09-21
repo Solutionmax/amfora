@@ -17,6 +17,12 @@ A new interface, front and back, and a white-label model that runs on the server
 - The postal artwork, envelopes, stamps and quotes are gone. The uploaded logo replaces the
   mark everywhere, including the favicon and link previews.
 
+## Workspace details
+
+- Receive links are wide rows: status, name, the link with copy, QR and open, chips for
+  files, size, limit, protection and end date, and the received files listed inline.
+- Tables keep their actions column on screen at laptop widths instead of scrolling sideways.
+
 ## Appearance on the server
 
 - Name, description, logo, accent colour, corner radius and font were already stored per
@@ -33,8 +39,15 @@ A new interface, front and back, and a white-label model that runs on the server
 - A brandpack is a signed string a customer pastes under Customization. With a valid one the
   installation can hide "Powered by Amfora", set a background image for the public pages and
   add custom CSS. Without one those settings are ignored by the server, whatever is stored.
-- Custom CSS is sanitised: `@import`, outside `url(`, `expression(` and `behavior:` are
-  removed, size capped at 20 kB. See `docs/BRANDPACK.md`.
+- Custom CSS is sanitised on the server: CSS escape sequences are decoded first so `\75rl(`
+  cannot hide `url(`, then `@import`, outside `url(`, `expression(`, `behavior:` and
+  `-moz-binding` are removed, every `<` is written as the CSS escape `\3c ` so the style
+  element can never be closed from inside, and the size is capped at 20 kB.
+- The background upload checks the file signature (PNG, JPEG, WebP, GIF, AVIF) rather than
+  the client's content type, so SVG never reaches the image library, and decoding has a
+  pixel limit. The brandpack and background routes require a signed-in administrator with
+  no first-run exception. See `docs/BRANDPACK.md`.
+- Buying one: <https://amfora.solutionmax.net/brandpack/>.
 
 ## Upgrading
 
