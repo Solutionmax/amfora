@@ -228,9 +228,10 @@ export class FileController {
 
   async getDownloadUrl(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { objectName, password } = request.query as {
+      const { objectName, password, preview } = request.query as {
         objectName: string;
         password?: string;
+        preview?: string;
       };
 
       if (!objectName) {
@@ -261,14 +262,14 @@ export class FileController {
       }
       hasAccess = await canDownloadFromShares(shares, password, admittedViews);
 
-      if (!hasAccess) {
-        try {
-          await request.jwtVerify();
-          const userId = (request as any).user?.userId;
-          if (userId && fileRecord.userId === userId) {
-            hasAccess = true;
-          }
-        } catch (err) {}
+      let requesterId: string | null = null;
+      try {
+        await request.jwtVerify();
+        requesterId = (request as any).user?.userId ?? null;
+      } catch (err) {}
+
+      if (!hasAccess && requesterId && fileRecord.userId === requesterId) {
+        hasAccess = true;
       }
 
       if (!hasAccess) {
@@ -280,6 +281,21 @@ export class FileController {
 
       // Always use presigned URLs (works for both internal and external storage)
       const url = await this.fileService.getPresignedGetUrl(objectName, expires, fileName);
+
+      // Handing out a presigned URL is where a download is counted: the bytes come straight
+      // from storage after this, so this is the last point the application sees. A preview
+      // asks for the same URL and says so, which is the only way to tell the two apart.
+      if (
+        shouldCountDownload({
+          isPreview: preview === "1",
+          isOwner: requesterId === fileRecord.userId,
+        })
+      ) {
+        await prisma.file
+          .update({ where: { id: fileRecord.id }, data: { downloads: { increment: 1 } } })
+          .catch((error) => console.error("Error counting download:", error));
+      }
+
       return reply.send({ url, expiresIn: expires });
     } catch (error) {
       console.error("Error in getDownloadUrl:", error);

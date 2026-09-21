@@ -18,9 +18,16 @@ class DownloadUrlCache {
   /**
    * Generates unique cache key considering objectName and optional share password
    */
-  private getCacheKey(objectName: string, options?: { headers?: { "x-share-password"?: string } }): string {
+  private getCacheKey(
+    objectName: string,
+    options?: { headers?: { "x-share-password"?: string } },
+    isPreview = false
+  ): string {
     const password = options?.headers?.["x-share-password"] || "";
-    return password ? `${objectName}:${password}` : objectName;
+    const key = password ? `${objectName}:${password}` : objectName;
+    // Previews are cached apart from downloads on purpose: sharing one entry would let a
+    // preview satisfy a later download, and that download would never be counted.
+    return isPreview ? `preview:${key}` : key;
   }
 
   /**
@@ -50,9 +57,10 @@ class DownloadUrlCache {
    */
   async getCachedDownloadUrl(
     objectName: string,
-    options?: { headers?: { "x-share-password"?: string } }
+    options?: { headers?: { "x-share-password"?: string } },
+    isPreview = false
   ): Promise<string> {
-    const cacheKey = this.getCacheKey(objectName, options);
+    const cacheKey = this.getCacheKey(objectName, options, isPreview);
     const now = Date.now();
     const cached = this.cache.get(cacheKey);
 
@@ -60,7 +68,7 @@ class DownloadUrlCache {
       return cached.url;
     }
 
-    const response = await getDownloadUrl(objectName, options);
+    const response = await getDownloadUrl(objectName, options, isPreview);
     const url = response.data.url;
     const entry: CacheEntry = {
       url,

@@ -194,7 +194,9 @@ export function useFilePreview({ file, isOpen, isReverseShare = false, sharePass
         url = await getCachedReverseShareDownloadUrl(file.id!);
       } else {
         const options = sharePassword ? { headers: { "x-share-password": sharePassword } } : undefined;
-        url = await getCachedDownloadUrl(file.objectName, options);
+        // Opening the preview is not a download, so it must not be counted as one. The
+        // download button further down this file deliberately asks without the flag.
+        url = await getCachedDownloadUrl(file.objectName, options, true);
       }
 
       setState((prev) => ({ ...prev, downloadUrl: url }));
