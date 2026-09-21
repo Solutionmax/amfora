@@ -473,8 +473,7 @@
     "deleteWarning": "این عمل قابل بازگشت نیست."
   },
   "footer": {
-    "poweredBy": "قدرت گرفته از",
-    "kyanHomepage": "صفحه اصلی SolutionMAX"
+    "poweredBy": "قدرت گرفته از"
   },
   "forgotPassword": {
     "emailLabel": "آدرس ایمیل",
@@ -512,21 +511,7 @@
     "documentation": "مستندات",
     "starOnGithub": "ستاره در GitHub",
     "privacyMessage": "با در نظر گرفتن حریم خصوصی ساخته شده. فایل‌های شما فقط قبل از بارگذاری برای کسانی که لینک اشتراک‌گذاری دارند قابل دسترسی هستند. برای همیشه رایگان و متن‌باز.",
-    "header": {
-      "fileSharing": "اشتراک‌گذاری فایل",
-      "tagline": "ساده و رایگان شده"
-    },
-    "pageTitle": "خانه",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "روی سرور خودتان اجرا می‌شود",
-      "expiry": "پیوندها به‌خودی‌خود منقضی می‌شوند",
-      "noTracking": "بدون ردیابی، بدون محدودیت"
-    }
+    "pageTitle": "خانه"
   },
   "iconPicker": {
     "title": "انتخاب آیکون",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "پروفایل"
   },
-  "publicTransfer": {
-    "downloadTitle": "چیزهای خوب،\nبرای شما.",
-    "uploadTitle": "جایی برای\nایده‌های شما.",
-    "downloadCaption": "از دنیای آن‌ها به دنیای شما.",
-    "uploadCaption": "هر ایدهٔ بزرگ با به‌اشتراک‌گذاری آغاز می‌شود."
-  },
   "qrCodeModal": {
     "title": "اشتراک‌گذاری QR کد",
     "description": "این QR کد را اسکن کنید تا به لینک دسترسی پیدا کنید.",
     "download": "دانلود QR کد"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "فایل‌های من",
-      "description": "دسترسی و مدیریت فایل‌های بارگذاری‌شده شما"
-    },
-    "shares": {
-      "title": "اشتراک‌های من",
-      "description": "مشاهده و مدیریت فایل‌های به اشتراک‌گذاری‌شده شما"
-    },
-    "reverseShares": {
-      "title": "دریافت فایل‌ها",
-      "description": "ایجاد لینک برای دیگران تا فایل برای شما ارسال کنند"
-    }
   },
   "recentFiles": {
     "title": "بارگذاری‌های اخیر",

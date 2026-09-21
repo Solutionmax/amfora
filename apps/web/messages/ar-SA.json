@@ -473,8 +473,7 @@
     "deleteWarning": "لا يمكن التراجع عن هذا الإجراء."
   },
   "footer": {
-    "poweredBy": "مدعوم من",
-    "kyanHomepage": "الصفحة الرئيسية لـ SolutionMAX"
+    "poweredBy": "مدعوم من"
   },
   "forgotPassword": {
     "emailLabel": "البريد الإلكتروني",
@@ -512,21 +511,7 @@
     "documentation": "التوثيق",
     "starOnGithub": "ضع نجمة على GitHub",
     "privacyMessage": "مصمم مع مراعاة الخصوصية. ملفاتك قبل الرفع متاحة فقط لأولئك الذين لديهم رابط المشاركة. مجاني ومفتوح المصدر دائمًا.",
-    "header": {
-      "fileSharing": "مشاركة الملفات",
-      "tagline": "بسيط ومجاني"
-    },
-    "pageTitle": "الصفحة الرئيسية",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "يعمل على خادمك الخاص",
-      "expiry": "تنتهي صلاحية الروابط تلقائيًا",
-      "noTracking": "بدون تتبع، بدون حدود"
-    }
+    "pageTitle": "الصفحة الرئيسية"
   },
   "iconPicker": {
     "title": "اختر أيقونة",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "الملف الشخصي"
   },
-  "publicTransfer": {
-    "downloadTitle": "أشياء جميلة،\nمن أجلك.",
-    "uploadTitle": "مساحة\nلأفكارك.",
-    "downloadCaption": "من عالمهم إلى عالمك.",
-    "uploadCaption": "كل فكرة عظيمة تبدأ بالمشاركة."
-  },
   "qrCodeModal": {
     "title": "مشاركة رمز QR",
     "description": "امسح رمز QR هذا للوصول إلى الرابط.",
     "download": "تحميل رمز QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "ملفاتي",
-      "description": "الوصول إلى الملفات المرفوعة وإدارتها"
-    },
-    "shares": {
-      "title": "مشاركاتي",
-      "description": "عرض وإدارة الملفات المشتركة"
-    },
-    "reverseShares": {
-      "title": "استلام الملفات",
-      "description": "إنشاء روابط ليتمكن الآخرون من إرسال الملفات إليك"
-    }
   },
   "recentFiles": {
     "title": "الرفع الأخير",

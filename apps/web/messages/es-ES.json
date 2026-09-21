@@ -473,8 +473,7 @@
     "deleteWarning": "Esta acción no se puede deshacer."
   },
   "footer": {
-    "poweredBy": "Desarrollado por",
-    "kyanHomepage": "Página principal de SolutionMAX"
+    "poweredBy": "Desarrollado por"
   },
   "forgotPassword": {
     "emailLabel": "Dirección de correo electrónico",
@@ -512,21 +511,7 @@
     "documentation": "Documentación",
     "starOnGithub": "Dale una estrella en GitHub",
     "privacyMessage": "Construido con la privacidad en mente. Tus archivos antes de la subida son accesibles solo para aquellos con el enlace de compartición. Siempre libre y de código abierto.",
-    "header": {
-      "fileSharing": "Compartir archivos",
-      "tagline": "simple y gratuito"
-    },
-    "pageTitle": "Inicio",
-    "visual": {
-      "expires": "Caduca",
-      "downloads": "Descargas",
-      "password": "Contraseña"
-    },
-    "points": {
-      "selfHosted": "Funciona en tu propio servidor",
-      "expiry": "Los enlaces caducan solos",
-      "noTracking": "Sin rastreo, sin límites"
-    }
+    "pageTitle": "Inicio"
   },
   "iconPicker": {
     "title": "Seleccionar Icono",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Perfil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Cosas buenas,\npara ti.",
-    "uploadTitle": "Espacio para\ntus ideas.",
-    "downloadCaption": "De su mundo al tuyo.",
-    "uploadCaption": "Toda gran idea empieza compartiendo."
-  },
   "qrCodeModal": {
     "title": "Compartir Código QR",
     "description": "Escanea este código QR para acceder al enlace.",
     "download": "Descargar Código QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Mis archivos",
-      "description": "Accede y gestiona tus archivos subidos"
-    },
-    "shares": {
-      "title": "Mis comparticiones",
-      "description": "Visualiza y gestiona tus archivos compartidos"
-    },
-    "reverseShares": {
-      "title": "Recibir archivos",
-      "description": "Crea enlaces para que otros te envíen archivos"
-    }
   },
   "recentFiles": {
     "title": "Cargas Recientes",

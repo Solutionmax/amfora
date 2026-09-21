@@ -473,8 +473,7 @@
     "deleteWarning": "Цю дію неможливо скасувати."
   },
   "footer": {
-    "poweredBy": "Працює на",
-    "kyanHomepage": "Домашня сторінка SolutionMAX"
+    "poweredBy": "Працює на"
   },
   "forgotPassword": {
     "emailLabel": "Адреса електронної пошти",
@@ -512,21 +511,7 @@
     "documentation": "Документація",
     "starOnGithub": "Поставити зірочку на GitHub",
     "privacyMessage": "Створено з думкою про приватність. Ваші файли доступні лише тим, у кого є посилання для спільного доступу перед завантаженням. Назавжди безкоштовно та з відкритим кодом.",
-    "header": {
-      "fileSharing": "Обмін файлами",
-      "tagline": "зроблено простим і безкоштовним"
-    },
-    "pageTitle": "Головна",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Працює на вашому власному сервері",
-      "expiry": "Посилання закінчуються самі",
-      "noTracking": "Без відстеження, без обмежень"
-    }
+    "pageTitle": "Головна"
   },
   "iconPicker": {
     "title": "Вибрати іконку",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Профіль"
   },
-  "publicTransfer": {
-    "downloadTitle": "Гарні речі,\nдля вас.",
-    "uploadTitle": "Простір для\nваших ідей.",
-    "downloadCaption": "З їхнього світу до вашого.",
-    "uploadCaption": "Кожна велика ідея починається з обміну."
-  },
   "qrCodeModal": {
     "title": "QR-код спільного доступу",
     "description": "Відскануйте цей QR-код для доступу до посилання.",
     "download": "Завантажити QR-код"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Мої файли",
-      "description": "Доступ та управління вашими завантаженими файлами"
-    },
-    "shares": {
-      "title": "Мої спільні доступи",
-      "description": "Переглядайте та керуйте вашими спільними файлами"
-    },
-    "reverseShares": {
-      "title": "Отримувати файли",
-      "description": "Створюйте посилання для інших, щоб надсилати файли вам"
-    }
   },
   "recentFiles": {
     "title": "Останні завантаження",

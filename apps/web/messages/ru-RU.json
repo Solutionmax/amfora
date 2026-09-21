@@ -473,8 +473,7 @@
     "deleteWarning": "Это действие нельзя отменить."
   },
   "footer": {
-    "poweredBy": "При поддержке",
-    "kyanHomepage": "Домашняя страница SolutionMAX"
+    "poweredBy": "При поддержке"
   },
   "forgotPassword": {
     "emailLabel": "Адрес электронной почты",
@@ -512,21 +511,7 @@
     "documentation": "Документация",
     "starOnGithub": "Оцените на GitHub",
     "privacyMessage": "Создано с учетом конфиденциальности. Ваши файлы до загрузки доступны только тем, у кого есть ссылка для доступа. Всегда бесплатно и с открытым исходным кодом.",
-    "header": {
-      "fileSharing": "Обмен файлами",
-      "tagline": "просто и бесплатно"
-    },
-    "pageTitle": "Главная",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Работает на вашем собственном сервере",
-      "expiry": "Ссылки истекают сами по себе",
-      "noTracking": "Без отслеживания, без ограничений"
-    }
+    "pageTitle": "Главная"
   },
   "iconPicker": {
     "title": "Выбрать иконку",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Профиль"
   },
-  "publicTransfer": {
-    "downloadTitle": "Хорошие вещи,\nдля вас.",
-    "uploadTitle": "Место для\nваших идей.",
-    "downloadCaption": "Из их мира в ваш.",
-    "uploadCaption": "Великие идеи рождаются, когда ими делятся."
-  },
   "qrCodeModal": {
     "title": "Поделиться QR-кодом",
     "description": "Отсканируйте этот QR-код, чтобы получить доступ к ссылке.",
     "download": "Скачать QR-код"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Мои файлы",
-      "description": "Доступ и управление загруженными файлами"
-    },
-    "shares": {
-      "title": "Мои общие доступы",
-      "description": "Просмотр и управление файлами для совместного использования"
-    },
-    "reverseShares": {
-      "title": "Получить файлы",
-      "description": "Создавайте ссылки для получения файлов от других"
-    }
   },
   "recentFiles": {
     "title": "Последние загрузки",

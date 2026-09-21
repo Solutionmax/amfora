@@ -473,8 +473,7 @@
     "deleteWarning": "Denna åtgärd kan inte ångras."
   },
   "footer": {
-    "poweredBy": "Drivs av",
-    "kyanHomepage": "SolutionMAX hemsida"
+    "poweredBy": "Drivs av"
   },
   "forgotPassword": {
     "emailLabel": "E-postadress",
@@ -512,21 +511,7 @@
     "documentation": "Dokumentation",
     "starOnGithub": "Stjärna på GitHub",
     "privacyMessage": "Byggd med integritet i åtanke. Dina filer är endast tillgängliga för de med delningslänken före uppladdning. För alltid gratis och öppen källkod.",
-    "header": {
-      "fileSharing": "Fildelning",
-      "tagline": "gjort enkelt och gratis"
-    },
-    "pageTitle": "Hem",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Körs på din egen server",
-      "expiry": "Länkar upphör automatiskt",
-      "noTracking": "Ingen spårning, inga gränser"
-    }
+    "pageTitle": "Hem"
   },
   "iconPicker": {
     "title": "Välj ikon",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Fina saker,\ntill dig.",
-    "uploadTitle": "Plats för\ndina idéer.",
-    "downloadCaption": "Från deras värld till din.",
-    "uploadCaption": "Varje stor idé börjar med att dela."
-  },
   "qrCodeModal": {
     "title": "Dela QR-kod",
     "description": "Skanna den här QR-koden för att komma åt länken.",
     "download": "Ladda ner QR-kod"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Mina filer",
-      "description": "Få åtkomst till och hantera dina uppladdade filer"
-    },
-    "shares": {
-      "title": "Mina aktier",
-      "description": "Visa och hantera dina delade filer"
-    },
-    "reverseShares": {
-      "title": "Ta emot filer",
-      "description": "Skapa länkar så att andra kan skicka filer till dig"
-    }
   },
   "recentFiles": {
     "title": "Senaste uppladdningar",

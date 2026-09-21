@@ -47,7 +47,14 @@ export function TransferShell({
           centered || !statement ? "max-w-[560px] grid-cols-1" : "md:grid-cols-[minmax(0,1fr)_minmax(0,520px)]"
         )}
       >
-        {statement}
+        {statement && appBackground ? (
+          // On a customer's own background the statement needs a floor to stay readable.
+          <div className="rounded-[calc(var(--radius)+10px)] bg-surface/75 p-6 backdrop-blur-md md:-ml-6">
+            {statement}
+          </div>
+        ) : (
+          statement
+        )}
         <section className={cn("float w-full animate-in fade-in-0 duration-150", panelClassName)}>{children}</section>
       </main>
 

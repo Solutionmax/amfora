@@ -473,8 +473,7 @@
     "deleteWarning": "此操作无法撤销。"
   },
   "footer": {
-    "poweredBy": "技术支持：",
-    "kyanHomepage": "SolutionMAX 主页"
+    "poweredBy": "技术支持："
   },
   "forgotPassword": {
     "emailLabel": "电子邮件地址",
@@ -512,21 +511,7 @@
     "documentation": "文档",
     "starOnGithub": "在GitHub上点赞",
     "privacyMessage": "本应用注重隐私。在上传前，您的文件仅对拥有共享链接的人可见。永远免费且开源。",
-    "header": {
-      "fileSharing": "文件共享",
-      "tagline": "简单且免费"
-    },
-    "pageTitle": "首页",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "在您自己的服务器上运行",
-      "expiry": "链接会自动过期",
-      "noTracking": "无跟踪，无限制"
-    }
+    "pageTitle": "首页"
   },
   "iconPicker": {
     "title": "选择图标",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "个人资料"
   },
-  "publicTransfer": {
-    "downloadTitle": "美好事物，\n为你送达。",
-    "uploadTitle": "给创意\n留点空间。",
-    "downloadCaption": "从他们的世界，来到你的世界。",
-    "uploadCaption": "每个好想法，都从分享开始。"
-  },
   "qrCodeModal": {
     "title": "分享QR Code",
     "description": "扫描此QR Code以访问链接。",
     "download": "下载QR Code"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "我的文件",
-      "description": "访问和管理您上传的文件"
-    },
-    "shares": {
-      "title": "我的共享",
-      "description": "查看和管理您共享的文件"
-    },
-    "reverseShares": {
-      "title": "接收文件",
-      "description": "创建链接让他人向您发送文件"
-    }
   },
   "recentFiles": {
     "title": "最近上传",
@@ -1782,7 +1747,11 @@
       "copyToClipboard": "复制到剪贴板",
       "savedMessage": "我已保存备用码",
       "available": "可用备用码：{count}个",
-      "instructions": ["• 将这些代码保存在安全的位置", "• 每个备用码只能使用一次", "• 您可以随时生成新的备用码"]
+      "instructions": [
+        "• 将这些代码保存在安全的位置",
+        "• 每个备用码只能使用一次",
+        "• 您可以随时生成新的备用码"
+      ]
     },
     "verification": {
       "title": "双重认证",

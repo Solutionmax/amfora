@@ -473,8 +473,7 @@
     "deleteWarning": "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
   },
   "footer": {
-    "poweredBy": "Με την υποστήριξη",
-    "kyanHomepage": "Αρχική σελίδα SolutionMAX"
+    "poweredBy": "Με την υποστήριξη"
   },
   "forgotPassword": {
     "emailLabel": "Διεύθυνση email",
@@ -512,21 +511,7 @@
     "documentation": "Τεκμηρίωση",
     "starOnGithub": "Αστέρι στο GitHub",
     "privacyMessage": "Φτιαγμένο με γνώμονα το απόρρητο. Τα αρχεία σας είναι προσβάσιμα μόνο σε όσους έχουν τον σύνδεσμο κοινής χρήσης πριν τη μεταφόρτωση. Για πάντα δωρεάν και ανοικτού κώδικα.",
-    "header": {
-      "fileSharing": "Κοινή χρήση αρχείων",
-      "tagline": "απλή και δωρεάν"
-    },
-    "pageTitle": "Αρχική",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Λειτουργεί στον δικό σας διακομιστή",
-      "expiry": "Οι σύνδεσμοι λήγουν από μόνοι τους",
-      "noTracking": "Χωρίς παρακολούθηση, χωρίς όρια"
-    }
+    "pageTitle": "Αρχική"
   },
   "iconPicker": {
     "title": "Επιλογή εικονιδίου",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Προφίλ"
   },
-  "publicTransfer": {
-    "downloadTitle": "Όμορφα πράγματα,\nγια εσάς.",
-    "uploadTitle": "Χώρος για\nτις ιδέες σας.",
-    "downloadCaption": "Από τον κόσμο τους στον δικό σας.",
-    "uploadCaption": "Κάθε μεγάλη ιδέα ξεκινά με το μοίρασμα."
-  },
   "qrCodeModal": {
     "title": "Κοινοποίηση κωδικού QR",
     "description": "Σαρώστε αυτόν τον κωδικό QR για πρόσβαση στον σύνδεσμο.",
     "download": "Λήψη κωδικού QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Τα αρχεία μου",
-      "description": "Πρόσβαση και διαχείριση των μεταφορτωμένων αρχείων σας"
-    },
-    "shares": {
-      "title": "Οι κοινές χρήσεις μου",
-      "description": "Προβολή και διαχείριση των κοινόχρηστων αρχείων σας"
-    },
-    "reverseShares": {
-      "title": "Λήψη αρχείων",
-      "description": "Δημιουργήστε συνδέσμους για να σας στέλνουν αρχεία άλλοι"
-    }
   },
   "recentFiles": {
     "title": "Πρόσφατες μεταφορτώσεις",

@@ -473,8 +473,7 @@
     "deleteWarning": "Esta ação não pode ser desfeita."
   },
   "footer": {
-    "poweredBy": "Desenvolvido por",
-    "kyanHomepage": "Página inicial da SolutionMAX"
+    "poweredBy": "Desenvolvido por"
   },
   "forgotPassword": {
     "emailLabel": "Endereço de Email",
@@ -512,21 +511,7 @@
     "documentation": "Documentação",
     "starOnGithub": "Estrela no GitHub",
     "privacyMessage": "Construído com privacidade em mente. Seus arquivos antes do upload são acessíveis apenas por aqueles com o link de compartilhamento. Para sempre gratuito e open source.",
-    "header": {
-      "fileSharing": "Compartilhamento de arquivos",
-      "tagline": "simples e gratuito"
-    },
-    "pageTitle": "Início",
-    "visual": {
-      "expires": "Expira",
-      "downloads": "Downloads",
-      "password": "Senha"
-    },
-    "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
-    }
+    "pageTitle": "Início"
   },
   "iconPicker": {
     "title": "Selecionar ícone",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Perfil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Coisas boas,\nentregues.",
-    "uploadTitle": "Espaço para\nsuas ideias.",
-    "downloadCaption": "Do mundo deles para o seu.",
-    "uploadCaption": "Toda grande ideia começa com uma partilha."
-  },
   "qrCodeModal": {
     "title": "Compartilhar QR Code",
     "description": "Escaneie este código QR para acessar o link.",
     "download": "Baixar QR Code"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Meus Arquivos",
-      "description": "Acesse e gerencie seus arquivos enviados"
-    },
-    "shares": {
-      "title": "Meus Compartilhamentos",
-      "description": "Visualize e gerencie seus arquivos compartilhados"
-    },
-    "reverseShares": {
-      "title": "Receber Arquivos",
-      "description": "Crie links para outros enviarem arquivos para você"
-    }
   },
   "recentFiles": {
     "title": "Uploads recentes",
