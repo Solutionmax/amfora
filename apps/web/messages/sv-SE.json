@@ -232,6 +232,56 @@
     "pageTitle": "Anpassning",
     "preview": {
       "title": "Förhandsvisning"
+    },
+    "v2": {
+      "subline": "Det som alla besökare ser. Ändringar gäller alla sidor, inklusive de publika länkarna.",
+      "save": "Spara ändringar",
+      "saved": "Sparat.",
+      "saveFailed": "Det gick inte att spara. Försök igen.",
+      "brand": {
+        "title": "Varumärke",
+        "name": "Namn",
+        "description": "Beskrivning",
+        "logo": "Logotyp",
+        "logoHint": "PNG, SVG eller WebP. Ersätter märket överallt och används som favikon."
+      },
+      "appearance": {
+        "title": "Färg och form",
+        "accent": "Accentfärg",
+        "accentHex": "Accentfärg som hex",
+        "accentHint": "Knappar, länkar, aktiv navigering och färgtonerna följer denna.",
+        "radius": "Gränsradie",
+        "radiusHint": "{px} px. Skarpare känns mer tekniskt, rundare känns vänligare.",
+        "font": "Teckensnitt",
+        "fontDefault": "Standard (Archivo och Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Betald",
+        "unlockTitle": "Lås upp fullständig white-label",
+        "unlockText": "Din egen bakgrund, anpassad CSS och ingen Amfora-kreditering. En organisation, obegränsat antal installationer, upphör aldrig att gälla.",
+        "buy": "Skaffa ett brandpack · 79 €",
+        "paste": "Klistra in ditt brandpack här",
+        "activate": "Aktivera",
+        "activated": "Brandpack aktiverat.",
+        "removed": "Brandpack borttaget.",
+        "active": "Brandpack aktivt för {organisation} · utfärdat {date}",
+        "remove": "Ta bort",
+        "credit": "Visa \"Drivs av Amfora\"",
+        "creditHint": "Av döljer krediteringen på varje sida. Meddelandet om öppen källkod finns kvar i källkoden.",
+        "background": "Bakgrund för publika sidor",
+        "backgroundHint": "Visas bakom inloggnings-, nedladdnings- och mottagningssidor. Upp till 3 MB; lagras som WebP.",
+        "backgroundUpload": "Ladda upp bild",
+        "backgroundReplace": "Byt bild",
+        "backgroundRemove": "Ta bort",
+        "css": "Anpassad CSS",
+        "cssHint": "Laddas sist, på varje sida. Imports och externa URL:er tas bort.",
+        "cssSave": "Spara CSS"
+      },
+      "preview": {
+        "title": "Förhandsgranskning",
+        "page": "Nedladdningssida"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "title": "Senaste filer",
       "description": "Dina senast uppladdade filer"
+    },
+    "greeting": {
+      "morning": "God morgon, {name}.",
+      "afternoon": "God eftermiddag, {name}.",
+      "evening": "God kväll, {name}.",
+      "night": "Fortfarande uppe, {name}?"
+    },
+    "subline": "{shares, plural, =0 {Inga delningar än} =1 {# delning} other {# delningar}}, {files, plural, =0 {inga filer} =1 {# fil} other {# filer}}.",
+    "hero": {
+      "send": {
+        "title": "Skicka filer",
+        "text": "Välj filer, ange ett lösenord och ett slutdatum, dela länken."
+      },
+      "receive": {
+        "title": "Ta emot filer",
+        "text": "Skapa en länk som vem som helst kan ladda upp till, inget konto krävs."
+      }
+    },
+    "stats": {
+      "storage": "Använt lagringsutrymme",
+      "storageOf": "av {total}",
+      "shares": "Delningar",
+      "downloads": "Nedladdningar",
+      "downloadsDetail": "över alla filer",
+      "files": "Filer"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "table": "Tabell",
       "grid": "Rutnät",
       "label": "Vy"
-    }
+    },
+    "subline": "{count, plural, =0 {Inga filer än} =1 {# fil} other {# filer}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "Filer tabell",
@@ -586,7 +662,12 @@
     "customization": "Anpassning",
     "settings": "Inställningar",
     "usersManagement": "Användarhantering",
-    "logout": "Logga ut"
+    "logout": "Logga ut",
+    "admin": "Admin",
+    "account": "Konto",
+    "roleAdmin": "Administratör",
+    "roleUser": "Medlem",
+    "storage": "Lagring"
   },
   "navigation": {
     "dashboard": "Instrumentbräda"
@@ -655,6 +736,97 @@
       "imageRemoved": "Profilbilden har tagits bort"
     },
     "pageTitle": "Profil"
+  },
+  "public": {
+    "login": {
+      "title": "Välkommen",
+      "accent": "tillbaka.",
+      "firstTitle": "Nu ställer vi",
+      "firstAccent": "in allt.",
+      "sub": "Använd ditt {app}-konto eller en ansluten leverantör.",
+      "firstSub": "Skapa det första administratörskontot för den här installationen.",
+      "or": "eller med e-post",
+      "trust": {
+        "server": {
+          "title": "Stannar på den här servern",
+          "text": "Inget lämnar installationen du loggar in på."
+        },
+        "expire": {
+          "title": "Länkar som upphör att gälla",
+          "text": "Lösenord, nedladdningsgränser och slutdatum för varje delning."
+        },
+        "receive": {
+          "title": "Ta emot utan konto",
+          "text": "Vem som helst med en mottagningslänk kan skicka filer till dig."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Inget här,} =1 {En fil,} other {# filer,}}",
+      "accent": "redo för dig.",
+      "via": "via {app}",
+      "passwordVerified": "Lösenord verifierat",
+      "expires": "Går ut {date}",
+      "downloaded": "nedladdad {count, plural, =1 {en gång} other {# gånger}}",
+      "preview": "Förhandsgranska",
+      "noteZip": "Laddas ned som en ZIP-fil.",
+      "noteSingle": "Laddas ned direkt till din enhet.",
+      "folder": "Mapp"
+    },
+    "kind": {
+      "video": "Video",
+      "image": "Bild",
+      "document": "Dokument",
+      "archive": "Arkiv",
+      "other": "Fil"
+    },
+    "receive": {
+      "eyebrow": "Mottagningslänk",
+      "title": "Skicka dina filer",
+      "accent": "till {name}.",
+      "uploading": "Laddar upp · {percent}%",
+      "limits": {
+        "size": "Upp till {size}",
+        "files": "{count, plural, =1 {# fil} other {# filer}} per uppladdning",
+        "until": "Öppen till {date}",
+        "encrypted": "Krypterad under överföring"
+      },
+      "drop": {
+        "text": "eller välj från din dator.",
+        "choose": "Välj filer"
+      },
+      "progress": {
+        "keepOpen": "Håll den här fliken öppen tills uppladdningen är klar.",
+        "ready": "Redo att skicka."
+      },
+      "send": "Skicka {count, plural, =0 {filer} =1 {# fil} other {# filer}}"
+    },
+    "recover": {
+      "title": "Glömt ditt",
+      "accent": "lösenord?",
+      "text": "Ange din e-postadress så skickar vi en länk där du kan välja ett nytt."
+    },
+    "reset": {
+      "title": "Välj ett nytt",
+      "accent": "lösenord.",
+      "text": "Välj något långt. En mening fungerar bättre än symboler."
+    },
+    "invite": {
+      "title": "Du är",
+      "accent": "inbjuden.",
+      "text": "Skapa ditt konto för att börja skicka och ta emot filer."
+    },
+    "state": {
+      "backHome": "Tillbaka till start",
+      "password": {
+        "title": "Den här länken är",
+        "text": "skyddad med ett lösenord. Fråga personen som skickade den."
+      },
+      "missing": {
+        "title": "Inget här.",
+        "text": "Länken finns inte, eller så har den tagits bort."
+      }
+    }
   },
   "qrCodeModal": {
     "title": "Dela QR-kod",

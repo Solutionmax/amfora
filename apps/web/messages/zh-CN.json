@@ -232,6 +232,56 @@
     "pageTitle": "自定义",
     "preview": {
       "title": "预览"
+    },
+    "v2": {
+      "subline": "所有访客都会看到的内容。更改将应用于所有页面，包括公开链接。",
+      "save": "保存更改",
+      "saved": "已保存。",
+      "saveFailed": "保存失败，请重试。",
+      "brand": {
+        "title": "品牌",
+        "name": "名称",
+        "description": "描述",
+        "logo": "Logo",
+        "logoHint": "PNG、SVG 或 WebP 格式。将替换所有位置的标志，并用作网站图标（favicon）。"
+      },
+      "appearance": {
+        "title": "颜色与形状",
+        "accent": "强调色",
+        "accentHex": "强调色（十六进制）",
+        "accentHint": "按钮、链接、当前导航项和色彩渲染都将跟随此颜色。",
+        "radius": "圆角半径",
+        "radiusHint": "{px} px。更尖锐显得更专业，更圆润显得更亲和。",
+        "font": "字体",
+        "fontDefault": "默认（Archivo 与 Public Sans）"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "付费",
+        "unlockTitle": "解锁完整白标功能",
+        "unlockText": "拥有专属背景图、自定义 CSS，并隐藏 Amfora 署名。一个组织，无限次安装，永不过期。",
+        "buy": "获取 Brandpack · €79",
+        "paste": "在此粘贴您的 Brandpack",
+        "activate": "激活",
+        "activated": "Brandpack 已激活。",
+        "removed": "Brandpack 已移除。",
+        "active": "Brandpack 已为 {organisation} 激活 · 签发于 {date}",
+        "remove": "移除",
+        "credit": "显示\"技术支持：Amfora\"",
+        "creditHint": "关闭后将在所有页面隐藏该署名。开源声明仍会保留在源代码中。",
+        "background": "公开页面背景",
+        "backgroundHint": "显示在登录、下载和接收页面的背景中。最大 3 MB，将以 WebP 格式存储。",
+        "backgroundUpload": "上传图片",
+        "backgroundReplace": "替换图片",
+        "backgroundRemove": "移除",
+        "css": "自定义 CSS",
+        "cssHint": "将在每个页面最后加载。系统会移除 import 语句及外部 URL。",
+        "cssSave": "保存 CSS"
+      },
+      "preview": {
+        "title": "预览",
+        "page": "下载页面"
+      }
     }
   },
   "dashboard": {
@@ -242,6 +292,31 @@
     "recentFiles": {
       "description": "您最近上传的文件",
       "title": "最近文件"
+    },
+    "greeting": {
+      "morning": "早上好，{name}。",
+      "afternoon": "下午好，{name}。",
+      "evening": "晚上好，{name}。",
+      "night": "还没休息吗，{name}？"
+    },
+    "subline": "{shares, plural, =0 {暂无分享} =1 {# 个分享} other {# 个分享}}，{files, plural, =0 {无文件} =1 {# 个文件} other {# 个文件}}。",
+    "hero": {
+      "send": {
+        "title": "发送文件",
+        "text": "选择文件，设置密码和截止日期，分享链接。"
+      },
+      "receive": {
+        "title": "接收文件",
+        "text": "创建一个任何人都可上传的链接，无需账户。"
+      }
+    },
+    "stats": {
+      "storage": "已用存储",
+      "storageOf": "共 {total}",
+      "shares": "分享数",
+      "downloads": "下载次数",
+      "downloadsDetail": "所有文件合计",
+      "files": "文件数"
     }
   },
   "deleteConfirmation": {
@@ -414,7 +489,8 @@
       "moveItemsFailed": "移动项目失败，请重试。",
       "cannotMoveHere": "无法将项目移动到此位置"
     },
-    "openFolder": "打开文件夹"
+    "openFolder": "打开文件夹",
+    "subline": "{count, plural, =0 {暂无文件} =1 {# 个文件} other {# 个文件}} · {size}"
   },
   "filesTable": {
     "ariaLabel": "文件表格",
@@ -586,7 +662,12 @@
     "settings": "设置",
     "usersManagement": "用户管理",
     "logout": "退出登录",
-    "customization": "自定义"
+    "customization": "自定义",
+    "admin": "管理",
+    "account": "账户",
+    "roleAdmin": "管理员",
+    "roleUser": "成员",
+    "storage": "存储"
   },
   "navigation": {
     "dashboard": "仪表盘"
@@ -655,6 +736,97 @@
       "imageRemoved": "头像移除成功"
     },
     "pageTitle": "个人资料"
+  },
+  "public": {
+    "login": {
+      "title": "欢迎",
+      "accent": "回来。",
+      "firstTitle": "让我们",
+      "firstAccent": "开始设置。",
+      "sub": "使用您的 {app} 账户或已连接的身份提供方登录。",
+      "firstSub": "为此安装创建第一个管理员账户。",
+      "or": "或使用电子邮件",
+      "trust": {
+        "server": {
+          "title": "数据留在本服务器",
+          "text": "不会离开您正在登录的这个安装环境。"
+        },
+        "expire": {
+          "title": "链接会过期",
+          "text": "每个分享都可设置密码、下载次数限制和截止日期。"
+        },
+        "receive": {
+          "title": "无需账户即可接收",
+          "text": "任何拥有接收链接的人都可以向您发送文件。"
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {这里什么都没有，} =1 {一个文件，} other {#个文件，}}",
+      "accent": "已为您准备好。",
+      "via": "通过 {app}",
+      "passwordVerified": "密码验证成功",
+      "expires": "过期：{date}",
+      "downloaded": "已下载{count, plural, =1 {1次} other {#次}}",
+      "preview": "预览",
+      "noteZip": "将下载为一个 ZIP 压缩包。",
+      "noteSingle": "将直接下载到您的设备。",
+      "folder": "文件夹"
+    },
+    "kind": {
+      "video": "视频",
+      "image": "图片",
+      "document": "文档",
+      "archive": "压缩包",
+      "other": "文件"
+    },
+    "receive": {
+      "eyebrow": "接收链接",
+      "title": "发送您的文件",
+      "accent": "至 {name}。",
+      "uploading": "正在上传 · {percent}%",
+      "limits": {
+        "size": "最多 {size}",
+        "files": "每次上传 {count, plural, =1 {# 个文件} other {# 个文件}}",
+        "until": "开放至 {date}",
+        "encrypted": "传输过程加密"
+      },
+      "drop": {
+        "text": "或从您的电脑中选择。",
+        "choose": "选择文件"
+      },
+      "progress": {
+        "keepOpen": "上传完成前请勿关闭此标签页。",
+        "ready": "已准备好发送。"
+      },
+      "send": "发送{count, plural, =0 {文件} =1 {# 个文件} other {# 个文件}}"
+    },
+    "recover": {
+      "title": "忘记",
+      "accent": "密码？",
+      "text": "输入您的电子邮件，我们将向您发送一个可以设置新密码的链接。"
+    },
+    "reset": {
+      "title": "设置新",
+      "accent": "密码。",
+      "text": "选择足够长的密码，一句话比符号组合更安全好记。"
+    },
+    "invite": {
+      "title": "您",
+      "accent": "已被邀请。",
+      "text": "创建您的账户，即可开始发送和接收文件。"
+    },
+    "state": {
+      "backHome": "返回首页",
+      "password": {
+        "title": "此链接",
+        "text": "受密码保护。请向发送者索取密码。"
+      },
+      "missing": {
+        "title": "这里什么都没有。",
+        "text": "此链接不存在，或已被移除。"
+      }
+    }
   },
   "qrCodeModal": {
     "title": "分享QR Code",
@@ -1747,11 +1919,7 @@
       "copyToClipboard": "复制到剪贴板",
       "savedMessage": "我已保存备用码",
       "available": "可用备用码：{count}个",
-      "instructions": [
-        "• 将这些代码保存在安全的位置",
-        "• 每个备用码只能使用一次",
-        "• 您可以随时生成新的备用码"
-      ]
+      "instructions": ["• 将这些代码保存在安全的位置", "• 每个备用码只能使用一次", "• 您可以随时生成新的备用码"]
     },
     "verification": {
       "title": "双重认证",
