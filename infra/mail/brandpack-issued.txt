@@ -1,0 +1,42 @@
+Subject: Your Amfora brandpack for {{organisation}}
+
+Thank you for the order. Below is the brandpack for {{organisation}}. It removes
+the "Powered by Amfora" credit from your public pages and unlocks the background
+image and custom CSS.
+
+YOUR KEY
+
+{{key}}
+
+ACTIVATE IN ONE MINUTE
+
+1. Sign in to your Amfora as an administrator and open Customization.
+2. Scroll to Brandpack, paste the key above and press Activate.
+3. The credit disappears at once. Upload a background image and add CSS if you
+   like; both fields are now unlocked.
+
+Guide: https://amfora.solutionmax.net/docs/#brandpack
+
+The key is issued to your organisation, works on every installation you run, and
+never expires, also not across major versions. It is verified by your own
+installation; nothing has to reach us for it to keep working. Needs Amfora 2.0 or
+newer. Keep this email. Lost it anyway? Reply from this address and we send the
+key again.
+
+ORDER
+
+Order reference {{order_reference}} · Issued {{issued_at}} · Terms version
+{{terms_version}}, attached for your records. Stripe sends your payment receipt
+with the price and tax breakdown separately.
+
+At checkout you asked for immediate delivery and acknowledged that your consumer
+right of withdrawal ends when delivery starts. This email is that delivery. Your
+statutory rights if the key is faulty or not as described are unaffected: if it
+does not work and we cannot make it work, you get your money back. Terms, refunds
+and the right of withdrawal: https://amfora.solutionmax.net/legal.html#terms
+
+--
+SolutionMAX, Lafayette Raymon Matulessy, Calle Creta 74, Bloque 01 nº 105,
+03130 Gran Alacant (Alicante), Spain. NIF ESZ2822653Y.
+Questions, refunds and support: mail@solutionmax.net
+Amfora is Apache-2.0 open source; a brandpack changes the interface, not the licence.

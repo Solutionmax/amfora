@@ -1,0 +1,61 @@
+Amfora brandpack: terms of sale, version 2026-09-22
+Attached to every delivery email. The live text is https://amfora.solutionmax.net/legal.html#terms
+
+SELLER
+Lafayette Raymon Matulessy, trading as SolutionMAX, sole trader (autonomo).
+Calle Creta 74, Bloque 01 no 105, 03130 Gran Alacant (Alicante), Spain.
+NIF / VAT ESZ2822653Y. Email mail@solutionmax.net.
+
+WHAT YOU BUY
+Amfora is open source under the Apache License 2.0 and costs nothing. A brandpack
+is a signed key that lets an installation run without the "Powered by Amfora"
+credit and switches on the paid customization (a background image for the public
+pages and custom CSS).
+- Brandpack, EUR 79 once. Issued to one organisation, valid for every installation
+  that organisation runs, never expires, also not across major versions. Not
+  transferable, not for resale. Hosting companies and agencies need one per
+  customer organisation.
+- Setup and 30 days, EUR 149 once. One installation on a server you provide,
+  configured together, and 30 days of questions by email answered within a
+  working day. Includes a brandpack. Hosting and third-party services are your
+  own cost.
+Delivery is by email to the address given at checkout, normally within minutes
+and in any case within one working day. Prices include applicable VAT; the total
+and tax treatment are shown before payment. Business customers with a valid EU VAT
+number are invoiced under the reverse charge where the law allows it. Payment is
+processed by Stripe.
+
+LICENCE
+A brandpack removes the SolutionMAX brand from the interface. It does not transfer
+ownership of the software, does not change the Apache License 2.0, and does not
+remove the NOTICE file with the attribution to the original author. Keys are
+Ed25519 signatures verified locally; nothing phones home. Requires Amfora 2.0 or
+newer. A lost key is reissued on request from the ordering address.
+
+RIGHT OF WITHDRAWAL
+Consumers in the EU normally have fourteen days from the order to withdraw
+without giving a reason. A brandpack is digital content delivered at once:
+checkout asks for your express consent to immediate delivery and your
+acknowledgement that the right of withdrawal ends when the key is sent. To keep
+the fourteen days, order by email instead and delivery follows after the period.
+For the setup service the right of withdrawal stays in place for fourteen days;
+withdrawing after work has started means paying a proportionate amount for the
+work done. Send an unambiguous statement to mail@solutionmax.net or the postal
+address above; we confirm by email and refund within fourteen days with the same
+payment method, at no cost to you. Model text: "To SolutionMAX: I hereby withdraw
+from my contract for [product], ordered on [date], order reference [reference].
+Name, address, date." The right of withdrawal does not apply to business purchases.
+
+REFUNDS AND DEFECTS
+If a key does not activate on a supported version and we cannot make it work, you
+get your money back, whether or not the withdrawal period is still running; a
+withdrawal waiver never waives that. EU conformity rules for digital content give
+you the right to a fix, a price reduction, or termination and refund when what you
+received is not as described. Refunds go back to the payment method used within
+fourteen days. After a refund the refunded key must no longer be used.
+
+COMPLAINTS AND LAW
+Write to mail@solutionmax.net; we acknowledge within two working days and answer
+within a month. We are not a member of an alternative dispute resolution scheme.
+Spanish law applies without taking away the mandatory consumer protection of the
+country where you live. New terms never change a purchase already made.
