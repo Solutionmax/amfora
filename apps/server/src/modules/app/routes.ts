@@ -48,6 +48,15 @@ export async function appRoutes(app: FastifyInstance) {
             appPrimaryColor: z.string().describe("Installation accent color"),
             appFontFamily: z.string().describe("Installation font family"),
             appRadius: z.string().describe("Installation corner radius"),
+            appHideCredit: z.boolean().describe("Whether the Amfora credit is hidden (needs a valid brandpack)"),
+            appBackground: z
+              .boolean()
+              .describe("Whether a public-page background image is set (needs a valid brandpack)"),
+            appCustomCss: z.string().describe("Custom CSS, sanitised, empty without a valid brandpack"),
+            brandpack: z
+              .object({ organisation: z.string(), issuedAt: z.string() })
+              .nullable()
+              .describe("The verified brandpack, or null"),
           }),
           400: z.object({ error: z.string().describe("Error message") }),
         },
@@ -268,5 +277,88 @@ export async function appRoutes(app: FastifyInstance) {
       },
     },
     appController.removeLogo.bind(appController)
+  );
+
+  const adminErrors = {
+    400: z.object({ error: z.string().describe("Error message") }),
+    401: z.object({ error: z.string().describe("Error message") }),
+    403: z.object({ error: z.string().describe("Error message") }),
+  };
+
+  app.get(
+    "/app/background",
+    {
+      schema: {
+        tags: ["App"],
+        operationId: "getBackground",
+        summary: "Public-page background image",
+        description: "Streams the uploaded background image, or 404 when there is none",
+      },
+    },
+    appController.getBackground.bind(appController)
+  );
+
+  app.post(
+    "/app/background",
+    {
+      preValidation: adminPreValidation,
+      schema: {
+        tags: ["App"],
+        operationId: "uploadBackground",
+        summary: "Upload the public-page background image",
+        description: "Upload a background image (admin only, brandpack needed for it to show)",
+        response: { 200: z.object({ message: z.string() }), ...adminErrors },
+      },
+    },
+    appController.uploadBackground.bind(appController)
+  );
+
+  app.delete(
+    "/app/background",
+    {
+      preValidation: adminPreValidation,
+      schema: {
+        tags: ["App"],
+        operationId: "removeBackground",
+        summary: "Remove the public-page background image",
+        description: "Remove the background image (admin only)",
+        response: { 200: z.object({ message: z.string() }), ...adminErrors },
+      },
+    },
+    appController.removeBackground.bind(appController)
+  );
+
+  app.put(
+    "/app/brandpack",
+    {
+      preValidation: adminPreValidation,
+      schema: {
+        tags: ["App"],
+        operationId: "activateBrandpack",
+        summary: "Activate a brandpack",
+        description: "Verifies and stores a signed brandpack (admin only)",
+        body: z.object({ token: z.string().min(1).max(4096) }),
+        response: {
+          200: z.object({ brandpack: z.object({ organisation: z.string(), issuedAt: z.string() }) }),
+          ...adminErrors,
+        },
+      },
+    },
+    appController.activateBrandpack.bind(appController)
+  );
+
+  app.delete(
+    "/app/brandpack",
+    {
+      preValidation: adminPreValidation,
+      schema: {
+        tags: ["App"],
+        operationId: "removeBrandpack",
+        summary: "Remove the brandpack",
+        description: "Removes the stored brandpack (admin only); paid customization switches off",
+        response: { 200: z.object({ message: z.string() }), ...adminErrors },
+      },
+    },
+    appController.removeBrandpack.bind(appController)
   );
 }

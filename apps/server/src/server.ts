@@ -31,6 +31,7 @@ async function ensureDirectories() {
   const dirsToCreate = [
     { path: directoriesConfig.uploads, name: "uploads" },
     { path: directoriesConfig.tempUploads, name: "temp-uploads" },
+    { path: directoriesConfig.branding, name: "branding" },
   ];
 
   for (const dir of dirsToCreate) {

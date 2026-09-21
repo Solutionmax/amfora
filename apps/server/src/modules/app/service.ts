@@ -1,20 +1,46 @@
+import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
+import { resolvePaidAppearance } from "./appearance";
+import { BackgroundService } from "./background.service";
+import { verifyBrandpack } from "./brandpack";
 
 export class AppService {
   private configService = new ConfigService();
+  private backgroundService = new BackgroundService();
 
   async getAppInfo() {
-    const [appName, appDescription, appLogo, firstUserAccess, appPrimaryColor, appFontFamily, appRadius] =
-      await Promise.all([
-        this.configService.getValue("appName"),
-        this.configService.getValue("appDescription"),
-        this.configService.getValue("appLogo"),
-        this.configService.getValue("firstUserAccess"),
-        this.configService.getValue("appPrimaryColor").catch(() => ""),
-        this.configService.getValue("appFontFamily").catch(() => ""),
-        this.configService.getValue("appRadius").catch(() => ""),
-      ]);
+    const value = (key: string) => this.configService.getValue(key).catch(() => "");
+    const [
+      appName,
+      appDescription,
+      appLogo,
+      firstUserAccess,
+      appPrimaryColor,
+      appFontFamily,
+      appRadius,
+      appHideCredit,
+      appCustomCss,
+      appBrandpack,
+      backgroundExists,
+    ] = await Promise.all([
+      this.configService.getValue("appName"),
+      this.configService.getValue("appDescription"),
+      this.configService.getValue("appLogo"),
+      this.configService.getValue("firstUserAccess"),
+      value("appPrimaryColor"),
+      value("appFontFamily"),
+      value("appRadius"),
+      value("appHideCredit"),
+      value("appCustomCss"),
+      value("appBrandpack"),
+      this.backgroundService.exists(),
+    ]);
+
+    const brandpack = appBrandpack ? verifyBrandpack(appBrandpack, env.AMFORA_BRANDPACK_PUBLIC_KEY) : null;
+    if (appBrandpack && !brandpack) {
+      console.warn("appBrandpack is set but does not verify; paid customization is ignored");
+    }
 
     return {
       appName,
@@ -24,7 +50,22 @@ export class AppService {
       appPrimaryColor: appPrimaryColor ?? "",
       appFontFamily: appFontFamily ?? "",
       appRadius: appRadius ?? "",
+      ...resolvePaidAppearance({ appHideCredit, appCustomCss, backgroundExists }, brandpack),
     };
+  }
+
+  /** Verifies before storing, so an admin learns about a bad pack at paste time. */
+  async activateBrandpack(token: string) {
+    const brandpack = verifyBrandpack(token, env.AMFORA_BRANDPACK_PUBLIC_KEY);
+    if (!brandpack) {
+      throw new Error("This brandpack does not verify. Check that you pasted the whole token.");
+    }
+    await this.updateConfig("appBrandpack", token.trim());
+    return brandpack;
+  }
+
+  async removeBrandpack() {
+    await this.updateConfig("appBrandpack", "");
   }
 
   async getSystemInfo() {
