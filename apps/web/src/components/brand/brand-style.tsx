@@ -28,5 +28,6 @@ export function BrandStyle() {
   // The server only returns custom CSS with a valid brandpack, and it has already
   // stripped imports, outside urls and expressions. This is the one place the app
   // injects markup it did not write, and it is admin-authored by design.
-  return <style id="amfora-custom-css" dangerouslySetInnerHTML={{ __html: appCustomCss }} />;
+  // Belt and braces: the server already escapes "<", this makes the style element unclosable regardless.
+  return <style id="amfora-custom-css" dangerouslySetInnerHTML={{ __html: appCustomCss.replace(/<\/style/gi, "") }} />;
 }
