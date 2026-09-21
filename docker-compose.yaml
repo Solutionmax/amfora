@@ -5,6 +5,10 @@ services:
     build:
       context: .
     image: amfora:local
+    # Over the air updates are optional and need a one time install on the host:
+    #   sudo COMPOSE_DIR=/opt/amfora bash ota/install-ota.sh
+    # then uncomment the ota-state mount under volumes. See docs/OTA.md.
+    #   AMFORA_UPDATE_URL: ""   # empty switches update checking off entirely
     container_name: amfora
     environment:
       # ==============================================================================

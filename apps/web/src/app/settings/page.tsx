@@ -9,6 +9,7 @@ import { LoadingScreen } from "@/components/layout/loading-screen";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SettingsForm } from "./components/settings-form";
+import { UpdateCard } from "./components/update-card";
 import { useSettings } from "./hooks/use-settings";
 
 export default function SettingsPage() {
@@ -84,7 +85,8 @@ export default function SettingsPage() {
   return (
     <ProtectedRoute requireAdmin>
       <FileManagerLayout title={t("settings.pageTitle")}>
-        <div className="w-full">
+        <div className="flex w-full flex-col gap-6">
+          <UpdateCard />
           <SettingsForm
             groupForms={settings.groupForms}
             groupedConfigs={settings.groupedConfigs}
