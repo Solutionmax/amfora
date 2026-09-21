@@ -28,9 +28,9 @@ export function FontPickerForm() {
   const appearance = useAppearance();
 
   const applyFont = useCallback((fontValue: string) => {
-    document.documentElement.style.setProperty("--custom-font-family", fontValue);
+    document.documentElement.style.setProperty("--font-body", fontValue);
     document.documentElement.style.setProperty("--font-sans", fontValue);
-    document.documentElement.style.setProperty("--font-serif", fontValue);
+    document.documentElement.style.setProperty("--font-display-family", fontValue);
 
     document.body.style.fontFamily = fontValue;
   }, []);

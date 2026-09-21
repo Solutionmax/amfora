@@ -13,7 +13,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return <thead data-slot="table-header" className={cn("bg-secondary/40 [&_tr]:border-b", className)} {...props} />;
+  return <thead data-slot="table-header" className={cn("[&_tr]:border-b [&_tr]:border-line", className)} {...props} />;
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
@@ -34,7 +34,10 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
-      className={cn("hover:bg-muted/40 data-[state=selected]:bg-primary/5 border-b transition-colors", className)}
+      className={cn(
+        "hover:bg-surface-2 data-[state=selected]:bg-primary-soft/60 border-b border-line transition-colors duration-150",
+        className
+      )}
       {...props}
     />
   );
@@ -45,7 +48,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "text-muted-foreground h-11 px-4 text-left align-middle text-[11px] font-semibold tracking-[0.06em] uppercase whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "text-ink-3 h-10 px-[18px] text-left align-middle text-xs font-semibold whitespace-nowrap bg-surface [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       {...props}
@@ -58,7 +61,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-4 py-4 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "px-[18px] h-12 py-0 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       {...props}
@@ -72,4 +75,8 @@ function TableCaption({ className, ...props }: React.ComponentProps<"caption">) 
   );
 }
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+function TableCellNum({ className, ...props }: React.ComponentProps<"td">) {
+  return <TableCell className={cn("mono text-right text-[13px] text-ink-2", className)} {...props} />;
+}
+
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCellNum, TableCaption };

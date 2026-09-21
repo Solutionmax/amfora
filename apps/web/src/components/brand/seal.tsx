@@ -5,7 +5,7 @@ export function Seal({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex h-20 w-20 -rotate-6 items-center justify-center rounded-full bg-seal text-seal-foreground shadow-[0_10px_24px_-12px_rgba(14,32,54,0.7)]",
+        "inline-flex h-20 w-20 -rotate-6 items-center justify-center rounded-full bg-ink text-background shadow-[0_10px_24px_-12px_rgba(14,32,54,0.7)]",
         className
       )}
     >

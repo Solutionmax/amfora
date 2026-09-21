@@ -24,9 +24,9 @@ export function applyAppearance(key: keyof typeof APPEARANCE_KEYS, value: string
   }
 
   if (key === "font") {
-    root.style.setProperty("--custom-font-family", value);
+    root.style.setProperty("--font-body", value);
     root.style.setProperty("--font-sans", value);
-    root.style.setProperty("--font-serif", value);
+    root.style.setProperty("--font-display-family", value);
     return;
   }
 
