@@ -464,12 +464,12 @@ export function FilesTable({
                 </TableHead>
               )}
               <TableHead className="">{t("filesTable.columns.name")}</TableHead>
-              <TableHead className="hidden sm:table-cell">{t("filesTable.columns.description")}</TableHead>
+              <TableHead className="hidden xl:table-cell">{t("filesTable.columns.description")}</TableHead>
               <TableHead className="">{t("filesTable.columns.size")}</TableHead>
-              <TableHead className="hidden lg:table-cell">{t("filesTable.columns.createdAt")}</TableHead>
-              <TableHead className="hidden lg:table-cell">{t("filesTable.columns.updatedAt")}</TableHead>
+              <TableHead className="hidden xl:table-cell">{t("filesTable.columns.createdAt")}</TableHead>
+              <TableHead className="hidden 2xl:table-cell">{t("filesTable.columns.updatedAt")}</TableHead>
               <TableHead className="hidden sm:table-cell">{t("filesTable.columns.downloads")}</TableHead>
-              <TableHead className="w-[70px]">{t("filesTable.columns.actions")}</TableHead>
+              <TableHead className="sticky right-0 w-[70px] bg-surface">{t("filesTable.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -639,13 +639,13 @@ export function FilesTable({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell className="hidden xl:table-cell">
                     {folder.totalSize ? formatFileSize(Number(folder.totalSize)) : "—"}
                   </TableCell>
-                  <TableCell className="hidden lg:table-cell">{formatDateTime(folder.createdAt)}</TableCell>
-                  <TableCell className="hidden lg:table-cell">{formatDateTime(folder.updatedAt)}</TableCell>
+                  <TableCell className="hidden xl:table-cell">{formatDateTime(folder.createdAt)}</TableCell>
+                  <TableCell className="hidden 2xl:table-cell">{formatDateTime(folder.updatedAt)}</TableCell>
                   <TableCell className="hidden text-muted-foreground sm:table-cell">—</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="sticky right-0 bg-inherit text-right">
                     {isShareMode ? (
                       onDownloadFolder && (
                         <Button
@@ -823,7 +823,7 @@ export function FilesTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell className="hidden xl:table-cell">
                     <div
                       className="flex items-center gap-1"
                       onMouseEnter={() => setHoveredField({ fileId: file.id, field: "description" })}
@@ -891,14 +891,14 @@ export function FilesTable({
                     </div>
                   </TableCell>
                   <TableCell className="">{formatFileSize(file.size)}</TableCell>
-                  <TableCell className="hidden lg:table-cell">{formatDateTime(file.createdAt)}</TableCell>
-                  <TableCell className="hidden lg:table-cell">
+                  <TableCell className="hidden xl:table-cell">{formatDateTime(file.createdAt)}</TableCell>
+                  <TableCell className="hidden 2xl:table-cell">
                     {formatDateTime(file.updatedAt || file.createdAt)}
                   </TableCell>
                   <TableCell className="hidden tabular-nums sm:table-cell">
                     {file.downloads ? file.downloads : <span className="text-muted-foreground">—</span>}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="sticky right-0 bg-inherit text-right">
                     {isShareMode ? (
                       <Button
                         size="icon"
