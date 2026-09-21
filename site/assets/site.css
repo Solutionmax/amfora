@@ -3194,7 +3194,14 @@ h3 {
   top: 100px;
 }
 .release-index nav {
+  display: grid;
+  gap: 10px;
   margin: 24px 0;
+}
+.release-entries {
+  display: grid;
+  gap: 28px;
+  min-width: 0;
 }
 .release-index nav a {
   display: flex;
