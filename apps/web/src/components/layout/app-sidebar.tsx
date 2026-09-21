@@ -17,7 +17,7 @@ import {
 import { useTranslations } from "next-intl";
 
 import { formatStorageSize } from "@/app/dashboard/utils/format-storage-size";
-import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,7 +40,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAdmin, logout } = useAuth();
-  const { appName, appLogo } = useAppInfo();
+  const { appName } = useAppInfo();
   const [disk, setDisk] = useState<DiskSpace | null>(null);
 
   useEffect(() => {
@@ -108,15 +108,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         onClick={onNavigate}
         className="flex min-h-20 min-w-0 shrink-0 items-center gap-3 border-b border-sidebar-border px-3"
       >
-        {appLogo ? (
-          <img
-            alt=""
-            className="h-9 w-9 shrink-0 rounded-lg border border-border bg-card p-1 object-contain"
-            src={appLogo}
-          />
-        ) : (
-          <AmphoraMark className="h-9 w-9 shrink-0 text-sidebar-primary" />
-        )}
+        <BrandMark className="h-9 w-9 shrink-0 text-sidebar-primary" />
         <span className="truncate font-display text-[22px] font-bold tracking-tight">{appName}</span>
       </Link>
 

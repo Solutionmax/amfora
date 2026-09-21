@@ -5,7 +5,7 @@ import Link from "next/link";
 import { IconClock, IconFileUpload, IconLock, IconNorthStar, IconSparkles } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -23,21 +23,13 @@ function WorkflowStep({ icon: Icon, label }: { icon: typeof IconFileUpload; labe
 
 export function PublicAuthShell({ eyebrow, children }: { eyebrow: string; children: ReactNode }) {
   const t = useTranslations();
-  const { appName, appLogo } = useAppInfo();
+  const { appName } = useAppInfo();
 
   return (
     <div className="min-h-screen overflow-x-clip bg-background text-foreground">
       <header className="mx-auto flex w-[calc(100%-2.5rem)] max-w-7xl items-center justify-between border-b border-[#dce1dd] py-5 dark:border-border sm:w-[calc(100%-4rem)] sm:py-7">
         <Link href="/" className="flex min-w-0 items-center gap-3">
-          {appLogo ? (
-            <img
-              alt=""
-              className="size-9 shrink-0 rounded-xl border border-[#dce1dd] bg-white p-1 object-contain dark:border-border dark:bg-card"
-              src={appLogo}
-            />
-          ) : (
-            <AmphoraMark className="size-9 shrink-0 text-primary" />
-          )}
+          <BrandMark className="size-9 shrink-0 text-primary" />
           <span className="truncate font-display text-xl font-bold tracking-tight sm:text-2xl">{appName}</span>
         </Link>
 

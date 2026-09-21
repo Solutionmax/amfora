@@ -5,7 +5,7 @@ import Link from "next/link";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import { useAppInfo } from "@/contexts/app-info-context";
 
 export function Navbar() {
   const t = useTranslations();
-  const { appName, appLogo, refreshAppInfo } = useAppInfo();
+  const { appName, refreshAppInfo } = useAppInfo();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -26,11 +26,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-8">
           <Link href="/" className="flex min-w-0 items-center gap-2.5">
-            {appLogo ? (
-              <img alt="" className="h-8 w-8 shrink-0 rounded-lg bg-white/95 p-1 object-contain" src={appLogo} />
-            ) : (
-              <AmphoraMark className="h-8 w-8 shrink-0 text-sky-300" />
-            )}
+            <BrandMark className="h-8 w-8 shrink-0 text-sky-300" />
             <span className="truncate font-display text-xl font-bold tracking-tight text-white">{appName}</span>
           </Link>
         </div>

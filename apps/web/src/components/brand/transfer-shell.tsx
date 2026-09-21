@@ -2,9 +2,10 @@
 
 import { Fragment, ReactNode } from "react";
 import Link from "next/link";
-import { IconArrowUpRight, IconFileText, IconFileZip, IconPhoto } from "@tabler/icons-react";
+import { IconFileText, IconFileZip, IconPhoto } from "@tabler/icons-react";
 
-import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { BrandCredit } from "@/components/brand/brand-credit";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -24,16 +25,12 @@ export function TransferShell({
   aside?: ReactNode;
   children: ReactNode;
 }) {
-  const { appName, appLogo } = useAppInfo();
+  const { appName } = useAppInfo();
   return (
     <div className={styles.shell} data-direction={direction}>
       <header className={styles.header}>
         <Link href="/" className="flex min-w-0 items-center gap-3 text-foreground">
-          {appLogo ? (
-            <img alt="" className="size-9 shrink-0 object-contain" src={appLogo} />
-          ) : (
-            <AmphoraMark className="size-9 shrink-0 text-primary" />
-          )}
+          <BrandMark className="size-9 shrink-0 text-primary" />
           <span className="truncate font-display text-2xl font-bold tracking-tight">{appName}</span>
         </Link>
         <div className="flex shrink-0 items-center gap-1 text-foreground">
@@ -60,13 +57,13 @@ export function TransferShell({
             </span>
             <span className={styles.trailLine} />
             <span className={styles.trailSeal}>
-              <AmphoraMark />
+              <BrandMark />
             </span>
           </div>
         </div>
         <section className={styles.envelope} aria-label={label}>
           <div className={styles.paper} aria-hidden="true">
-            <AmphoraMark />
+            <BrandMark />
           </div>
           <div className={styles.filePeek} aria-hidden="true">
             <IconFileText strokeWidth={1.3} />
@@ -82,7 +79,7 @@ export function TransferShell({
           <div className={styles.workspace}>
             {direction !== "upload" && (
               <div className={styles.stamp} aria-hidden="true">
-                <AmphoraMark />
+                <BrandMark />
                 <svg className={styles.postmark} viewBox="0 0 120 44" fill="none">
                   <path
                     d="M2 10 Q17 0 32 10 T62 10 T92 10 T122 10 M2 22 Q17 12 32 22 T62 22 T92 22 T122 22 M2 34 Q17 24 32 34 T62 34 T92 34 T122 34"
@@ -98,13 +95,7 @@ export function TransferShell({
         {aside && <div className={styles.aside}>{aside}</div>}
       </main>
       <footer className={styles.footer}>
-        <a className={styles.credit} href="https://amfora.solutionmax.net/" target="_blank" rel="noopener noreferrer">
-          <AmphoraMark className="h-7 w-6 text-primary" aria-hidden="true" />
-          <span>
-            Powered by <strong>Amfora</strong>
-          </span>
-          <IconArrowUpRight className="size-4" aria-hidden="true" />
-        </a>
+        <BrandCredit className={styles.credit} withMark />
       </footer>
     </div>
   );
