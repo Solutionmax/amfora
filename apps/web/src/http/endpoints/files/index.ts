@@ -86,10 +86,13 @@ export const listFiles = <TData = ListFilesResult>(
  */
 export const getDownloadUrl = <TData = GetDownloadUrlResult>(
   objectName: string,
-  options?: AxiosRequestConfig
+  options?: AxiosRequestConfig,
+  /** A preview asks for the same URL as a download, and must not be counted as one. */
+  isPreview = false
 ): Promise<TData> => {
   const encodedObjectName = encodeURIComponent(objectName);
-  return apiInstance.get(`/api/files/download-url?objectName=${encodedObjectName}`, options);
+  const previewFlag = isPreview ? "&preview=1" : "";
+  return apiInstance.get(`/api/files/download-url?objectName=${encodedObjectName}${previewFlag}`, options);
 };
 
 /**
