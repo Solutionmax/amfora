@@ -473,8 +473,7 @@
     "deleteWarning": "Deze actie kan niet ongedaan worden gemaakt."
   },
   "footer": {
-    "poweredBy": "Mogelijk gemaakt door",
-    "kyanHomepage": "SolutionMAX homepage"
+    "poweredBy": "Mogelijk gemaakt door"
   },
   "forgotPassword": {
     "emailLabel": "E-mailadres",
@@ -512,21 +511,7 @@
     "documentation": "Documentatie",
     "starOnGithub": "Star op GitHub",
     "privacyMessage": "Elke deling is verzegeld: zet een wachtwoord, een vervaldatum en een downloadlimiet. Verloopt de link, dan is hij dood.",
-    "header": {
-      "fileSharing": "Bestanden sturen",
-      "tagline": "die verzegeld blijven"
-    },
-    "pageTitle": "Startpagina",
-    "visual": {
-      "expires": "Verloopt",
-      "downloads": "Opgehaald",
-      "password": "Wachtwoord"
-    },
-    "points": {
-      "selfHosted": "Draait op je eigen server",
-      "expiry": "Links verlopen vanzelf",
-      "noTracking": "Geen tracking, geen limieten"
-    }
+    "pageTitle": "Startpagina"
   },
   "iconPicker": {
     "title": "Selecteer Pictogram",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profiel"
   },
-  "publicTransfer": {
-    "downloadTitle": "Post voor\njou.",
-    "uploadTitle": "Stuur iets\nmoois.",
-    "downloadCaption": "Van hun wereld naar die van jou.",
-    "uploadCaption": "Elk goed idee begint met delen."
-  },
   "qrCodeModal": {
     "title": "QR Code Delen",
     "description": "Scan deze QR-code om toegang te krijgen tot de link.",
     "download": "QR Code Downloaden"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Mijn Bestanden",
-      "description": "Toegang tot en beheer van je geüploade bestanden"
-    },
-    "shares": {
-      "title": "Mijn Delingen",
-      "description": "Bekijk en beheer je gedeelde bestanden"
-    },
-    "reverseShares": {
-      "title": "Bestanden Ontvangen",
-      "description": "Maak links aan zodat anderen bestanden naar jou kunnen sturen"
-    }
   },
   "recentFiles": {
     "title": "Recente Uploads",

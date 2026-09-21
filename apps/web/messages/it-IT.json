@@ -473,8 +473,7 @@
     "deleteWarning": "Questa azione non può essere annullata."
   },
   "footer": {
-    "poweredBy": "Sviluppato da",
-    "kyanHomepage": "Homepage di SolutionMAX"
+    "poweredBy": "Sviluppato da"
   },
   "forgotPassword": {
     "emailLabel": "Indirizzo Email",
@@ -512,21 +511,7 @@
     "documentation": "Documentazione",
     "starOnGithub": "Metti una stella su GitHub",
     "privacyMessage": "Costruito pensando alla privacy. I tuoi file prima del caricamento sono accessibili solo a chi ha il link di condivisione. Sempre gratuito e open source.",
-    "header": {
-      "fileSharing": "Condivisione file",
-      "tagline": "semplice e gratuita"
-    },
-    "pageTitle": "Pagina iniziale",
-    "visual": {
-      "expires": "Scade",
-      "downloads": "Download",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
-    }
+    "pageTitle": "Pagina iniziale"
   },
   "iconPicker": {
     "title": "Seleziona Icona",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profilo"
   },
-  "publicTransfer": {
-    "downloadTitle": "Belle cose,\nper te.",
-    "uploadTitle": "Spazio alle\ntue idee.",
-    "downloadCaption": "Dal loro mondo al tuo.",
-    "uploadCaption": "Ogni grande idea nasce dalla condivisione."
-  },
   "qrCodeModal": {
     "title": "Condividi QR Code",
     "description": "Scansiona questo codice QR per accedere al link.",
     "download": "Scarica QR Code"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "I Miei File",
-      "description": "Accedi e gestisci i tuoi file caricati"
-    },
-    "shares": {
-      "title": "Le Mie Condivisioni",
-      "description": "Visualizza e gestisci i tuoi file condivisi"
-    },
-    "reverseShares": {
-      "title": "Ricevi File",
-      "description": "Crea link per permettere ad altri di inviarti file"
-    }
   },
   "recentFiles": {
     "title": "Caricamenti Recenti",

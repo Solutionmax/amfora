@@ -473,8 +473,7 @@
     "deleteWarning": "פעולה זו אינה ניתנת לביטול."
   },
   "footer": {
-    "poweredBy": "מופעל על ידי",
-    "kyanHomepage": "דף הבית של SolutionMAX"
+    "poweredBy": "מופעל על ידי"
   },
   "forgotPassword": {
     "emailLabel": "כתובת דוא\"ל",
@@ -512,21 +511,7 @@
     "documentation": "תיעוד",
     "starOnGithub": "תן כוכב ב-GitHub",
     "privacyMessage": "בנוי עם פרטיות בראש. הקבצים שלך נגישים רק לאלו עם קישור השיתוף לפני ההעלאה. חינמי וקוד פתוח לנצח.",
-    "header": {
-      "fileSharing": "שיתוף קבצים",
-      "tagline": "נעשה פשוט וחינם"
-    },
-    "pageTitle": "בית",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "פועל על השרת שלך",
-      "expiry": "הקישורים פגים מעצמם",
-      "noTracking": "ללא מעקב, ללא הגבלות"
-    }
+    "pageTitle": "בית"
   },
   "iconPicker": {
     "title": "בחר אייקון",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "פרופיל"
   },
-  "publicTransfer": {
-    "downloadTitle": "דברים טובים,\nבשבילך.",
-    "uploadTitle": "מקום\nלרעיונות שלך.",
-    "downloadCaption": "מהעולם שלהם לעולם שלך.",
-    "uploadCaption": "כל רעיון גדול מתחיל בשיתוף."
-  },
   "qrCodeModal": {
     "title": "קוד QR לשיתוף",
     "description": "סרוק קוד QR זה כדי לגשת לקישור.",
     "download": "הורד קוד QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "הקבצים שלי",
-      "description": "גש ונהל את הקבצים שהעלית"
-    },
-    "shares": {
-      "title": "השיתופים שלי",
-      "description": "צפה ונהל את הקבצים המשותפים שלך"
-    },
-    "reverseShares": {
-      "title": "קבל קבצים",
-      "description": "צור קישורים לאחרים לשלוח לך קבצים"
-    }
   },
   "recentFiles": {
     "title": "העלאות אחרונות",

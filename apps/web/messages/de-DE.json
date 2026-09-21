@@ -473,8 +473,7 @@
     "deleteWarning": "Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "footer": {
-    "poweredBy": "Angetrieben von",
-    "kyanHomepage": "SolutionMAX Homepage"
+    "poweredBy": "Angetrieben von"
   },
   "forgotPassword": {
     "emailLabel": "E-Mail-Adresse",
@@ -512,21 +511,7 @@
     "documentation": "Dokumentation",
     "starOnGithub": "Auf GitHub Sternchen vergeben",
     "privacyMessage": "Mit Blick auf den Datenschutz entwickelt. Ihre Dateien sind vor dem Hochladen nur für diejenigen zugänglich, die den Freigabelink haben. Immer kostenlos und Open Source.",
-    "header": {
-      "fileSharing": "Dateifreigabe",
-      "tagline": "einfach und kostenlos"
-    },
-    "pageTitle": "Startseite",
-    "visual": {
-      "expires": "Läuft ab",
-      "downloads": "Downloads",
-      "password": "Passwort"
-    },
-    "points": {
-      "selfHosted": "Läuft auf deinem eigenen Server",
-      "expiry": "Links laufen von selbst ab",
-      "noTracking": "Kein Tracking, keine Limits"
-    }
+    "pageTitle": "Startseite"
   },
   "iconPicker": {
     "title": "Symbol auswählen",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Gute Dinge,\nfür dich.",
-    "uploadTitle": "Raum für\ndeine Ideen.",
-    "downloadCaption": "Aus ihrer Welt in deine.",
-    "uploadCaption": "Jede große Idee beginnt mit dem Teilen."
-  },
   "qrCodeModal": {
     "title": "QR-Code teilen",
     "description": "Scannen Sie diesen QR-Code, um auf den Link zuzugreifen.",
     "download": "QR-Code herunterladen"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Meine Dateien",
-      "description": "Zugriff und Verwaltung Ihrer hochgeladenen Dateien"
-    },
-    "shares": {
-      "title": "Meine Freigaben",
-      "description": "Anzeigen und Verwalten Ihrer geteilten Dateien"
-    },
-    "reverseShares": {
-      "title": "Dateien empfangen",
-      "description": "Erstellen Sie Links, damit andere Ihnen Dateien senden können"
-    }
   },
   "recentFiles": {
     "title": "Kürzlich hochgeladen",

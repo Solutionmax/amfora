@@ -473,8 +473,7 @@
     "deleteWarning": "Cette action ne peut pas être annulée."
   },
   "footer": {
-    "poweredBy": "Propulsé par",
-    "kyanHomepage": "Page d'accueil de SolutionMAX"
+    "poweredBy": "Propulsé par"
   },
   "forgotPassword": {
     "emailLabel": "Adresse Email",
@@ -512,21 +511,7 @@
     "documentation": "Documentation",
     "starOnGithub": "Star sur GitHub",
     "privacyMessage": "Conçu avec la confidentialité à l'esprit. Vos fichiers avant téléchargement ne sont accessibles que par ceux ayant le lien de partage. Gratuit et open source pour toujours.",
-    "header": {
-      "fileSharing": "Partage de fichiers",
-      "tagline": "simple et gratuit"
-    },
-    "pageTitle": "Accueil",
-    "visual": {
-      "expires": "Expire",
-      "downloads": "Téléchargements",
-      "password": "Mot de passe"
-    },
-    "points": {
-      "selfHosted": "Fonctionne sur votre serveur",
-      "expiry": "Les liens expirent d'eux-mêmes",
-      "noTracking": "Sans suivi, sans limites"
-    }
+    "pageTitle": "Accueil"
   },
   "iconPicker": {
     "title": "Sélectionner une Icône",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profil"
   },
-  "publicTransfer": {
-    "downloadTitle": "De belles choses,\npour vous.",
-    "uploadTitle": "Place à\nvos idées.",
-    "downloadCaption": "De leur univers au vôtre.",
-    "uploadCaption": "Chaque grande idée commence par un partage."
-  },
   "qrCodeModal": {
     "title": "Code QR de Partage",
     "description": "Scannez ce code QR pour accéder au lien.",
     "download": "Télécharger le Code QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Mes Fichiers",
-      "description": "Accédez et gérez vos fichiers téléchargés"
-    },
-    "shares": {
-      "title": "Mes Partages",
-      "description": "Visualisez et gérez vos fichiers partagés"
-    },
-    "reverseShares": {
-      "title": "Recevoir des Fichiers",
-      "description": "Créez des liens pour que d'autres puissent vous envoyer des fichiers"
-    }
   },
   "recentFiles": {
     "title": "Téléchargements Récents",

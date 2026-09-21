@@ -549,8 +549,7 @@
     "deleteWarning": "This action cannot be undone."
   },
   "footer": {
-    "poweredBy": "Powered by",
-    "kyanHomepage": "SolutionMAX homepage"
+    "poweredBy": "Powered by"
   },
   "forgotPassword": {
     "emailLabel": "Email Address",
@@ -588,21 +587,7 @@
     "documentation": "Documentation",
     "starOnGithub": "Star on GitHub",
     "privacyMessage": "Every share is sealed: set a password, an expiry date and a download limit. Once it expires the link is dead.",
-    "header": {
-      "fileSharing": "Send files",
-      "tagline": "that stay sealed"
-    },
-    "pageTitle": "Home",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Runs on your own server",
-      "expiry": "Links expire on their own",
-      "noTracking": "No tracking, no limits"
-    }
+    "pageTitle": "Home"
   },
   "iconPicker": {
     "title": "Select Icon",
@@ -843,30 +828,10 @@
       }
     }
   },
-  "publicTransfer": {
-    "downloadTitle": "A delivery\nfor you.",
-    "uploadTitle": "Send something\ngood.",
-    "downloadCaption": "From their world to yours.",
-    "uploadCaption": "Every great idea starts with a little sharing."
-  },
   "qrCodeModal": {
     "title": "Share QR Code",
     "description": "Scan this QR code to access the link.",
     "download": "Download QR Code"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "My Files",
-      "description": "Access and manage your uploaded files"
-    },
-    "shares": {
-      "title": "My Shares",
-      "description": "View and manage your shared files"
-    },
-    "reverseShares": {
-      "title": "Receive Files",
-      "description": "Create links for others to send files to you"
-    }
   },
   "recentFiles": {
     "title": "Recent Uploads",

@@ -473,8 +473,7 @@
     "deleteWarning": "Ta operacja nie może zostać cofnięta."
   },
   "footer": {
-    "poweredBy": "Zasilane przez",
-    "kyanHomepage": "Strona główna SolutionMAX"
+    "poweredBy": "Zasilane przez"
   },
   "forgotPassword": {
     "emailLabel": "Adres e-mail",
@@ -512,21 +511,7 @@
     "documentation": "Dokumentacja",
     "starOnGithub": "Oceń na GitHub",
     "privacyMessage": "Stworzone z myślą o prywatności. Twoje pliki są dostępne tylko dla osób posiadających link do udostępniania przed przesłaniem. Zawsze darmowe i open source.",
-    "header": {
-      "fileSharing": "Udostępnianie plików",
-      "tagline": "proste i darmowe"
-    },
-    "pageTitle": "Strona główna",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Działa na własnym serwerze",
-      "expiry": "Linki wygasają same",
-      "noTracking": "Bez śledzenia, bez limitów"
-    }
+    "pageTitle": "Strona główna"
   },
   "iconPicker": {
     "title": "Wybierz ikonę",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Dobre rzeczy,\ndla Ciebie.",
-    "uploadTitle": "Miejsce na\nTwoje pomysły.",
-    "downloadCaption": "Z ich świata do Twojego.",
-    "uploadCaption": "Każdy wielki pomysł zaczyna się od dzielenia."
-  },
   "qrCodeModal": {
     "title": "Udostępnij kod QR",
     "description": "Skanuj ten kod QR, aby uzyskać dostęp do linku.",
     "download": "Pobierz kod QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Moje pliki",
-      "description": "Dostęp i zarządzanie przesłanymi plikami"
-    },
-    "shares": {
-      "title": "Moje udostępnienia",
-      "description": "Wyświetlaj i zarządzaj udostępnionymi plikami"
-    },
-    "reverseShares": {
-      "title": "Odbieraj pliki",
-      "description": "Twórz linki, aby inni mogli wysyłać Ci pliki"
-    }
   },
   "recentFiles": {
     "title": "Ostatnie przesłane pliki",

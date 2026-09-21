@@ -473,8 +473,7 @@
     "deleteWarning": "Hành động này không thể hoàn tác."
   },
   "footer": {
-    "poweredBy": "Cung cấp bởi",
-    "kyanHomepage": "Trang chủ SolutionMAX"
+    "poweredBy": "Cung cấp bởi"
   },
   "forgotPassword": {
     "emailLabel": "Địa chỉ email",
@@ -512,21 +511,7 @@
     "documentation": "Tài liệu",
     "starOnGithub": "Gắn sao trên GitHub",
     "privacyMessage": "Được xây dựng với sự riêng tư. Các tệp của bạn chỉ có thể được truy cập bởi những người có liên kết chia sẻ trước khi tải lên. Mãi mãi miễn phí và mã nguồn mở.",
-    "header": {
-      "fileSharing": "Chia sẻ tệp",
-      "tagline": "đơn giản và miễn phí"
-    },
-    "pageTitle": "Trang chủ",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Chạy trên máy chủ riêng của bạn",
-      "expiry": "Liên kết tự động hết hạn",
-      "noTracking": "Không theo dõi, không giới hạn"
-    }
+    "pageTitle": "Trang chủ"
   },
   "iconPicker": {
     "title": "Chọn biểu tượng",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Hồ sơ"
   },
-  "publicTransfer": {
-    "downloadTitle": "Điều tốt đẹp,\ngửi đến bạn.",
-    "uploadTitle": "Không gian cho\ný tưởng của bạn.",
-    "downloadCaption": "Từ thế giới của họ đến thế giới của bạn.",
-    "uploadCaption": "Mỗi ý tưởng lớn đều bắt đầu từ sự sẻ chia."
-  },
   "qrCodeModal": {
     "title": "Chia sẻ mã QR",
     "description": "Quét mã QR này để truy cập liên kết.",
     "download": "Tải xuống mã QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Tệp của tôi",
-      "description": "Truy cập và quản lý các tệp đã tải lên của bạn"
-    },
-    "shares": {
-      "title": "Chia sẻ của tôi",
-      "description": "Xem và quản lý các tệp được chia sẻ của bạn"
-    },
-    "reverseShares": {
-      "title": "Nhận tệp",
-      "description": "Tạo liên kết để người khác gửi tệp cho bạn"
-    }
   },
   "recentFiles": {
     "title": "Tải lên gần đây",

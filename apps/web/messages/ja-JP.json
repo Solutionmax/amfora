@@ -473,8 +473,7 @@
     "deleteWarning": "この操作は元に戻すことができません。"
   },
   "footer": {
-    "poweredBy": "提供:",
-    "kyanHomepage": "SolutionMAX ホームページ"
+    "poweredBy": "提供:"
   },
   "forgotPassword": {
     "emailLabel": "メールアドレス",
@@ -512,21 +511,7 @@
     "documentation": "ドキュメント",
     "starOnGithub": "GitHubでスターを付ける",
     "privacyMessage": "プライバシーを重視して作られています。アップロード前のファイルは、共有リンクを持つ人だけがアクセスできます。常に無料でオープンソースです。",
-    "header": {
-      "fileSharing": "ファイル共有",
-      "tagline": "シンプルで無料"
-    },
-    "pageTitle": "ホーム",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "自分のサーバーで動作します",
-      "expiry": "リンクは自動的に期限切れになります",
-      "noTracking": "追跡なし、制限なし"
-    }
+    "pageTitle": "ホーム"
   },
   "iconPicker": {
     "title": "アイコンを選択",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "プロフィール"
   },
-  "publicTransfer": {
-    "downloadTitle": "素敵なものを、\nあなたへ。",
-    "uploadTitle": "アイデアが\n広がる場所。",
-    "downloadCaption": "あの人の世界から、あなたの世界へ。",
-    "uploadCaption": "素晴らしいアイデアは、分かち合うことから。"
-  },
   "qrCodeModal": {
     "title": "QRコードを共有",
     "description": "このQRコードをスキャンしてリンクにアクセスしてください。",
     "download": "QRコードをダウンロード"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "マイファイル",
-      "description": "アップロードされたファイルにアクセスし、管理します"
-    },
-    "shares": {
-      "title": "マイ共有",
-      "description": "共有されたファイルを表示および管理します"
-    },
-    "reverseShares": {
-      "title": "ファイルを受け取る",
-      "description": "他のユーザーがファイルを送信できるリンクを作成"
-    }
   },
   "recentFiles": {
     "title": "最近のアップロード",

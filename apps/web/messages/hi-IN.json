@@ -473,8 +473,7 @@
     "deleteWarning": "यह कार्य पूर्ववत नहीं किया जा सकता।"
   },
   "footer": {
-    "poweredBy": "द्वारा संचालित",
-    "kyanHomepage": "SolutionMAX होमपेज"
+    "poweredBy": "द्वारा संचालित"
   },
   "forgotPassword": {
     "emailLabel": "ईमेल पता",
@@ -512,21 +511,7 @@
     "documentation": "दस्तावेज",
     "starOnGithub": "GitHub पर स्टार करें",
     "privacyMessage": "गोपनीयता को ध्यान में रखते हुए बनाया गया। अपलोड से पहले आपकी फाइलें केवल उनके लिए उपलब्ध हैं जिनके पास साझाकरण लिंक है। हमेशा मुफ्त और ओपन सोर्स।",
-    "header": {
-      "fileSharing": "फाइल साझा करें",
-      "tagline": "सरल और मुफ्त"
-    },
-    "pageTitle": "होम",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "आपके अपने सर्वर पर चलता है",
-      "expiry": "लिंक अपने आप समाप्त हो जाते हैं",
-      "noTracking": "कोई ट्रैकिंग नहीं, कोई सीमा नहीं"
-    }
+    "pageTitle": "होम"
   },
   "iconPicker": {
     "title": "आइकन चुनें",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "प्रोफ़ाइल"
   },
-  "publicTransfer": {
-    "downloadTitle": "अच्छी चीज़ें,\nआपके लिए।",
-    "uploadTitle": "आपके विचारों\nके लिए जगह।",
-    "downloadCaption": "उनकी दुनिया से आपकी दुनिया तक।",
-    "uploadCaption": "हर बेहतरीन विचार की शुरुआत साझा करने से होती है।"
-  },
   "qrCodeModal": {
     "title": "QR कोड साझा करें",
     "description": "इस QR कोड को स्कैन करके लिंक तक पहुंच सकते हैं।",
     "download": "QR कोड डाउनलोड करें"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "मेरी फाइलें",
-      "description": "अपलोड की गई फाइलों तक पहुंच और प्रबंधन"
-    },
-    "shares": {
-      "title": "मेरे साझाकरण",
-      "description": "साझा की गई फाइलों को देखें और प्रबंधित करें"
-    },
-    "reverseShares": {
-      "title": "फ़ाइलें प्राप्त करें",
-      "description": "दूसरों को आपको फ़ाइलें भेजने के लिए लिंक बनाएं"
-    }
   },
   "recentFiles": {
     "title": "हाल की अपलोड्स",

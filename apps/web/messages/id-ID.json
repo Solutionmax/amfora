@@ -473,8 +473,7 @@
     "deleteWarning": "Tindakan ini tidak dapat dibatalkan."
   },
   "footer": {
-    "poweredBy": "Ditenagai oleh",
-    "kyanHomepage": "Beranda SolutionMAX"
+    "poweredBy": "Ditenagai oleh"
   },
   "forgotPassword": {
     "emailLabel": "Alamat Email",
@@ -512,21 +511,7 @@
     "documentation": "Dokumentasi",
     "starOnGithub": "Berikan Bintang di GitHub",
     "privacyMessage": "Dibangun dengan mengutamakan privasi. File Anda hanya dapat diakses oleh mereka yang memiliki tautan berbagi sebelum unggah. Selamanya gratis dan open source.",
-    "header": {
-      "fileSharing": "Berbagi file",
-      "tagline": "dibuat sederhana dan gratis"
-    },
-    "pageTitle": "Beranda",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Berjalan di server Anda sendiri",
-      "expiry": "Tautan kedaluwarsa dengan sendirinya",
-      "noTracking": "Tanpa pelacakan, tanpa batasan"
-    }
+    "pageTitle": "Beranda"
   },
   "iconPicker": {
     "title": "Pilih Ikon",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Hal-hal baik,\nuntukmu.",
-    "uploadTitle": "Ruang untuk\nide-idemu.",
-    "downloadCaption": "Dari dunia mereka ke duniamu.",
-    "uploadCaption": "Setiap ide hebat dimulai dengan berbagi."
-  },
   "qrCodeModal": {
     "title": "Bagikan Kode QR",
     "description": "Pindai kode QR ini untuk mengakses tautan.",
     "download": "Unduh Kode QR"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "File Saya",
-      "description": "Akses dan kelola file yang telah Anda unggah"
-    },
-    "shares": {
-      "title": "Berbagi Saya",
-      "description": "Lihat dan kelola file yang telah Anda bagikan"
-    },
-    "reverseShares": {
-      "title": "Terima File",
-      "description": "Buat tautan untuk orang lain mengirim file kepada Anda"
-    }
   },
   "recentFiles": {
     "title": "Unggahan Terbaru",

@@ -473,8 +473,7 @@
     "deleteWarning": "Bu işlem geri alınamaz."
   },
   "footer": {
-    "poweredBy": "Tarafından destekleniyor:",
-    "kyanHomepage": "SolutionMAX Ana Sayfası"
+    "poweredBy": "Tarafından destekleniyor:"
   },
   "forgotPassword": {
     "emailLabel": "E-posta Adresi",
@@ -512,21 +511,7 @@
     "documentation": "Belgelendirme",
     "starOnGithub": "GitHub'da Yıldız Verin",
     "privacyMessage": "Gizlilik göz önünde bulundurularak tasarlanmıştır. Yüklemeden önceki dosyalar, yalnızca paylaşım bağlantısına sahip olanlar tarafından erişilebilir. Her zaman ücretsiz ve açık kaynaktır.",
-    "header": {
-      "fileSharing": "Dosya Paylaşımı",
-      "tagline": "Basit ve Ücretsiz"
-    },
-    "pageTitle": "Ana Sayfa",
-    "visual": {
-      "expires": "Expires",
-      "downloads": "Downloads",
-      "password": "Password"
-    },
-    "points": {
-      "selfHosted": "Kendi sunucunuzda çalışır",
-      "expiry": "Bağlantılar kendiliğinden sona erer",
-      "noTracking": "Takip yok, sınır yok"
-    }
+    "pageTitle": "Ana Sayfa"
   },
   "iconPicker": {
     "title": "Simge Seç",
@@ -671,30 +656,10 @@
     },
     "pageTitle": "Profil"
   },
-  "publicTransfer": {
-    "downloadTitle": "Güzel şeyler,\nsenin için.",
-    "uploadTitle": "Fikirlerine\nyer aç.",
-    "downloadCaption": "Onların dünyasından seninkine.",
-    "uploadCaption": "Her büyük fikir küçük bir paylaşımla başlar."
-  },
   "qrCodeModal": {
     "title": "QR Kodu Paylaş",
     "description": "Bu QR kodu tarayarak bağlantıya erişebilirsiniz.",
     "download": "QR Kodu İndir"
-  },
-  "quickAccess": {
-    "files": {
-      "title": "Benim Dosyalarım",
-      "description": "Yüklenen dosyalara erişin ve yönetin"
-    },
-    "shares": {
-      "title": "Benim Paylaşımlarım",
-      "description": "Paylaşılan dosyaları görüntüleyin ve yönetin"
-    },
-    "reverseShares": {
-      "title": "Dosya Al",
-      "description": "Başkalarının size dosya göndermesi için bağlantılar oluşturun"
-    }
   },
   "recentFiles": {
     "title": "Son Yüklemeler",
