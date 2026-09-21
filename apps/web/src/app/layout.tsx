@@ -1,5 +1,5 @@
 import {
-  Bricolage_Grotesque,
+  Archivo,
   Inter,
   JetBrains_Mono,
   Lato,
@@ -7,8 +7,8 @@ import {
   Nunito,
   Open_Sans,
   Outfit,
-  Plus_Jakarta_Sans,
   Poppins,
+  Public_Sans,
   Raleway,
   Roboto,
   Source_Sans_3,
@@ -28,9 +28,10 @@ import { ShareProvider } from "@/contexts/share-context";
 import { ThemeColorProvider } from "../providers/theme-color-provider";
 import { ThemeProvider } from "../providers/theme-provider";
 
-const bricolage = Bricolage_Grotesque({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-bricolage",
+  variable: "--font-archivo",
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -40,9 +41,9 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
+const publicSans = Public_Sans({
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-public-sans",
   display: "swap",
 });
 
@@ -134,7 +135,7 @@ export default async function RootLayout({
         <Favicon />
       </head>
       <body
-        className={`${bricolage.variable} ${jetbrains.variable} ${plusJakarta.variable} ${outfit.variable} ${inter.variable} ${roboto.variable} ${openSans.variable} ${poppins.variable} ${nunito.variable} ${lato.variable} ${montserrat.variable} ${sourceSans.variable} ${raleway.variable} ${workSans.variable} font-sans antialiased`}
+        className={`${archivo.variable} ${jetbrains.variable} ${publicSans.variable} ${outfit.variable} ${inter.variable} ${roboto.variable} ${openSans.variable} ${poppins.variable} ${nunito.variable} ${lato.variable} ${montserrat.variable} ${sourceSans.variable} ${raleway.variable} ${workSans.variable} font-sans antialiased`}
       >
         <NextIntlClientProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
