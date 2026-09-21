@@ -1408,6 +1408,23 @@
         "saveChanges": "Save changes",
         "cancelEdit": "Cancel edit"
       }
+    },
+    "v2": {
+      "subline": "{links, plural, =0 {No receive links yet} =1 {# receive link} other {# receive links}} · {files, plural, =0 {nothing received} =1 {# file received} other {# files received}}",
+      "filesOf": "{count} of {max} files",
+      "filesReceived": "{count, plural, =0 {No files yet} =1 {# file} other {# files}}",
+      "maxSize": "Up to {size} per file",
+      "openLink": "Open link",
+      "expiresOn": "Expires {date}",
+      "expiredOn": "Expired {date}",
+      "noEndDate": "No end date",
+      "actions": "Actions",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "received": "{count, plural, =0 {Received} =1 {Received · # file} other {Received · # files}}",
+      "noFiles": "Nothing has come in yet. Share the link and files show up here.",
+      "receivedBy": "{sender} · {date}",
+      "showAll": "Show all {count} files"
     }
   },
   "searchBar": {

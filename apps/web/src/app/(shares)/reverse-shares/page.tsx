@@ -1,13 +1,15 @@
 "use client";
 
+import { IconPlus, IconSearch } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { LoadingScreen } from "@/components/layout/loading-screen";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ReverseSharesCardsContainer } from "./components/reverse-shares-cards-container";
 import { ReverseSharesModals } from "./components/reverse-shares-modals";
-import { ReverseSharesSearch } from "./components/reverse-shares-search";
 import { useReverseShares } from "./hooks/use-reverse-shares";
 
 export default function ReverseSharesPage() {
@@ -53,16 +55,29 @@ export default function ReverseSharesPage() {
 
   return (
     <ProtectedRoute>
-      <FileManagerLayout title={t("reverseShares.pageTitle")}>
-        <ReverseSharesSearch
-          filteredCount={filteredReverseShares.length}
-          searchQuery={searchQuery}
-          totalReverseShares={reverseShares.length}
-          onCreateReverseShare={() => setIsCreateModalOpen(true)}
-          onSearchChange={setSearchQuery}
-          onRefresh={loadReverseShares}
-          isRefreshing={isLoading}
-        />
+      <FileManagerLayout
+        title={t("reverseShares.pageTitle")}
+        subline={t("reverseShares.v2.subline", {
+          links: reverseShares.length,
+          files: reverseShares.reduce((sum, share) => sum + (share.files?.length ?? 0), 0),
+        })}
+        actions={
+          <Button onClick={() => setIsCreateModalOpen(true)}>
+            <IconPlus className="size-4" />
+            {t("reverseShares.search.createButton")}
+          </Button>
+        }
+      >
+        <div className="relative max-w-sm">
+          <IconSearch className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+          <Input
+            type="search"
+            className="pl-9"
+            placeholder={t("reverseShares.search.placeholder")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
 
         <ReverseSharesCardsContainer
           reverseShares={filteredReverseShares}
@@ -74,9 +89,9 @@ export default function ReverseSharesPage() {
           onViewFiles={setReverseShareToViewFiles}
           onViewQrCode={setReverseShareToViewQrCode}
           onCreateReverseShare={() => setIsCreateModalOpen(true)}
-          onUpdateReverseShare={handleUpdateReverseShareData}
           onToggleActive={handleToggleActive}
           onUpdatePassword={handleUpdatePassword}
+          onRefresh={loadReverseShares}
         />
 
         <ReverseSharesModals
