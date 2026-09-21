@@ -6,6 +6,7 @@ import { FolderService } from "../folder/service";
 import { UserService } from "../user/service";
 import { CreateShareInput, ShareResponseSchema, UpdateShareInput } from "./dto";
 import { IShareRepository, PrismaShareRepository } from "./repository";
+import { pickPreviewObjectName } from "./share-preview";
 
 export class ShareService {
   constructor(private readonly shareRepository: IShareRepository = new PrismaShareRepository()) {}
@@ -469,6 +470,7 @@ export class ShareService {
       hasPassword,
       isExpired,
       isMaxViewsReached,
+      previewObjectName: pickPreviewObjectName(share),
     };
   }
 }
