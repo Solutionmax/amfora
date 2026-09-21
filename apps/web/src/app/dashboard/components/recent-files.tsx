@@ -1,16 +1,23 @@
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconCloudUpload, IconFolderOpen } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
+import { paginate } from "@/lib/paginate";
 import type { RecentFilesProps } from "../types";
 import { DashboardFilesView } from "./dashboard-files-view";
 import { EmptyFilesState } from "./empty-file-state";
 
+const FILES_PER_PAGE = 5;
+
 export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFilesProps) {
   const t = useTranslations();
   const router = useRouter();
+  const [requestedPage, setRequestedPage] = useState(1);
+  const { items: pageFiles, page, totalPages } = paginate(files, requestedPage, FILES_PER_PAGE);
 
   return (
     <Card className="overflow-hidden">
@@ -37,7 +44,7 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
       <CardContent className="p-0">
         {files.length > 0 ? (
           <DashboardFilesView
-            files={files}
+            files={pageFiles}
             onDelete={fileManager.setFileToDelete}
             onDownload={fileManager.handleDownload}
             onPreview={fileManager.setPreviewFile}
@@ -48,13 +55,13 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
             onBulkDownload={fileManager.handleBulkDownload}
             setClearSelectionCallback={fileManager.setClearSelectionCallback}
             onUpdateName={(fileId, newName) => {
-              const file = files.find((f) => f.id === fileId);
+              const file = pageFiles.find((f) => f.id === fileId);
               if (file) {
                 fileManager.handleRename(fileId, newName, file.description);
               }
             }}
             onUpdateDescription={(fileId, newDescription) => {
-              const file = files.find((f) => f.id === fileId);
+              const file = pageFiles.find((f) => f.id === fileId);
               if (file) {
                 fileManager.handleRename(fileId, file.name, newDescription);
               }
@@ -63,6 +70,7 @@ export function RecentFiles({ files, fileManager, onOpenUploadModal }: RecentFil
         ) : (
           <EmptyFilesState onUpload={onOpenUploadModal} />
         )}
+        <Pagination page={page} totalPages={totalPages} onPageChange={setRequestedPage} />
       </CardContent>
     </Card>
   );

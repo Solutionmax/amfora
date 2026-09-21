@@ -62,13 +62,13 @@ export function useDashboard() {
         const sortedFiles = [...allFiles].sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        setRecentFiles(sortedFiles.slice(0, 5));
+        setRecentFiles(sortedFiles);
 
         const allShares = sharesRes.data.shares || [];
         const sortedShares = [...allShares].sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        setRecentShares(sortedShares.slice(0, 5));
+        setRecentShares(sortedShares);
       };
 
       await Promise.allSettled([loadDiskSpace(), loadFilesAndShares()]);

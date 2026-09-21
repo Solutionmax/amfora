@@ -624,6 +624,11 @@
       "position": " (był #{position} w kolejce)"
     }
   },
+  "pagination": {
+    "label": "Paginacja",
+    "previous": "Poprzednia",
+    "next": "Następna"
+  },
   "profile": {
     "password": {
       "title": "Zmień hasło",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Aktualizacje",
+    "running": "Działa wersja {version}",
+    "upToDate": "Masz najnowszą wersję.",
+    "available": "Wersja {version} jest dostępna.",
+    "checkNow": "Sprawdź teraz",
+    "applyNow": "Zaktualizuj teraz",
+    "applying": "Trwa aktualizacja. Ta strona wróci po ponownym uruchomieniu serwera.",
+    "checkDisabled": "Sprawdzanie aktualizacji jest wyłączone dla tej instalacji.",
+    "hostSideMissing": "Aktualizowanie z tego miejsca wymaga zainstalowanej części hosta. Zobacz dokumentację.",
+    "statusFailed": "Nie udało się odczytać stanu aktualizacji.",
+    "applyFailed": "Nie udało się rozpocząć aktualizacji."
   },
   "uploadFile": {
     "title": "Prześlij plik",

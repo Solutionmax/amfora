@@ -624,6 +624,11 @@
       "position": " (estava na posição #{position} da fila)"
     }
   },
+  "pagination": {
+    "label": "Paginação",
+    "previous": "Anterior",
+    "next": "Próxima"
+  },
   "profile": {
     "password": {
       "title": "Alterar Senha",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Atualizações",
+    "running": "Executando {version}",
+    "upToDate": "Você está atualizado.",
+    "available": "A versão {version} está disponível.",
+    "checkNow": "Verificar agora",
+    "applyNow": "Atualizar agora",
+    "applying": "Uma atualização está sendo aplicada. Esta página volta quando o servidor reiniciar.",
+    "checkDisabled": "A verificação de atualizações está desativada nesta instalação.",
+    "hostSideMissing": "Aplicar atualizações a partir daqui exige o lado do host instalado. Consulte a documentação.",
+    "statusFailed": "Não foi possível ler o status da atualização.",
+    "applyFailed": "Não foi possível iniciar a atualização."
   },
   "uploadFile": {
     "title": "Enviar Arquivo",

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -5,12 +6,18 @@ import { useTranslations } from "next-intl";
 import { SharesTable } from "@/components/tables/shares-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
+import { paginate } from "@/lib/paginate";
 import { RecentSharesProps } from "../types";
 import { EmptySharesState } from "./empty-shares-state";
+
+const SHARES_PER_PAGE = 5;
 
 export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLink }: RecentSharesProps) {
   const t = useTranslations();
   const router = useRouter();
+  const [requestedPage, setRequestedPage] = useState(1);
+  const { items: pageShares, page, totalPages } = paginate(shares, requestedPage, SHARES_PER_PAGE);
 
   return (
     <Card className="overflow-hidden">
@@ -38,7 +45,7 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
           <div className="px-0 py-0">
             {shares.length > 0 ? (
               <SharesTable
-                shares={shares}
+                shares={pageShares}
                 onCopyLink={onCopyLink}
                 onDelete={shareManager.setShareToDelete}
                 onBulkDelete={shareManager.handleBulkDelete}
@@ -61,6 +68,8 @@ export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLi
               <EmptySharesState onCreate={onOpenCreateModal} />
             )}
           </div>
+
+          <Pagination page={page} totalPages={totalPages} onPageChange={setRequestedPage} />
         </div>
       </CardContent>
     </Card>

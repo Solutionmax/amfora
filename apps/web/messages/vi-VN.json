@@ -624,6 +624,11 @@
       "position": " (đã ở vị trí #{position} trong hàng đợi)"
     }
   },
+  "pagination": {
+    "label": "Phân trang",
+    "previous": "Trước",
+    "next": "Tiếp"
+  },
   "profile": {
     "password": {
       "title": "Thay đổi mật khẩu",
@@ -1896,6 +1901,19 @@
         "android": " trên Android"
       }
     }
+  },
+  "updates": {
+    "title": "Cập nhật",
+    "running": "Đang chạy {version}",
+    "upToDate": "Bạn đang dùng bản mới nhất.",
+    "available": "Đã có phiên bản {version}.",
+    "checkNow": "Kiểm tra ngay",
+    "applyNow": "Cập nhật ngay",
+    "applying": "Đang áp dụng bản cập nhật. Trang này sẽ trở lại khi máy chủ khởi động lại.",
+    "checkDisabled": "Việc kiểm tra cập nhật đã tắt cho bản cài đặt này.",
+    "hostSideMissing": "Cập nhật từ đây cần cài đặt phía máy chủ. Xem tài liệu.",
+    "statusFailed": "Không đọc được trạng thái cập nhật.",
+    "applyFailed": "Không thể bắt đầu cập nhật."
   },
   "uploadFile": {
     "title": "Tải lên tệp",

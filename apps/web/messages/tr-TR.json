@@ -624,6 +624,11 @@
       "position": " (kuyrukta #{position} sıradaydı)"
     }
   },
+  "pagination": {
+    "label": "Sayfalama",
+    "previous": "Önceki",
+    "next": "Sonraki"
+  },
   "profile": {
     "password": {
       "title": "Şifreyi Değiştir",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Güncellemeler",
+    "running": "{version} çalışıyor",
+    "upToDate": "Güncelsiniz.",
+    "available": "{version} sürümü mevcut.",
+    "checkNow": "Şimdi denetle",
+    "applyNow": "Şimdi güncelle",
+    "applying": "Bir güncelleme uygulanıyor. Sunucu yeniden başladığında bu sayfa geri gelir.",
+    "checkDisabled": "Bu kurulum için güncelleme denetimi kapalı.",
+    "hostSideMissing": "Buradan güncellemek için ana makine tarafının kurulu olması gerekir. Belgelere bakın.",
+    "statusFailed": "Güncelleme durumu okunamadı.",
+    "applyFailed": "Güncelleme başlatılamadı."
   },
   "uploadFile": {
     "title": "Dosya Yükle",

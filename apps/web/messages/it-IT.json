@@ -624,6 +624,11 @@
       "position": " (era #{position} in coda)"
     }
   },
+  "pagination": {
+    "label": "Impaginazione",
+    "previous": "Precedente",
+    "next": "Successivo"
+  },
   "profile": {
     "password": {
       "title": "Cambia Parola d'accesso",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Aggiornamenti",
+    "running": "In esecuzione {version}",
+    "upToDate": "Tutto aggiornato.",
+    "available": "La versione {version} è disponibile.",
+    "checkNow": "Controlla ora",
+    "applyNow": "Aggiorna ora",
+    "applying": "È in corso un aggiornamento. Questa pagina torna al riavvio del server.",
+    "checkDisabled": "Il controllo degli aggiornamenti è disattivato per questa installazione.",
+    "hostSideMissing": "Applicare gli aggiornamenti da qui richiede la parte host installata. Vedi la documentazione.",
+    "statusFailed": "Non è stato possibile leggere lo stato dell'aggiornamento.",
+    "applyFailed": "Non è stato possibile avviare l'aggiornamento."
   },
   "uploadFile": {
     "title": "Carica file",
