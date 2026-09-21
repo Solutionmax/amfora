@@ -624,6 +624,11 @@
       "position": " (was #{position} in queue)"
     }
   },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next"
+  },
   "profile": {
     "password": {
       "title": "Change Password",
@@ -1896,6 +1901,19 @@
         "android": " on Android"
       }
     }
+  },
+  "updates": {
+    "title": "Updates",
+    "running": "Running {version}",
+    "upToDate": "You are up to date.",
+    "available": "Version {version} is available.",
+    "checkNow": "Check now",
+    "applyNow": "Update now",
+    "applying": "An update is being applied. This page comes back when the server restarts.",
+    "checkDisabled": "Update checking is switched off for this installation.",
+    "hostSideMissing": "Applying updates from here needs the host side installed. See the documentation.",
+    "statusFailed": "The update status could not be read.",
+    "applyFailed": "The update could not be started."
   },
   "uploadFile": {
     "title": "Upload File",

@@ -624,6 +624,11 @@
       "position": " (was #{position} in wachtrij)"
     }
   },
+  "pagination": {
+    "label": "Paginanavigatie",
+    "previous": "Vorige",
+    "next": "Volgende"
+  },
   "profile": {
     "password": {
       "title": "Wachtwoord Wijzigen",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Updates",
+    "running": "Draait {version}",
+    "upToDate": "Je bent up-to-date.",
+    "available": "Versie {version} is beschikbaar.",
+    "checkNow": "Nu controleren",
+    "applyNow": "Nu updaten",
+    "applying": "Er wordt een update uitgevoerd. Deze pagina komt terug zodra de server herstart is.",
+    "checkDisabled": "Controleren op updates staat uit voor deze installatie.",
+    "hostSideMissing": "Updaten vanaf hier vereist dat de hostkant geïnstalleerd is. Zie de documentatie.",
+    "statusFailed": "De updatestatus kon niet gelezen worden.",
+    "applyFailed": "De update kon niet gestart worden."
   },
   "uploadFile": {
     "title": "Bestand uploaden",

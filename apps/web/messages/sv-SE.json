@@ -624,6 +624,11 @@
       "position": " (var #{position} i kön)"
     }
   },
+  "pagination": {
+    "label": "Sidnavigering",
+    "previous": "Föregående",
+    "next": "Nästa"
+  },
   "profile": {
     "password": {
       "title": "Ändra lösenord",
@@ -1896,6 +1901,19 @@
         "android": "på Android"
       }
     }
+  },
+  "updates": {
+    "title": "Uppdateringar",
+    "running": "Kör {version}",
+    "upToDate": "Du har senaste versionen.",
+    "available": "Version {version} finns tillgänglig.",
+    "checkNow": "Kontrollera nu",
+    "applyNow": "Uppdatera nu",
+    "applying": "En uppdatering pågår. Den här sidan kommer tillbaka när servern startat om.",
+    "checkDisabled": "Uppdateringskontroll är avstängd för den här installationen.",
+    "hostSideMissing": "Att uppdatera härifrån kräver att värdsidan är installerad. Se dokumentationen.",
+    "statusFailed": "Uppdateringsstatusen kunde inte läsas.",
+    "applyFailed": "Uppdateringen kunde inte startas."
   },
   "uploadFile": {
     "title": "Ladda upp fil",

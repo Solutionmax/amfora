@@ -624,6 +624,11 @@
       "position": " (était n°{position} dans la file d'attente)"
     }
   },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Précédent",
+    "next": "Suivant"
+  },
   "profile": {
     "password": {
       "title": "Changer le Mot de Passe",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Mises à jour",
+    "running": "Version {version} en cours d'exécution",
+    "upToDate": "Tout est à jour.",
+    "available": "La version {version} est disponible.",
+    "checkNow": "Vérifier maintenant",
+    "applyNow": "Mettre à jour maintenant",
+    "applying": "Une mise à jour est en cours. Cette page revient dès que le serveur a redémarré.",
+    "checkDisabled": "La vérification des mises à jour est désactivée pour cette installation.",
+    "hostSideMissing": "Appliquer les mises à jour depuis cette page nécessite la partie hôte installée. Voir la documentation.",
+    "statusFailed": "Le statut de mise à jour n'a pas pu être lu.",
+    "applyFailed": "La mise à jour n'a pas pu être lancée."
   },
   "uploadFile": {
     "title": "Télécharger fichier",

@@ -24,13 +24,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { useAuth } from "@/contexts/auth-context";
+import { useSecureConfigValue } from "@/hooks/use-secure-configs";
 import { getDiskSpace, logout as logoutAPI } from "@/http/endpoints";
 import { cn } from "@/lib/utils";
+import packageJson from "../../../package.json";
+
+const { version } = packageJson;
 
 type DiskSpace = { diskSizeGB: number; diskUsedGB: number; diskAvailableGB: number };
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations();
+  // Operators can hide the version; the footer honours the same setting.
+  const { value: hideVersion } = useSecureConfigValue("hideVersion");
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAdmin, logout } = useAuth();
@@ -170,6 +176,9 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className="flex shrink-0 items-center gap-1 border-t border-sidebar-border py-2.5 [&_button]:text-sidebar-foreground/70 [&_button:hover]:bg-sidebar-accent [&_button:hover]:text-sidebar-accent-foreground">
         <LanguageSwitcher />
         <ModeToggle />
+        {hideVersion !== "true" && (
+          <span className="ml-auto pr-1 font-mono text-[11px] text-sidebar-foreground/50">v{version}</span>
+        )}
       </div>
     </div>
   );

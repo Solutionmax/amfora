@@ -624,6 +624,11 @@
       "position": " (war #{position} in der Warteschlange)"
     }
   },
+  "pagination": {
+    "label": "Seitennavigation",
+    "previous": "Vorherige",
+    "next": "Nächste"
+  },
   "profile": {
     "password": {
       "title": "Passwort ändern",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "Updates",
+    "running": "Läuft mit {version}",
+    "upToDate": "Sie sind auf dem neuesten Stand.",
+    "available": "Version {version} ist verfügbar.",
+    "checkNow": "Jetzt prüfen",
+    "applyNow": "Jetzt aktualisieren",
+    "applying": "Ein Update wird ausgeführt. Diese Seite kehrt zurück, sobald der Server neu gestartet ist.",
+    "checkDisabled": "Die Updateprüfung ist für diese Installation deaktiviert.",
+    "hostSideMissing": "Updates von hier aus einzuspielen erfordert die installierte Hostseite. Siehe Dokumentation.",
+    "statusFailed": "Der Updatestatus konnte nicht gelesen werden.",
+    "applyFailed": "Das Update konnte nicht gestartet werden."
   },
   "uploadFile": {
     "title": "Datei hochladen",

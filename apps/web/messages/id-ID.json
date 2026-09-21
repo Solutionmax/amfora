@@ -624,6 +624,11 @@
       "position": " (sebelumnya # posisi {position} dalam antrean)"
     }
   },
+  "pagination": {
+    "label": "Navigasi halaman",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya"
+  },
   "profile": {
     "password": {
       "title": "Ubah Kata Sandi",
@@ -1896,6 +1901,19 @@
         "android": " di Android"
       }
     }
+  },
+  "updates": {
+    "title": "Pembaruan",
+    "running": "Menjalankan {version}",
+    "upToDate": "Anda sudah menggunakan versi terbaru.",
+    "available": "Versi {version} tersedia.",
+    "checkNow": "Periksa sekarang",
+    "applyNow": "Perbarui sekarang",
+    "applying": "Pembaruan sedang diterapkan. Halaman ini akan kembali setelah server dimulai ulang.",
+    "checkDisabled": "Pemeriksaan pembaruan dimatikan untuk instalasi ini.",
+    "hostSideMissing": "Memperbarui dari sini memerlukan sisi host terpasang. Lihat dokumentasi.",
+    "statusFailed": "Status pembaruan tidak dapat dibaca.",
+    "applyFailed": "Pembaruan tidak dapat dimulai."
   },
   "uploadFile": {
     "title": "Unggah File",

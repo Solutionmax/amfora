@@ -624,6 +624,11 @@
       "position": " (היה #{position} בתור)"
     }
   },
+  "pagination": {
+    "label": "ניווט בין עמודים",
+    "previous": "הקודם",
+    "next": "הבא"
+  },
   "profile": {
     "password": {
       "title": "שנה סיסמה",
@@ -1896,6 +1901,19 @@
         "android": " ב-Android"
       }
     }
+  },
+  "updates": {
+    "title": "עדכונים",
+    "running": "מריץ {version}",
+    "upToDate": "הגרסה שלך מעודכנת.",
+    "available": "גרסה {version} זמינה.",
+    "checkNow": "בדוק כעת",
+    "applyNow": "עדכן כעת",
+    "applying": "עדכון מוחל כעת. הדף יחזור לאחר הפעלה מחדש של השרת.",
+    "checkDisabled": "בדיקת עדכונים כבויה בהתקנה זו.",
+    "hostSideMissing": "עדכון מכאן דורש התקנה בצד המחשב המאחסן. ראה את התיעוד.",
+    "statusFailed": "לא ניתן היה לקרוא את מצב העדכון.",
+    "applyFailed": "לא ניתן היה להתחיל את העדכון."
   },
   "uploadFile": {
     "title": "העלה קובץ",

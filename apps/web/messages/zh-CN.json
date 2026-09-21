@@ -624,6 +624,11 @@
       "position": "（队列中第 {position} 位）"
     }
   },
+  "pagination": {
+    "label": "分页",
+    "previous": "上一页",
+    "next": "下一页"
+  },
   "profile": {
     "password": {
       "title": "修改密码",
@@ -1777,11 +1782,7 @@
       "copyToClipboard": "复制到剪贴板",
       "savedMessage": "我已保存备用码",
       "available": "可用备用码：{count}个",
-      "instructions": [
-        "• 将这些代码保存在安全的位置",
-        "• 每个备用码只能使用一次",
-        "• 您可以随时生成新的备用码"
-      ]
+      "instructions": ["• 将这些代码保存在安全的位置", "• 每个备用码只能使用一次", "• 您可以随时生成新的备用码"]
     },
     "verification": {
       "title": "双重认证",
@@ -1896,6 +1897,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "更新",
+    "running": "正在运行 {version}",
+    "upToDate": "已是最新版本。",
+    "available": "版本 {version} 可用。",
+    "checkNow": "立即检查",
+    "applyNow": "立即更新",
+    "applying": "正在应用更新。服务器重启后将返回此页面。",
+    "checkDisabled": "此安装已关闭更新检查。",
+    "hostSideMissing": "从此处更新需要先安装主机端。请参阅文档。",
+    "statusFailed": "无法读取更新状态。",
+    "applyFailed": "无法开始更新。"
   },
   "uploadFile": {
     "title": "上传文件",

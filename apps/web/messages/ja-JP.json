@@ -624,6 +624,11 @@
       "position": "（キュー内{position}番目）"
     }
   },
+  "pagination": {
+    "label": "ページ送り",
+    "previous": "前へ",
+    "next": "次へ"
+  },
   "profile": {
     "password": {
       "title": "パスワードを変更",
@@ -1896,6 +1901,19 @@
         }
       }
     }
+  },
+  "updates": {
+    "title": "アップデート",
+    "running": "バージョン {version} で動作中",
+    "upToDate": "最新の状態です。",
+    "available": "バージョン {version} が利用できます。",
+    "checkNow": "今すぐ確認",
+    "applyNow": "今すぐ更新",
+    "applying": "更新を適用しています。サーバーの再起動後にこのページに戻ります。",
+    "checkDisabled": "このインストールではアップデートの確認が無効になっています。",
+    "hostSideMissing": "ここから更新するにはホスト側のインストールが必要です。ドキュメントを参照してください。",
+    "statusFailed": "アップデート状況を取得できませんでした。",
+    "applyFailed": "アップデートを開始できませんでした。"
   },
   "uploadFile": {
     "title": "ファイルをアップロード",
