@@ -32,7 +32,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=releases-20260918" />
+    <link rel="stylesheet" href="/assets/site.css?v=2.0.0" />
     <script src="/assets/site.js?v=real-screens-20260918" defer></script>
   </head>
   <body class="docs-page">
@@ -74,7 +74,8 @@
         <nav id="navigation" aria-label="Main navigation">
           <a href="/#features">Product</a
           ><a href="/#how-it-works">How it works</a
-          ><a href="/#hosting">Where it runs</a><a href="/docs/">Docs</a
+          ><a href="/#hosting">Where it runs</a><a href="/brandpack/">Brandpack</a
+          ><a href="/docs/">Docs</a
           ><a href="/releases/">Releases</a><a href="/#faq">FAQ</a
           ><a href="/#contact">Contact</a>
           <a
@@ -408,10 +409,36 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             <h3 id="branding">Make it feel like your brand</h3>
             <p>
               Open <strong>Customization</strong> to set the application name,
-              logo, accent color, font and corner radius. Check the result in
-              both light and dark themes, on mobile, and on a public upload and
-              download page. Use <strong>Settings</strong> for storage limits,
-              language, email and authentication configuration.
+              description, logo, accent color, font and corner radius. All of
+              it is stored on the server, so every visitor sees the same
+              brand; the logo also replaces the mark in link previews and the
+              favicon. Check the result in both light and dark themes, on
+              mobile, and on a public upload and download page. Use
+              <strong>Settings</strong> for storage limits, language, email and
+              authentication configuration.
+            </p>
+            <h3 id="brandpack">Brandpack: run it under your own name</h3>
+            <p>
+              Free installations show "Powered by Amfora" on the public pages.
+              A <a href="/brandpack/">brandpack</a> is a signed key that removes
+              that credit and unlocks two more settings: a background image for
+              the public pages and custom CSS. Paste the key under
+              <strong>Customization → Brandpack</strong> and press Activate;
+              the installation verifies the signature itself with a public key
+              that ships in the source, so nothing has to reach SolutionMAX for
+              it to work. Removing the key brings the credit back and keeps the
+              stored background and CSS for the next activation.
+            </p>
+            <p>
+              Custom CSS is admin-only and sanitised on the server: imports,
+              external URLs, expressions and behaviours are removed and the size
+              is capped at 20 kB. The background image is converted to WebP,
+              resized to 2400 px wide and served from
+              <code>/api/app/background</code>. Details for operators and
+              vendors are in
+              <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/BRANDPACK.md"
+                >docs/BRANDPACK.md</a
+              >.
             </p>
             <h3>Two factor authentication</h3>
             <p>
@@ -543,6 +570,7 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
           <h2>Amfora</h2>
           <a href="/#features">Product</a
           ><a href="/#how-it-works">Send &amp; collect</a
+          ><a href="/brandpack/">Brandpack</a
           ><a href="/#walkthrough-guide">Product walkthrough</a
           ><a href="/#faq">Common questions</a><a href="/#contact">Contact</a>
         </div>
@@ -571,6 +599,7 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
           ><a href="https://portalis.sh/">Portalis</a
           ><a href="https://buymeacoffee.com/solutionmax">Support the work ↗</a
           ><a href="/legal.html#imprint">Legal notice</a
+          ><a href="/legal.html#terms">Terms &amp; refunds</a
           ><a href="/legal.html#privacy">Privacy</a
           ><a href="/legal.html#cookies">Cookies</a>
         </div>

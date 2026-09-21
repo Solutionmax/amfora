@@ -67,3 +67,27 @@ Custom CSS is stored through the normal config endpoint as `appCustomCss` and is
 sanitised on the way out: `@import`, `expression(`, `behavior:` and `url(` to anything
 that is not a same-origin path or an image data URI are removed, and the size is capped
 at 20 kB.
+
+## Selling and delivery
+
+The sales page is `site/brandpack/index.html` (`https://amfora.solutionmax.net/brandpack/`),
+the terms are `site/legal.html#terms` with a Spanish consumer version at `site/sales-es.html`,
+and the delivery email lives in `infra/mail/`:
+
+| File | Purpose |
+| --- | --- |
+| `infra/mail/brandpack-issued.html` | the email a customer gets, HTML, inline CSS, placeholders `{{organisation}}`, `{{key}}`, `{{order_reference}}`, `{{issued_at}}`, `{{terms_version}}` |
+| `infra/mail/brandpack-issued.txt` | the plain-text alternative, first line is the subject |
+| `infra/mail/amfora-terms-<date>.txt` | the terms as sold, attached to the email; a new version is a new file, old ones stay |
+
+The flow mirrors the Pharos portal (`pharos-portal`, Laravel on edge-01): checkout on Stripe
+with the consumer consent checkbox for immediate delivery, `checkout.session.completed`
+webhook, the signer produces the pack for the organisation name given at checkout, the
+email above goes out with the terms attached, and the order reference (the Stripe session
+id) is stored with the terms version that was accepted. Until that is wired up, the buy
+buttons on the sales page open an email order; the key is then signed by hand with
+`node infra/sign-brandpack.js "<organisation>"` and pasted into the template.
+
+What the signer needs on the machine that sends: the Ed25519 secret as a mounted read-only
+file, never in the image and never in git. The public half ships in `env.ts`; changing the
+key pair means every issued pack stops verifying, so the secret is backed up, not rotated.

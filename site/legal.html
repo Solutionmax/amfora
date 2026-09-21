@@ -29,7 +29,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=releases-20260918" />
+    <link rel="stylesheet" href="/assets/site.css?v=2.0.0" />
     <script src="/assets/site.js?v=real-screens-20260918" defer></script>
   </head>
   <body class="legal-page">
@@ -71,7 +71,8 @@
         <nav id="navigation" aria-label="Main navigation">
           <a href="/#features">Product</a
           ><a href="/#how-it-works">How it works</a
-          ><a href="/#hosting">Where it runs</a><a href="/docs/">Docs</a
+          ><a href="/#hosting">Where it runs</a><a href="/brandpack/">Brandpack</a
+          ><a href="/docs/">Docs</a
           ><a href="/releases/">Releases</a><a href="/#faq">FAQ</a
           ><a href="/#contact">Contact</a>
           <a
@@ -102,11 +103,13 @@
       <h1>Legal &amp; privacy.</h1>
       <p class="legal-intro">
         Who operates this website, what happens to your data, and where the
-        responsibility for a self hosted installation sits. Updated 18 September
+        responsibility for a self hosted installation sits. Updated 22 September
         2026.
       </p>
       <nav class="legal-nav" aria-label="On this page">
-        <a href="#imprint">Legal notice</a><a href="#privacy">Privacy</a
+        <a href="#imprint">Legal notice</a><a href="#terms">What you buy</a
+        ><a href="#withdrawal">Right of withdrawal</a
+        ><a href="#refunds">Refunds</a><a href="#privacy">Privacy</a
         ><a href="#cookies">Cookies</a
         ><a href="#installations">Self hosted installations</a
         ><a href="#licence">Software licence</a>
@@ -143,6 +146,137 @@
           This notice covers <strong>amfora.solutionmax.net</strong>, its
           documentation and installer downloads. This is a product information
           website, separate from the Amfora file sharing application.
+        </p>
+      </section>
+      <section id="terms">
+        <h2>What you buy</h2>
+        <p>
+          Amfora itself is open source under the Apache License 2.0 and costs
+          nothing. What is sold on this site is a <strong>brandpack</strong>:
+          a signed key that lets an installation run without the "Powered by
+          Amfora" credit and switches on the paid customization (a background
+          image for the public pages and custom CSS). Optionally, a
+          <strong>setup service</strong>: we install Amfora with you and answer
+          questions for 30 days. Version 2026-09-22 of these terms.
+        </p>
+        <ul>
+          <li>
+            <strong>Brandpack, €79 once.</strong> Issued to one organisation,
+            valid for every installation that organisation runs, and it never
+            expires, also not across major versions. Not transferable, not for
+            resale. Hosting companies and agencies need one per customer
+            organisation.
+          </li>
+          <li>
+            <strong>Setup and 30 days, €149 once.</strong> One installation on
+            a server you provide, configured together over email or a call,
+            and 30 days of questions by email answered within a working day.
+            Includes a brandpack for that organisation. Hosting, domain and
+            third-party services are your own cost.
+          </li>
+        </ul>
+        <p>
+          Delivery is by email to the address given at checkout, normally
+          within minutes of payment and in any case within one working day.
+          Prices are in euros and include applicable VAT; the total and the tax
+          treatment are shown before you pay. Business customers with a valid
+          EU VAT number are invoiced under the reverse charge where the law
+          allows it. Payment is processed by Stripe; we never see your card
+          details.
+        </p>
+        <p>
+          A brandpack removes the SolutionMAX brand from the interface. It
+          does not transfer ownership of the software, does not change the
+          Apache License 2.0, and does not remove the
+          <a href="/NOTICE">NOTICE</a> file with the attribution to the
+          original author, which stays in every copy of the source and the
+          image. Everything the licence already lets you do with Amfora, you
+          can still do without buying anything.
+        </p>
+        <p>
+          Keys are Ed25519 signatures verified locally by your installation.
+          No key phones home, and nothing on our side has to be reachable for
+          it to keep working. Requirements: Amfora 2.0 or newer. If a key is
+          lost, write to
+          <!--email_off--><a href="mailto:mail@solutionmax.net"
+            >mail@solutionmax.net</a
+          ><!--/email_off-->
+          from the address you ordered with and we reissue it.
+        </p>
+      </section>
+      <section id="withdrawal">
+        <h2>Right of withdrawal</h2>
+        <p>
+          If you buy as a consumer in the EU you normally have fourteen days
+          from the day of the order to withdraw from a distance purchase
+          without giving a reason.
+        </p>
+        <p>
+          A brandpack is digital content that is delivered at once. Checkout
+          therefore asks you to confirm that you want delivery to start
+          immediately and that you acknowledge losing the right of withdrawal
+          once the key has been sent. That confirmation is recorded with your
+          order and repeated in the delivery email. If you would rather keep
+          the fourteen days, do not complete checkout: write to
+          <!--email_off--><a href="mailto:mail@solutionmax.net"
+            >mail@solutionmax.net</a
+          ><!--/email_off-->
+          and we invoice you and send the key after the period has passed.
+        </p>
+        <p>
+          For the setup service the right of withdrawal stays in place for
+          the whole fourteen days, also when the work has started. If you
+          withdraw after asking us to start, you pay a proportionate amount
+          for the work done up to your notice; if you withdraw before we
+          start, you pay nothing.
+        </p>
+        <p>
+          To withdraw, send an unambiguous statement before the period ends
+          to
+          <!--email_off--><a href="mailto:mail@solutionmax.net"
+            >mail@solutionmax.net</a
+          ><!--/email_off-->
+          or to the postal address in the legal notice. We confirm receipt
+          by email and refund within fourteen days of your statement, with
+          the payment method you used, at no cost to you. You may use this
+          model text, but you do not have to:
+        </p>
+        <p class="model-form">To SolutionMAX, Calle Creta 74, Bloque 01 nº 105, 03130 Gran Alacant (Alicante), Spain, mail@solutionmax.net:
+I hereby withdraw from my contract for [brandpack / setup service], ordered on [date], order reference [reference].
+Name: [name]. Address: [address]. Date: [date].</p>
+        <p>
+          The right of withdrawal does not apply to purchases made in the
+          course of a business or profession.
+        </p>
+      </section>
+      <section id="refunds">
+        <h2>Refunds and defects</h2>
+        <p>
+          If a key does not activate on a supported version and we cannot
+          make it work, you get your money back, whether or not the
+          withdrawal period is still running. A withdrawal waiver never waives
+          that. The same applies when what you received is not what this page
+          describes: EU rules on the conformity of digital content give you
+          the right to have it fixed, to a price reduction, or to end the
+          contract and be refunded.
+        </p>
+        <p>
+          Refunds go back to the payment method used, within fourteen days.
+          After a refund the refunded key must no longer be used; an offline
+          key cannot be switched off remotely, and we rely on you for that.
+        </p>
+        <p>
+          Complaints: write to
+          <!--email_off--><a href="mailto:mail@solutionmax.net"
+            >mail@solutionmax.net</a
+          ><!--/email_off-->. We acknowledge within two working days and
+          answer within a month. We are not a member of an alternative
+          dispute resolution scheme. Spanish law applies, without taking away
+          the mandatory consumer protection of the country where you live,
+          and new terms never change a purchase already made.
+        </p>
+        <p lang="es">
+          <a href="/sales-es.html">Información de contratación en castellano</a>.
         </p>
       </section>
       <section id="privacy">
@@ -326,6 +460,7 @@
           <h2>Amfora</h2>
           <a href="/#features">Product</a
           ><a href="/#how-it-works">Send &amp; collect</a
+          ><a href="/brandpack/">Brandpack</a
           ><a href="/#walkthrough-guide">Product walkthrough</a
           ><a href="/#faq">Common questions</a><a href="/#contact">Contact</a>
         </div>
@@ -354,6 +489,7 @@
           ><a href="https://portalis.sh/">Portalis</a
           ><a href="https://buymeacoffee.com/solutionmax">Support the work ↗</a
           ><a href="/legal.html#imprint">Legal notice</a
+          ><a href="/legal.html#terms">Terms &amp; refunds</a
           ><a href="/legal.html#privacy">Privacy</a
           ><a href="/legal.html#cookies">Cookies</a>
         </div>

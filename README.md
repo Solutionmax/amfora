@@ -72,12 +72,13 @@ The screenshots show the English interface with demonstration data.
 
 ![Amfora dashboard](site/assets/screenshots/dashboard.webp?v=blue-post-details-20260917)
 
-The dashboard brings uploads, shares, receive links, storage usage, and recent
-files into one starting point.
+The dashboard greets you, opens with Send files and Receive files, and shows
+storage, shares, downloads and files in one strip above the recent activity.
 
 ![Amfora send view](site/assets/screenshots/download.webp?v=blue-post-details-20260917)
 
-A share presents its files and delivery rules in a focused download view.
+A share page is a statement column and a floating panel: who sent it, what is
+in it, and one button to download it all.
 
 ![Amfora receive view](site/assets/screenshots/upload.webp?v=blue-post-details-20260917)
 
@@ -97,8 +98,20 @@ two factor authentication when it is enabled for the account.
 | **Send files** | Download links with optional passwords, expiry dates, view limits, recipient email notifications and QR codes. |
 | **Collect files** | Upload requests with optional password, expiry, file count, size and type limits. Senders do not need an account. |
 | **Storage** | Bundled MinIO or an external S3 compatible provider, on infrastructure you control. |
-| **Branding** | Application name, logo, accent colour, font, corner radius and default language. |
+| **Branding** | Application name, description, logo, accent colour, font, corner radius and default language, all stored on the server. A [brandpack](https://amfora.solutionmax.net/brandpack/) removes the "Powered by Amfora" credit and unlocks a background image and custom CSS. |
 | **Access** | User invitations, roles, deactivation, trusted devices and TOTP two factor authentication with backup codes. Optional OAuth2/OIDC sign in. |
+
+## Make it yours
+
+Everything a visitor sees reads the installation's name, logo and accent colour
+from the server, so every recipient sees the same brand on every device. The
+free version shows "Powered by Amfora" on the public pages. A
+[brandpack](https://amfora.solutionmax.net/brandpack/) is a signed key that
+removes that credit and unlocks a background image for the public pages and
+custom CSS. It is issued to one organisation, works on every installation that
+organisation runs, never expires, and is verified locally with an Ed25519
+signature: nothing phones home. Paste it under **Customization → Brandpack**.
+Details for operators are in [docs/BRANDPACK.md](docs/BRANDPACK.md).
 
 ## Install Amfora
 
