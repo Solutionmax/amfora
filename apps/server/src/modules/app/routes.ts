@@ -31,6 +31,18 @@ export async function appRoutes(app: FastifyInstance) {
     }
   };
 
+  /** No first-run exception here: nothing about a brandpack or a background belongs to setup. */
+  const strictAdminPreValidation = async (request: any, reply: any) => {
+    try {
+      await request.jwtVerify();
+    } catch {
+      return reply.status(401).send({ error: "Unauthorized" });
+    }
+    if (!request.user?.isAdmin) {
+      return reply.status(403).send({ error: "Access restricted to administrators" });
+    }
+  };
+
   app.get(
     "/app/info",
     {
@@ -301,7 +313,7 @@ export async function appRoutes(app: FastifyInstance) {
   app.post(
     "/app/background",
     {
-      preValidation: adminPreValidation,
+      preValidation: strictAdminPreValidation,
       schema: {
         tags: ["App"],
         operationId: "uploadBackground",
@@ -316,7 +328,7 @@ export async function appRoutes(app: FastifyInstance) {
   app.delete(
     "/app/background",
     {
-      preValidation: adminPreValidation,
+      preValidation: strictAdminPreValidation,
       schema: {
         tags: ["App"],
         operationId: "removeBackground",
@@ -331,7 +343,7 @@ export async function appRoutes(app: FastifyInstance) {
   app.put(
     "/app/brandpack",
     {
-      preValidation: adminPreValidation,
+      preValidation: strictAdminPreValidation,
       schema: {
         tags: ["App"],
         operationId: "activateBrandpack",
@@ -350,7 +362,7 @@ export async function appRoutes(app: FastifyInstance) {
   app.delete(
     "/app/brandpack",
     {
-      preValidation: adminPreValidation,
+      preValidation: strictAdminPreValidation,
       schema: {
         tags: ["App"],
         operationId: "removeBrandpack",

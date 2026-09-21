@@ -23,3 +23,23 @@ test("strips imports, outside urls and expressions, keeps the rest", () => {
 test("caps the length", () => {
   assert.equal(sanitizeCss("a".repeat(CUSTOM_CSS_MAX_LENGTH + 5000)).length, CUSTOM_CSS_MAX_LENGTH);
 });
+
+test("cannot break out of the style element", () => {
+  const out = sanitizeCss(".a{color:red}</style><script>alert(1)</script><style>");
+  assert.ok(!out.includes("<"), out);
+  assert.ok(!/<\/style/i.test(out));
+  assert.ok(out.includes(".a{color:red}"));
+});
+
+test("sees through CSS escape sequences", () => {
+  const out = sanitizeCss(
+    ".a{background:\\75rl(https://evil.test/b.png)} @\\69mport url(x); .b{c:\\\\75rl(https://evil.test)}"
+  );
+  assert.ok(!/evil\.test/.test(out), out);
+  assert.ok(!/@import/i.test(out));
+  assert.ok(!out.includes("\\75"), out);
+});
+
+test("keeps the child combinator", () => {
+  assert.equal(sanitizeCss(".a > .b{color:red}"), ".a > .b{color:red}");
+});
