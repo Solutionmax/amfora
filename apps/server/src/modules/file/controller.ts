@@ -11,6 +11,7 @@ import {
 import { getContentType } from "../../utils/mime-types";
 import { ConfigService } from "../config/service";
 import { canDownloadFromShares } from "./download-access";
+import { shouldCountDownload } from "./download-count";
 import {
   CheckFileInput,
   CheckFileSchema,
@@ -28,7 +29,6 @@ import { isOwnedMultipartObject } from "./multipart-access";
 import { FileService } from "./service";
 import { folderAndAncestorIds } from "./share-access";
 import { shareGrantSubject } from "./share-download-grant";
-import { shouldCountDownload } from "./download-count";
 
 export class FileController {
   private fileService = new FileService();
