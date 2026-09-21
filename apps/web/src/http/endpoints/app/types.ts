@@ -31,6 +31,10 @@ export interface GetAppInfo200 {
   appPrimaryColor?: string;
   appFontFamily?: string;
   appRadius?: string;
+  appHideCredit?: boolean;
+  appBackground?: boolean;
+  appCustomCss?: string;
+  brandpack?: { organisation: string; issuedAt: string } | null;
   appLogo: string;
   firstUserAccess: boolean;
 }

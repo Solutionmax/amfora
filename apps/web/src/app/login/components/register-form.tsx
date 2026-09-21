@@ -65,7 +65,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
   };
 
   const renderErrorMessage = () => (
-    <p className="rounded-xl bg-destructive/10 p-3 text-center text-sm text-destructive">{error}</p>
+    <p className="rounded-[var(--radius)] bg-bad-soft p-3 text-center text-sm text-bad">{error}</p>
   );
 
   const renderForm = () => (
@@ -82,7 +82,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
                   {...field}
                   placeholder={t("register.labels.firstName")}
                   disabled={form.formState.isSubmitting}
-                  className="h-11 rounded-xl bg-background"
+                  className="bg-surface"
                 />
               </FormControl>
               <FormMessage />
@@ -101,7 +101,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
                   {...field}
                   placeholder={t("register.labels.lastName")}
                   disabled={form.formState.isSubmitting}
-                  className="h-11 rounded-xl bg-background"
+                  className="bg-surface"
                 />
               </FormControl>
               <FormMessage />
@@ -120,7 +120,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
                   {...field}
                   placeholder={t("register.labels.username")}
                   disabled={form.formState.isSubmitting}
-                  className="h-11 rounded-xl bg-background"
+                  className="bg-surface"
                 />
               </FormControl>
               <FormMessage />
@@ -140,7 +140,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
                   type="email"
                   placeholder={t("register.labels.email")}
                   disabled={form.formState.isSubmitting}
-                  className="h-11 rounded-xl bg-background"
+                  className="bg-surface"
                 />
               </FormControl>
               <FormMessage />
@@ -161,7 +161,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
                     type={isVisible ? "text" : "password"}
                     placeholder={t("register.labels.password")}
                     disabled={form.formState.isSubmitting}
-                    className="h-11 rounded-xl bg-background pr-10"
+                    className="bg-surface pr-10"
                   />
                   <PasswordVisibilityToggle isVisible={isVisible} onToggle={onToggleVisibility} />
                 </div>
@@ -171,12 +171,7 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
           )}
         />
 
-        <Button
-          className="mt-4 h-12 w-full cursor-pointer justify-between rounded-xl px-4"
-          variant="default"
-          size="lg"
-          type="submit"
-        >
+        <Button className="mt-2 w-full" variant="default" size="lg" type="submit">
           <span>
             {form.formState.isSubmitting ? t("register.buttons.creating") : t("register.buttons.createAdmin")}
           </span>

@@ -671,6 +671,97 @@
     },
     "pageTitle": "Profile"
   },
+  "public": {
+    "login": {
+      "title": "Welcome",
+      "accent": "back.",
+      "firstTitle": "Let's set",
+      "firstAccent": "things up.",
+      "sub": "Use your {app} account or a connected provider.",
+      "firstSub": "Create the first administrator account for this installation.",
+      "or": "or with email",
+      "trust": {
+        "server": {
+          "title": "Stays on this server",
+          "text": "Nothing leaves the installation you are signing in to."
+        },
+        "expire": {
+          "title": "Links that expire",
+          "text": "Passwords, download limits and end dates on every share."
+        },
+        "receive": {
+          "title": "Receive without accounts",
+          "text": "Anyone with a receive link can send you files."
+        }
+      }
+    },
+    "download": {
+      "title": "{count, plural, =0 {Nothing here,} =1 {One file,} other {# files,}}",
+      "accent": "ready for you.",
+      "via": "via {app}",
+      "passwordVerified": "Password verified",
+      "expires": "Expires {date}",
+      "downloaded": "downloaded {count, plural, =1 {once} other {# times}}",
+      "preview": "Preview",
+      "noteZip": "Downloads as one ZIP.",
+      "noteSingle": "Downloads directly to your device.",
+      "folder": "Folder"
+    },
+    "kind": {
+      "video": "Video",
+      "image": "Image",
+      "document": "Document",
+      "archive": "Archive",
+      "other": "File"
+    },
+    "receive": {
+      "eyebrow": "Receive link",
+      "title": "Send your files",
+      "accent": "to {name}.",
+      "uploading": "Uploading · {percent}%",
+      "limits": {
+        "size": "Up to {size}",
+        "files": "{count, plural, =1 {# file} other {# files}} per upload",
+        "until": "Open until {date}",
+        "encrypted": "Encrypted in transit"
+      },
+      "drop": {
+        "text": "or choose from your computer.",
+        "choose": "Choose files"
+      },
+      "progress": {
+        "keepOpen": "Keep this tab open until the upload finishes.",
+        "ready": "Ready to send."
+      },
+      "send": "Send {count, plural, =0 {files} =1 {# file} other {# files}}"
+    },
+    "recover": {
+      "title": "Forgot your",
+      "accent": "password?",
+      "text": "Enter your email and we send you a link to choose a new one."
+    },
+    "reset": {
+      "title": "Choose a new",
+      "accent": "password.",
+      "text": "Pick something long. A sentence works better than symbols."
+    },
+    "invite": {
+      "title": "You're",
+      "accent": "invited.",
+      "text": "Create your account to start sending and receiving files."
+    },
+    "state": {
+      "backHome": "Back to start",
+      "password": {
+        "title": "This link is",
+        "text": "protected with a password. Ask the person who sent it."
+      },
+      "missing": {
+        "title": "Nothing here.",
+        "text": "This link does not exist, or it has been removed."
+      }
+    }
+  },
   "publicTransfer": {
     "downloadTitle": "A delivery\nfor you.",
     "uploadTitle": "Send something\ngood.",

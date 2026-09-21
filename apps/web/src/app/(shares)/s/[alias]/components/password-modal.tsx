@@ -11,9 +11,9 @@ export function PasswordModal({ isOpen, password, isError, onPasswordChange, onS
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}} modal>
-      <DialogContent className="rounded-[1.5rem] sm:max-w-md">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader className="gap-3">
-          <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <div className="tile">
             <IconLock className="size-5" />
           </div>
           <DialogTitle>{t("share.password.title")}</DialogTitle>
@@ -21,7 +21,7 @@ export function PasswordModal({ isOpen, password, isError, onPasswordChange, onS
             <p>{t("share.password.protected")}</p>
           </div>
           {isError && (
-            <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+            <div className="flex items-center gap-2 rounded-[var(--radius)] bg-bad-soft p-3 text-sm text-bad">
               <p>{t("share.password.incorrect")}</p>
             </div>
           )}
@@ -36,7 +36,7 @@ export function PasswordModal({ isOpen, password, isError, onPasswordChange, onS
           />
         </div>
         <DialogFooter>
-          <Button className="rounded-full px-6" onClick={onSubmit}>
+          <Button className="w-full" size="lg" onClick={onSubmit}>
             {t("share.password.submit")}
           </Button>
         </DialogFooter>

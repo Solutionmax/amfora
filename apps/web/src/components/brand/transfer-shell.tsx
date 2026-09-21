@@ -1,101 +1,58 @@
 "use client";
 
-import { Fragment, ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { IconFileText, IconFileZip, IconPhoto } from "@tabler/icons-react";
 
 import { BrandCredit } from "@/components/brand/brand-credit";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
-import styles from "./transfer-shell.module.css";
+import { cn } from "@/lib/utils";
 
-/** Shared postal identity for public transfers and sign-in. */
+/**
+ * Every public page: sign-in, recovery, invitations, downloads and receive links.
+ * A colour wash in the installation's accent, the statement on the left, a floating
+ * panel on the right; stacked on small screens.
+ */
 export function TransferShell({
-  direction,
-  title,
-  label,
-  aside,
+  statement,
   children,
+  panelClassName,
+  centered = false,
 }: {
-  direction: "upload" | "download" | "login";
-  title: string;
-  label: string;
-  aside?: ReactNode;
+  statement?: ReactNode;
   children: ReactNode;
+  panelClassName?: string;
+  centered?: boolean;
 }) {
-  const { appName } = useAppInfo();
+  const { appName, appBackground } = useAppInfo();
+
   return (
-    <div className={styles.shell} data-direction={direction}>
-      <header className={styles.header}>
-        <Link href="/" className="flex min-w-0 items-center gap-3 text-foreground">
-          <BrandMark className="size-9 shrink-0 text-primary" />
-          <span className="truncate font-display text-2xl font-bold tracking-tight">{appName}</span>
+    <div className={cn("stage grain flex min-h-screen flex-col", appBackground && "stage-image")}>
+      <header className="mx-auto flex w-full max-w-[1120px] items-center justify-between px-5 py-5 md:px-8">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5 text-ink no-underline">
+          <BrandMark className="size-8 shrink-0 text-primary" />
+          <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{appName}</span>
         </Link>
-        <div className="flex shrink-0 items-center gap-1 text-foreground">
+        <div className="flex shrink-0 items-center gap-0.5">
           <LanguageSwitcher />
           <ModeToggle />
         </div>
       </header>
-      <main className={styles.main} data-has-aside={!!aside}>
-        <div className={styles.hero}>
-          <h1 className={styles.title}>
-            {title.split("\n").map((line, index) => (
-              <Fragment key={index}>
-                {index > 0 && "\n"}
-                <span>{line}</span>
-              </Fragment>
-            ))}
-          </h1>
-          <div className={styles.deliveryTrail} aria-hidden="true">
-            <span className={styles.trailFile}>
-              <IconFileText strokeWidth={1.4} />
-            </span>
-            <span className={styles.trailFile}>
-              <IconPhoto strokeWidth={1.4} />
-            </span>
-            <span className={styles.trailLine} />
-            <span className={styles.trailSeal}>
-              <BrandMark />
-            </span>
-          </div>
-        </div>
-        <section className={styles.envelope} aria-label={label}>
-          <div className={styles.paper} aria-hidden="true">
-            <BrandMark />
-          </div>
-          <div className={styles.filePeek} aria-hidden="true">
-            <IconFileText strokeWidth={1.3} />
-            <span />
-            <span />
-          </div>
-          <div className={styles.photoPeek} aria-hidden="true">
-            <IconPhoto strokeWidth={1.2} />
-          </div>
-          <div className={styles.archivePeek} aria-hidden="true">
-            <IconFileZip strokeWidth={1.3} />
-          </div>
-          <div className={styles.workspace}>
-            {direction !== "upload" && (
-              <div className={styles.stamp} aria-hidden="true">
-                <BrandMark />
-                <svg className={styles.postmark} viewBox="0 0 120 44" fill="none">
-                  <path
-                    d="M2 10 Q17 0 32 10 T62 10 T92 10 T122 10 M2 22 Q17 12 32 22 T62 22 T92 22 T122 22 M2 34 Q17 24 32 34 T62 34 T92 34 T122 34"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </div>
-            )}
-            {children}
-          </div>
-        </section>
-        {aside && <div className={styles.aside}>{aside}</div>}
+
+      <main
+        className={cn(
+          "mx-auto grid w-full max-w-[1120px] flex-1 items-center gap-7 px-5 pb-12 pt-2 md:gap-14 md:px-8 md:pb-16",
+          centered || !statement ? "max-w-[560px] grid-cols-1" : "md:grid-cols-[minmax(0,1fr)_minmax(0,520px)]"
+        )}
+      >
+        {statement}
+        <section className={cn("float w-full animate-in fade-in-0 duration-150", panelClassName)}>{children}</section>
       </main>
-      <footer className={styles.footer}>
-        <BrandCredit className={styles.credit} withMark />
+
+      <footer className="flex justify-center p-5">
+        <BrandCredit className="rounded-md px-2 py-1.5 text-xs text-ink-3 hover:bg-surface/70 hover:text-ink" />
       </footer>
     </div>
   );

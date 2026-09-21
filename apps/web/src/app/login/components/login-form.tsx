@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconArrowUpRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 
@@ -64,7 +63,7 @@ export function LoginForm({
 
   const renderErrorMessage = () =>
     error && (
-      <p className="rounded-xl bg-destructive/10 p-3 text-center text-sm text-destructive">
+      <p className="rounded-[var(--radius)] bg-bad-soft p-3 text-center text-sm text-bad">
         {error.replace("errors.", "")}
       </p>
     );
@@ -82,7 +81,7 @@ export function LoginForm({
               type="text"
               placeholder={t("login.emailOrUsernamePlaceholder")}
               disabled={isSubmitting}
-              className="h-12 rounded-xl bg-background"
+              className="bg-surface"
             />
           </FormControl>
           <FormMessage />
@@ -105,7 +104,7 @@ export function LoginForm({
                 type={isVisible ? "text" : "password"}
                 placeholder={t("login.passwordPlaceholder")}
                 disabled={isSubmitting}
-                className="h-12 rounded-xl bg-background pr-10"
+                className="bg-surface pr-10"
               />
               <PasswordVisibilityToggle isVisible={isVisible} onToggle={onToggleVisibility} />
             </div>
@@ -119,7 +118,7 @@ export function LoginForm({
   if (authConfigLoading || providersLoading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="size-7 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
       </div>
     );
   }
@@ -151,14 +150,8 @@ export function LoginForm({
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {renderEmailOrUsernameField()}
           {passwordAuthEnabled && renderPasswordField()}
-          <Button
-            className="mt-4 h-12 w-full cursor-pointer justify-between rounded-xl px-4"
-            variant="default"
-            size="lg"
-            type="submit"
-          >
-            <span>{isSubmitting ? t("login.signingIn") : t("login.signIn")}</span>
-            <IconArrowUpRight className="size-5" />
+          <Button className="mt-2 w-full" variant="default" size="lg" type="submit">
+            {isSubmitting ? t("login.signingIn") : t("login.signIn")}
           </Button>
         </form>
       </Form>
@@ -168,7 +161,7 @@ export function LoginForm({
       {passwordAuthEnabled && (
         <div className="flex w-full items-center justify-center px-1 mt-2">
           <Link
-            className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+            className="text-[13px] font-medium text-primary underline-offset-4 hover:underline"
             href="/forgot-password"
           >
             {t("login.forgotPassword")}
