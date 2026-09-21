@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
+import { fetchAppInfo } from "@/lib/app-info.server";
+import { DEFAULT_BRAND } from "@/lib/brand";
 import { firstForwardedValue, forwardedProtocol } from "@/lib/forwarded-headers";
 import { buildOgImage } from "@/lib/og-image";
 
@@ -28,24 +30,6 @@ async function getShareMetadata(alias: string) {
   }
 }
 
-async function getAppInfo() {
-  try {
-    const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
-    const response = await fetch(`${API_BASE_URL}/app/info`, {
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      return { appName: "Amfora", appDescription: "Secure file sharing", appLogo: null };
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching app info:", error);
-    return { appName: "Amfora", appDescription: "Secure file sharing", appLogo: null };
-  }
-}
-
 async function getBaseUrl(): Promise<string> {
   const headersList = await headers();
   const protocol = forwardedProtocol(headersList.get("x-forwarded-proto"), "http");
@@ -57,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
   const t = await getTranslations();
   const resolvedParams = await params;
   const metadata = await getShareMetadata(resolvedParams.alias);
-  const appInfo = await getAppInfo();
+  const appInfo = await fetchAppInfo();
 
   const title = metadata?.name || t("share.pageTitle");
   const description =
@@ -68,7 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
 
   const baseUrl = await getBaseUrl();
   const shareUrl = `${baseUrl}/s/${resolvedParams.alias}`;
-  const ogImage = buildOgImage(baseUrl, metadata?.previewObjectName, appInfo.appLogo);
+  const ogImage = buildOgImage(baseUrl, metadata?.previewObjectName, appInfo.appLogo, appInfo.appName);
 
   return {
     title,
@@ -77,7 +61,7 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
       title,
       description,
       url: shareUrl,
-      siteName: appInfo.appName || "Amfora",
+      siteName: appInfo.appName || DEFAULT_BRAND.name,
       type: "website",
       images: [ogImage],
     },

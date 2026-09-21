@@ -140,7 +140,8 @@
   background: var(--secondary);
   transform: rotate(7deg);
 }
-.paper svg {
+.paper svg,
+.paper img {
   position: absolute;
   top: 18px;
   right: 24px;
@@ -173,7 +174,8 @@
   transform: rotate(7deg);
   color: var(--primary);
 }
-.stamp svg {
+.stamp svg,
+.stamp img {
   width: 24px;
   height: 30px;
 }
@@ -389,7 +391,8 @@
   outline: 1px solid var(--border);
   outline-offset: 4px;
 }
-.trailSeal svg {
+.trailSeal svg,
+.trailSeal img {
   width: 22px;
   height: 28px;
 }

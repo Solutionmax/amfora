@@ -1,7 +1,10 @@
+import { DEFAULT_BRAND } from "./brand";
+
 /**
- * Unfurl bots (Slack, WhatsApp, Discord) fetch og:image over HTTP. A `data:` URI,
- * which is how an uploaded app logo is stored, renders as a broken image everywhere,
- * so anything that is not an absolute http(s) URL falls back to the static card.
+ * Unfurl bots (Slack, WhatsApp, Discord) fetch og:image over HTTP. An uploaded
+ * app logo is stored as a `data:` URI, which renders as a broken image everywhere,
+ * so it is served through `/api/app/logo` instead. No logo at all falls back to
+ * the static product card.
  */
 export interface OgImage {
   url: string;
@@ -10,7 +13,14 @@ export interface OgImage {
   alt: string;
 }
 
-export function buildOgImage(baseUrl: string, previewObjectName?: string | null, appLogo?: string | null): OgImage {
+export function buildOgImage(
+  baseUrl: string,
+  previewObjectName?: string | null,
+  appLogo?: string | null,
+  appName?: string | null
+): OgImage {
+  const alt = appName || DEFAULT_BRAND.name;
+
   if (previewObjectName) {
     return {
       url: `${baseUrl}/api/files/download?objectName=${encodeURIComponent(previewObjectName)}&preview=1`,
@@ -19,8 +29,12 @@ export function buildOgImage(baseUrl: string, previewObjectName?: string | null,
   }
 
   if (appLogo && /^https?:\/\//i.test(appLogo)) {
-    return { url: appLogo, alt: "Amfora" };
+    return { url: appLogo, alt };
   }
 
-  return { url: `${baseUrl}/og-card.jpg`, width: 1200, height: 630, alt: "Amfora" };
+  if (appLogo && /^data:image\//i.test(appLogo)) {
+    return { url: `${baseUrl}/api/app/logo`, alt };
+  }
+
+  return { url: `${baseUrl}/og-card.jpg`, width: 1200, height: 630, alt };
 }

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { BrandMark } from "@/components/brand/brand-mark";
 
 export function LoadingScreen() {
   const t = useTranslations();
@@ -14,7 +14,7 @@ export function LoadingScreen() {
     >
       <div className="flex flex-col items-center gap-5">
         <div className="flex size-16 items-center justify-center rounded-2xl border border-border bg-card">
-          <AmphoraMark className="size-8 text-primary" />
+          <BrandMark className="size-8 text-primary" />
         </div>
         <span className="text-sm font-medium text-muted-foreground">{t("common.loading")}</span>
       </div>
