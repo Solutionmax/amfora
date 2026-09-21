@@ -27,15 +27,20 @@ export function TransferShell({
   centered?: boolean;
 }) {
   const { appName, appBackground } = useAppInfo();
+  // On a customer's own background the header needs the same floor as the statement.
+  const floor = "rounded-md bg-surface/75 px-2.5 py-1.5 backdrop-blur-md";
 
   return (
     <div className={cn("stage grain flex min-h-screen flex-col", appBackground && "stage-image")}>
       <header className="mx-auto flex w-full max-w-[1120px] items-center justify-between px-5 py-5 md:px-8">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5 text-ink no-underline">
+        <Link
+          href="/"
+          className={cn("flex min-w-0 items-center gap-2.5 text-ink no-underline", appBackground && floor)}
+        >
           <BrandMark className="size-8 shrink-0 text-primary" />
           <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{appName}</span>
         </Link>
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className={cn("flex shrink-0 items-center gap-0.5", appBackground && floor)}>
           <LanguageSwitcher />
           <ModeToggle />
         </div>
