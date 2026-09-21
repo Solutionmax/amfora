@@ -1,7 +1,7 @@
 services:
   amfora:
     # Build the image from this repository. Swap for the published image when you prefer:
-    #   image: ghcr.io/raym0nz82/amfora:1.0.0
+    #   image: ghcr.io/solutionmax/amfora:1.1.0
     build:
       context: .
     image: amfora:local

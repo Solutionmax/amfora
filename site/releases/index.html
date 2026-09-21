@@ -137,7 +137,7 @@
               >
             </div>
             <p class="release-detail">
-              Docker image: Linux AMD64 and ARM64, registry access required.<br />ZIP:
+              Docker image: Linux AMD64 and ARM64, no account needed.<br />ZIP:
               source code, requires a build.
             </p>
           </article>
@@ -170,17 +170,16 @@
             <p class="eyebrow">02 / DOCKER IMAGE</p>
             <h2>Use a published version.</h2>
             <p>
-              Pull version 1.1.0 with an account that has registry access.
-              Docker selects the image for your processor.
+              Pull version 1.1.0. No account and no login needed. Docker
+              selects the image for your processor.
             </p>
             <pre
               class="install-command"
             ><code>docker pull ghcr.io/solutionmax/amfora:1.1.0</code></pre>
             <p class="release-detail">
               Version 1.0.0 remains under <code>ghcr.io/raym0nz82/amfora</code>.
-              Registry access is currently required. For a public installation
-              without registry access, use the source installer. Keep the
-              repository's Compose settings for storage and persistent data.
+              Keep the repository's Compose settings for storage and persistent
+              data.
             </p>
             <a
               class="text-link"
@@ -395,8 +394,7 @@ bash infra/build-docker.sh local</code></pre>
             <p>
               Back up your data and keep your existing volume mounts, ports and
               environment settings. Updates are applied from your Docker host.
-              The image commands require registry access; see the guide for
-              builds from source.
+              See the guide for builds from source.
             </p>
             <a class="text-link" href="/docs/#operations"
               >Backup &amp; recovery guide →</a
@@ -411,8 +409,7 @@ bash infra/build-docker.sh local</code></pre>
               class="install-command"
             ><code>image: ghcr.io/solutionmax/amfora:1.1.0</code></pre>
             <p>
-              With registry access configured, pull and start that service,
-              keeping its persistent data:
+              Then pull and start that service, keeping its persistent data:
             </p>
             <pre class="install-command"><code>docker compose pull amfora
 docker compose up -d --no-build amfora</code></pre>
