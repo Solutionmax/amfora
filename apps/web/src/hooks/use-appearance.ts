@@ -11,26 +11,18 @@ export const APPEARANCE_KEYS = {
 
 /** Applies an appearance value to the document. Same code path for preview and for load. */
 export function applyAppearance(key: keyof typeof APPEARANCE_KEYS, value: string) {
-  const root = document.documentElement;
+  const root = document.documentElement.style;
+  const vars: Record<keyof typeof APPEARANCE_KEYS, string[]> = {
+    color: ["--primary"],
+    font: ["--font-body", "--font-display-family"],
+    radius: ["--radius"],
+  };
 
-  if (!value) return;
-
-  if (key === "color") {
-    root.style.setProperty("--primary", value);
-    root.style.setProperty("--sidebar-primary", value);
-    root.style.setProperty("--ring", value);
-    root.style.setProperty("--sidebar-ring", value);
-    return;
+  // An empty value means "the default": the stylesheet's own value must win again.
+  for (const name of vars[key]) {
+    if (value) root.setProperty(name, value);
+    else root.removeProperty(name);
   }
-
-  if (key === "font") {
-    root.style.setProperty("--font-body", value);
-    root.style.setProperty("--font-sans", value);
-    root.style.setProperty("--font-display-family", value);
-    return;
-  }
-
-  root.style.setProperty("--radius", value);
 }
 
 /**
