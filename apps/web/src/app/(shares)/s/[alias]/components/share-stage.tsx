@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { IconDownload, IconFolder, IconLoader2 } from "@tabler/icons-react";
-import { format } from "date-fns";
+import { IconDownload, IconEye, IconLoader2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
+import { Cover } from "@/components/brand/cover";
+import { kindFromName } from "@/components/brand/file-kind";
+import { FileManifest, type ManifestItem } from "@/components/brand/file-manifest";
 import { Button } from "@/components/ui/button";
-import { getFileIcon } from "@/utils/file-icons";
-import { formatFileSize } from "@/utils/format-file-size";
 
 interface ShareFile {
   id: string;
@@ -21,28 +21,23 @@ interface ShareFolder {
   name: string;
 }
 
+/** The floating panel of a download page: cover, manifest, one primary action. */
 export function ShareStage({
-  name,
-  description,
-  expiration,
-  views,
-  maxViews,
   files,
   folders,
+  views,
   onDownload,
   onDownloadFolder,
   onBulkDownload,
+  onPreview,
 }: {
-  name: string;
-  description?: string | null;
-  expiration?: string | null;
-  views: number;
-  maxViews?: number | null;
   files: ShareFile[];
   folders: ShareFolder[];
+  views: number;
   onDownload: (objectName: string, fileName: string) => Promise<void>;
   onDownloadFolder: (folderId: string, folderName: string) => Promise<void>;
   onBulkDownload?: () => Promise<void>;
+  onPreview?: (file: ShareFile) => void;
 }) {
   const t = useTranslations();
   const [isDownloading, setIsDownloading] = useState(false);
@@ -53,7 +48,6 @@ export function ShareStage({
 
   const runDownload = async (action: () => Promise<void>) => {
     if (isDownloading) return;
-
     setIsDownloading(true);
     try {
       await action();
@@ -68,94 +62,75 @@ export function ShareStage({
       return onBulkDownload?.() ?? Promise.resolve();
     });
 
+  const coverFiles = files.map((file) => {
+    const kind = kindFromName(file.name);
+    return {
+      name: file.name,
+      kind,
+      previewUrl:
+        kind === "image"
+          ? `/api/files/download?objectName=${encodeURIComponent(file.objectName)}&preview=1`
+          : undefined,
+    };
+  });
+
+  const items: ManifestItem[] = [
+    ...folders.map((folder) => ({
+      id: `folder:${folder.id}`,
+      name: folder.name,
+      kind: "other" as const,
+      subline: t("public.download.folder"),
+      onClick: () => runDownload(() => onDownloadFolder(folder.id, folder.name)),
+    })),
+    ...files.map((file) => ({
+      id: file.id,
+      name: file.name,
+      size: Number(file.size || 0),
+      kind: kindFromName(file.name),
+      subline: t(`public.kind.${kindFromName(file.name)}`),
+      onClick: () => runDownload(() => onDownload(file.objectName, file.name)),
+    })),
+  ];
+
   return (
-    <div className="w-full space-y-7">
-      <header className="space-y-3">
-        <h2 className="break-words font-display text-3xl font-extrabold leading-tight tracking-tight">{name}</h2>
-        {description && <p className="break-words leading-7 text-muted-foreground">{description}</p>}
-      </header>
-
-      <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
-        <span>
-          {t("share.itemCount", { count: itemCount })} · {formatFileSize(totalBytes)}
-        </span>
-        {maxViews ? (
-          <span>
-            {t("shareDetails.views")}: {views} / {maxViews}
-          </span>
-        ) : null}
-        {expiration && (
-          <span>
-            {t("home.visual.expires")}: {format(new Date(expiration), "dd-MM-yyyy")}
-          </span>
+    <div>
+      <Cover
+        files={coverFiles}
+        onOpen={onPreview && files[0] ? () => onPreview(files[0]) : undefined}
+        caption={files[0] ? t(`public.kind.${kindFromName(files[0].name)}`) : undefined}
+      />
+      <div className="px-5 pb-6 pt-5 md:px-6">
+        {itemCount > 0 && (
+          <FileManifest
+            items={items}
+            total={{
+              label: `${t("share.itemCount", { count: itemCount })} · ${t("public.download.downloaded", { count: views })}`,
+              size: totalBytes,
+            }}
+          />
         )}
+        <div className="mt-[18px] flex gap-2.5">
+          <Button
+            type="button"
+            size="lg"
+            className="flex-1 shadow-[0_10px_24px_-12px_color-mix(in_oklab,var(--primary)_70%,transparent)]"
+            onClick={downloadAll}
+            disabled={isDownloading || itemCount === 0}
+          >
+            {isDownloading ? <IconLoader2 className="size-5 animate-spin" /> : <IconDownload className="size-5" />}
+            {single ? t("share.download") : t("share.downloadAll")}
+          </Button>
+          {onPreview && files[0] && (
+            <Button type="button" size="lg" variant="outline" onClick={() => onPreview(files[0])}>
+              <IconEye className="size-5" />
+              {t("public.download.preview")}
+            </Button>
+          )}
+        </div>
+        <p className="mt-3.5 text-center text-xs text-ink-3">
+          {single ? t("public.download.noteSingle") : t("public.download.noteZip")}
+        </p>
       </div>
-
-      {itemCount > 0 && (
-        <section aria-label={t("share.itemCount", { count: itemCount })}>
-          <ul className="divide-y border-y border-border">
-            {folders.map((folder) => (
-              <li
-                key={folder.id}
-                className="flex min-w-0 items-center gap-3 py-4 transition-colors hover:bg-secondary/50"
-              >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <IconFolder className="size-5" />
-                </span>
-                <span className="min-w-0 flex-1 break-words text-sm font-medium">{folder.name}</span>
-                <button
-                  type="button"
-                  onClick={() => runDownload(() => onDownloadFolder(folder.id, folder.name))}
-                  disabled={isDownloading}
-                  aria-label={`${t("share.download")} ${folder.name}`}
-                  className="shrink-0 rounded-full border border-border p-2.5 text-primary transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                >
-                  <IconDownload className="size-4" />
-                </button>
-              </li>
-            ))}
-            {files.map((file) => {
-              const { icon: FileTypeIcon, color } = getFileIcon(file.name);
-              return (
-                <li
-                  key={file.id}
-                  className="flex min-w-0 items-center gap-3 py-4 transition-colors hover:bg-secondary/50"
-                >
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary">
-                    <FileTypeIcon className={`size-5 ${color}`} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="break-words text-sm font-medium leading-5">{file.name}</p>
-                    <p className="mt-1 font-mono text-xs text-muted-foreground">
-                      {formatFileSize(Number(file.size || 0))}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => runDownload(() => onDownload(file.objectName, file.name))}
-                    disabled={isDownloading}
-                    aria-label={`${t("share.download")} ${file.name}`}
-                    className="shrink-0 rounded-full border border-border p-2.5 text-primary transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                  >
-                    <IconDownload className="size-4" />
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
-
-      <Button
-        type="button"
-        size="lg"
-        className="h-13 w-full rounded-lg text-base shadow-lg shadow-primary/15"
-        onClick={downloadAll}
-        disabled={isDownloading || itemCount === 0}
-      >
-        {isDownloading ? <IconLoader2 className="size-5 animate-spin" /> : <IconDownload className="size-5" />}
-        {single ? t("share.download") : t("share.downloadAll")}
-      </Button>
     </div>
   );
 }

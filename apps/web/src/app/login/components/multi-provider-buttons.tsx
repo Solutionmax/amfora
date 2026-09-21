@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
   const [providers, setProviders] = useState<EnabledAuthProvider[]>([]);
   const [loading, setLoading] = useState(true);
   const { firstAccess } = useAppInfo();
+  const t = useTranslations();
 
   const loadProviders = async () => {
     try {
@@ -60,7 +62,7 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
   if (loading) {
     return (
       <div className="space-y-2">
-        <div className="h-10 bg-muted animate-pulse rounded-md" />
+        <div className="h-10 animate-pulse rounded-[var(--radius)] bg-surface-2" />
       </div>
     );
   }
@@ -77,8 +79,8 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              Or continue with
+            <span className="bg-surface px-3 text-xs normal-case tracking-normal text-ink-3">
+              {t("public.login.or")}
             </span>
           </div>
         </div>

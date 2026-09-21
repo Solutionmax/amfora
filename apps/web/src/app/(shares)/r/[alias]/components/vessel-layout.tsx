@@ -1,12 +1,12 @@
 "use client";
 
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
 
 import { TransferShell } from "@/components/brand/transfer-shell";
 import { MESSAGE_TYPES } from "../constants";
 import { VesselLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
+import { ReceiveStatement } from "./receive-statement";
 import { VesselStatusMessage } from "./shared/status-message";
 
 export function VesselLayout({
@@ -20,7 +20,6 @@ export function VesselLayout({
   isLinkNotFound,
   isLinkExpired,
 }: VesselLayoutProps) {
-  const t = useTranslations();
   const uploadSection = () => {
     if (hasUploadedSuccessfully) {
       return (
@@ -91,24 +90,5 @@ export function VesselLayout({
     );
   };
 
-  if (
-    reverseShare &&
-    !hasUploadedSuccessfully &&
-    !isLinkInactive &&
-    !isLinkNotFound &&
-    !isLinkExpired &&
-    !isMaxFilesReached
-  ) {
-    return uploadSection();
-  }
-
-  return (
-    <TransferShell
-      direction="upload"
-      title={t("publicTransfer.uploadTitle")}
-      label={t("reverseShares.upload.layout.defaultTitle")}
-    >
-      {uploadSection()}
-    </TransferShell>
-  );
+  return <TransferShell statement={<ReceiveStatement reverseShare={reverseShare} />}>{uploadSection()}</TransferShell>;
 }

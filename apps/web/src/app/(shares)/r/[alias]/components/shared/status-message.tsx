@@ -35,7 +35,7 @@ export function StatusMessage({
   const isCompact = size === "compact";
 
   return (
-    <div className={`space-y-4 ${isCompact ? "py-6" : "py-8"}`}>
+    <div className={`space-y-4 px-6 ${isCompact ? "py-8" : "py-10"}`}>
       <div>
         <div className={`${styles.iconBg} flex size-12 items-center justify-center rounded-xl`}>
           <Icon className={`${isCompact ? "h-6 w-6" : "h-8 w-8"} ${styles.iconColor}`} />

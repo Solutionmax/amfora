@@ -7,7 +7,8 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { PublicAuthShell } from "@/components/brand/public-auth-shell";
+import { Statement } from "@/components/brand/statement";
+import { TransferShell } from "@/components/brand/transfer-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -125,152 +126,170 @@ export default function RegisterWithInvitePage() {
 
   if (!tokenValid) {
     return (
-      <PublicAuthShell eyebrow={t("registerWithInvite.pageTitle")}>
-        <div className="text-center">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary/10 font-display text-xl font-bold text-primary">
-            !
+      <TransferShell
+        statement={
+          <Statement
+            title={t("public.invite.title")}
+            accentLine={t("public.invite.accent")}
+            quote={t("public.invite.text")}
+          />
+        }
+      >
+        <div className="flex flex-col gap-5 px-6 py-7 md:px-7">
+          <div className="text-center">
+            <div className="tile mx-auto font-display text-xl font-bold">!</div>
+            <h1 className="mt-5 font-display text-2xl font-extrabold tracking-tight">
+              {t("registerWithInvite.errors.invalidToken")}
+            </h1>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">{tokenError}</p>
+            <Button className="mt-6 w-full" onClick={() => router.push("/login")}>
+              <span>{t("forgotPassword.backToLogin")}</span>
+              <IconArrowLeft className="size-4" />
+            </Button>
           </div>
-          <h1 className="mt-5 font-display text-2xl font-extrabold tracking-tight">
-            {t("registerWithInvite.errors.invalidToken")}
-          </h1>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">{tokenError}</p>
-          <Button className="mt-6 h-11 w-full justify-between rounded-xl px-4" onClick={() => router.push("/login")}>
-            <span>{t("forgotPassword.backToLogin")}</span>
-            <IconArrowLeft className="size-4" />
-          </Button>
         </div>
-      </PublicAuthShell>
+      </TransferShell>
     );
   }
 
   return (
-    <PublicAuthShell eyebrow={t("registerWithInvite.pageTitle")}>
-      <div className="mb-7">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-          {t("registerWithInvite.pageTitle")}
-        </p>
-        <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">{t("registerWithInvite.title")}</h1>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">{t("registerWithInvite.description")}</p>
-      </div>
+    <TransferShell
+      statement={
+        <Statement
+          title={t("public.invite.title")}
+          accentLine={t("public.invite.accent")}
+          quote={t("public.invite.text")}
+        />
+      }
+    >
+      <div className="flex flex-col gap-5 px-6 py-7 md:px-7">
+        <div className="mb-7">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+            {t("registerWithInvite.pageTitle")}
+          </p>
+          <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">{t("registerWithInvite.title")}</h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">{t("registerWithInvite.description")}</p>
+        </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">{t("registerWithInvite.labels.firstName")}</Label>
-            <Input
-              id="firstName"
-              placeholder={t("registerWithInvite.labels.firstNamePlaceholder")}
-              {...register("firstName", {
-                required: t("registerWithInvite.validation.firstNameRequired"),
-              })}
-            />
-            {errors.firstName && <p className="text-destructive text-sm">{errors.firstName.message}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">{t("registerWithInvite.labels.firstName")}</Label>
+              <Input
+                id="firstName"
+                placeholder={t("registerWithInvite.labels.firstNamePlaceholder")}
+                {...register("firstName", {
+                  required: t("registerWithInvite.validation.firstNameRequired"),
+                })}
+              />
+              {errors.firstName && <p className="text-destructive text-sm">{errors.firstName.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="lastName">{t("registerWithInvite.labels.lastName")}</Label>
+              <Input
+                id="lastName"
+                placeholder={t("registerWithInvite.labels.lastNamePlaceholder")}
+                {...register("lastName", {
+                  required: t("registerWithInvite.validation.lastNameRequired"),
+                })}
+              />
+              {errors.lastName && <p className="text-destructive text-sm">{errors.lastName.message}</p>}
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="lastName">{t("registerWithInvite.labels.lastName")}</Label>
+            <Label htmlFor="username">{t("registerWithInvite.labels.username")}</Label>
             <Input
-              id="lastName"
-              placeholder={t("registerWithInvite.labels.lastNamePlaceholder")}
-              {...register("lastName", {
-                required: t("registerWithInvite.validation.lastNameRequired"),
-              })}
-            />
-            {errors.lastName && <p className="text-destructive text-sm">{errors.lastName.message}</p>}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="username">{t("registerWithInvite.labels.username")}</Label>
-          <Input
-            id="username"
-            placeholder={t("registerWithInvite.labels.usernamePlaceholder")}
-            {...register("username", {
-              required: t("registerWithInvite.validation.usernameMinLength"),
-              minLength: {
-                value: 3,
-                message: t("registerWithInvite.validation.usernameMinLength"),
-              },
-            })}
-          />
-          {errors.username && <p className="text-destructive text-sm">{errors.username.message}</p>}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">{t("registerWithInvite.labels.email")}</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder={t("registerWithInvite.labels.emailPlaceholder")}
-            {...register("email", {
-              required: t("registerWithInvite.validation.invalidEmail"),
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: t("registerWithInvite.validation.invalidEmail"),
-              },
-            })}
-          />
-          {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="password">{t("registerWithInvite.labels.password")}</Label>
-          <div className="relative">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder={t("registerWithInvite.labels.passwordPlaceholder")}
-              className="pe-10"
-              {...register("password", {
-                required: t("registerWithInvite.validation.passwordMinLength"),
+              id="username"
+              placeholder={t("registerWithInvite.labels.usernamePlaceholder")}
+              {...register("username", {
+                required: t("registerWithInvite.validation.usernameMinLength"),
                 minLength: {
-                  value: 8,
-                  message: t("registerWithInvite.validation.passwordMinLength"),
+                  value: 3,
+                  message: t("registerWithInvite.validation.usernameMinLength"),
                 },
               })}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={t("registerWithInvite.labels.password")}
-              className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-            </button>
+            {errors.username && <p className="text-destructive text-sm">{errors.username.message}</p>}
           </div>
-          {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="confirmPassword">{t("registerWithInvite.labels.confirmPassword")}</Label>
-          <div className="relative">
+          <div className="space-y-2">
+            <Label htmlFor="email">{t("registerWithInvite.labels.email")}</Label>
             <Input
-              id="confirmPassword"
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder={t("registerWithInvite.labels.confirmPasswordPlaceholder")}
-              className="pe-10"
-              {...register("confirmPassword", {
-                required: t("registerWithInvite.validation.passwordsMatch"),
-                validate: (value) => value === password || t("registerWithInvite.validation.passwordsMatch"),
+              id="email"
+              type="email"
+              placeholder={t("registerWithInvite.labels.emailPlaceholder")}
+              {...register("email", {
+                required: t("registerWithInvite.validation.invalidEmail"),
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: t("registerWithInvite.validation.invalidEmail"),
+                },
               })}
             />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={t("registerWithInvite.labels.confirmPassword")}
-              className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              {showConfirmPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-            </button>
+            {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
           </div>
-          {errors.confirmPassword && <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>}
-        </div>
 
-        <Button type="submit" className="mt-2 h-12 w-full justify-between rounded-xl px-4" disabled={isSubmitting}>
-          {isSubmitting ? t("registerWithInvite.buttons.creating") : t("registerWithInvite.buttons.createAccount")}
-          <IconArrowUpRight className="size-5" />
-        </Button>
-      </form>
-    </PublicAuthShell>
+          <div className="space-y-2">
+            <Label htmlFor="password">{t("registerWithInvite.labels.password")}</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder={t("registerWithInvite.labels.passwordPlaceholder")}
+                className="pe-10"
+                {...register("password", {
+                  required: t("registerWithInvite.validation.passwordMinLength"),
+                  minLength: {
+                    value: 8,
+                    message: t("registerWithInvite.validation.passwordMinLength"),
+                  },
+                })}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={t("registerWithInvite.labels.password")}
+                className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+              </button>
+            </div>
+            {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">{t("registerWithInvite.labels.confirmPassword")}</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder={t("registerWithInvite.labels.confirmPasswordPlaceholder")}
+                className="pe-10"
+                {...register("confirmPassword", {
+                  required: t("registerWithInvite.validation.passwordsMatch"),
+                  validate: (value) => value === password || t("registerWithInvite.validation.passwordsMatch"),
+                })}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={t("registerWithInvite.labels.confirmPassword")}
+                className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showConfirmPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+              </button>
+            </div>
+            {errors.confirmPassword && <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>}
+          </div>
+
+          <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
+            {isSubmitting ? t("registerWithInvite.buttons.creating") : t("registerWithInvite.buttons.createAccount")}
+            <IconArrowUpRight className="size-5" />
+          </Button>
+        </form>
+      </div>
+    </TransferShell>
   );
 }

@@ -48,7 +48,7 @@ export function TwoFactorVerification({
     <Card className="w-full gap-0 border-0 bg-transparent py-0 shadow-none">
       <CardHeader className="gap-3 border-b px-0 pb-5 pt-0 text-left">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-primary/10 p-3">
+          <div className="tile">
             <IconShield className="size-5 text-primary" />
           </div>
           <div>

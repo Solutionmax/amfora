@@ -9,6 +9,10 @@ interface AppInfoStore {
   appPrimaryColor: string;
   appFontFamily: string;
   appRadius: string;
+  appHideCredit: boolean;
+  appBackground: boolean;
+  appCustomCss: string;
+  brandpack: { organisation: string; issuedAt: string } | null;
   firstAccess: boolean | null;
   isLoading: boolean;
   setAppName: (name: string) => void;
@@ -28,6 +32,10 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     appPrimaryColor: "",
     appFontFamily: "",
     appRadius: "",
+    appHideCredit: false,
+    appBackground: false,
+    appCustomCss: "",
+    brandpack: null,
     firstAccess: null,
     isLoading: true,
   };
@@ -43,6 +51,10 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appPrimaryColor: response.data.appPrimaryColor ?? "",
           appFontFamily: response.data.appFontFamily ?? "",
           appRadius: response.data.appRadius ?? "",
+          appHideCredit: response.data.appHideCredit ?? false,
+          appBackground: response.data.appBackground ?? false,
+          appCustomCss: response.data.appCustomCss ?? "",
+          brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
         });
@@ -76,6 +88,10 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appPrimaryColor: response.data.appPrimaryColor ?? "",
           appFontFamily: response.data.appFontFamily ?? "",
           appRadius: response.data.appRadius ?? "",
+          appHideCredit: response.data.appHideCredit ?? false,
+          appBackground: response.data.appBackground ?? false,
+          appCustomCss: response.data.appCustomCss ?? "",
+          brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
         });

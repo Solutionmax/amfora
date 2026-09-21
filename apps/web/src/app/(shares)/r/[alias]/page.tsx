@@ -3,9 +3,10 @@
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
+import { Statement } from "@/components/brand/statement";
 import { TransferShell } from "@/components/brand/transfer-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { DefaultLayout, PasswordModal, VesselLayout } from "./components";
+import { DefaultLayout, PasswordModal } from "./components";
 import { useReverseShareUpload } from "./hooks/use-reverse-share-upload";
 
 export default function ReverseShareUploadPage() {
@@ -20,7 +21,6 @@ export default function ReverseShareUploadPage() {
     isPasswordModalOpen,
     hasUploadedSuccessfully,
     isMaxFilesReached,
-    isVesselLayout,
     hasError,
     isLinkInactive,
     isLinkNotFound,
@@ -37,12 +37,12 @@ export default function ReverseShareUploadPage() {
   if (isPasswordModalOpen) {
     return (
       <TransferShell
-        direction="upload"
-        title={t("publicTransfer.uploadTitle")}
-        label={t("reverseShares.upload.layout.defaultTitle")}
+        statement={<Statement title={t("public.state.password.title")} quote={t("public.state.password.text")} />}
       >
-        <h2 className="font-display text-2xl font-bold">{t("reverseShares.upload.password.title")}</h2>
-        <p className="mt-3 text-sm text-muted-foreground">{t("reverseShares.upload.password.description")}</p>
+        <div className="px-6 py-8">
+          <h2 className="font-display text-xl font-semibold">{t("reverseShares.upload.password.title")}</h2>
+          <p className="mt-2 text-sm text-ink-3">{t("reverseShares.upload.password.description")}</p>
+        </div>
         <PasswordModal
           isOpen={isPasswordModalOpen}
           onSubmit={handlePasswordSubmit}
@@ -52,49 +52,17 @@ export default function ReverseShareUploadPage() {
     );
   }
 
-  if (hasError) {
-    return (
-      <DefaultLayout
-        reverseShare={reverseShare}
-        password={currentPassword}
-        alias={shareAlias}
-        isMaxFilesReached={false}
-        hasUploadedSuccessfully={false}
-        onUploadSuccess={handleUploadSuccess}
-        isLinkInactive={isLinkInactive}
-        isLinkNotFound={isLinkNotFound}
-        isLinkExpired={isLinkExpired}
-      />
-    );
-  }
-
-  if (isVesselLayout) {
-    return (
-      <VesselLayout
-        reverseShare={reverseShare}
-        password={currentPassword}
-        alias={shareAlias}
-        isMaxFilesReached={isMaxFilesReached}
-        hasUploadedSuccessfully={hasUploadedSuccessfully}
-        onUploadSuccess={handleUploadSuccess}
-        isLinkInactive={false}
-        isLinkNotFound={false}
-        isLinkExpired={false}
-      />
-    );
-  }
-
   return (
     <DefaultLayout
       reverseShare={reverseShare}
       password={currentPassword}
       alias={shareAlias}
-      isMaxFilesReached={isMaxFilesReached}
-      hasUploadedSuccessfully={hasUploadedSuccessfully}
+      isMaxFilesReached={hasError ? false : isMaxFilesReached}
+      hasUploadedSuccessfully={hasError ? false : hasUploadedSuccessfully}
       onUploadSuccess={handleUploadSuccess}
-      isLinkInactive={false}
-      isLinkNotFound={false}
-      isLinkExpired={false}
+      isLinkInactive={hasError && isLinkInactive}
+      isLinkNotFound={hasError && isLinkNotFound}
+      isLinkExpired={hasError && isLinkExpired}
     />
   );
 }

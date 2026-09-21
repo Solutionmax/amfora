@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { BrandMark } from "@/components/brand/brand-mark";
+import { TransferShell } from "@/components/brand/transfer-shell";
 import { useAuth } from "@/contexts/auth-context";
 import { getCurrentUser } from "@/http/endpoints";
 
@@ -82,14 +83,14 @@ export default function AuthCallbackPage() {
   }, [router, searchParams, setUser, setIsAuthenticated, setIsAdmin, t]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-6">
-      <div className="flex w-full max-w-sm flex-col items-center rounded-[1.75rem] border bg-card p-10 text-center shadow-sm">
-        <span className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+    <TransferShell centered>
+      <div className="flex flex-col items-center px-8 py-12 text-center">
+        <span className="tile">
           <BrandMark className="size-6" />
         </span>
         <div className="mt-6 size-7 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
-        <p className="mt-4 text-sm text-muted-foreground">{t("login.processing")}</p>
+        <p className="mt-4 text-sm text-ink-3">{t("login.processing")}</p>
       </div>
-    </div>
+    </TransferShell>
   );
 }
