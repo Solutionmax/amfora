@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-brand="amfora" data-screen="login">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amfora UI mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --primary:#0079D2; --primary-ink:#ffffff; --primary-soft:#E8F2FB;
+  --ink:#0C1626; --ink-2:#46566B; --ink-3:#667085;
+  --bg:#F6F9FD; --surface:#FFFFFF; --surface-2:#F1F5FA; --line:#E3E9F2; --line-2:#CBD5E1;
+  --ok:#1A7F4B; --ok-soft:#E4F5EB; --warn:#9A5B00; --warn-soft:#FBF0DC; --bad:#B42318; --bad-soft:#FBE9E7; --info:#0B5CAD; --info-soft:#E8F2FB;
+  --font-display:"Archivo",system-ui,sans-serif; --font-body:"Public Sans",system-ui,sans-serif; --font-mono:"JetBrains Mono",ui-monospace,monospace;
+  --radius:8px; --shadow:0 12px 32px -12px rgba(12,22,38,.25);
+  --public-bg:radial-gradient(1200px 420px at 50% -120px, color-mix(in oklab, var(--primary) 12%, var(--bg)), var(--bg) 70%);
+  --credit:flex;
+}
+[data-theme=dark]{
+  --primary:#3B9CF0; --primary-ink:#06111F; --primary-soft:#12253B;
+  --ink:#E6EDF7; --ink-2:#B4C0D3; --ink-3:#8A97AD;
+  --bg:#0B1220; --surface:#121C2E; --surface-2:#182540; --line:#22304A; --line-2:#33456A;
+  --ok:#5BD08F; --ok-soft:#10301F; --warn:#F2B950; --warn-soft:#35270A; --bad:#F58A80; --bad-soft:#3A1512; --info:#7DBDF5; --info-soft:#12253B;
+  --shadow:0 12px 32px -12px rgba(0,0,0,.6);
+  --public-bg:radial-gradient(1200px 420px at 50% -120px, color-mix(in oklab, var(--primary) 16%, var(--bg)), var(--bg) 70%);
+}
+/* paid customer: everything overridden by the brandpack settings */
+[data-brand=acme]{
+  --primary:#E8590C; --primary-ink:#ffffff; --primary-soft:#FDEBDF;
+  --font-display:"Manrope",system-ui,sans-serif; --font-body:"Manrope",system-ui,sans-serif;
+  --radius:4px; --credit:none;
+  --public-bg:linear-gradient(180deg,#FFF4EC 0%, #F6F9FD 40%);
+}
+[data-brand=acme][data-theme=dark]{ --primary:#FF8A3D; --primary-ink:#1A0A00; --primary-soft:#3A1E0C; --public-bg:linear-gradient(180deg,#2A1607 0%, #0B1220 45%); }
+
+/* ---------- base ---------- */
+*{box-sizing:border-box} html,body{margin:0;height:100%}
+body{font:14px/1.5 var(--font-body);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-.01em}
+h1{font-size:28px;font-weight:600;line-height:1.15} h2{font-size:18px;font-weight:600} h3{font-size:14px;font-weight:600}
+p{margin:0} a{color:inherit}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-3)} .small{font-size:12px}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:var(--radius);border:1px solid transparent;font:600 14px var(--font-body);cursor:pointer;transition:background .15s,border-color .15s,transform .15s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--primary);color:var(--primary-ink)} .btn-primary:hover{filter:brightness(1.06)}
+.btn-outline{background:var(--surface);border-color:var(--line-2);color:var(--ink)} .btn-outline:hover{background:var(--surface-2)}
+.btn-ghost{background:transparent;color:var(--ink-2)} .btn-ghost:hover{background:var(--surface-2);color:var(--ink)}
+.btn-sm{height:32px;padding:0 12px;font-size:13px}
+.btn-block{width:100%;justify-content:center;height:44px;font-size:15px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--ink-2)}
+.input{height:40px;border:1px solid var(--line-2);border-radius:var(--radius);background:var(--surface);color:var(--ink);padding:0 12px;font:14px var(--font-body);width:100%}
+.input:focus{outline:2px solid var(--primary);outline-offset:-1px;border-color:var(--primary)}
+textarea.input{height:auto;padding:10px 12px;resize:vertical}
+.badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600}
+.badge-ok{background:var(--ok-soft);color:var(--ok)} .badge-warn{background:var(--warn-soft);color:var(--warn)} .badge-bad{background:var(--bad-soft);color:var(--bad)} .badge-info{background:var(--info-soft);color:var(--info)} .badge-muted{background:var(--surface-2);color:var(--ink-3)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:calc(var(--radius) + 4px)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:-.01em;text-decoration:none}
+.logo{width:32px;height:32px;flex:none;color:var(--primary)}
+.logo-acme{display:none;width:32px;height:32px;border-radius:6px;background:var(--primary);color:var(--primary-ink);font:700 16px var(--font-display);align-items:center;justify-content:center}
+[data-brand=acme] .logo-amfora{display:none} [data-brand=acme] .logo-acme{display:flex}
+.name-amfora{display:inline} .name-acme{display:none}
+[data-brand=acme] .name-amfora{display:none} [data-brand=acme] .name-acme{display:inline}
+.credit{display:var(--credit);align-items:center;gap:8px;color:var(--ink-3);font-size:12px;text-decoration:none;padding:6px 8px;border-radius:6px}
+.credit:hover{color:var(--ink);background:var(--surface-2)} .credit svg{width:14px;height:18px;color:var(--primary)}
+.credit-off{display:none;font-size:12px;color:var(--ink-3)} [data-brand=acme] .credit-off{display:block}
+
+/* manifest: the signature */
+.manifest{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.manifest li{display:grid;grid-template-columns:20px 1fr auto;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.manifest .n{display:flex;align-items:baseline;gap:8px;min-width:0}
+.manifest .n span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.manifest .n:after{content:"";flex:1;border-bottom:1px dotted var(--line-2);transform:translateY(-4px);min-width:16px}
+.manifest .s{font-family:var(--font-mono);font-size:13px;color:var(--ink-2)}
+.manifest .sub{font-size:12px;color:var(--ink-3);white-space:nowrap}
+.manifest .total{display:flex;justify-content:space-between;padding:12px 4px 0;font-size:13px;color:var(--ink-2)}
+.manifest .total b{font-family:var(--font-mono);font-weight:500;color:var(--ink)}
+.bar{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--primary);border-radius:2px}
+
+/* ---------- public shell ---------- */
+.public{min-height:100vh;display:flex;flex-direction:column;background:var(--public-bg)}
+.public-top{display:flex;justify-content:space-between;align-items:center;padding:20px 32px;max-width:1120px;width:100%;margin:0 auto}
+.public-main{flex:1;display:flex;flex-direction:column;align-items:center;padding:24px 20px 56px}
+.public-foot{display:flex;justify-content:center;padding:20px}
+.icon-row{display:flex;gap:2px}
+.icon-btn{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);color:var(--ink-2);background:transparent;border:0;cursor:pointer}.icon-btn:hover{background:color-mix(in oklab,var(--surface) 70%,transparent);color:var(--ink)}
+.panel{width:100%;max-width:440px;padding:32px}
+.panel-wide{max-width:640px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.providers{display:grid;gap:8px}
+.or{display:flex;align-items:center;gap:12px;color:var(--ink-3);font-size:12px}.or:before,.or:after{content:"";flex:1;border-top:1px solid var(--line)}
+.sender{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font:600 14px var(--font-display);flex:none}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink-3);margin-top:4px}
+.meta span{display:inline-flex;align-items:center;gap:5px}
+.msg{padding:14px 16px;background:var(--surface-2);border-radius:var(--radius);font-size:14px;color:var(--ink-2);border-left:3px solid var(--primary)}
+.drop{border:1.5px dashed var(--line-2);border-radius:var(--radius);padding:28px;text-align:center;background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer}
+.drop:hover{border-color:var(--primary);background:var(--primary-soft)}
+.drop .btn{margin-top:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.two{grid-template-columns:1fr}.panel{padding:24px 20px}}
+
+/* ---------- admin shell ---------- */
+.admin{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.side{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;position:sticky;top:0;height:100vh}
+.side .brand{padding:6px 8px 18px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border-radius:var(--radius);color:var(--ink-2);text-decoration:none;font-weight:500;font-size:13.5px}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a.on{background:var(--primary-soft);color:var(--primary);font-weight:600}
+.nav .h{padding:18px 10px 6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:14px;padding:0 4px}
+.storage{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-3)}
+.storage .row{display:flex;justify-content:space-between}
+.user{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid var(--line)}
+.user .avatar{width:30px;height:30px;font-size:12px}
+.user b{display:block;font-size:13px;font-weight:600}.user .small{display:block}
+.side-bottom{display:flex;justify-content:space-between;align-items:center;color:var(--ink-3);font-size:11px}
+.main{padding:28px 36px;max-width:1240px;width:100%}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}
+.page-head .sub{color:var(--ink-3);margin-top:4px}
+.actions{display:flex;gap:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);background:var(--surface);margin-bottom:24px}
+.stat{padding:18px 20px;border-right:1px solid var(--line)} .stat:last-child{border-right:0}
+.stat .k{font-size:12px;color:var(--ink-3);font-weight:500} .stat .v{font:500 24px/1.2 var(--font-mono);margin-top:6px;letter-spacing:-.02em} .stat .d{font-size:12px;margin-top:4px;color:var(--ink-3)} .stat .d.up{color:var(--ok)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.table-card{overflow:hidden}
+.table-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:12px;font-weight:600;color:var(--ink-3);padding:10px 18px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0}
+td{padding:0 18px;height:48px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0} tbody tr:hover td{background:var(--surface-2)}
+td.num,th.num{text-align:right;font-family:var(--font-mono);font-size:13px}
+.file{display:flex;align-items:center;gap:10px;min-width:0}.file .fi{width:28px;height:28px;border-radius:6px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--ink-2);flex:none}
+.file .fn{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.search{position:relative;flex:1;max-width:360px}.search .input{padding-left:36px}.search svg{position:absolute;left:11px;top:11px;color:var(--ink-3)}
+.chip{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;cursor:pointer}.chip.on{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+.sel{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:var(--radius);background:var(--primary-soft);color:var(--primary);font-weight:600;font-size:13px;margin-bottom:12px}
+.sel .btn{margin-left:auto}
+.rowacts{display:flex;gap:2px;justify-content:flex-end;opacity:.0;transition:opacity .15s}tr:hover .rowacts{opacity:1}
+.rowacts .icon-btn{width:30px;height:30px}
+.empty{padding:40px;text-align:center;color:var(--ink-3)}.empty .btn{margin-top:12px}
+
+/* customization */
+.cust{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:start}
+.section{padding:22px 24px;display:flex;flex-direction:column;gap:16px}
+.section+.section{border-top:1px solid var(--line)}
+.section .h{display:flex;justify-content:space-between;align-items:center}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}.sw{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer}.sw.on{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--surface)}
+.logo-up{display:flex;align-items:center;gap:14px}.logo-box{width:56px;height:56px;border:1px dashed var(--line-2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;background:var(--surface-2)}
+.range{-webkit-appearance:none;width:100%;height:4px;background:var(--surface-2);border-radius:2px}.range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--primary);border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line-2)}
+.locked{position:relative}
+.locked .lockbar{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius);background:var(--surface-2);border:1px solid var(--line)}
+.locked .lockbar .btn{margin-left:auto}
+.locked .fields{opacity:.45;pointer-events:none;filter:grayscale(.3)}
+[data-brand=acme] .locked .lockbar{display:none}[data-brand=acme] .locked .fields{opacity:1;pointer-events:auto;filter:none}
+.pack-on{display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius);background:var(--ok-soft);color:var(--ok);font-weight:600;font-size:13px}[data-brand=acme] .pack-on{display:flex}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:16px}.toggle .t{font-weight:500;color:var(--ink)}.toggle .small{display:block}
+.sw-toggle{width:36px;height:20px;border-radius:999px;background:var(--line-2);position:relative;flex:none}.sw-toggle:after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}.sw-toggle.on{background:var(--primary)}.sw-toggle.on:after{transform:translateX(16px)}
+.preview{position:sticky;top:24px}
+.preview .pv{border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;background:var(--public-bg);padding:20px}
+.preview .pv .panel{max-width:none;padding:18px;font-size:12px}
+.code{font:12px/1.6 var(--font-mono);background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:12px;color:var(--ink-2);white-space:pre}
+
+
+/* ---------- public transfer pages (v2: warmer) ---------- */
+.stage{min-height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:
+   radial-gradient(900px 520px at 12% -10%, color-mix(in oklab,var(--primary) 26%,transparent), transparent 60%),
+   radial-gradient(700px 480px at 100% 100%, color-mix(in oklab,var(--primary) 18%,transparent), transparent 60%),
+   radial-gradient(600px 300px at 60% 30%, color-mix(in oklab,#ffffff 40%,transparent), transparent 70%),
+   var(--bg)}
+[data-theme=dark] .stage{background:
+   radial-gradient(900px 520px at 12% -10%, color-mix(in oklab,var(--primary) 30%,transparent), transparent 60%),
+   radial-gradient(700px 480px at 100% 100%, color-mix(in oklab,var(--primary) 22%,transparent), transparent 60%),
+   var(--bg)}
+[data-brand=acme] .stage{background:
+   radial-gradient(900px 520px at 12% -10%, color-mix(in oklab,var(--primary) 22%,transparent), transparent 60%),
+   radial-gradient(700px 480px at 100% 100%, #FCE3D0, transparent 60%), #FFF8F3}
+[data-brand=acme][data-theme=dark] .stage{background:
+   radial-gradient(900px 520px at 12% -10%, color-mix(in oklab,var(--primary) 28%,transparent), transparent 60%),
+   radial-gradient(700px 480px at 100% 100%, #3A1E0C, transparent 60%), var(--bg)}
+.stage:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.stage>*{position:relative}
+.split{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:56px;align-items:center;max-width:1120px;width:100%;margin:0 auto;padding:16px 32px 64px}
+.statement{display:flex;flex-direction:column;gap:22px;max-width:480px}
+.statement h1{font-size:44px;line-height:1.05;letter-spacing:-.025em;font-weight:600}
+.statement h1 em{font-style:normal;color:var(--primary)}
+.statement .from{display:flex;align-items:center;gap:12px}
+.statement .avatar{width:48px;height:48px;font-size:16px;background:var(--surface);color:var(--primary);box-shadow:0 1px 0 var(--line),0 8px 20px -10px rgba(12,22,38,.35)}
+.statement .from b{display:block;font-size:15px}.statement .from span{font-size:13px;color:var(--ink-3)}
+.quote{font-family:var(--font-display);font-size:19px;line-height:1.45;font-weight:500;color:var(--ink-2);padding-left:18px;border-left:2px solid var(--primary)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:color-mix(in oklab,var(--surface) 70%,transparent);border:1px solid color-mix(in oklab,var(--line) 80%,transparent);font-size:13px;font-weight:500;color:var(--ink-2);backdrop-filter:blur(6px)}
+.chips svg{width:14px;height:14px;color:var(--primary)}
+.float{background:var(--surface);border:1px solid color-mix(in oklab,var(--line) 70%,transparent);border-radius:calc(var(--radius) + 10px);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 30px 60px -30px rgba(12,22,38,.35),0 10px 24px -14px rgba(12,22,38,.2);overflow:hidden}
+[data-theme=dark] .float{box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 30px 60px -30px rgba(0,0,0,.8)}
+.cover{position:relative;aspect-ratio:16/8;background:linear-gradient(135deg,color-mix(in oklab,var(--primary) 85%,#000 0%) 0%,color-mix(in oklab,var(--primary) 45%,#0C1626) 100%);display:flex;align-items:flex-end;padding:18px;color:#fff}
+.cover .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.cover .play i{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center}
+.cover .play svg{width:22px;height:22px;stroke:#fff;fill:#fff}
+.cover .cap{font-size:12px;opacity:.85;display:flex;gap:10px;align-items:center}
+.cover .cap b{font-weight:600}
+.cover .thumbs{position:absolute;right:18px;top:18px;display:flex;gap:6px}
+.cover .thumbs i{width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center}
+.cover .thumbs svg{width:16px;height:16px;stroke:#fff}
+.float .body{padding:22px 24px 24px}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.list li{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.list li:last-of-type{border-bottom:0}
+.tile{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--primary);background:var(--primary-soft)}
+.tile.v{background:#EEE6FB;color:#6941C6}.tile.d{background:#FDECEA;color:#B42318}.tile.z{background:#FBF0DC;color:#9A5B00}.tile.i{background:#E4F5EB;color:#1A7F4B}
+[data-theme=dark] .tile.v{background:#2A1F45}[data-theme=dark] .tile.d{background:#3A1512}[data-theme=dark] .tile.z{background:#35270A}[data-theme=dark] .tile.i{background:#10301F}
+.list .nm{min-width:0}.list .nm b{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list .nm span{font-size:12px;color:var(--ink-3)}
+.list .sz{font-family:var(--font-mono);font-size:13px;color:var(--ink-2)}
+.sum{display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;margin-top:4px;border-top:1px dashed var(--line-2);font-size:13px;color:var(--ink-3)}
+.sum b{font-family:var(--font-mono);font-weight:500;color:var(--ink);font-size:14px}
+.cta{display:flex;gap:10px;margin-top:18px}
+.cta .btn-primary{flex:1;justify-content:center;height:48px;font-size:15px;border-radius:calc(var(--radius) + 2px);box-shadow:0 10px 24px -12px color-mix(in oklab,var(--primary) 70%,transparent)}
+.cta .btn-outline{height:48px;border-radius:calc(var(--radius) + 2px)}
+.note{margin-top:14px;font-size:12px;color:var(--ink-3);text-align:center}
+.dz{position:relative;border:1.5px dashed color-mix(in oklab,var(--primary) 45%,var(--line-2));border-radius:calc(var(--radius) + 6px);padding:30px 24px 24px;text-align:center;background:linear-gradient(180deg,color-mix(in oklab,var(--primary) 6%,var(--surface)),var(--surface));transition:border-color .15s,background .15s}
+.dz:hover{border-color:var(--primary);background:var(--primary-soft)}
+.stackart{position:relative;width:96px;height:72px;margin:0 auto 14px}
+.stackart i{position:absolute;left:50%;top:50%;width:52px;height:64px;border-radius:8px;background:var(--surface);border:1px solid var(--line-2);box-shadow:0 8px 18px -10px rgba(12,22,38,.4);transform:translate(-50%,-50%) rotate(var(--r));transform-origin:50% 90%}
+.stackart i:nth-child(1){--r:-14deg;background:var(--primary-soft);border-color:color-mix(in oklab,var(--primary) 30%,var(--line-2))}
+.stackart i:nth-child(2){--r:6deg}
+.stackart i:nth-child(3){--r:0deg;display:flex;align-items:center;justify-content:center;color:var(--primary)}
+.stackart svg{width:22px;height:22px}
+.dz b{display:block;font-family:var(--font-display);font-size:16px;font-weight:600}
+.dz p{font-size:13px;color:var(--ink-3);margin-top:4px}
+.dz .btn{margin-top:14px}
+.ring{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding:14px 16px;border-radius:var(--radius);background:var(--surface-2);margin-top:14px}
+.ring svg{width:44px;height:44px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:4}.ring .bg{stroke:var(--line)}.ring .fg{stroke:var(--primary);stroke-linecap:round;stroke-dasharray:113;stroke-dashoffset:42}
+.ring b{display:block;font-size:14px}.ring span{font-size:12px;color:var(--ink-3)}
+.ring .pct{font-family:var(--font-mono);font-weight:500;color:var(--ink)}
+.rowbar{grid-column:1/-1;height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden;margin-top:-6px}.rowbar i{display:block;height:100%;background:var(--primary)}
+@media(max-width:900px){.split{grid-template-columns:1fr;gap:28px;padding:8px 20px 48px}.statement h1{font-size:32px}.statement{max-width:none}}
+
+
+/* ---------- v2 warmth for login + admin ---------- */
+.admin{background:
+   radial-gradient(900px 420px at 85% -10%, color-mix(in oklab,var(--primary) 14%,transparent), transparent 60%),
+   radial-gradient(600px 400px at 30% 110%, color-mix(in oklab,var(--primary) 8%,transparent), transparent 60%), var(--bg)}
+[data-brand=acme] .admin{background:radial-gradient(900px 420px at 85% -10%, #FCE3D0, transparent 60%), #FFF8F3}
+[data-brand=acme][data-theme=dark] .admin{background:radial-gradient(900px 420px at 85% -10%, #3A1E0C, transparent 60%), var(--bg)}
+.side{background:linear-gradient(180deg,color-mix(in oklab,var(--primary) 7%,var(--surface)) 0%,var(--surface) 160px);border-right:1px solid color-mix(in oklab,var(--line) 80%,transparent)}
+.nav a.on{background:var(--surface);color:var(--primary);box-shadow:0 1px 0 var(--line),0 8px 18px -12px rgba(12,22,38,.35);position:relative}
+.nav a.on:before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--primary)}
+[data-theme=dark] .nav a.on{background:var(--surface-2);box-shadow:none}
+.side-foot .storage{padding:12px;border-radius:var(--radius);background:var(--surface-2)}
+.main{padding:32px 40px}
+.greet h1{font-size:34px;letter-spacing:-.025em}
+.greet .sub{font-size:15px}
+.hero-tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.hero-tile{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 8px);padding:22px 24px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;color:#fff;text-decoration:none;
+  background:linear-gradient(135deg,var(--primary) 0%,color-mix(in oklab,var(--primary) 55%,#0C1626) 100%);box-shadow:0 20px 40px -24px color-mix(in oklab,var(--primary) 80%,transparent)}
+.hero-tile.alt{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 20px 40px -30px rgba(12,22,38,.35)}
+.hero-tile .ic{position:absolute;top:20px;left:24px;width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.hero-tile.alt .ic{background:var(--primary-soft);color:var(--primary);border-color:transparent}
+.hero-tile b{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:-.01em}
+.hero-tile span{font-size:13px;opacity:.85}
+.hero-tile .arrow{position:absolute;right:20px;top:20px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.hero-tile.alt .arrow{background:var(--surface-2);color:var(--ink-2)}
+.hero-tile .grain{position:absolute;inset:0;opacity:.25;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+.stats{box-shadow:0 20px 40px -30px rgba(12,22,38,.3);border-color:color-mix(in oklab,var(--line) 80%,transparent)}
+.stat .v{font-family:var(--font-display);font-weight:600;font-size:26px}
+.card.table-card{box-shadow:0 20px 40px -30px rgba(12,22,38,.3);border-color:color-mix(in oklab,var(--line) 80%,transparent)}
+.tile.sm{width:32px;height:32px;border-radius:8px}.tile.sm svg{width:16px;height:16px}
+.file .fn{font-weight:500}
+.sel{background:var(--primary);color:var(--primary-ink);box-shadow:0 10px 24px -14px color-mix(in oklab,var(--primary) 80%,transparent)}
+.sel .btn-primary{background:var(--surface);color:var(--primary)} .sel .btn-ghost{color:var(--primary-ink)!important;opacity:.9}
+.cust .card{box-shadow:0 20px 40px -30px rgba(12,22,38,.3)}
+.section .h h3{display:flex;align-items:center;gap:10px}.section .h h3 .tile{width:30px;height:30px;border-radius:8px}.section .h h3 .tile svg{width:15px;height:15px}
+.preview .pv{background:
+   radial-gradient(300px 160px at 10% -10%, color-mix(in oklab,var(--primary) 26%,transparent), transparent 60%),
+   radial-gradient(240px 160px at 100% 100%, color-mix(in oklab,var(--primary) 18%,transparent), transparent 60%), var(--bg)}
+.preview .float{border-radius:12px}
+.preview .cover{aspect-ratio:16/6;padding:10px}.preview .cover .cap{font-size:10px}.preview .cover .play i{width:32px;height:32px}.preview .cover .play svg{width:12px;height:12px}
+.login-panel .body{padding:28px 28px 26px}
+.login-panel h2{font-size:20px;margin-bottom:4px}
+.login-panel .sub{color:var(--ink-3);font-size:13px;margin-bottom:18px}
+.trust{display:grid;gap:12px;margin-top:6px}
+.trust>div{display:flex;gap:12px;align-items:flex-start}.trust>div>div{display:block}
+.trust .tile{width:34px;height:34px;border-radius:9px;background:color-mix(in oklab,var(--surface) 75%,transparent);color:var(--primary);border:1px solid color-mix(in oklab,var(--line) 70%,transparent);backdrop-filter:blur(6px)}
+.trust .tile svg{width:16px;height:16px}
+.trust b{display:block;font-size:14px;font-weight:600}.trust span{font-size:13px;color:var(--ink-3)}
+
+/* ---------- mockup chrome (not part of the product) ---------- */
+.mock{position:fixed;z-index:9;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:6px;align-items:center;padding:6px;background:#0C1626;color:#fff;border-radius:12px;box-shadow:0 20px 40px -10px rgba(0,0,0,.5);font:12px/1 "Public Sans",sans-serif}
+.mock .g{display:flex;gap:2px;padding:0 6px;border-right:1px solid #2b3a52}.mock .g:last-child{border:0}
+.mock button{background:transparent;border:0;color:#b4c0d3;padding:8px 10px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600}
+.mock button.on{background:#fff;color:#0C1626}
+.mock .lbl{color:#667085;padding:0 4px 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.screen{display:none}[data-screen=login] #s-login,[data-screen=download] #s-download,[data-screen=upload] #s-upload,[data-screen=dashboard] #s-dashboard,[data-screen=files] #s-files,[data-screen=custom] #s-custom{display:block}
+.admin-note{position:fixed;top:12px;right:12px;font:11px "Public Sans";color:#667085;background:var(--surface);border:1px solid var(--line);padding:6px 10px;border-radius:8px}
+</style>
+</head>
+<body>
+
+<!-- ===== svg symbols ===== -->
+<svg width="0" height="0" style="position:absolute">
+ <symbol id="amphora" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"><path d="M45 21 C30 25 22 38 32 52"/><path d="M55 21 C70 25 78 38 68 52"/></g><g fill="currentColor"><rect x="35" y="9" width="30" height="8" rx="4"/><path d="M44 17 H56 L55 30 H45 Z"/><path d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"/><rect x="41" y="83" width="18" height="7" rx="3.5"/></g></symbol>
+ <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></symbol>
+ <symbol id="i-img" viewBox="0 0 24 24"><path d="M15 8h.01"/><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/></symbol>
+ <symbol id="i-zip" viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M11 6h1M11 8h1M11 10h1M11 12h1M11 14h1"/></symbol>
+ <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></symbol>
+ <symbol id="i-down" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></symbol>
+ <symbol id="i-up" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></symbol>
+ <symbol id="i-inbox" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 13h3l3 3h4l3-3h3"/></symbol>
+ <symbol id="i-share" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="m8 11 8-4M8 13l8 4"/></symbol>
+ <symbol id="i-home" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+ <symbol id="i-folder" viewBox="0 0 24 24"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></symbol>
+ <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></symbol>
+ <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 8 0 0 1 9 8 4.5 4 0 0 1-4.5 4H14a2 2 0 0 0-1 3.75A1.3 1.3 0 0 1 12 21"/><circle cx="7.5" cy="10.5" r=".5"/><circle cx="12" cy="7.5" r=".5"/><circle cx="16.5" cy="10.5" r=".5"/></symbol>
+ <symbol id="i-cog" viewBox="0 0 24 24"><path d="M10.3 4.3a1.7 1.7 0 0 1 3.4 0 1.7 1.7 0 0 0 2.6 1.1 1.7 1.7 0 0 1 2.4 2.4 1.7 1.7 0 0 0 1.1 2.6 1.7 1.7 0 0 1 0 3.4 1.7 1.7 0 0 0-1.1 2.6 1.7 1.7 0 0 1-2.4 2.4 1.7 1.7 0 0 0-2.6 1.1 1.7 1.7 0 0 1-3.4 0 1.7 1.7 0 0 0-2.6-1.1 1.7 1.7 0 0 1-2.4-2.4 1.7 1.7 0 0 0-1.1-2.6 1.7 1.7 0 0 1 0-3.4 1.7 1.7 0 0 0 1.1-2.6 1.7 1.7 0 0 1 2.4-2.4 1.7 1.7 0 0 0 2.6-1.1"/><circle cx="12" cy="12" r="3"/></symbol>
+ <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="m21 21-6-6"/></symbol>
+ <symbol id="i-link" viewBox="0 0 24 24"><path d="M9 15l6-6M11 6l.5-.5a3.5 3.5 0 0 1 5 5L16 11M13 18l-.5.5a3.5 3.5 0 0 1-5-5L8 13"/></symbol>
+ <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></symbol>
+ <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M3 12h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7-.7.7m0 11.4.7.7m-12.1-.7-.7.7"/></symbol>
+ <symbol id="i-lang" viewBox="0 0 24 24"><path d="M4 5h7M9 3v2c0 4.4-2.7 8-6 8M5 9c0 2.1 2.6 3.9 6 4M12 20l4-9 4 9M19.1 18h-6.2"/></symbol>
+ <symbol id="i-eye" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M22 12c-2.7 4.4-6 6.7-10 6.7S4.7 16.4 2 12c2.7-4.4 6-6.7 10-6.7s7.3 2.3 10 6.7"/></symbol>
+ <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+ <symbol id="i-logout" viewBox="0 0 24 24"><path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2M9 12h12l-3-3m0 6 3-3"/></symbol>
+</svg>
+
+<!-- ============ PUBLIC: LOGIN ============ -->
+<div class="screen" id="s-login"><div class="stage">
+ <header class="public-top">
+  <a class="brand" href="#"><svg class="logo logo-amfora"><use href="#amphora"/></svg><span class="logo-acme">A</span><span><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></a>
+  <div class="icon-row"><button class="icon-btn"><svg class="i"><use href="#i-lang"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-sun"/></svg></button></div>
+ </header>
+ <main class="split">
+  <section class="statement">
+   <h1>Welcome<br><em>back.</em></h1>
+   <p class="quote"><span class="name-amfora">Send and receive files on your own server. Yours, not a third party's.</span><span class="name-acme">Files for Acme clients and partners, on Acme's own server.</span></p>
+   <div class="trust">
+    <div><div class="tile"><svg class="i"><use href="#i-lock"/></svg></div><div><b>Stays on this server</b><span>Nothing leaves the installation you are signing in to.</span></div></div>
+    <div><div class="tile"><svg class="i"><use href="#i-share"/></svg></div><div><b>Links that expire</b><span>Passwords, download limits and end dates on every share.</span></div></div>
+    <div><div class="tile"><svg class="i"><use href="#i-inbox"/></svg></div><div><b>Receive without accounts</b><span>Anyone with a receive link can send you files.</span></div></div>
+   </div>
+  </section>
+  <section class="float login-panel" aria-label="Sign in">
+   <div class="body">
+    <h2>Sign in</h2><p class="sub">Use your <span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span> account or a connected provider.</p>
+    <div class="stack">
+     <div class="providers"><button class="btn btn-outline btn-block" style="height:42px;font-size:14px">Continue with Google</button><button class="btn btn-outline btn-block" style="height:42px;font-size:14px">Continue with Microsoft</button></div>
+     <div class="or">or with email</div>
+     <label class="field">Email or username<input class="input" value="marcel@acme.test"></label>
+     <label class="field"><span style="display:flex;justify-content:space-between">Password <a href="#" class="small" style="font-weight:500;color:var(--primary);text-decoration:none">Forgot password?</a></span><input class="input" type="password" value="••••••••••"></label>
+     <div class="cta" style="margin-top:4px"><button class="btn btn-primary">Sign in</button></div>
+    </div>
+   </div>
+  </section>
+ </main>
+ <footer class="public-foot"><a class="credit" href="#"><svg><use href="#amphora"/></svg>Powered by Amfora</a><span class="credit-off">Acme Transfer</span></footer>
+</div></div>
+
+<!-- ============ PUBLIC: DOWNLOAD ============ -->
+<div class="screen" id="s-download"><div class="stage">
+ <header class="public-top">
+  <a class="brand" href="#"><svg class="logo logo-amfora"><use href="#amphora"/></svg><span class="logo-acme">A</span><span><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></a>
+  <div class="icon-row"><button class="icon-btn"><svg class="i"><use href="#i-lang"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-sun"/></svg></button></div>
+ </header>
+ <main class="split">
+  <section class="statement">
+   <div class="from"><div class="avatar">MV</div><div><b>Marcel Vos</b><span><span class="name-amfora">via Amfora</span><span class="name-acme">Acme Studio</span> · sent yesterday</span></div></div>
+   <h1>Three files,<br><em>ready for you.</em></h1>
+   <p class="quote">Final cut of the launch video plus the poster in print resolution. Let me know if the colour grade works for you.</p>
+   <div class="chips"><span><svg class="i"><use href="#i-check"/></svg>Password verified</span><span>Expires 27 Sep</span><span>248 MB</span></div>
+  </section>
+  <section class="float" aria-label="Files">
+   <div class="cover"><div class="play"><i><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></i></div><div class="thumbs"><i><svg class="i"><use href="#i-img"/></svg></i><i><svg class="i"><use href="#i-zip"/></svg></i></div><div class="cap"><b>launch-video-final-v3.mp4</b><span>02:14 · 1080p</span></div></div>
+   <div class="body">
+    <ul class="list">
+     <li><div class="tile v"><svg class="i"><use href="#i-video"/></svg></div><div class="nm"><b>launch-video-final-v3.mp4</b><span>Video · MP4</span></div><span class="sz">231.4 MB</span></li>
+     <li><div class="tile d"><svg class="i"><use href="#i-file"/></svg></div><div class="nm"><b>poster-a2-print.pdf</b><span>Document · PDF, 2 pages</span></div><span class="sz">14.9 MB</span></li>
+     <li><div class="tile z"><svg class="i"><use href="#i-zip"/></svg></div><div class="nm"><b>fonts-and-assets.zip</b><span>Archive · 14 items</span></div><span class="sz">1.7 MB</span></li>
+    </ul>
+    <div class="sum"><span>3 files · downloaded 4 times</span><b>248.0 MB</b></div>
+    <div class="cta"><button class="btn btn-primary"><svg class="i"><use href="#i-down"/></svg>Download all</button><button class="btn btn-outline"><svg class="i"><use href="#i-eye"/></svg>Preview</button></div>
+    <p class="note">Downloads as one ZIP. Files stay available until 27 Sep.</p>
+   </div>
+  </section>
+ </main>
+ <footer class="public-foot"><a class="credit" href="#"><svg><use href="#amphora"/></svg>Powered by Amfora</a><span class="credit-off">Acme Transfer</span></footer>
+</div></div>
+
+<!-- ============ PUBLIC: UPLOAD (receive link) ============ -->
+<div class="screen" id="s-upload"><div class="stage">
+ <header class="public-top">
+  <a class="brand" href="#"><svg class="logo logo-amfora"><use href="#amphora"/></svg><span class="logo-acme">A</span><span><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></a>
+  <div class="icon-row"><button class="icon-btn"><svg class="i"><use href="#i-lang"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-sun"/></svg></button></div>
+ </header>
+ <main class="split">
+  <section class="statement">
+   <span class="eyebrow">Receive link</span>
+   <h1>Send your files<br>to <em><span class="name-amfora">Marcel</span><span class="name-acme">Acme Studio</span></em>.</h1>
+   <p class="quote">Selections from the shoot go here. Originals please, no exports from the phone.</p>
+   <div class="chips"><span><svg class="i"><use href="#i-up"/></svg>Up to 5 GB</span><span>20 files per upload</span><span>Open until 30 Sep</span><span><svg class="i"><use href="#i-lock"/></svg>Encrypted in transit</span></div>
+  </section>
+  <section class="float" aria-label="Upload">
+   <div class="body">
+    <div class="dz"><div class="stackart"><i></i><i></i><i><svg class="i"><use href="#i-up"/></svg></i></div><b>Drop files here</b><p>or choose from your computer. Folders are fine too.</p><button class="btn btn-outline btn-sm">Choose files</button></div>
+    <ul class="list" style="margin-top:16px">
+     <li><div class="tile i"><svg class="i"><use href="#i-img"/></svg></div><div class="nm"><b>brand-photos-selection.zip</b><span>Uploading · 1 min left</span></div><span class="sz">412 MB</span><div class="rowbar"><i style="width:63%"></i></div></li>
+     <li><div class="tile d"><svg class="i"><use href="#i-file"/></svg></div><div class="nm"><b>brief.docx</b><span style="color:var(--ok)">Uploaded</span></div><span class="sz">86 KB</span></li>
+    </ul>
+    <div class="ring"><svg viewBox="0 0 40 40"><circle class="bg" cx="20" cy="20" r="18"/><circle class="fg" cx="20" cy="20" r="18"/></svg><div><b><span class="pct">63%</span> · 2 files · 412.1 MB</b><span>Keep this tab open until the upload finishes.</span></div></div>
+    <div class="two" style="margin-top:18px"><label class="field">Your name<input class="input" value="Eva de Wit"></label><label class="field">Email<input class="input" value="eva@studio.nl"></label></div>
+    <label class="field" style="margin-top:12px">Message (optional)<textarea class="input" rows="2">Selection from the shoot on 18 Sep.</textarea></label>
+    <div class="cta"><button class="btn btn-primary"><svg class="i"><use href="#i-up"/></svg>Send 2 files</button></div>
+   </div>
+  </section>
+ </main>
+ <footer class="public-foot"><a class="credit" href="#"><svg><use href="#amphora"/></svg>Powered by Amfora</a><span class="credit-off">Acme Transfer</span></footer>
+</div></div>
+
+<!-- ============ ADMIN SHELL (shared markup, repeated per screen) ============ -->
+<div class="screen" id="s-dashboard"><div class="admin">
+ <aside class="side">
+  <a class="brand" href="#"><svg class="logo logo-amfora"><use href="#amphora"/></svg><span class="logo-acme">A</span><span><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></a>
+  <nav class="nav">
+   <a class="on" href="#"><svg class="i"><use href="#i-home"/></svg>Dashboard</a>
+   <a href="#"><svg class="i"><use href="#i-folder"/></svg>Files</a>
+   <a href="#"><svg class="i"><use href="#i-share"/></svg>Shares</a>
+   <a href="#"><svg class="i"><use href="#i-inbox"/></svg>Receive links</a>
+   <div class="h">Admin</div>
+   <a href="#"><svg class="i"><use href="#i-users"/></svg>Users</a>
+   <a href="#"><svg class="i"><use href="#i-palette"/></svg>Customization</a>
+   <a href="#"><svg class="i"><use href="#i-cog"/></svg>Settings</a>
+  </nav>
+  <div class="side-foot">
+   <div class="storage"><div class="row"><span>Storage</span><span class="mono">80.9 / 117.9 GB</span></div><div class="bar"><i style="width:69%"></i></div></div>
+   <div class="user"><div class="avatar">MV</div><div><b>Marcel Vos</b><span class="small muted">Administrator</span></div><button class="icon-btn" style="margin-left:auto"><svg class="i"><use href="#i-logout"/></svg></button></div>
+   <div class="side-bottom"><span class="icon-row"><button class="icon-btn" style="width:28px;height:28px"><svg class="i" style="width:15px;height:15px"><use href="#i-lang"/></svg></button><button class="icon-btn" style="width:28px;height:28px"><svg class="i" style="width:15px;height:15px"><use href="#i-sun"/></svg></button></span><span class="mono">v1.3.0</span></div>
+  </div>
+ </aside>
+ <main class="main">
+  <div class="page-head greet"><div><h1>Good afternoon, Marcel.</h1><p class="sub">14 active shares, 3 new uploads since yesterday.</p></div><div class="actions"><button class="btn btn-outline"><svg class="i"><use href="#i-up"/></svg>Upload</button><button class="btn btn-primary"><svg class="i"><use href="#i-share"/></svg>New share</button></div></div>
+  <div class="hero-tiles">
+   <a class="hero-tile" href="#"><span class="grain"></span><span class="ic"><svg class="i"><use href="#i-share"/></svg></span><span class="arrow"><svg class="i" style="width:16px;height:16px"><use href="#i-link"/></svg></span><b>Send files</b><span>Pick files, set a password and an end date, share the link.</span></a>
+   <a class="hero-tile alt" href="#"><span class="ic"><svg class="i"><use href="#i-inbox"/></svg></span><span class="arrow"><svg class="i" style="width:16px;height:16px"><use href="#i-link"/></svg></span><b>Receive files</b><span>Create a link anyone can upload to, no account needed.</span></a>
+  </div>
+  <div class="stats">
+   <div class="stat"><div class="k">Storage used</div><div class="v">80.9 GB</div><div class="d">of 117.9 GB</div></div>
+   <div class="stat"><div class="k">Active shares</div><div class="v">14</div><div class="d up">+3 this week</div></div>
+   <div class="stat"><div class="k">Downloads</div><div class="v">126</div><div class="d up">+41 vs. previous 30 days</div></div>
+   <div class="stat"><div class="k">Received files</div><div class="v">37</div><div class="d">via 4 receive links</div></div>
+  </div>
+  <div class="grid2">
+   <div class="card table-card"><div class="table-head"><h3>Recent shares</h3><a href="#" class="small" style="color:var(--primary);font-weight:600;text-decoration:none">View all</a></div>
+    <table><thead><tr><th>Share</th><th class="num">Downloads</th><th>Status</th></tr></thead><tbody>
+     <tr><td><div class="file"><div class="tile sm v"><svg class="i"><use href="#i-video"/></svg></div><div><div class="fn">Launch video final</div><div class="small muted">3 files · 248 MB · expires 27 Sep</div></div></div></td><td class="num">4</td><td><span class="badge badge-ok">Active</span></td></tr>
+     <tr><td><div class="file"><div class="tile sm i"><svg class="i"><use href="#i-img"/></svg></div><div><div class="fn">Brand photos, selection</div><div class="small muted">1 file · 412 MB · password</div></div></div></td><td class="num">12</td><td><span class="badge badge-ok">Active</span></td></tr>
+     <tr><td><div class="file"><div class="tile sm d"><svg class="i"><use href="#i-file"/></svg></div><div><div class="fn">Q3 report, board</div><div class="small muted">2 files · 6 MB</div></div></div></td><td class="num">31</td><td><span class="badge badge-muted">Expired</span></td></tr>
+    </tbody></table></div>
+   <div class="card table-card"><div class="table-head"><h3>Recent uploads</h3><a href="#" class="small" style="color:var(--primary);font-weight:600;text-decoration:none">View all</a></div>
+    <table><thead><tr><th>File</th><th class="num">Size</th><th>Uploaded</th></tr></thead><tbody>
+     <tr><td><div class="file"><div class="tile sm z"><svg class="i"><use href="#i-zip"/></svg></div><div class="fn">brand-photos-selection.zip</div></div></td><td class="num">412 MB</td><td class="muted">Today, 14:02</td></tr>
+     <tr><td><div class="file"><div class="tile sm v"><svg class="i"><use href="#i-video"/></svg></div><div class="fn">launch-video-final-v3.mp4</div></div></td><td class="num">231 MB</td><td class="muted">Yesterday</td></tr>
+     <tr><td><div class="file"><div class="tile sm d"><svg class="i"><use href="#i-file"/></svg></div><div class="fn">poster-a2-print.pdf</div></div></td><td class="num">15 MB</td><td class="muted">19 Sep</td></tr>
+    </tbody></table></div>
+  </div>
+ </main>
+</div></div>
+
+<!-- ============ ADMIN: FILES ============ -->
+<div class="screen" id="s-files"><div class="admin">
+ <aside class="side">
+  <a class="brand" href="#"><svg class="logo logo-amfora"><use href="#amphora"/></svg><span class="logo-acme">A</span><span><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></a>
+  <nav class="nav">
+   <a href="#"><svg class="i"><use href="#i-home"/></svg>Dashboard</a>
+   <a class="on" href="#"><svg class="i"><use href="#i-folder"/></svg>Files</a>
+   <a href="#"><svg class="i"><use href="#i-share"/></svg>Shares</a>
+   <a href="#"><svg class="i"><use href="#i-inbox"/></svg>Receive links</a>
+   <div class="h">Admin</div>
+   <a href="#"><svg class="i"><use href="#i-users"/></svg>Users</a>
+   <a href="#"><svg class="i"><use href="#i-palette"/></svg>Customization</a>
+   <a href="#"><svg class="i"><use href="#i-cog"/></svg>Settings</a>
+  </nav>
+  <div class="side-foot">
+   <div class="storage"><div class="row"><span>Storage</span><span class="mono">80.9 / 117.9 GB</span></div><div class="bar"><i style="width:69%"></i></div></div>
+   <div class="user"><div class="avatar">MV</div><div><b>Marcel Vos</b><span class="small muted">Administrator</span></div><button class="icon-btn" style="margin-left:auto"><svg class="i"><use href="#i-logout"/></svg></button></div>
+   <div class="side-bottom"><span class="icon-row"><button class="icon-btn" style="width:28px;height:28px"><svg class="i" style="width:15px;height:15px"><use href="#i-lang"/></svg></button><button class="icon-btn" style="width:28px;height:28px"><svg class="i" style="width:15px;height:15px"><use href="#i-sun"/></svg></button></span><span class="mono">v1.3.0</span></div>
+  </div>
+ </aside>
+ <main class="main">
+  <div class="page-head"><div><h1>Files</h1><p class="sub">11 files · 1.2 GB</p></div><div class="actions"><button class="btn btn-outline">New folder</button><button class="btn btn-primary"><svg class="i"><use href="#i-up"/></svg>Upload</button></div></div>
+  <div class="toolbar"><div class="search"><svg class="i"><use href="#i-search"/></svg><input class="input" placeholder="Search files"></div><span class="chip on">All</span><span class="chip">Video</span><span class="chip">Images</span><span class="chip">Documents</span><span class="chip">Archives</span></div>
+  <div class="sel"><svg class="i"><use href="#i-check"/></svg>2 selected<button class="btn btn-sm btn-primary"><svg class="i"><use href="#i-share"/></svg>Share</button><button class="btn btn-sm btn-ghost" style="margin-left:0;color:var(--bad)"><svg class="i"><use href="#i-trash"/></svg>Delete</button></div>
+  <div class="card table-card"><table>
+   <thead><tr><th style="width:36px"></th><th>Name</th><th class="num">Size</th><th class="num">Downloads</th><th>Uploaded</th><th style="width:120px"></th></tr></thead>
+   <tbody>
+    <tr><td><input type="checkbox" checked></td><td><div class="file"><div class="tile sm v"><svg class="i"><use href="#i-video"/></svg></div><div class="fn">launch-video-final-v3.mp4</div></div></td><td class="num">231.4 MB</td><td class="num">4</td><td class="muted">Yesterday</td><td><div class="rowacts"><button class="icon-btn"><svg class="i"><use href="#i-eye"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-link"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-dots"/></svg></button></div></td></tr>
+    <tr><td><input type="checkbox" checked></td><td><div class="file"><div class="tile sm i"><svg class="i"><use href="#i-img"/></svg></div><div class="fn">poster-a2-print.pdf</div></div></td><td class="num">14.9 MB</td><td class="num">4</td><td class="muted">19 Sep</td><td><div class="rowacts"><button class="icon-btn"><svg class="i"><use href="#i-eye"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-link"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-dots"/></svg></button></div></td></tr>
+    <tr><td><input type="checkbox"></td><td><div class="file"><div class="tile sm z"><svg class="i"><use href="#i-zip"/></svg></div><div class="fn">brand-photos-selection.zip</div></div></td><td class="num">412.0 MB</td><td class="num">12</td><td class="muted">Today, 14:02</td><td><div class="rowacts"><button class="icon-btn"><svg class="i"><use href="#i-eye"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-link"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-dots"/></svg></button></div></td></tr>
+    <tr><td><input type="checkbox"></td><td><div class="file"><div class="tile sm d"><svg class="i"><use href="#i-file"/></svg></div><div class="fn">q3-board-report.pdf</div></div></td><td class="num">4.1 MB</td><td class="num">31</td><td class="muted">12 Sep</td><td><div class="rowacts"><button class="icon-btn"><svg class="i"><use href="#i-eye"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-link"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-dots"/></svg></button></div></td></tr>
+    <tr><td><input type="checkbox"></td><td><div class="file"><div class="tile sm v"><svg class="i"><use href="#i-video"/></svg></div><div class="fn">TONY.mp4</div></div></td><td class="num">96.2 MB</td><td class="num">1</td><td class="muted">10 Sep</td><td><div class="rowacts"><button class="icon-btn"><svg class="i"><use href="#i-eye"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-link"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-dots"/></svg></button></div></td></tr>
+    <tr><td><input type="checkbox"></td><td><div class="file"><div class="tile sm d"><svg class="i"><use href="#i-file"/></svg></div><div class="fn">brief.docx</div></div></td><td class="num">86 KB</td><td class="num">0</td><td class="muted">Today, 14:05</td><td><div class="rowacts"><button class="icon-btn"><svg class="i"><use href="#i-eye"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-link"/></svg></button><button class="icon-btn"><svg class="i"><use href="#i-dots"/></svg></button></div></td></tr>
+   </tbody></table>
+   <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid var(--line)" class="small muted"><span>Showing 6 of 11</span><span class="actions"><button class="btn btn-sm btn-outline">Previous</button><button class="btn btn-sm btn-outline">Next</button></span></div>
+  </div>
+ </main>
+</div></div>
+
+<!-- ============ ADMIN: CUSTOMIZATION ============ -->
+<div class="screen" id="s-custom"><div class="admin">
+ <aside class="side">
+  <a class="brand" href="#"><svg class="logo logo-amfora"><use href="#amphora"/></svg><span class="logo-acme">A</span><span><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></a>
+  <nav class="nav">
+   <a href="#"><svg class="i"><use href="#i-home"/></svg>Dashboard</a>
+   <a href="#"><svg class="i"><use href="#i-folder"/></svg>Files</a>
+   <a href="#"><svg class="i"><use href="#i-share"/></svg>Shares</a>
+   <a href="#"><svg class="i"><use href="#i-inbox"/></svg>Receive links</a>
+   <div class="h">Admin</div>
+   <a href="#"><svg class="i"><use href="#i-users"/></svg>Users</a>
+   <a class="on" href="#"><svg class="i"><use href="#i-palette"/></svg>Customization</a>
+   <a href="#"><svg class="i"><use href="#i-cog"/></svg>Settings</a>
+  </nav>
+  <div class="side-foot">
+   <div class="storage"><div class="row"><span>Storage</span><span class="mono">80.9 / 117.9 GB</span></div><div class="bar"><i style="width:69%"></i></div></div>
+   <div class="user"><div class="avatar">MV</div><div><b>Marcel Vos</b><span class="small muted">Administrator</span></div><button class="icon-btn" style="margin-left:auto"><svg class="i"><use href="#i-logout"/></svg></button></div>
+   <div class="side-bottom"><span class="icon-row"><button class="icon-btn" style="width:28px;height:28px"><svg class="i" style="width:15px;height:15px"><use href="#i-lang"/></svg></button><button class="icon-btn" style="width:28px;height:28px"><svg class="i" style="width:15px;height:15px"><use href="#i-sun"/></svg></button></span><span class="mono">v1.3.0</span></div>
+  </div>
+ </aside>
+ <main class="main">
+  <div class="page-head"><div><h1>Customization</h1><p class="sub">What every visitor sees. Changes apply to all pages, including the public links.</p></div><div class="actions"><button class="btn btn-primary">Save changes</button></div></div>
+  <div class="cust">
+   <div class="card">
+    <div class="section"><div class="h"><h3><span class="tile"><svg class="i"><use href="#i-user"/></svg></span>Brand</h3></div>
+     <div class="two"><label class="field">Name<input class="input" value="Acme Transfer"></label><label class="field">Description<input class="input" value="Files for Acme clients and partners."></label></div>
+     <div class="logo-up"><div class="logo-box"><span class="logo-acme" style="display:flex">A</span></div><div><div style="font-weight:500">Logo</div><div class="small muted">PNG, SVG or WebP · replaces the mark everywhere · also used as favicon</div><div class="actions" style="margin-top:8px"><button class="btn btn-sm btn-outline">Upload</button><button class="btn btn-sm btn-ghost">Remove</button></div></div></div>
+    </div>
+    <div class="section"><div class="h"><h3><span class="tile"><svg class="i"><use href="#i-palette"/></svg></span>Colour and shape</h3></div>
+     <div class="two"><div class="field">Accent colour<div class="swatches"><span class="sw" style="background:#0079D2"></span><span class="sw on" style="background:#E8590C"></span><span class="sw" style="background:#1A7F4B"></span><span class="sw" style="background:#6941C6"></span><span class="sw" style="background:#B42318"></span><span class="sw" style="background:#0C1626"></span><input class="input" style="width:110px;height:28px;font-family:var(--font-mono);font-size:12px" value="#E8590C"></div></div>
+      <label class="field">Corner radius<input type="range" class="range" min="0" max="16" value="4"><span class="small muted">4 px · sharper feels more technical, rounder feels friendlier</span></label></div>
+    </div>
+    <div class="section locked">
+     <div class="h"><h3><span class="tile"><svg class="i"><use href="#i-lock"/></svg></span>Brandpack</h3><span class="badge badge-info"><svg class="i" style="width:12px;height:12px;margin-right:4px"><use href="#i-lock"/></svg>Paid</span></div>
+     <div class="lockbar"><svg class="i" style="color:var(--ink-3)"><use href="#i-lock"/></svg><div><div style="font-weight:600">Unlock full white-label</div><div class="small muted">Your own font, background, CSS, and no Amfora credit. One organisation, unlimited installations, never expires.</div></div><button class="btn btn-sm btn-primary">Get a brandpack · €79</button></div>
+     <div class="pack-on"><svg class="i"><use href="#i-check"/></svg>Brandpack active for Acme B.V. · issued 21 Sep 2026</div>
+     <div class="fields stack">
+      <div class="two"><label class="field">Font<select class="input"><option>Manrope</option><option>Inter</option><option>Public Sans</option><option>Source Sans 3</option><option>Upload your own (woff2)</option></select></label>
+       <label class="field">Public page background<select class="input"><option>Soft tint of the accent</option><option>Plain</option><option>Custom image</option></select></label></div>
+      <div class="toggle"><div><span class="t">Show "Powered by Amfora"</span><span class="small muted">Off hides the credit on every page. The open-source notice stays in the source.</span></div><span class="sw-toggle" role="switch"></span></div>
+      <label class="field">Custom CSS<span class="small muted" style="font-weight:400">Loaded last, on every page. Use it for details the settings above do not cover.</span><div class="code">.public-panel { box-shadow: none; }
+.btn-primary { text-transform: uppercase; letter-spacing: .04em; }</div></label>
+     </div>
+    </div>
+   </div>
+   <div class="preview"><div class="card" style="padding:16px"><div class="h" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3>Preview</h3><span class="small muted">Download page</span></div>
+    <div class="pv"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px" class="brand"><svg class="logo logo-amfora" style="width:20px;height:20px"><use href="#amphora"/></svg><span class="logo-acme" style="width:20px;height:20px;font-size:11px">A</span><span style="font-size:13px"><span class="name-amfora">Amfora</span><span class="name-acme">Acme Transfer</span></span></div>
+     <div class="float"><div class="cover"><div class="play"><i><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></i></div><div class="cap"><b>launch-video.mp4</b></div></div><div class="body" style="padding:12px 14px"><ul class="list"><li style="padding:7px 0;grid-template-columns:28px 1fr auto;gap:10px"><div class="tile sm v" style="width:26px;height:26px"><svg class="i" style="width:13px;height:13px"><use href="#i-video"/></svg></div><div class="nm"><b style="font-size:12px">launch-video.mp4</b></div><span class="sz" style="font-size:11px">231 MB</span></li><li style="padding:7px 0;grid-template-columns:28px 1fr auto;gap:10px"><div class="tile sm d" style="width:26px;height:26px"><svg class="i" style="width:13px;height:13px"><use href="#i-file"/></svg></div><div class="nm"><b style="font-size:12px">poster.pdf</b></div><span class="sz" style="font-size:11px">15 MB</span></li></ul><button class="btn btn-primary btn-block" style="height:34px;font-size:12px;margin-top:10px">Download all</button></div></div>
+     <div style="display:flex;justify-content:center;margin-top:12px"><span class="credit" style="font-size:11px"><svg><use href="#amphora"/></svg>Powered by Amfora</span><span class="credit-off" style="font-size:11px">Acme Transfer</span></div>
+    </div></div></div>
+  </div>
+ </main>
+</div></div>
+
+<!-- ===== mockup toolbar ===== -->
+<div class="mock" role="toolbar" aria-label="Mockup controls">
+ <div class="g"><span class="lbl">Screen</span><button data-s="login" class="on">Login</button><button data-s="download">Download</button><button data-s="upload">Upload</button><button data-s="dashboard">Dashboard</button><button data-s="files">Files</button><button data-s="custom">Customization</button></div>
+ <div class="g"><span class="lbl">Brand</span><button data-b="amfora" class="on">Amfora (free)</button><button data-b="acme">Acme (brandpack)</button></div>
+ <div class="g"><span class="lbl">Theme</span><button data-t="light" class="on">Light</button><button data-t="dark">Dark</button></div>
+</div>
+<script>
+const H=document.documentElement,q=new URLSearchParams(location.search);
+const set=(k,v)=>{H.dataset[k]=v;document.querySelectorAll(`[data-${k[0]}]`).forEach(b=>b.classList.toggle('on',b.dataset[k[0]]===v));};
+document.querySelectorAll('.mock button').forEach(b=>b.onclick=()=>{if(b.dataset.s)set('screen',b.dataset.s);if(b.dataset.b)set('brand',b.dataset.b);if(b.dataset.t)set('theme',b.dataset.t);});
+if(q.get('screen'))set('screen',q.get('screen'));if(q.get('brand'))set('brand',q.get('brand'));if(q.get('theme'))set('theme',q.get('theme'));
+</script>
+</body>
+</html>
