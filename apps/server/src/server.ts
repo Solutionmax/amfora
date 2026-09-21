@@ -16,6 +16,7 @@ import { s3StorageRoutes } from "./modules/s3-storage/routes";
 import { shareRoutes } from "./modules/share/routes";
 import { storageRoutes } from "./modules/storage/routes";
 import { twoFactorRoutes } from "./modules/two-factor/routes";
+import { updateRoutes } from "./modules/update/routes";
 import { userRoutes } from "./modules/user/routes";
 
 if (typeof globalThis.crypto === "undefined") {
@@ -76,6 +77,7 @@ async function startServer() {
   app.register(appRoutes);
   app.register(healthRoutes);
   app.register(s3StorageRoutes);
+  app.register(updateRoutes);
 
   if (isInternalStorage) {
     console.log("📦 Using internal storage (auto-configured)");
