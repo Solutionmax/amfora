@@ -20,12 +20,12 @@ import { getLocale } from "next-intl/server";
 import "./globals.css";
 
 import { RedirectHandler } from "@/components/auth/redirect-handler";
+import { BrandStyle } from "@/components/brand/brand-style";
 import { Favicon } from "@/components/layout/favicon";
 import { DynamicToaster } from "@/components/ui/dynamic-toaster";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ShareProvider } from "@/contexts/share-context";
-import { ThemeColorProvider } from "../providers/theme-color-provider";
 import { ThemeProvider } from "../providers/theme-provider";
 
 const archivo = Archivo({
@@ -139,14 +139,13 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <ThemeColorProvider>
-              <AuthProvider>
-                <RedirectHandler>
-                  <ShareProvider>{children}</ShareProvider>
-                </RedirectHandler>
-              </AuthProvider>
-              <DynamicToaster />
-            </ThemeColorProvider>
+            <BrandStyle />
+            <AuthProvider>
+              <RedirectHandler>
+                <ShareProvider>{children}</ShareProvider>
+              </RedirectHandler>
+            </AuthProvider>
+            <DynamicToaster />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

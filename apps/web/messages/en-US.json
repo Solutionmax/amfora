@@ -232,6 +232,56 @@
     "pageTitle": "Customization",
     "preview": {
       "title": "Preview"
+    },
+    "v2": {
+      "subline": "What every visitor sees. Changes apply to all pages, including the public links.",
+      "save": "Save changes",
+      "saved": "Saved.",
+      "saveFailed": "Could not save. Try again.",
+      "brand": {
+        "title": "Brand",
+        "name": "Name",
+        "description": "Description",
+        "logo": "Logo",
+        "logoHint": "PNG, SVG or WebP. Replaces the mark everywhere and is used as the favicon."
+      },
+      "appearance": {
+        "title": "Colour and shape",
+        "accent": "Accent colour",
+        "accentHex": "Accent colour as hex",
+        "accentHint": "Buttons, links, active navigation and the colour washes follow this.",
+        "radius": "Corner radius",
+        "radiusHint": "{px} px. Sharper feels more technical, rounder feels friendlier.",
+        "font": "Font",
+        "fontDefault": "Default (Archivo and Public Sans)"
+      },
+      "pack": {
+        "title": "Brandpack",
+        "paid": "Paid",
+        "unlockTitle": "Unlock full white-label",
+        "unlockText": "Your own background, custom CSS, and no Amfora credit. One organisation, unlimited installations, never expires.",
+        "buy": "Get a brandpack · €79",
+        "paste": "Paste your brandpack here",
+        "activate": "Activate",
+        "activated": "Brandpack activated.",
+        "removed": "Brandpack removed.",
+        "active": "Brandpack active for {organisation} · issued {date}",
+        "remove": "Remove",
+        "credit": "Show \"Powered by Amfora\"",
+        "creditHint": "Off hides the credit on every page. The open-source notice stays in the source.",
+        "background": "Public page background",
+        "backgroundHint": "Shown behind sign-in, download and receive pages. Up to 3 MB; stored as WebP.",
+        "backgroundUpload": "Upload image",
+        "backgroundReplace": "Replace image",
+        "backgroundRemove": "Remove",
+        "css": "Custom CSS",
+        "cssHint": "Loaded last, on every page. Imports and outside URLs are removed.",
+        "cssSave": "Save CSS"
+      },
+      "preview": {
+        "title": "Preview",
+        "page": "Download page"
+      }
     }
   },
   "dashboard": {
