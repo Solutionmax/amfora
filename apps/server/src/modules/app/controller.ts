@@ -1,13 +1,71 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { EmailService } from "../email/service";
+import { BACKGROUND_MAX_BYTES, BackgroundService } from "./background.service";
 import { LogoService } from "./logo.service";
 import { AppService } from "./service";
 
 export class AppController {
   private appService = new AppService();
   private logoService = new LogoService();
+  private backgroundService = new BackgroundService();
   private emailService = new EmailService();
+
+  async getBackground(_request: FastifyRequest, reply: FastifyReply) {
+    const image = await this.backgroundService.read();
+    if (!image) {
+      return reply.status(404).send();
+    }
+    return reply.header("Content-Type", "image/webp").header("Cache-Control", "public, max-age=300").send(image);
+  }
+
+  async uploadBackground(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const file = await request.file();
+      if (!file) {
+        return reply.status(400).send({ error: "No file uploaded" });
+      }
+      if (!file.mimetype.startsWith("image/")) {
+        return reply.status(400).send({ error: "Only images are allowed" });
+      }
+
+      const chunks: Buffer[] = [];
+      let totalSize = 0;
+      for await (const chunk of file.file) {
+        totalSize += chunk.length;
+        if (totalSize > BACKGROUND_MAX_BYTES) {
+          throw new Error("Background image too large. Maximum size is 3MB.");
+        }
+        chunks.push(chunk);
+      }
+
+      await this.backgroundService.save(Buffer.concat(chunks));
+      return reply.send({ message: "Background saved" });
+    } catch (error: any) {
+      console.error("Background upload error:", error);
+      return reply.status(400).send({ error: error.message });
+    }
+  }
+
+  async removeBackground(_request: FastifyRequest, reply: FastifyReply) {
+    await this.backgroundService.remove();
+    return reply.send({ message: "Background removed" });
+  }
+
+  async activateBrandpack(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { token } = request.body as { token: string };
+      const brandpack = await this.appService.activateBrandpack(token);
+      return reply.send({ brandpack });
+    } catch (error: any) {
+      return reply.status(400).send({ error: error.message });
+    }
+  }
+
+  async removeBrandpack(_request: FastifyRequest, reply: FastifyReply) {
+    await this.appService.removeBrandpack();
+    return reply.send({ message: "Brandpack removed" });
+  }
 
   async getAppInfo(_request: FastifyRequest, reply: FastifyReply) {
     try {

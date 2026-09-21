@@ -39,7 +39,13 @@ function publicKeyFrom(hex: string): crypto.KeyObject {
   });
 }
 
-export function verifyManifest(token: string, publicKeyHex: string): ReleaseManifest | null {
+/**
+ * Verifies any `base64url(payload).base64url(signature)` token signed with our Ed25519
+ * key and returns the parsed payload when its `purpose` matches. Release manifests
+ * and brandpacks share this; the purpose field is what keeps one from being replayed
+ * as the other.
+ */
+export function verifySigned(token: string, publicKeyHex: string, purpose: string): Record<string, unknown> | null {
   const parts = token.trim().split(".");
 
   if (parts.length !== 2) return null;
@@ -73,10 +79,18 @@ export function verifyManifest(token: string, publicKeyHex: string): ReleaseMani
     return null;
   }
 
-  const manifest = parsed as ReleaseManifest;
+  if (!parsed || typeof parsed !== "object") return null;
+  if ((parsed as { purpose?: unknown }).purpose !== purpose) return null;
 
-  if (!manifest || typeof manifest !== "object") return null;
-  if (manifest.purpose !== PURPOSE) return null;
+  return parsed as Record<string, unknown>;
+}
+
+export function verifyManifest(token: string, publicKeyHex: string): ReleaseManifest | null {
+  const parsed = verifySigned(token, publicKeyHex, PURPOSE);
+  if (!parsed) return null;
+
+  const manifest = parsed as unknown as ReleaseManifest;
+
   if (typeof manifest.version !== "string" || !/^\d+\.\d+\.\d+/.test(manifest.version)) return null;
   if (typeof manifest.image !== "string" || !/^[a-z0-9.\-_/]+$/.test(manifest.image)) return null;
   // Pinning by digest is what makes the pull reproducible and the signature meaningful.

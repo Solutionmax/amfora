@@ -36,6 +36,11 @@ const envSchema = z.object({
     .string()
     .optional()
     .default("3c18a8768933ddafb3fc0ac13c972c6ba252e8bfb036638b8e955f2f37fae9b4"),
+  // Same reasoning for brandpacks: the public half ships, a fork signs its own.
+  AMFORA_BRANDPACK_PUBLIC_KEY: z
+    .string()
+    .optional()
+    .default("a329bd6b2d08bb001a5f5cd9f1aa7559efe82ae594416a4cfc16a69f501ca756"),
   // Shared with the host side when over the air updating is installed.
   AMFORA_OTA_DIR: z.string().optional().default("/app/server/ota"),
 });

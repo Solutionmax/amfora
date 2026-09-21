@@ -3,6 +3,11 @@ const crypto = require("crypto");
 
 const prisma = new PrismaClient();
 
+// The 1.x seed shipped the amphora as the default logo. 2.0 draws it as an SVG when the logo
+// is empty, so an untouched installation is normalised back to "empty" at startup.
+const LEGACY_DEFAULT_LOGO =
+  "data:image/webp;base64,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";
+
 const defaultConfigs = [
   // General Configurations
   {
@@ -19,19 +24,37 @@ const defaultConfigs = [
   },
   {
     key: "appPrimaryColor",
-    value: "#1757e8",
+    value: "#0079d2",
     type: "string",
     group: "general",
   },
   {
     key: "appFontFamily",
-    value: "var(--font-jakarta)",
+    value: "",
     type: "string",
     group: "general",
   },
   {
     key: "appRadius",
-    value: "0.75rem",
+    value: "0.5rem",
+    type: "string",
+    group: "general",
+  },
+  {
+    key: "appHideCredit",
+    value: "false",
+    type: "boolean",
+    group: "general",
+  },
+  {
+    key: "appCustomCss",
+    value: "",
+    type: "string",
+    group: "general",
+  },
+  {
+    key: "appBrandpack",
+    value: "",
     type: "string",
     group: "general",
   },
@@ -49,7 +72,7 @@ const defaultConfigs = [
   },
   {
     key: "appLogo",
-    value: "data:image/webp;base64,UklGRgIJAABXRUJQVlA4TPUIAAAvY8AYECq78f87lqxMZi+KTQGtxdxzTvedXoWOgBRekoiZudO3u61n/SIgBCJ44KtGa2FdNBwX4TVazVMWwiQHPA23xjxV7eFKU9nSbJMIqDURjRbXbI9EMDsKslC+Fv8hlTHXJRDWRKz5hLnCWtJok3ommahGC2vMwXwZbApQ7eIrCwtTq2thTltMrfQ2Atx9PsImCFzq4I970aIDQJlYFAlQQxC42wk8MCeAlwdVITu23TaSlPnkM5+TgFvvRLwLApCbbR8H5UC2bdqWbdu2bVuRFRmxbdvGt23btm3r/HP23nMCcAjfoSF6gSFqs/YSa4gp2L7iWTz2DOtJDLC6gnVSsZoKQ9XG3++1HnJA7BExzmoOZm0V8Yb7V85XW7l/MfJVc50Xf3URe4LSw83erK+rLzASRiCxtZusuUP0+5ZpxR0vkODs8Jk4JmY7M27tA9ynID1AYyPngxEs5cD21CjKeGv9lYP2gmty3h5ox8w9N3oBJBjT//1xOpqLtZalo/+9+grOdkh4YCd+4yU+mXSTJElaS5Ik6Sa+WZ9Nt9XKCxDjpuYyb9bLJzC+cf38AtOXtBUG/cEXvvCSXxnx2qgtfLZDDG+MgY3WonH2UlQdU9acL910rLR72/Ud9ZY/nacUgQ68csUQt7oUcOarrIhkM+dFPOVOOYzGLS7+YZHzF/0/cP4hab1KwCP1wUMcWG9mj4iXK/9j1RnmAmp5R9k73shejg1Qa0+QgBmWZk0b8XfVBWaBizCEfmv96GpzAyP/NmtmPSA9IMApXuR4NJv5sxSOqE829qP50lx+id7yfQRu05MYnv3MujElOpiEjIiIieat5DkRUXbYvG/kzWH3w6R2lVZgVBiLMLLjsIyICiaSj2zYxITxrr3pFcxYVRBRdtgmc+XvAaVdpBV4H/CLhlEioopWnmAd4FxlfnwuHSudYzrGuTJyYJoqIqInFwPRB6G0a4Ym0YOfxSGYXXNDlBJRnk+LTozYaPQYCCWvOqEaq5o9HkZGCd8kQpjOcyJKo+PegXrBLQG4DRzH4YmIKnPFK4zYZIYrAEbcIoeMFS6+C0DDXI3c8IrmgoqI6BvHMRtE4JIa7F/RgDvPBSKKZs16JDwRkCu6VC3k1i3GKrqNcK2fJAHmCRebjYjoBT/3D0ftCoWGHM3iRJCUiJgLpRFbTvtLHZNKW0MChgXMFMWoopjhCsSntJrE/YzcNIiIKN33JlOOkK5QXGesT1RE9OLS6ANAgFiDKc/ITyJpRmNmIti7G8qHjhEA/ysZhIiqZa6zSrmgBie7jIioKgWDkAoKUvjodJLSuGkyzfuYhIKS+HRZEVFUXh618/QVWLvfXFlIVPU4u1DHUDj7V0Uj96y5IkqpxTRafYORe58IhbhG0quIwhcx3buCdlwNpqTlJxP1Dxjx/qymFSt0YP1UEnHKZ/A0wW/4Ik43/iqjAxX/40EH+kRPXn4taqdJMDatOrGIqCpZK0AAraxXGdGPDY6mCR9din7cOskojQDD/wrLiij62xSkwzRuxPTJSDAxYqInMXty+k26o4cm0QBc61dfcTTZePQUZz2CBd05/SbN7clJOaUJ08cbQTtLwlBQc0VKFPnMmxAgQGOunvoG2fqNKa5qBAjA1exHROmVHzE0iUhnBeCUlxFRNsfwHZpEpQR3f3OlIoTMnuwiL/kppFwYnv12ZERRyShD4DTOgB9RlvxgA5Q683dZzt1XhGRz+Iq7fVEpbPhBklHkf8dpNbivrjohonxkBed2BwF4q506jGw/bKrRahFAMd15Rk7RLNcqamdJcDZPMxEKNzFdgopF0xf9hxE0tS/90iar9GKFz47syKmaPgrSWZMQrJuuKH8F1/WFGky9/mHUxsP8+6Ne4Fx/RU7RNGMdJp0VoKGJMqL+HNPr85k8+Kx525msHdnMr/6EnzC9metTVArGETiNUeVHVHAHd8Fs9ppTPqiordVgVg+HfbitoMhf57QanJTlqxFVq04QnouGLloHC9sT3uJ7EJY7WxGFy7yloHaWgmGmTP/nM4pWXcC1fNZDa982avO2fdahxVkeRJTNczirTKCchThmXNkUUraD84qp4xV5u/JXvLnckVG4idkVHcPhAbg3+xERERdHDrwDEVHkczUPTSKB0xT+ta8Ytc0J86MKIwjvdlBOgwLXgV5FRJkTCiKqeh+FguOXwIk8ISQHhydcF0vOgwKzYys/UTmnuteXoeBCCTZ7mgsVTgqnFFvXMfeEdAMmwdrwFBPvlJf7DRvBJFwZq43cH/pPdsaTfc6jjSp2BxTu0lyvzhVOKOb+eRcouDWGFJWfpO3LEiPzJGK4N4BI3e3zWbuy+e03RQAXa31Nppc7+u3q7+C8uKbWboIC59By2K5wWfhBKLg6AKPFj9oV+VzNQ5NI4K4l8Bba3JC3K2+uMDwES+7SOKvJM17t6Lenv4PZq2tCuwsBGOODqD3R4DMI4HIJZt5msbQ96d9fCOk2xJrpgrUjbEf4XWYXdAzXB+AUrjqjakdVMitC4D6Ns/zVOLmb2Zd1Ty6h3YcaXBOrzojsi0qmSdTwQImfGSVwmH2FkeRs/5wgvQDWEEOj7e9VdlU9pv1Q8MQlMCI25Xblm+6OJW9AZ4HZuVuE9oS3aLTzugOPrNFoqb3KnqrHIwW1V0DJQ0d2FtoR7j9UKnhmjQf3Kjuq3oNReweUusni1SZ2tcWHKwUPXcIwkYvhxMLF62LJSyDB7GCvmkjVYzoICY8R6WYW4dCJ/MdcCMPdayDBbGHAjLS2q2zYIiQ8VsXDMjDiu5E0bSX9hOg/rhQrr0ENTuVxu1rZdRyzKtTwXH3QqwQYl18Rjpe/gtllBNp7OmBzhlmPD6Tj9Y2Fmuu94T+RiD1HgnmavyOlFh/d3NBc2ImQXhPXnJv7D6OWD7sX55w1xDoeo/FOzufHpK2lj+H6fPqfStDego7y77U9S1vMXr6fcXMyhsdKnLhuuZu02B3ZMXg2pNdAYXiONNezT/hVi4LPzeUyUwY68F4FbNhrNZUNY/5+716gAy+WmKCER8ct4xDzAA==",
+    value: "",
     type: "string",
     group: "general",
   },
@@ -377,6 +400,12 @@ async function main() {
 
     console.log(`✅ Created configuration: ${config.key}`);
     createdCount++;
+  }
+
+  const legacyLogo = await prisma.appConfig.findUnique({ where: { key: "appLogo" } });
+  if (legacyLogo && legacyLogo.value === LEGACY_DEFAULT_LOGO) {
+    await prisma.appConfig.update({ where: { key: "appLogo" }, data: { value: "", updatedAt: new Date() } });
+    console.log("🏺 Replaced the 1.x default logo with the built-in mark");
   }
 
   console.log("\n📊 Seed Summary:");
