@@ -426,6 +426,7 @@
       "size": "Boyut",
       "createdAt": "Oluşturulma Tarihi",
       "updatedAt": "Güncellenme Tarihi",
+      "downloads": "Downloads",
       "actions": "İşlemler"
     },
     "actions": {

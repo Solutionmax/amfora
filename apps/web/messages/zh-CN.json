@@ -426,6 +426,7 @@
       "size": "大小",
       "createdAt": "创建时间",
       "updatedAt": "更新时间",
+      "downloads": "Downloads",
       "actions": "操作"
     },
     "actions": {
@@ -1776,7 +1777,11 @@
       "copyToClipboard": "复制到剪贴板",
       "savedMessage": "我已保存备用码",
       "available": "可用备用码：{count}个",
-      "instructions": ["• 将这些代码保存在安全的位置", "• 每个备用码只能使用一次", "• 您可以随时生成新的备用码"]
+      "instructions": [
+        "• 将这些代码保存在安全的位置",
+        "• 每个备用码只能使用一次",
+        "• 您可以随时生成新的备用码"
+      ]
     },
     "verification": {
       "title": "双重认证",

@@ -13,6 +13,7 @@ interface File {
   extension: string;
   size: number;
   objectName: string;
+  downloads?: number;
   userId: string;
   folderId?: string;
   createdAt: string;

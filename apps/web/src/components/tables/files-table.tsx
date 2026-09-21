@@ -34,6 +34,7 @@ interface File {
   extension: string;
   size: number;
   objectName: string;
+  downloads?: number;
   userId: string;
   folderId?: string;
   createdAt: string;
@@ -476,6 +477,9 @@ export function FilesTable({
               <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:table-cell">
                 {t("filesTable.columns.updatedAt")}
               </TableHead>
+              <TableHead className="hidden h-11 bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:table-cell">
+                {t("filesTable.columns.downloads")}
+              </TableHead>
               <TableHead className="h-11 w-[70px] rounded-tr-lg bg-secondary/60 px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("filesTable.columns.actions")}
               </TableHead>
@@ -651,6 +655,7 @@ export function FilesTable({
                   </TableCell>
                   <TableCell className="hidden h-12 px-4 lg:table-cell">{formatDateTime(folder.createdAt)}</TableCell>
                   <TableCell className="hidden h-12 px-4 lg:table-cell">{formatDateTime(folder.updatedAt)}</TableCell>
+                  <TableCell className="hidden h-12 px-4 text-muted-foreground sm:table-cell">—</TableCell>
                   <TableCell className="h-12 px-4 text-right">
                     {isShareMode ? (
                       onDownloadFolder && (
@@ -898,6 +903,9 @@ export function FilesTable({
                   <TableCell className="hidden h-12 px-4 lg:table-cell">{formatDateTime(file.createdAt)}</TableCell>
                   <TableCell className="hidden h-12 px-4 lg:table-cell">
                     {formatDateTime(file.updatedAt || file.createdAt)}
+                  </TableCell>
+                  <TableCell className="hidden h-12 px-4 tabular-nums sm:table-cell">
+                    {file.downloads ? file.downloads : <span className="text-muted-foreground">—</span>}
                   </TableCell>
                   <TableCell className="h-12 px-4 text-right">
                     {isShareMode ? (

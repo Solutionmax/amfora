@@ -165,6 +165,7 @@ export async function fileRoutes(app: FastifyInstance) {
         querystring: z.object({
           objectName: z.string().min(1, "The objectName is required"),
           password: z.string().optional().describe("Share password if required"),
+          preview: z.string().optional().describe("Set to 1 for link preview fetches, which are not counted"),
         }),
       },
     },
@@ -194,6 +195,7 @@ export async function fileRoutes(app: FastifyInstance) {
                 userId: z.string().describe("The user ID"),
                 folderId: z.string().nullable().describe("The folder ID"),
                 relativePath: z.string().nullable().describe("The relative path (only for recursive listing)"),
+                downloads: z.number().describe("How often the file has been downloaded by someone else"),
                 createdAt: z.date().describe("The file creation date"),
                 updatedAt: z.date().describe("The file last update date"),
               })

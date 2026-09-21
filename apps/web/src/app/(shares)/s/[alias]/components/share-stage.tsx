@@ -81,7 +81,7 @@ export function ShareStage({
         </span>
         {maxViews ? (
           <span>
-            {t("home.visual.downloads")}: {views} / {maxViews}
+            {t("shareDetails.views")}: {views} / {maxViews}
           </span>
         ) : null}
         {expiration && (

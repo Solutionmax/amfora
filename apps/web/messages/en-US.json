@@ -426,6 +426,7 @@
       "size": "SIZE",
       "createdAt": "CREATED AT",
       "updatedAt": "UPDATED AT",
+      "downloads": "DOWNLOADS",
       "actions": "ACTIONS"
     },
     "actions": {
