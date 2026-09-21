@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
 import { firstForwardedValue, forwardedProtocol } from "@/lib/forwarded-headers";
+import { buildOgImage } from "@/lib/og-image";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -67,6 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
 
   const baseUrl = await getBaseUrl();
   const shareUrl = `${baseUrl}/s/${resolvedParams.alias}`;
+  const ogImage = buildOgImage(baseUrl, metadata?.previewObjectName, appInfo.appLogo);
 
   return {
     title,
@@ -77,22 +79,13 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
       url: shareUrl,
       siteName: appInfo.appName || "Amfora",
       type: "website",
-      images: appInfo.appLogo
-        ? [
-            {
-              url: appInfo.appLogo,
-              width: 1200,
-              height: 630,
-              alt: appInfo.appName || "Amfora",
-            },
-          ]
-        : [],
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: appInfo.appLogo ? [appInfo.appLogo] : [],
+      images: [ogImage.url],
     },
   };
 }

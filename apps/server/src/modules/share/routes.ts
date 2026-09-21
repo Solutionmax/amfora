@@ -361,6 +361,7 @@ export async function shareRoutes(app: FastifyInstance) {
             hasPassword: z.boolean(),
             isExpired: z.boolean(),
             isMaxViewsReached: z.boolean(),
+            previewObjectName: z.string().nullable().describe("File to use as the link preview image, if any"),
           }),
           404: z.object({ error: z.string() }),
         },
