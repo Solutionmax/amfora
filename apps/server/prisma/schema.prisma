@@ -46,6 +46,7 @@ model File {
   extension   String
   size        BigInt
   objectName  String
+  downloads   Int     @default(0)
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

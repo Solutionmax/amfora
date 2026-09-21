@@ -426,6 +426,7 @@
       "size": "크기",
       "createdAt": "생성일",
       "updatedAt": "수정일",
+      "downloads": "Downloads",
       "actions": "작업"
     },
     "actions": {

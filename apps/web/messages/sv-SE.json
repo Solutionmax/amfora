@@ -426,6 +426,7 @@
       "size": "STORLEK",
       "createdAt": "SKAPAD KL",
       "updatedAt": "UPPDATERAD KL",
+      "downloads": "DOWNLOADS",
       "actions": "ÅTGÄRDER"
     },
     "actions": {

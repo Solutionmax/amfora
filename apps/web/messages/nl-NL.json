@@ -426,6 +426,7 @@
       "size": "GROOTTE",
       "createdAt": "AANGEMAAKT OP",
       "updatedAt": "BIJGEWERKT OP",
+      "downloads": "OPGEHAALD",
       "actions": "ACTIES"
     },
     "actions": {

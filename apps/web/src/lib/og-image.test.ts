@@ -14,6 +14,6 @@ test("an http logo is used as-is, and the preview file wins over both", () => {
   assert.equal(buildOgImage(base, null, "https://cdn.example/logo.png").url, "https://cdn.example/logo.png");
   assert.equal(
     buildOgImage(base, "user id/holiday shot.png", "https://cdn.example/logo.png").url,
-    `${base}/api/files/download?objectName=user%20id%2Fholiday%20shot.png`
+    `${base}/api/files/download?objectName=user%20id%2Fholiday%20shot.png&preview=1`
   );
 });

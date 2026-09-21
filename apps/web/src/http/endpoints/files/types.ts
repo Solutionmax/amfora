@@ -9,6 +9,7 @@ export interface FileItem {
   objectName: string;
   userId: string;
   folderId: string | null;
+  downloads?: number;
   createdAt: string;
   updatedAt: string;
 }

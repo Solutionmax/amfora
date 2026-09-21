@@ -21,7 +21,10 @@ export async function GET(req: NextRequest) {
               key.startsWith("authorization") ||
               key.startsWith("x-forwarded") ||
               key === "user-agent" ||
-              key === "accept"
+              key === "accept" ||
+              // Forwarded so the backend can tell a seek apart from a fresh download
+              // when counting; it does not serve partial responses itself.
+              key === "range"
           )
         ),
       },

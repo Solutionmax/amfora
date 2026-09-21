@@ -426,6 +426,7 @@
       "size": "РАЗМЕР",
       "createdAt": "СОЗДАНО",
       "updatedAt": "ОБНОВЛЕНО",
+      "downloads": "DOWNLOADS",
       "actions": "ДЕЙСТВИЯ"
     },
     "actions": {

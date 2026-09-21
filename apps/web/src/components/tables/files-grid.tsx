@@ -38,6 +38,7 @@ interface File {
   extension: string;
   size: number;
   objectName: string;
+  downloads?: number;
   userId: string;
   folderId?: string;
   createdAt: string;
@@ -884,6 +885,11 @@ export function FilesGrid({
                           <div className="text-xs text-muted-foreground space-y-1 text-left">
                             <p>{formatFileSize(file.size)}</p>
                             <p>{formatDateTime(file.createdAt)}</p>
+                            {!!file.downloads && (
+                              <p>
+                                {t("filesTable.columns.downloads")}: {file.downloads}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>

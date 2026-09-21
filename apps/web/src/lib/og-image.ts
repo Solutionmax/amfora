@@ -13,7 +13,7 @@ export interface OgImage {
 export function buildOgImage(baseUrl: string, previewObjectName?: string | null, appLogo?: string | null): OgImage {
   if (previewObjectName) {
     return {
-      url: `${baseUrl}/api/files/download?objectName=${encodeURIComponent(previewObjectName)}`,
+      url: `${baseUrl}/api/files/download?objectName=${encodeURIComponent(previewObjectName)}&preview=1`,
       alt: "Shared file",
     };
   }

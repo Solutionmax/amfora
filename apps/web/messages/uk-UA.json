@@ -426,6 +426,7 @@
       "size": "РОЗМІР",
       "createdAt": "СТВОРЕНО",
       "updatedAt": "ОНОВЛЕНО",
+      "downloads": "DOWNLOADS",
       "actions": "ДІЇ"
     },
     "actions": {

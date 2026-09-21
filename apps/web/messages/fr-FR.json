@@ -426,6 +426,7 @@
       "size": "TAILLE",
       "createdAt": "CRÉÉ LE",
       "updatedAt": "MIS À JOUR LE",
+      "downloads": "TÉLÉCHARGEMENTS",
       "actions": "ACTIONS"
     },
     "actions": {

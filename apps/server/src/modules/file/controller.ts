@@ -28,6 +28,7 @@ import { isOwnedMultipartObject } from "./multipart-access";
 import { FileService } from "./service";
 import { folderAndAncestorIds } from "./share-access";
 import { shareGrantSubject } from "./share-download-grant";
+import { shouldCountDownload } from "./download-count";
 
 export class FileController {
   private fileService = new FileService();
@@ -288,9 +289,10 @@ export class FileController {
 
   async downloadFile(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { objectName, password } = request.query as {
+      const { objectName, password, preview } = request.query as {
         objectName: string;
         password?: string;
+        preview?: string;
       };
 
       if (!objectName) {
@@ -356,18 +358,31 @@ export class FileController {
       }
       hasAccess = await canDownloadFromShares(shares, password, admittedViews);
 
-      if (!hasAccess) {
-        try {
-          await request.jwtVerify();
-          const userId = (request as any).user?.userId;
-          if (userId && fileRecord.userId === userId) {
-            hasAccess = true;
-          }
-        } catch (err) {}
+      let requesterId: string | null = null;
+      try {
+        await request.jwtVerify();
+        requesterId = (request as any).user?.userId ?? null;
+      } catch (err) {}
+
+      if (!hasAccess && requesterId && fileRecord.userId === requesterId) {
+        hasAccess = true;
       }
 
       if (!hasAccess) {
         return reply.status(401).send({ error: "Unauthorized access to file." });
+      }
+
+      if (
+        shouldCountDownload({
+          range: request.headers.range,
+          isPreview: preview === "1",
+          isOwner: requesterId === fileRecord.userId,
+        })
+      ) {
+        // A failed count must never cost the visitor their download.
+        await prisma.file
+          .update({ where: { id: fileRecord.id }, data: { downloads: { increment: 1 } } })
+          .catch((error) => console.error("Error counting download:", error));
       }
 
       // Stream from S3/MinIO
@@ -431,6 +446,7 @@ export class FileController {
         userId: file.userId,
         folderId: file.folderId,
         relativePath: file.relativePath || null,
+        downloads: file.downloads ?? 0,
         createdAt: file.createdAt,
         updatedAt: file.updatedAt,
       }));

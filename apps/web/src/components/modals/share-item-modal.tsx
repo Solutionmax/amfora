@@ -22,6 +22,7 @@ interface File {
   description?: string;
   size: number;
   objectName: string;
+  downloads?: number;
   createdAt: string;
   updatedAt: string;
 }
