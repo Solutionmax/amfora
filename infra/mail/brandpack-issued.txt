@@ -36,7 +36,7 @@ does not work and we cannot make it work, you get your money back. Terms, refund
 and the right of withdrawal: https://amfora.solutionmax.net/legal.html#terms
 
 --
-SolutionMAX, Lafayette Raymon Matulessy, Calle Creta 74, Bloque 01 nº 105,
-03130 Gran Alacant (Alicante), Spain. NIF ESZ2822653Y.
+SolutionMAX, Lafayette Raymon Matulessy, Carrer de Creta 105,
+03130 Santa Pola (Alicante), Spain. NIF ESZ2822653Y.
 Questions, refunds and support: mail@solutionmax.net
 Amfora is Apache-2.0 open source; a brandpack changes the interface, not the licence.
