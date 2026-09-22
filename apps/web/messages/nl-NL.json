@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Terug naar start",
       "password": {
-        "title": "Deze link is",
-        "text": "beveiligd met een wachtwoord. Vraag het aan de afzender."
+        "title": "Wachtwoord vereist.",
+        "text": "Deze link is beveiligd met een wachtwoord. Vraag het aan de afzender."
       },
       "missing": {
         "title": "Niets hier.",
         "text": "Deze link bestaat niet, of is verwijderd."
+      },
+      "expired": {
+        "title": "Deze link is verlopen.",
+        "text": "De afzender heeft een einddatum ingesteld en die is verstreken. Vraag de afzender om een nieuwe link."
+      },
+      "maxViews": {
+        "title": "Deze link is op.",
+        "text": "Hij kon een beperkt aantal keren geopend worden en die limiet is bereikt. Vraag de afzender om een nieuwe link."
       }
     }
   },

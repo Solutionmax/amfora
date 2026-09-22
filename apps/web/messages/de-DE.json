@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Zurück zum Start",
       "password": {
-        "title": "Dieser Link ist",
-        "text": "mit einem Passwort geschützt. Fragen Sie die Person, die ihn Ihnen geschickt hat."
+        "title": "Passwort erforderlich.",
+        "text": "Dieser Link ist mit einem Passwort geschützt. Fragen Sie die Person, die ihn Ihnen geschickt hat."
       },
       "missing": {
         "title": "Hier ist nichts.",
         "text": "Dieser Link existiert nicht oder wurde entfernt."
+      },
+      "expired": {
+        "title": "Dieser Link ist abgelaufen.",
+        "text": "Der Absender hat ein Enddatum festgelegt, das bereits verstrichen ist. Bitten Sie ihn um einen neuen Link."
+      },
+      "maxViews": {
+        "title": "Dieser Link ist aufgebraucht.",
+        "text": "Er konnte nur eine begrenzte Anzahl von Malen geöffnet werden, und dieses Limit ist erreicht. Bitten Sie den Absender um einen neuen Link."
       }
     }
   },

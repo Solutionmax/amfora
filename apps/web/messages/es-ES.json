@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Volver al inicio",
       "password": {
-        "title": "Este enlace está",
-        "text": "protegido con contraseña. Pregunta a la persona que te lo envió."
+        "title": "Se requiere contraseña.",
+        "text": "Este enlace está protegido con contraseña. Pregunta a la persona que te lo envió."
       },
       "missing": {
         "title": "Nada por aquí.",
         "text": "Este enlace no existe, o ha sido eliminado."
+      },
+      "expired": {
+        "title": "Este enlace ha caducado.",
+        "text": "Quien lo envió fijó una fecha de caducidad y ya ha pasado. Pídele un enlace nuevo."
+      },
+      "maxViews": {
+        "title": "Este enlace se ha agotado.",
+        "text": "Podía abrirse un número limitado de veces y se ha alcanzado ese límite. Pide a quien lo envió un enlace nuevo."
       }
     }
   },
