@@ -2087,7 +2087,29 @@
     "checkDisabled": "La vérification des mises à jour est désactivée pour cette installation.",
     "hostSideMissing": "Appliquer les mises à jour depuis cette page nécessite la partie hôte installée. Voir la documentation.",
     "statusFailed": "Le statut de mise à jour n'a pas pu être lu.",
-    "applyFailed": "La mise à jour n'a pas pu être lancée."
+    "applyFailed": "La mise à jour n'a pas pu être lancée.",
+    "progress": {
+      "title": "Installation de {version}",
+      "titleNoVersion": "Installation de la mise à jour",
+      "steps": {
+        "requested": "Mise à jour demandée",
+        "handover": "Transmission au serveur",
+        "verifying": "Vérification de la version signée",
+        "backup": "Sauvegarde de vos données",
+        "pulling": "Téléchargement de la nouvelle version",
+        "restarting": "Redémarrage d’Amfora",
+        "health": "Vérification du bon fonctionnement"
+      },
+      "handoverNote": "Le serveur prend en charge la demande en quelques secondes.",
+      "restartingNote": "Amfora est indisponible un instant pendant son redémarrage.",
+      "done": "Amfora {version} est installé.",
+      "failed": "La mise à jour n’a pas abouti : {error}. La version précédente continue de fonctionner.",
+      "failedUnknown": "La mise à jour n’a pas abouti. La version précédente continue de fonctionner.",
+      "signinAfterRestart": "Amfora a redémarré ; reconnectez-vous pour continuer.",
+      "signin": "Votre session a expiré ; reconnectez-vous pour voir le résultat de la mise à jour.",
+      "timeout": "Cela prend plus de temps que prévu. Consultez update.log dans le dossier ota-state sur l’hôte.",
+      "reload": "Recharger"
+    }
   },
   "uploadFile": {
     "title": "Télécharger fichier",

@@ -2087,7 +2087,29 @@
     "checkDisabled": "Update checking is switched off for this installation.",
     "hostSideMissing": "Applying updates from here needs the host side installed. See the documentation.",
     "statusFailed": "The update status could not be read.",
-    "applyFailed": "The update could not be started."
+    "applyFailed": "The update could not be started.",
+    "progress": {
+      "title": "Installing {version}",
+      "titleNoVersion": "Installing the update",
+      "steps": {
+        "requested": "Update requested",
+        "handover": "Handing over to the server",
+        "verifying": "Checking the signed release",
+        "backup": "Backing up your data",
+        "pulling": "Downloading the new version",
+        "restarting": "Restarting Amfora",
+        "health": "Checking that it is healthy"
+      },
+      "handoverNote": "The server picks up the request within a few seconds.",
+      "restartingNote": "Amfora is away for a moment while it restarts.",
+      "done": "Amfora {version} is installed.",
+      "failed": "The update did not finish: {error}. The previous version keeps running.",
+      "failedUnknown": "The update did not finish. The previous version keeps running.",
+      "signinAfterRestart": "Amfora restarted; sign in again to continue.",
+      "signin": "Your session ended; sign in again to see how the update went.",
+      "timeout": "This is taking longer than expected. Check update.log in the ota-state folder on the host.",
+      "reload": "Reload"
+    }
   },
   "uploadFile": {
     "title": "Upload File",

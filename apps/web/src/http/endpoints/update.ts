@@ -19,3 +19,14 @@ export const getUpdateStatus = (refresh = false): Promise<AxiosResponse<UpdateSt
   apiInstance.get(`/api/update/status${refresh ? "?refresh=true" : ""}`);
 
 export const applyUpdate = (): Promise<AxiosResponse<{ message: string }>> => apiInstance.post("/api/update/apply");
+
+/** Short timeout: while the container is recreated nothing answers, and the dialog polls again. */
+const PROGRESS_TIMEOUT_MS = 5000;
+
+export const getUpdateProgress = (): Promise<AxiosResponse<unknown>> =>
+  apiInstance.get("/api/update/progress", {
+    timeout: PROGRESS_TIMEOUT_MS,
+    headers: { "Cache-Control": "no-store" },
+    // Every status is an answer here; the dialog decides what it means.
+    validateStatus: () => true,
+  });

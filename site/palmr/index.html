@@ -64,14 +64,14 @@
         <h2>Five steps</h2>
         <ol>
           <li><b>Back up.</b> Stop Palmr and copy the whole data volume, or take a snapshot. <code>docker compose stop</code>, then back up the directory or volume mounted at <code>/app/server</code>.</li>
-          <li><b>Swap the image.</b> In your compose file replace the Palmr image with <code>ghcr.io/solutionmax/amfora:2.1.0</code>. Keep the volume line exactly as it is.</li>
+          <li><b>Swap the image.</b> In your compose file replace the Palmr image with <code>ghcr.io/solutionmax/amfora:2.2.0</code>. Keep the volume line exactly as it is.</li>
           <li><b>Rename the settings</b> that carried the Palmr name, see below.</li>
           <li><b>Start.</b> <code>docker compose up -d</code>, then <code>docker compose logs -f</code> until you see the database migration and "Starting Amfora Application".</li>
           <li><b>Check.</b> Sign in with your existing account, open a share you sent before and download a file from it.</li>
         </ol>
         <pre><code>services:
   amfora:
-    image: ghcr.io/solutionmax/amfora:2.1.0   # was: kyantech/palmr
+    image: ghcr.io/solutionmax/amfora:2.2.0   # was: kyantech/palmr
     ports:
       - "5487:5487"
       - "9379:9379"
@@ -109,7 +109,7 @@ volumes:
         </ul>
       </section>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.1.0 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.2.0 &middot; released 23 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>

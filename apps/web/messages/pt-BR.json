@@ -2087,7 +2087,29 @@
     "checkDisabled": "A verificação de atualizações está desativada nesta instalação.",
     "hostSideMissing": "Aplicar atualizações a partir daqui exige o lado do host instalado. Consulte a documentação.",
     "statusFailed": "Não foi possível ler o status da atualização.",
-    "applyFailed": "Não foi possível iniciar a atualização."
+    "applyFailed": "Não foi possível iniciar a atualização.",
+    "progress": {
+      "title": "Instalando {version}",
+      "titleNoVersion": "Instalando a atualização",
+      "steps": {
+        "requested": "Atualização solicitada",
+        "handover": "Repassando ao servidor",
+        "verifying": "Verificando a versão assinada",
+        "backup": "Fazendo backup dos seus dados",
+        "pulling": "Baixando a nova versão",
+        "restarting": "Reiniciando o Amfora",
+        "health": "Verificando se está funcionando bem"
+      },
+      "handoverNote": "O servidor assume a solicitação em poucos segundos.",
+      "restartingNote": "O Amfora fica indisponível por um momento enquanto reinicia.",
+      "done": "Amfora {version} está instalado.",
+      "failed": "A atualização não foi concluída: {error}. A versão anterior continua em execução.",
+      "failedUnknown": "A atualização não foi concluída. A versão anterior continua em execução.",
+      "signinAfterRestart": "O Amfora reiniciou; entre novamente para continuar.",
+      "signin": "Sua sessão terminou; entre novamente para ver como foi a atualização.",
+      "timeout": "Isso está demorando mais que o esperado. Verifique update.log na pasta ota-state no host.",
+      "reload": "Recarregar"
+    }
   },
   "uploadFile": {
     "title": "Enviar Arquivo",

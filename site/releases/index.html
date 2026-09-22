@@ -58,13 +58,13 @@
             <p class="eyebrow">
               <span class="status-dot" aria-hidden="true"></span> LATEST RELEASE
             </p>
-            <h2 id="latest-title">Amfora 2.1.0</h2>
+            <h2 id="latest-title">Amfora 2.2.0</h2>
             <p class="release-date">
-              Released <time datetime="2026-09-22">22 September 2026</time>
+              Released <time datetime="2026-09-23">23 September 2026</time>
             </p>
             <p>
-              Your own picture on every download page and in link previews, and
-              videos that download instead of play in the browser.
+              Updating shows its progress step by step, the same dialog as
+              Pharos and Ostia, with nothing to change on the host.
             </p>
             <div class="release-actions">
               <a class="button primary" href="/docs/#getting-started"
@@ -72,7 +72,7 @@
               >
               <a
                 class="button release-secondary"
-                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.1.0.zip"
+                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.2.0.zip"
                 >Download source ZIP ↓</a
               >
             </div>
@@ -110,12 +110,12 @@
             <p class="eyebrow">02 / DOCKER IMAGE</p>
             <h2>Use a published version.</h2>
             <p>
-              Pull version 2.1.0. No account and no login needed. Docker selects
+              Pull version 2.2.0. No account and no login needed. Docker selects
               the image for your processor.
             </p>
             <pre
               class="install-command"
-            ><code>docker pull ghcr.io/solutionmax/amfora:2.1.0</code></pre>
+            ><code>docker pull ghcr.io/solutionmax/amfora:2.2.0</code></pre>
             <p class="release-detail">
               Version 1.0.0 remains under <code>ghcr.io/raym0nz82/amfora</code>.
               Keep the repository's Compose settings for storage and persistent
@@ -123,7 +123,7 @@
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/blob/v2.1.0/docker-compose.yaml"
+              href="https://github.com/Solutionmax/amfora/blob/v2.2.0/docker-compose.yaml"
               >View the Compose configuration ↗</a
             >
           </article>
@@ -131,12 +131,12 @@
             <p class="eyebrow">03 / SOURCE CODE</p>
             <h2>Build a specific release.</h2>
             <p>
-              Download the version 2.1.0 source archive or check out its tag to
+              Download the version 2.2.0 source archive or check out its tag to
               build this release yourself.
             </p>
             <pre
               class="install-command"
-            ><code>git clone --branch v2.1.0 --depth 1 https://github.com/Solutionmax/amfora.git
+            ><code>git clone --branch v2.2.0 --depth 1 https://github.com/Solutionmax/amfora.git
 cd amfora
 bash infra/build-docker.sh local</code></pre>
             <p class="release-detail">
@@ -145,7 +145,7 @@ bash infra/build-docker.sh local</code></pre>
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/tree/v2.1.0"
+              href="https://github.com/Solutionmax/amfora/tree/v2.2.0"
               >Browse the release source ↗</a
             >
           </article>
@@ -156,6 +156,10 @@ bash infra/build-docker.sh local</code></pre>
           <aside class="release-index">
             <p class="eyebrow">RELEASE HISTORY</p>
             <nav aria-label="Release versions">
+              <a href="#v2-2-0"
+                ><strong>2.2.0</strong
+                ><time datetime="2026-09-23">23 Sep 2026</time></a
+              >
               <a href="#v2-1-0"
                 ><strong>2.1.0</strong
                 ><time datetime="2026-09-22">22 Sep 2026</time></a
@@ -188,10 +192,25 @@ bash infra/build-docker.sh local</code></pre>
             >
           </aside>
           <div class="release-entries">
-            <article class="release-entry" id="v2-1-0">
+            <article class="release-entry" id="v2-2-0">
               <div class="release-entry-heading">
                 <div>
                   <p class="eyebrow">LATEST RELEASE</p>
+                  <h2>Amfora 2.2.0</h2>
+                </div>
+                <time datetime="2026-09-23">23 September 2026</time>
+              </div>
+              <p>Updating shows its progress, step by step.</p>
+              <ul>
+                <li>Update now opens a progress dialog, the same as Pharos and Ostia: requested, handing over to the server, checking the signed release, backing up your data, downloading, restarting, health check. It ends with a Reload button, or with the reason it stopped while the previous version keeps running.</li>
+                <li>It keeps going while Amfora restarts and reopens when you return to Settings during an install.</li>
+                <li>Nothing changes on the host: the app reads the progress from the update log the host already writes.</li>
+              </ul>
+            </article>
+            <article class="release-entry" id="v2-1-0">
+              <div class="release-entry-heading">
+                <div>
+                  <p class="eyebrow">RELEASE</p>
                   <h2>Amfora 2.1.0</h2>
                 </div>
                 <time datetime="2026-09-22">22 September 2026</time>
@@ -619,7 +638,7 @@ docker compose up -d --no-build amfora</code></pre>
         </div>
       </section>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.1.0 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.2.0 &middot; released 23 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>

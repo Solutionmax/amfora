@@ -9,7 +9,7 @@ main() {
     set -eu
     # Bumped by infra/update-versions.sh on every release, so a new install always
     # starts on the version the website announces.
-    AMFORA_VERSION="2.1.0"
+    AMFORA_VERSION="2.2.0"
     IMAGE="ghcr.io/solutionmax/amfora:$AMFORA_VERSION"
     mode=image
     case "${1:-}" in

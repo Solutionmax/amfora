@@ -2087,7 +2087,29 @@
     "checkDisabled": "Việc kiểm tra cập nhật đã tắt cho bản cài đặt này.",
     "hostSideMissing": "Cập nhật từ đây cần cài đặt phía máy chủ. Xem tài liệu.",
     "statusFailed": "Không đọc được trạng thái cập nhật.",
-    "applyFailed": "Không thể bắt đầu cập nhật."
+    "applyFailed": "Không thể bắt đầu cập nhật.",
+    "progress": {
+      "title": "Đang cài đặt {version}",
+      "titleNoVersion": "Đang cài đặt bản cập nhật",
+      "steps": {
+        "requested": "Đã yêu cầu cập nhật",
+        "handover": "Đang chuyển cho máy chủ",
+        "verifying": "Đang kiểm tra bản phát hành đã ký",
+        "backup": "Đang sao lưu dữ liệu của bạn",
+        "pulling": "Đang tải phiên bản mới",
+        "restarting": "Đang khởi động lại Amfora",
+        "health": "Đang kiểm tra hoạt động ổn định"
+      },
+      "handoverNote": "Máy chủ sẽ nhận yêu cầu trong vài giây.",
+      "restartingNote": "Amfora tạm thời không truy cập được trong khi khởi động lại.",
+      "done": "Amfora {version} đã được cài đặt.",
+      "failed": "Bản cập nhật chưa hoàn tất: {error}. Phiên bản trước vẫn tiếp tục chạy.",
+      "failedUnknown": "Bản cập nhật chưa hoàn tất. Phiên bản trước vẫn tiếp tục chạy.",
+      "signinAfterRestart": "Amfora đã khởi động lại; hãy đăng nhập lại để tiếp tục.",
+      "signin": "Phiên của bạn đã kết thúc; hãy đăng nhập lại để xem kết quả cập nhật.",
+      "timeout": "Việc này lâu hơn dự kiến. Hãy kiểm tra update.log trong thư mục ota-state trên máy chủ.",
+      "reload": "Tải lại"
+    }
   },
   "uploadFile": {
     "title": "Tải lên tệp",

@@ -75,13 +75,14 @@ test("app, update, invite and user admin routes: 401 without a session, 403 for 
     { id: "admin", isAdmin: true },
     { id: "member", isAdmin: false },
   ]);
-  for (const url of ["/app/configs", "/update/status", "/users"]) {
+  for (const url of ["/app/configs", "/update/status", "/update/progress", "/users"]) {
     assert.equal((await get(url)).statusCode, 401, `${url} without a session`);
     assert.equal((await get(url, memberToken)).statusCode, 403, `${url} as a member`);
     assert.equal((await get(url, { ...memberToken, isAdmin: true })).statusCode, 403, `${url} member claiming admin`);
   }
   assert.equal((await get("/app/configs", adminToken)).statusCode, 200);
   assert.equal((await get("/users", adminToken)).statusCode, 200);
+  assert.equal((await get("/update/progress", adminToken)).statusCode, 200);
 
   const invite = await app.inject({
     method: "POST",
@@ -100,7 +101,7 @@ test("an admin demoted or deactivated in the database is refused with the old to
   assert.equal((await app.inject({ method: "GET", url: "/app/configs", cookies: { token } })).statusCode, 200);
 
   await prisma.user.update({ where: { id: "admin" }, data: { isAdmin: false } });
-  for (const url of ["/app/configs", "/update/status", "/users"]) {
+  for (const url of ["/app/configs", "/update/status", "/update/progress", "/users"]) {
     assert.equal((await app.inject({ method: "GET", url, cookies: { token } })).statusCode, 403, url);
   }
   const invite = await app.inject({ method: "POST", url: "/invite-tokens", cookies: { token } });
@@ -139,6 +140,7 @@ test("first run: open with 0 users or the single first user while firstUserAcces
   // The update routes never had a first run exception and still do not.
   await resetUsers([]);
   assert.equal((await get("/update/status")).statusCode, 401);
+  assert.equal((await get("/update/progress")).statusCode, 401);
 });
 
 test("registering the first user closes the setup window on the server", async () => {

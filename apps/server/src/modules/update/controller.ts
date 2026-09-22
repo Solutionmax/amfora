@@ -17,6 +17,15 @@ export class UpdateController {
     }
   }
 
+  async getProgress(_request: FastifyRequest, reply: FastifyReply) {
+    try {
+      return reply.send(await updateService.getProgress());
+    } catch (error) {
+      console.error("Error reading update progress:", error);
+      return reply.status(500).send({ error: "Internal server error." });
+    }
+  }
+
   async apply(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await updateService.requestApply();

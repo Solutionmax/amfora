@@ -2087,7 +2087,29 @@
     "checkDisabled": "Uppdateringskontroll är avstängd för den här installationen.",
     "hostSideMissing": "Att uppdatera härifrån kräver att värdsidan är installerad. Se dokumentationen.",
     "statusFailed": "Uppdateringsstatusen kunde inte läsas.",
-    "applyFailed": "Uppdateringen kunde inte startas."
+    "applyFailed": "Uppdateringen kunde inte startas.",
+    "progress": {
+      "title": "Installerar {version}",
+      "titleNoVersion": "Installerar uppdateringen",
+      "steps": {
+        "requested": "Uppdatering begärd",
+        "handover": "Lämnar över till servern",
+        "verifying": "Kontrollerar den signerade versionen",
+        "backup": "Säkerhetskopierar dina data",
+        "pulling": "Laddar ner den nya versionen",
+        "restarting": "Startar om Amfora",
+        "health": "Kontrollerar att allt fungerar"
+      },
+      "handoverNote": "Servern tar emot begäran inom några sekunder.",
+      "restartingNote": "Amfora är borta en stund medan det startar om.",
+      "done": "Amfora {version} är installerat.",
+      "failed": "Uppdateringen slutfördes inte: {error}. Den tidigare versionen fortsätter att köras.",
+      "failedUnknown": "Uppdateringen slutfördes inte. Den tidigare versionen fortsätter att köras.",
+      "signinAfterRestart": "Amfora har startats om; logga in igen för att fortsätta.",
+      "signin": "Din session har gått ut; logga in igen för att se hur uppdateringen gick.",
+      "timeout": "Det här tar längre tid än väntat. Kontrollera update.log i mappen ota-state på värden.",
+      "reload": "Ladda om"
+    }
   },
   "uploadFile": {
     "title": "Ladda upp fil",

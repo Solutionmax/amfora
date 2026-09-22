@@ -2087,7 +2087,29 @@
     "checkDisabled": "Die Updateprüfung ist für diese Installation deaktiviert.",
     "hostSideMissing": "Updates von hier aus einzuspielen erfordert die installierte Hostseite. Siehe Dokumentation.",
     "statusFailed": "Der Updatestatus konnte nicht gelesen werden.",
-    "applyFailed": "Das Update konnte nicht gestartet werden."
+    "applyFailed": "Das Update konnte nicht gestartet werden.",
+    "progress": {
+      "title": "{version} wird installiert",
+      "titleNoVersion": "Update wird installiert",
+      "steps": {
+        "requested": "Update angefordert",
+        "handover": "Übergabe an den Server",
+        "verifying": "Signiertes Release wird geprüft",
+        "backup": "Deine Daten werden gesichert",
+        "pulling": "Neue Version wird heruntergeladen",
+        "restarting": "Amfora wird neu gestartet",
+        "health": "Funktionsfähigkeit wird geprüft"
+      },
+      "handoverNote": "Der Server übernimmt die Anfrage innerhalb weniger Sekunden.",
+      "restartingNote": "Amfora ist kurz nicht erreichbar, während es neu startet.",
+      "done": "Amfora {version} ist installiert.",
+      "failed": "Das Update wurde nicht abgeschlossen: {error}. Die vorherige Version läuft weiter.",
+      "failedUnknown": "Das Update wurde nicht abgeschlossen. Die vorherige Version läuft weiter.",
+      "signinAfterRestart": "Amfora wurde neu gestartet; melde dich erneut an, um fortzufahren.",
+      "signin": "Deine Sitzung ist abgelaufen; melde dich erneut an, um zu sehen, wie das Update gelaufen ist.",
+      "timeout": "Das dauert länger als erwartet. Prüfe update.log im Ordner ota-state auf dem Host.",
+      "reload": "Neu laden"
+    }
   },
   "uploadFile": {
     "title": "Datei hochladen",
