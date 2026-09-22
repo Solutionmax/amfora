@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /
+Disallow: /account/
+
+Sitemap: https://amfora.solutionmax.net/sitemap.xml

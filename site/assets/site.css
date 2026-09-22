@@ -126,3 +126,83 @@ details p{animation:fadein .3s}@keyframes fadein{from{opacity:0;transform:transl
 .closing{padding:0 0 80px}.closing-grid{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 12px);padding:48px 56px;background:linear-gradient(120deg,var(--primary),color-mix(in oklab,var(--primary) 55%,#0c1626));color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.closing-grid h2,.closing-grid p{color:#fff}.closing-grid .eyebrow{color:#fff;opacity:.8}.closing-grid .button.light{background:#fff;color:#0c1626;border-color:transparent}.closing-source{display:inline-flex;margin-left:12px;color:#fff;font-weight:600;font-size:14px}.contact-privacy{margin-top:14px;font-size:12px;opacity:.85}.contact-privacy a{text-decoration:underline}
 .ftr .legal{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);margin-top:10px}
 @media(max-width:1000px){.menu-toggle{display:inline-flex}.nav{position:absolute;left:0;right:0;top:64px;display:none;flex-direction:column;align-items:stretch;padding:12px 20px 18px;background:var(--surface);border-bottom:1px solid var(--line)}.nav.open{display:flex}.nav a{display:block!important;padding:12px}.nav .btn{margin-top:6px}.faq-grid,.closing-grid{grid-template-columns:1fr}.closing-grid{padding:32px}.section-head{flex-direction:column;align-items:start}}
+
+/* former inline styles, moved here for the CSP (style-src self) */
+.is1{grid-area:1/1 !important}
+.is2{grid-area:1/2 !important}
+.is3{grid-area:1/3 !important}
+.is4{grid-area:1/4 !important}
+.is5{grid-area:1/5 !important}
+.is6{grid-area:1/6 !important}
+.is7{grid-area:1/7 !important}
+.is8{grid-area:1/8 !important}
+.is9{grid-area:1/9 !important}
+.is10{grid-area:2/1 !important}
+.is11{grid-area:2/2 !important}
+.is12{grid-area:2/3 !important}
+.is13{grid-area:2/6 !important}
+.is14{grid-area:2/7 !important}
+.is15{grid-area:2/8 !important}
+.is16{grid-area:2/9 !important}
+.is17{grid-area:3/1 !important}
+.is18{grid-area:3/2 !important}
+.is19{grid-area:3/3 !important}
+.is20{grid-area:3/6 !important}
+.is21{grid-area:3/7 !important}
+.is22{grid-area:3/8 !important}
+.is23{grid-area:3/9 !important}
+.is24{grid-area:4/1 !important}
+.is25{grid-area:4/2 !important}
+.is26{grid-area:4/3 !important}
+.is27{grid-area:4/4 !important}
+.is28{grid-area:4/5 !important}
+.is29{grid-area:4/6 !important}
+.is30{grid-area:4/7 !important}
+.is31{grid-area:4/8 !important}
+.is32{grid-area:4/9 !important}
+.is33{grid-area:5/3 !important}
+.is34{grid-area:5/6 !important}
+.is35{grid-area:5/9 !important}
+.is36{grid-area:6/3 !important}
+.is37{grid-area:6/6 !important}
+.is38{grid-area:6/9 !important}
+.is39{grid-area:7/1 !important}
+.is40{grid-area:7/2 !important}
+.is41{grid-area:7/3 !important}
+.is42{grid-area:7/4 !important}
+.is43{grid-area:7/5 !important}
+.is44{grid-area:7/6 !important}
+.is45{grid-area:7/7 !important}
+.is46{grid-area:7/8 !important}
+.is47{grid-area:7/9 !important}
+.is48{grid-area:8/1 !important}
+.is49{grid-area:8/2 !important}
+.is50{grid-area:8/3 !important}
+.is51{grid-area:8/6 !important}
+.is52{grid-area:8/9 !important}
+.is53{grid-area:9/1 !important}
+.is54{grid-area:9/2 !important}
+.is55{grid-area:9/3 !important}
+.is56{grid-area:9/6 !important}
+.is57{grid-area:9/9 !important}
+.is58{font-size:13px !important}
+.is59{width:100% !important}
+.is60{width:28px !important;height:28px !important;border-radius:7px !important}
+.is61{--w:100% !important}
+.is62{--w:66% !important}
+.is63{font-size:12px !important}
+.is64{padding:8px 0 0 !important}
+.is65{flex:1 !important;font-size:13px !important}
+.is66{font-size:11px !important;color:var(--ok) !important}
+.is67{background:#0079d2 !important}
+.is68{background:#d9480f !important}
+.is69{background:#1a7f4b !important}
+.is70{background:#6941c6 !important}
+.is71{background:#b42318 !important}
+.is72{background:#0c1626 !important}
+.is73{width:70% !important}
+.is74{width:85% !important}
+.is75{padding-top:64px !important}
+.is76{margin:0 !important}
+.is77{margin:22px 0 0 8px !important;vertical-align:bottom !important}
+.is78{color:#fff !important;opacity:.8 !important}

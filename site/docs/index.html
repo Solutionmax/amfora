@@ -8,10 +8,9 @@
       name="description"
       content="A practical guide to self hosting Amfora, sending files, collecting uploads and managing your workspace."
     />
-    <meta name="robots" content="noindex,nofollow" />
     <meta name="theme-color" content="#fbfcfe" />
     <link rel="canonical" href="https://amfora.solutionmax.net/docs/" />
-    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" /><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
@@ -129,32 +128,29 @@
             <p class="section-kicker">02 / Install</p>
             <h2>Start with Docker Compose</h2>
             <p>
-              You need curl, Git, and Docker with Compose and Buildx 0.30 or
-              later, plus Bash and a running Docker engine. The repository is
-              public and requires no GitHub account. Run this command from a
-              directory without an existing <code>amfora</code> folder. Clone
-              the maintained branch, build the application, and open the local
-              web interface:
+              You need Docker with Compose v2 and a running Docker engine. Run
+              this command from a directory without an existing
+              <code>amfora</code> folder:
             </p>
-            <pre><code>curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker</code></pre>
+            <pre><code>curl -fsSL https://amfora.solutionmax.net/get | sh</code></pre>
             <p>
-              The <a href="/get">installer script</a> checks Docker, Compose,
-              Buildx and source access before downloading anything. It creates
-              an <code>amfora</code> directory, builds the image and starts
-              Compose. Existing Amfora directories, containers or data volumes
-              are refused. It does not install Docker, configure HTTPS, create
-              backups or enable automatic updates.
+              The <a href="/get">installer script</a> checks Docker and Compose,
+              creates an <code>amfora</code> directory with a compose file pinned
+              to the current release, pulls
+              <code>ghcr.io/solutionmax/amfora</code> (amd64 and arm64) and
+              starts it. Existing Amfora directories, containers or data volumes
+              are refused. It does not install Docker or configure HTTPS.
             </p>
             <p>To inspect the script before running it:</p>
             <pre><code>curl -fsSL https://amfora.solutionmax.net/get -o amfora-get.sh
 less amfora-get.sh
-sh amfora-get.sh --docker</code></pre>
+sh amfora-get.sh</code></pre>
             <p>
-              The build script reuses layers in a dedicated Amfora builder and
-              reclaims unused cache above a 4 GB target. Active builds can
-              temporarily exceed that target. <code>make clean</code> only
-              reclaims build cache; application data and images are retained.
-              Keep the running image and a tested rollback image when upgrading.
+              To build the release yourself, add <code>--source</code>: the
+              installer clones the release tag and builds it, which also needs
+              Git, Bash and Buildx 0.30 or later. The build reuses layers in a
+              dedicated Amfora builder and keeps unused cache near a 4 GB
+              target; <code>make clean</code> only reclaims build cache.
             </p>
             <p>
               Open <code>http://localhost:5487</code>. The first start creates
@@ -423,14 +419,27 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
               that provider’s supported process. Keep the database and object
               backup points close enough to restore a consistent workspace.
             </p>
-            <h3>Upgrade</h3>
+            <h3 id="updating">Updating</h3>
             <p>
-              Keep the persistent volume, replace the image, and start the
-              container. Startup applies the Prisma schema and seeds missing
-              configuration/provider records. Older database filenames are
+              Your files and settings live in the persistent volume; an update
+              only replaces the image. In the <code>amfora</code> directory, set
+              the new version in <code>docker-compose.yaml</code> and run:
+            </p>
+            <pre><code>docker compose pull
+docker compose up -d</code></pre>
+            <p>
+              Startup applies the Prisma schema and seeds missing
+              configuration and provider records. Older database filenames are
               migrated to <code>prisma/amfora.db</code>; an existing internal
               bucket is preserved when no explicit bucket override is supplied.
-              Verify a test share and download after the upgrade.
+              Verify a test share and download afterwards, and keep the
+              previous image until the new one runs so you can switch back.
+            </p>
+            <p>
+              The admin area shows when a newer release is out. To let the host
+              install signed releases for you with one click, set up
+              <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/OTA.md">over the air updates</a>
+              once. Every release is on the <a href="/releases/">releases page</a>.
             </p>
           </section>
           <section class="docs-section" id="troubleshooting">
@@ -504,7 +513,7 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
         </p>
       </div>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.0 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.1 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>

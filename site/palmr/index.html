@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Moving from Palmr to Amfora</title>
+    <meta
+      name="description"
+      content="Who operates Amfora, how this website handles personal data, cookies and software licensing."
+    />
+    <meta name="theme-color" content="#fbfcfe" />
+    <link rel="canonical" href="https://amfora.solutionmax.net/palmr/" />
+    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" /><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Moving from Palmr to Amfora" />
+    <meta
+      property="og:description"
+      content="Operator details, privacy, cookies and software licensing for Amfora."
+    />
+    <meta
+      property="og:image"
+      content="https://amfora.solutionmax.net/assets/screenshots/download.webp?v=2.0.0"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/archivo-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/assets/site.css?v=2.1" />
+    <link rel="stylesheet" href="/assets/pages.css?v=2.1" />
+    <script src="/assets/site.js?v=2.1" defer></script>
+  </head>
+  <body class="legal-page">
+    <a class="skip" href="#main">Skip to content</a>
+<header class="hdr"><div class="wrap"><a class="brand" href="/" aria-label="Amfora home"><svg viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"><path d="M38 14 H62"/><path d="M42 14 V24"/><path d="M58 14 V24"/><path d="M34 24 H66"/><path d="M28 38 C18 42 16 54 24 58"/><path d="M72 38 C82 42 84 54 76 58"/><path d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"/><rect x="41" y="83" width="18" height="7" rx="3.5"/></g></svg><span>amfora<i>.</i></span></a>
+<button class="menu-toggle" aria-controls="navigation" aria-expanded="false">Menu</button>
+<nav class="nav" id="navigation" aria-label="Main navigation"><a href="/#product">Product</a><a href="/brandpack/">Brandpack</a><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a class="btn btn-p" href="/#run">Install</a></nav></div></header>
+    <main id="main" class="wrap legal-layout">
+      <p class="eyebrow">MIGRATION GUIDE</p>
+      <h1>Moving from Palmr.</h1>
+      <p class="legal-intro">
+        Palmr was archived by its maker on 27 February 2026. Amfora continues it
+        under Apache-2.0, with a new interface, security fixes and releases. It
+        reads a Palmr data volume as it is: your users, files, shares and
+        download links move with you.
+      </p>
+      <nav class="legal-nav" aria-label="On this page">
+        <a href="#what-moves">What moves</a><a href="#steps">Five steps</a
+        ><a href="#settings">Settings to rename</a><a href="#back">Going back</a
+        ><a href="#after">After the move</a>
+      </nav>
+      <section id="what-moves">
+        <h2>What moves with you</h2>
+        <ul>
+          <li><b>Database.</b> On its first start Amfora renames <code>prisma/palmr.db</code> to <code>prisma/amfora.db</code>, once, with its WAL files. Users, shares, receive links and settings stay as they were.</li>
+          <li><b>Files in bundled storage.</b> An existing bucket is kept when you do not set <code>MINIO_BUCKET</code>, so every uploaded file stays where it is.</li>
+          <li><b>Links you already sent.</b> Same paths, same ports (5487 for the web interface, 9379 for bundled storage), so a link in someone's inbox keeps working.</li>
+          <li><b>External S3.</b> The <code>ENABLE_S3</code> and <code>S3_*</code> variables are the same; nothing to change.</li>
+        </ul>
+      </section>
+      <section id="steps">
+        <h2>Five steps</h2>
+        <ol>
+          <li><b>Back up.</b> Stop Palmr and copy the whole data volume, or take a snapshot. <code>docker compose stop</code>, then back up the directory or volume mounted at <code>/app/server</code>.</li>
+          <li><b>Swap the image.</b> In your compose file replace the Palmr image with <code>ghcr.io/solutionmax/amfora:2.0.1</code>. Keep the volume line exactly as it is.</li>
+          <li><b>Rename the settings</b> that carried the Palmr name, see below.</li>
+          <li><b>Start.</b> <code>docker compose up -d</code>, then <code>docker compose logs -f</code> until you see the database migration and "Starting Amfora Application".</li>
+          <li><b>Check.</b> Sign in with your existing account, open a share you sent before and download a file from it.</li>
+        </ol>
+        <pre><code>services:
+  amfora:
+    image: ghcr.io/solutionmax/amfora:2.0.1   # was: kyantech/palmr
+    ports:
+      - "5487:5487"
+      - "9379:9379"
+    volumes:
+      - palmr_data:/app/server                # unchanged
+    environment:
+      APP_URL: "https://files.example.com"
+      STORAGE_URL: "https://storage.example.com"
+volumes:
+  palmr_data:                                 # same block as in your Palmr file</code></pre>
+        <p>Run it from the same directory as before, so Compose finds the same project and volume names.</p>
+      </section>
+      <section id="settings">
+        <h2>Settings to rename</h2>
+        <ul>
+          <li><code>PALMR_UID</code> and <code>PALMR_GID</code> become <code>AMFORA_UID</code> and <code>AMFORA_GID</code>. Without them the container runs as uid 1001; set them to the owner of your existing files to avoid a long ownership change on the first start.</li>
+          <li>The container name in examples is <code>amfora</code>; rename yours if scripts refer to it.</li>
+          <li>Branding is now set in the admin area under Customization and stored on the server, so every visitor sees the same name, logo and colour.</li>
+        </ul>
+      </section>
+      <section id="back">
+        <h2>Going back</h2>
+        <p>
+          Amfora 2 adds tables and settings to the database, so the way back is
+          the backup from step 1, not the new volume. Restore it and start the
+          Palmr image again.
+        </p>
+      </section>
+      <section id="after">
+        <h2>After the move</h2>
+        <ul>
+          <li>Updates: <a href="/docs/#updating">pull a new tag</a>, or set up signed over the air updates once and install them from the admin area.</li>
+          <li>Your own brand without the "Powered by Amfora" credit on public pages: the <a href="/brandpack/">brandpack</a>.</li>
+          <li>Something not carried over? Mail <a href="mailto:mail@solutionmax.net">mail@solutionmax.net</a>; it is a bug we want to hear about.</li>
+        </ul>
+      </section>
+    </main>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.1 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+<p class="toast" role="status" aria-live="polite"></p>
+  </body>
+</html>
