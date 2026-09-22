@@ -12,7 +12,17 @@ import { Config } from "../types";
 import { FileSizeInput } from "./file-size-input";
 import { LogoInput } from "./logo-input";
 
-const HIDDEN_FIELDS = ["serverUrl", "firstUserAccess", "showHomePage", "appFontFamily", "appPrimaryColor", "appRadius"];
+const HIDDEN_FIELDS = [
+  "serverUrl",
+  "firstUserAccess",
+  "showHomePage",
+  "appFontFamily",
+  "appPrimaryColor",
+  "appRadius",
+  "appBrandpack",
+  "appCustomCss",
+  "appHideCredit",
+];
 
 export function isFieldHidden(fieldKey: string): boolean {
   return HIDDEN_FIELDS.includes(fieldKey);

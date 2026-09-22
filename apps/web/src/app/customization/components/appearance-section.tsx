@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAppearance } from "@/hooks/use-appearance";
+import { applyAppearance, useAppearance } from "@/hooks/use-appearance";
 import { Section } from "./section";
 
 const SWATCHES = ["#0079d2", "#e8590c", "#1a7f4b", "#6941c6", "#b42318", "#0c1626"];
@@ -41,15 +41,22 @@ export function AppearanceSection() {
   useEffect(() => setHex(appearance.color || SWATCHES[0]), [appearance.color]);
   useEffect(() => setRadius(remToPx(appearance.radius || "0.5rem")), [appearance.radius]);
 
-  const saveColor = (value: string) => {
+  // Typing or dragging previews at once; the value is stored when the change is done
+  // (swatch click, leaving the field, releasing the slider), not on every keystroke.
+  const previewColor = (value: string) => {
     setHex(value);
+    if (/^#[0-9a-f]{6}$/i.test(value)) applyAppearance("color", value.toLowerCase());
+  };
+  const saveColor = (value: string) => {
+    previewColor(value);
     if (/^#[0-9a-f]{6}$/i.test(value)) appearance.save("color", value.toLowerCase()).catch(console.error);
   };
 
-  const saveRadius = (px: number) => {
+  const previewRadius = (px: number) => {
     setRadius(px);
-    appearance.save("radius", `${px / 16}rem`).catch(console.error);
+    applyAppearance("radius", `${px / 16}rem`);
   };
+  const saveRadius = () => appearance.save("radius", `${radius / 16}rem`).catch(console.error);
 
   return (
     <Section icon={IconPalette} title={t("customization.v2.appearance.title")}>
@@ -71,7 +78,8 @@ export function AppearanceSection() {
             <Input
               aria-label={t("customization.v2.appearance.accentHex")}
               value={hex}
-              onChange={(e) => saveColor(e.target.value)}
+              onChange={(e) => previewColor(e.target.value)}
+              onBlur={(e) => saveColor(e.target.value)}
               className="mono h-7 w-[110px] px-2 text-xs"
               maxLength={7}
             />
@@ -87,7 +95,10 @@ export function AppearanceSection() {
             max={RADIUS_MAX_PX}
             step={2}
             value={radius}
-            onChange={(e) => saveRadius(Number(e.target.value))}
+            onChange={(e) => previewRadius(Number(e.target.value))}
+            onPointerUp={saveRadius}
+            onKeyUp={saveRadius}
+            onBlur={saveRadius}
             className="w-full accent-primary"
           />
           <p className="text-xs text-ink-3">{t("customization.v2.appearance.radiusHint", { px: radius })}</p>

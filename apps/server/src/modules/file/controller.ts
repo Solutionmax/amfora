@@ -10,6 +10,7 @@ import {
 } from "../../utils/file-name-generator";
 import { getContentType } from "../../utils/mime-types";
 import { ConfigService } from "../config/service";
+import { dispositionFor } from "./disposition";
 import { canDownloadFromShares } from "./download-access";
 import { shouldCountDownload } from "./download-count";
 import {
@@ -347,7 +348,11 @@ export class FileController {
           const fileName = reverseShareFile.name;
 
           reply.header("Content-Type", contentType);
-          reply.header("Content-Disposition", `inline; filename="${encodeURIComponent(fileName)}"`);
+          reply.header(
+            "Content-Disposition",
+            `${dispositionFor(contentType)}; filename="${encodeURIComponent(fileName)}"`
+          );
+          if (dispositionFor(contentType) === "attachment") reply.header("Content-Security-Policy", "sandbox");
           reply.header("Content-Length", reverseShareFile.size.toString());
 
           return reply.send(stream);
@@ -407,7 +412,8 @@ export class FileController {
       const fileName = fileRecord.name;
 
       reply.header("Content-Type", contentType);
-      reply.header("Content-Disposition", `inline; filename="${encodeURIComponent(fileName)}"`);
+      reply.header("Content-Disposition", `${dispositionFor(contentType)}; filename="${encodeURIComponent(fileName)}"`);
+      if (dispositionFor(contentType) === "attachment") reply.header("Content-Security-Policy", "sandbox");
       reply.header("Content-Length", fileRecord.size.toString());
 
       return reply.send(stream);
@@ -667,7 +673,8 @@ export class FileController {
       const fileName = fileRecord.name;
 
       reply.header("Content-Type", contentType);
-      reply.header("Content-Disposition", `inline; filename="${encodeURIComponent(fileName)}"`);
+      reply.header("Content-Disposition", `${dispositionFor(contentType)}; filename="${encodeURIComponent(fileName)}"`);
+      if (dispositionFor(contentType) === "attachment") reply.header("Content-Security-Policy", "sandbox");
       reply.header("Content-Length", fileRecord.size.toString());
       reply.header("Cache-Control", "public, max-age=31536000"); // One year
 

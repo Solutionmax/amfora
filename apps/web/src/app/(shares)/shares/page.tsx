@@ -17,18 +17,8 @@ import { useShares } from "./hooks/use-shares";
 
 export default function SharesPage() {
   const t = useTranslations();
-  const {
-    shares,
-    isLoading,
-    searchQuery,
-    setSearchQuery,
-    filteredShares,
-    shareToGenerateLink,
-    handleCopyLink,
-    loadShares,
-    setShareToGenerateLink,
-    smtpEnabled,
-  } = useShares();
+  const { shares, isLoading, searchQuery, setSearchQuery, filteredShares, handleCopyLink, loadShares, smtpEnabled } =
+    useShares();
 
   const { isOpen: isCreateModalOpen, onOpen: onOpenCreateModal, onClose: onCloseCreateModal } = useDisclosure();
   const shareManager = useShareManager(loadShares);
@@ -68,11 +58,11 @@ export default function SharesPage() {
           isCreateModalOpen={isCreateModalOpen}
           shareManager={shareManager}
           fileManager={fileManager}
-          shareToGenerateLink={shareToGenerateLink}
+          shareToGenerateLink={shareManager.shareToGenerateLink}
           shareToViewDetails={shareManager.shareToViewDetails}
           smtpEnabled={smtpEnabled}
           onCloseCreateModal={onCloseCreateModal}
-          onCloseGenerateLink={() => setShareToGenerateLink(null)}
+          onCloseGenerateLink={() => shareManager.setShareToGenerateLink(null)}
           onCloseViewDetails={() => shareManager.setShareToViewDetails(null)}
           onSuccess={loadShares}
         />

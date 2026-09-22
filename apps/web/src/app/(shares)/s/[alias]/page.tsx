@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { IconLock } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
@@ -7,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { Chip, Statement } from "@/components/brand/statement";
 import { TransferShell } from "@/components/brand/transfer-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
+import { FilePreviewModal } from "@/components/modals/file-preview-modal";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { formatFileSize } from "@/utils/format-file-size";
 import { PasswordModal } from "./components/password-modal";
@@ -32,6 +34,7 @@ export default function PublicSharePage() {
     password,
     isPasswordModalOpen,
     isPasswordError,
+    reason,
     setPassword,
     handlePasswordSubmit,
     handleDownload,
@@ -39,6 +42,12 @@ export default function PublicSharePage() {
     folders,
     files,
   } = usePublicShare();
+  const [previewFile, setPreviewFile] = useState<{
+    name: string;
+    objectName: string;
+    type?: string;
+    id?: string;
+  } | null>(null);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -76,20 +85,28 @@ export default function PublicSharePage() {
   ) : isPasswordModalOpen ? (
     <Statement title={t("public.state.password.title")} quote={t("public.state.password.text")} />
   ) : (
-    <Statement title={t("public.state.missing.title")} quote={t("public.state.missing.text")} />
+    <Statement title={t(`public.state.${reason}.title`)} quote={t(`public.state.${reason}.text`)} />
   );
 
   return (
     <TransferShell statement={statement}>
-      {!isPasswordModalOpen && !share && <ShareNotFound />}
+      {!isPasswordModalOpen && !share && <ShareNotFound reason={reason} />}
       {share && (
         <ShareStage
           files={files}
           folders={folders}
-          views={share.views}
           onDownload={handleDownload}
           onDownloadFolder={(folderId, folderName) => handleDownload(`folder:${folderId}`, folderName)}
           onBulkDownload={handleBulkDownload}
+          onPreview={setPreviewFile}
+        />
+      )}
+      {previewFile && (
+        <FilePreviewModal
+          isOpen={!!previewFile}
+          onClose={() => setPreviewFile(null)}
+          file={previewFile}
+          sharePassword={password || undefined}
         />
       )}
       <PasswordModal

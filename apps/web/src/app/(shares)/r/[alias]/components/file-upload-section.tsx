@@ -350,7 +350,11 @@ export function FileUploadSection({
                 {t("share.itemCount", { count: fileUploads.length })} · {formatFileSize(totalBytes)}
               </b>
               <span className="text-xs text-ink-3">
-                {isUploading ? t("public.receive.progress.keepOpen") : t("public.receive.progress.ready")}
+                {isUploading
+                  ? t("public.receive.progress.keepOpen")
+                  : allFilesProcessed && hasSuccessfulUploads
+                    ? t("reverseShares.upload.success.title")
+                    : t("public.receive.progress.ready")}
               </span>
             </div>
           </div>
@@ -419,7 +423,7 @@ export function FileUploadSection({
       <Button
         type="button"
         onClick={handleUpload}
-        disabled={!canUpload}
+        disabled={!canUpload || (allFilesProcessed && hasSuccessfulUploads)}
         className="mt-[18px] w-full shadow-[0_10px_24px_-12px_color-mix(in_oklab,var(--primary)_70%,transparent)]"
         size="lg"
       >

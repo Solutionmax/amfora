@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
 
   return {
-    title: `${t("settings.pageTitle")} `,
+    title: `${t("navbar.usersManagement")}`,
   };
 }
 
