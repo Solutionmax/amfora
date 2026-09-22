@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { prisma } from "../../shared/prisma";
+import { createAdminGuard, loadAccount } from "../../shared/admin-guard";
 import { createPasswordSchema } from "../auth/dto";
 import { canUpdateUser } from "./authorization";
 import { UserController } from "./controller";
@@ -11,26 +11,8 @@ import { validatePasswordMiddleware } from "./middleware";
 export async function userRoutes(app: FastifyInstance) {
   const userController = new UserController();
 
-  const preValidation = async (request: any, reply: any) => {
-    try {
-      const usersCount = await prisma.user.count();
-
-      if (usersCount > 0) {
-        try {
-          await request.jwtVerify();
-          if (!request.user.isAdmin) {
-            return reply.status(403).send({ error: "Access restricted to administrators" });
-          }
-        } catch (authErr) {
-          console.error(authErr);
-          return reply.status(401).send({ error: "Unauthorized: a valid token is required to access this resource." });
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      return reply.status(500).send({ error: "Internal server error" });
-    }
-  };
+  // Open only while there is no user at all, so the very first account can be created.
+  const preValidation = createAdminGuard({ firstRun: "noUsers" });
 
   const updateUserPreValidation = async (request: any, reply: any) => {
     try {
@@ -41,9 +23,19 @@ export async function userRoutes(app: FastifyInstance) {
     }
 
     const body = request.body as { id?: string; isAdmin?: boolean } | undefined;
-    const authenticatedUser = request.user as { userId?: string; isAdmin?: boolean };
+    const userId = (request.user as { userId?: string }).userId;
 
-    if (!canUpdateUser(authenticatedUser, { id: body?.id ?? "", isAdmin: body?.isAdmin })) {
+    let account;
+    try {
+      account = await loadAccount(userId);
+    } catch (err) {
+      console.error(err);
+      return reply.status(500).send({ error: "Internal server error" });
+    }
+    // Privilege comes from the database, not from the day-long token claim.
+    const authenticatedUser = { userId, isAdmin: account?.isActive === true && account.isAdmin };
+
+    if (!account?.isActive || !canUpdateUser(authenticatedUser, { id: body?.id ?? "", isAdmin: body?.isAdmin })) {
       return reply.status(403).send({ error: "You can only update your own profile" });
     }
   };

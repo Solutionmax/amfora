@@ -47,7 +47,8 @@ export class AuthProvidersService {
   private pendingStates = new Map<string, PendingState>();
 
   constructor() {
-    setInterval(() => this.cleanupExpiredStates(), CLEANUP_INTERVAL);
+    // unref: a cleanup timer must never be what keeps the process (or a test run) alive.
+    setInterval(() => this.cleanupExpiredStates(), CLEANUP_INTERVAL).unref();
   }
 
   private buildBaseUrl(requestContext?: RequestContextService): string {

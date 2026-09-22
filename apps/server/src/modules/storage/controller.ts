@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { loadAccount } from "../../shared/admin-guard";
 import { StorageService } from "./service";
 
 export class StorageController {
@@ -13,12 +14,14 @@ export class StorageController {
       try {
         await request.jwtVerify();
         userId = (request as any).user?.userId;
-        isAdmin = (request as any).user?.isAdmin || false;
       } catch (err) {
         return reply.status(401).send({
           error: "Unauthorized: a valid token is required to access this resource.",
         });
       }
+      // The token's isAdmin claim can be a day old; the whole-disk view follows the database.
+      const account = await loadAccount(userId);
+      isAdmin = account?.isActive === true && account.isAdmin;
 
       const diskSpace = await this.storageService.getDiskSpace(userId, isAdmin);
       return reply.send(diskSpace);

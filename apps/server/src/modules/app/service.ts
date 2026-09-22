@@ -1,13 +1,16 @@
-import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
 import { resolvePaidAppearance } from "./appearance";
 import { BackgroundService } from "./background.service";
 import { verifyBrandpack } from "./brandpack";
+import { BRANDPACK_PUBLIC_KEY } from "./brandpack-key";
 
 export class AppService {
   private configService = new ConfigService();
   private backgroundService = new BackgroundService();
+
+  /** The key is a constructor argument only so tests can use their own; nothing reads it from env. */
+  constructor(private readonly brandpackPublicKey: string = BRANDPACK_PUBLIC_KEY) {}
 
   async getAppInfo() {
     const value = (key: string) => this.configService.getValue(key).catch(() => "");
@@ -37,7 +40,7 @@ export class AppService {
       this.backgroundService.exists(),
     ]);
 
-    const brandpack = appBrandpack ? verifyBrandpack(appBrandpack, env.AMFORA_BRANDPACK_PUBLIC_KEY) : null;
+    const brandpack = appBrandpack ? verifyBrandpack(appBrandpack, this.brandpackPublicKey) : null;
     if (appBrandpack && !brandpack) {
       console.warn("appBrandpack is set but does not verify; paid customization is ignored");
     }
@@ -56,7 +59,7 @@ export class AppService {
 
   /** Verifies before storing, so an admin learns about a bad pack at paste time. */
   async activateBrandpack(token: string) {
-    const brandpack = verifyBrandpack(token, env.AMFORA_BRANDPACK_PUBLIC_KEY);
+    const brandpack = verifyBrandpack(token, this.brandpackPublicKey);
     if (!brandpack) {
       throw new Error("This brandpack does not verify. Check that you pasted the whole token.");
     }

@@ -34,8 +34,10 @@ shape as the update manifest. The payload is:
 { "purpose": "amfora-brandpack", "organisation": "Acme B.V.", "issuedAt": "2026-09-21" }
 ```
 
-The server verifies the pack with the public key in `AMFORA_BRANDPACK_PUBLIC_KEY`
-(`apps/server/src/env.ts`, shipped as a default) every time `/app/info` is served.
+The server verifies the pack with a public key that is built into the server
+(`apps/server/src/modules/app/brandpack-key.ts`) every time `/app/info` is served. The key
+cannot be set through an environment variable. A fork that wants to sign its own packs
+changes that constant in the code, which Apache-2.0 allows.
 Without a valid pack the response carries `appHideCredit: false`, `appBackground: false`
 and `appCustomCss: ""`, whatever an admin stored. Activating a pack later switches the
 stored values on without re-entering anything. The `purpose` field keeps a release
@@ -49,7 +51,7 @@ On the vendor machine only:
 node infra/sign-brandpack.js "Acme B.V." 2026-09-21
 ```
 
-The secret lives in `/root/secrets/amfora-brandpack-secret.hex` (mode 600) and never
+The secret key is held by the vendor only (mode 600) and never
 enters a repository, a container image or a chat. Send the printed string to the
 customer; they paste it under Customization, Brandpack, Activate.
 

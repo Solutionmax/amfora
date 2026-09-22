@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 
+import { createAdminGuard } from "../../shared/admin-guard";
 import { UpdateController } from "./controller";
 
 const UpdateStatusSchema = z.object({
@@ -24,17 +25,7 @@ export async function updateRoutes(app: FastifyInstance) {
    * call and can ask the host to restart the stack, so an installation that has not
    * been set up yet must not expose them either.
    */
-  const adminOnly = async (request: any, reply: any) => {
-    try {
-      await request.jwtVerify();
-
-      if (!request.user?.isAdmin) {
-        return reply.status(403).send({ error: "Access restricted to administrators" });
-      }
-    } catch {
-      return reply.status(401).send({ error: "Unauthorized: a valid token is required." });
-    }
-  };
+  const adminOnly = createAdminGuard();
 
   app.get(
     "/update/status",
