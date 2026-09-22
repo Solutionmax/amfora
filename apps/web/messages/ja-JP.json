@@ -2087,7 +2087,29 @@
     "checkDisabled": "このインストールではアップデートの確認が無効になっています。",
     "hostSideMissing": "ここから更新するにはホスト側のインストールが必要です。ドキュメントを参照してください。",
     "statusFailed": "アップデート状況を取得できませんでした。",
-    "applyFailed": "アップデートを開始できませんでした。"
+    "applyFailed": "アップデートを開始できませんでした。",
+    "progress": {
+      "title": "{version} をインストール中",
+      "titleNoVersion": "アップデートをインストール中",
+      "steps": {
+        "requested": "アップデートを要求しました",
+        "handover": "サーバーに引き渡し中",
+        "verifying": "署名済みリリースを確認中",
+        "backup": "データをバックアップ中",
+        "pulling": "新しいバージョンをダウンロード中",
+        "restarting": "Amfora を再起動中",
+        "health": "正常に動作しているか確認中"
+      },
+      "handoverNote": "サーバーは数秒以内に要求を受け取ります。",
+      "restartingNote": "再起動中は Amfora に少しの間アクセスできません。",
+      "done": "Amfora {version} をインストールしました。",
+      "failed": "アップデートは完了しませんでした: {error}。以前のバージョンが引き続き動作します。",
+      "failedUnknown": "アップデートは完了しませんでした。以前のバージョンが引き続き動作します。",
+      "signinAfterRestart": "Amfora が再起動しました。続けるには再度サインインしてください。",
+      "signin": "セッションが終了しました。アップデートの結果を確認するには再度サインインしてください。",
+      "timeout": "想定より時間がかかっています。ホストの ota-state フォルダーにある update.log を確認してください。",
+      "reload": "再読み込み"
+    }
   },
   "uploadFile": {
     "title": "ファイルをアップロード",

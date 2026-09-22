@@ -2087,7 +2087,29 @@
     "checkDisabled": "Sprawdzanie aktualizacji jest wyłączone dla tej instalacji.",
     "hostSideMissing": "Aktualizowanie z tego miejsca wymaga zainstalowanej części hosta. Zobacz dokumentację.",
     "statusFailed": "Nie udało się odczytać stanu aktualizacji.",
-    "applyFailed": "Nie udało się rozpocząć aktualizacji."
+    "applyFailed": "Nie udało się rozpocząć aktualizacji.",
+    "progress": {
+      "title": "Instalowanie {version}",
+      "titleNoVersion": "Instalowanie aktualizacji",
+      "steps": {
+        "requested": "Zażądano aktualizacji",
+        "handover": "Przekazywanie do serwera",
+        "verifying": "Sprawdzanie podpisanego wydania",
+        "backup": "Tworzenie kopii zapasowej danych",
+        "pulling": "Pobieranie nowej wersji",
+        "restarting": "Ponowne uruchamianie Amfora",
+        "health": "Sprawdzanie, czy wszystko działa"
+      },
+      "handoverNote": "Serwer przejmie żądanie w ciągu kilku sekund.",
+      "restartingNote": "Amfora jest przez chwilę niedostępna podczas ponownego uruchamiania.",
+      "done": "Amfora {version} została zainstalowana.",
+      "failed": "Aktualizacja nie została ukończona: {error}. Poprzednia wersja nadal działa.",
+      "failedUnknown": "Aktualizacja nie została ukończona. Poprzednia wersja nadal działa.",
+      "signinAfterRestart": "Amfora została uruchomiona ponownie; zaloguj się ponownie, aby kontynuować.",
+      "signin": "Twoja sesja wygasła; zaloguj się ponownie, aby zobaczyć wynik aktualizacji.",
+      "timeout": "To trwa dłużej niż zwykle. Sprawdź update.log w folderze ota-state na hoście.",
+      "reload": "Odśwież"
+    }
   },
   "uploadFile": {
     "title": "Prześlij plik",

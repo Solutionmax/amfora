@@ -2087,7 +2087,29 @@
     "checkDisabled": "이 설치에서는 업데이트 확인이 꺼져 있습니다.",
     "hostSideMissing": "여기에서 업데이트하려면 호스트 쪽 설치가 필요합니다. 문서를 참조하세요.",
     "statusFailed": "업데이트 상태를 읽을 수 없습니다.",
-    "applyFailed": "업데이트를 시작할 수 없습니다."
+    "applyFailed": "업데이트를 시작할 수 없습니다.",
+    "progress": {
+      "title": "{version} 설치 중",
+      "titleNoVersion": "업데이트 설치 중",
+      "steps": {
+        "requested": "업데이트 요청됨",
+        "handover": "서버로 넘기는 중",
+        "verifying": "서명된 릴리스 확인 중",
+        "backup": "데이터 백업 중",
+        "pulling": "새 버전 다운로드 중",
+        "restarting": "Amfora 다시 시작 중",
+        "health": "정상 작동 확인 중"
+      },
+      "handoverNote": "서버가 몇 초 안에 요청을 받습니다.",
+      "restartingNote": "다시 시작하는 동안 Amfora에 잠시 연결할 수 없습니다.",
+      "done": "Amfora {version}이(가) 설치되었습니다.",
+      "failed": "업데이트가 완료되지 않았습니다: {error}. 이전 버전이 계속 실행됩니다.",
+      "failedUnknown": "업데이트가 완료되지 않았습니다. 이전 버전이 계속 실행됩니다.",
+      "signinAfterRestart": "Amfora가 다시 시작되었습니다. 계속하려면 다시 로그인하세요.",
+      "signin": "세션이 종료되었습니다. 업데이트 결과를 보려면 다시 로그인하세요.",
+      "timeout": "예상보다 오래 걸리고 있습니다. 호스트의 ota-state 폴더에서 update.log를 확인하세요.",
+      "reload": "새로고침"
+    }
   },
   "uploadFile": {
     "title": "파일 업로드",

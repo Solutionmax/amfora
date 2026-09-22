@@ -2087,7 +2087,29 @@
     "checkDisabled": "Bu kurulum için güncelleme denetimi kapalı.",
     "hostSideMissing": "Buradan güncellemek için ana makine tarafının kurulu olması gerekir. Belgelere bakın.",
     "statusFailed": "Güncelleme durumu okunamadı.",
-    "applyFailed": "Güncelleme başlatılamadı."
+    "applyFailed": "Güncelleme başlatılamadı.",
+    "progress": {
+      "title": "{version} yükleniyor",
+      "titleNoVersion": "Güncelleme yükleniyor",
+      "steps": {
+        "requested": "Güncelleme istendi",
+        "handover": "Sunucuya devrediliyor",
+        "verifying": "İmzalı sürüm doğrulanıyor",
+        "backup": "Verileriniz yedekleniyor",
+        "pulling": "Yeni sürüm indiriliyor",
+        "restarting": "Amfora yeniden başlatılıyor",
+        "health": "Sağlıklı çalıştığı kontrol ediliyor"
+      },
+      "handoverNote": "Sunucu isteği birkaç saniye içinde alır.",
+      "restartingNote": "Amfora yeniden başlarken kısa bir süre erişilemez.",
+      "done": "Amfora {version} yüklendi.",
+      "failed": "Güncelleme tamamlanmadı: {error}. Önceki sürüm çalışmaya devam ediyor.",
+      "failedUnknown": "Güncelleme tamamlanmadı. Önceki sürüm çalışmaya devam ediyor.",
+      "signinAfterRestart": "Amfora yeniden başladı; devam etmek için tekrar oturum açın.",
+      "signin": "Oturumunuz sona erdi; güncellemenin sonucunu görmek için tekrar oturum açın.",
+      "timeout": "Bu beklenenden uzun sürüyor. Sunucudaki ota-state klasöründe update.log dosyasını kontrol edin.",
+      "reload": "Yeniden yükle"
+    }
   },
   "uploadFile": {
     "title": "Dosya Yükle",

@@ -2087,7 +2087,29 @@
     "checkDisabled": "Pemeriksaan pembaruan dimatikan untuk instalasi ini.",
     "hostSideMissing": "Memperbarui dari sini memerlukan sisi host terpasang. Lihat dokumentasi.",
     "statusFailed": "Status pembaruan tidak dapat dibaca.",
-    "applyFailed": "Pembaruan tidak dapat dimulai."
+    "applyFailed": "Pembaruan tidak dapat dimulai.",
+    "progress": {
+      "title": "Memasang {version}",
+      "titleNoVersion": "Memasang pembaruan",
+      "steps": {
+        "requested": "Pembaruan diminta",
+        "handover": "Menyerahkan ke server",
+        "verifying": "Memeriksa rilis yang ditandatangani",
+        "backup": "Mencadangkan data Anda",
+        "pulling": "Mengunduh versi baru",
+        "restarting": "Memulai ulang Amfora",
+        "health": "Memeriksa bahwa semuanya sehat"
+      },
+      "handoverNote": "Server mengambil permintaan dalam beberapa detik.",
+      "restartingNote": "Amfora tidak tersedia sebentar selama dimulai ulang.",
+      "done": "Amfora {version} telah terpasang.",
+      "failed": "Pembaruan tidak selesai: {error}. Versi sebelumnya tetap berjalan.",
+      "failedUnknown": "Pembaruan tidak selesai. Versi sebelumnya tetap berjalan.",
+      "signinAfterRestart": "Amfora telah dimulai ulang; masuk lagi untuk melanjutkan.",
+      "signin": "Sesi Anda berakhir; masuk lagi untuk melihat hasil pembaruan.",
+      "timeout": "Ini memakan waktu lebih lama dari perkiraan. Periksa update.log di folder ota-state pada host.",
+      "reload": "Muat ulang"
+    }
   },
   "uploadFile": {
     "title": "Unggah File",

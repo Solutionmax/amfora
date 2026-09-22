@@ -17,6 +17,18 @@ const UpdateStatusSchema = z.object({
   checkEnabled: z.boolean().describe("Whether this installation checks for updates at all"),
 });
 
+const UpdateProgressSchema = z.object({
+  stage: z
+    .enum(["idle", "handover", "verifying", "backup", "pulling", "restarting", "health", "done", "failed"])
+    .describe("The step in progress, or how the update ended"),
+  targetVersion: z.string().nullable().describe("The version being installed"),
+  currentVersion: z.string().nullable().describe("The version this server runs"),
+  startedAt: z.string().nullable().describe("When the host started this update"),
+  finished: z.boolean().describe("Whether the update has ended, either way"),
+  ok: z.boolean().nullable().describe("True on success, false on failure, null while it runs"),
+  error: z.string().nullable().describe("Why the update failed, if it did"),
+});
+
 export async function updateRoutes(app: FastifyInstance) {
   const updateController = new UpdateController();
 
@@ -51,6 +63,26 @@ export async function updateRoutes(app: FastifyInstance) {
       },
     },
     updateController.getStatus.bind(updateController)
+  );
+
+  app.get(
+    "/update/progress",
+    {
+      preValidation: adminOnly,
+      schema: {
+        tags: ["Update"],
+        operationId: "getUpdateProgress",
+        summary: "Get update progress",
+        description: "Reports how far the most recently requested update has come, read from the host's update log",
+        response: {
+          200: UpdateProgressSchema,
+          401: z.object({ error: z.string() }),
+          403: z.object({ error: z.string() }),
+          500: z.object({ error: z.string() }),
+        },
+      },
+    },
+    updateController.getProgress.bind(updateController)
   );
 
   app.post(

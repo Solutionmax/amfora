@@ -2087,7 +2087,29 @@
     "checkDisabled": "Controleren op updates staat uit voor deze installatie.",
     "hostSideMissing": "Updaten vanaf hier vereist dat de hostkant geïnstalleerd is. Zie de documentatie.",
     "statusFailed": "De updatestatus kon niet gelezen worden.",
-    "applyFailed": "De update kon niet gestart worden."
+    "applyFailed": "De update kon niet gestart worden.",
+    "progress": {
+      "title": "{version} wordt geïnstalleerd",
+      "titleNoVersion": "De update wordt geïnstalleerd",
+      "steps": {
+        "requested": "Update aangevraagd",
+        "handover": "Overdragen aan de server",
+        "verifying": "Ondertekende release controleren",
+        "backup": "Je gegevens back-uppen",
+        "pulling": "Nieuwe versie downloaden",
+        "restarting": "Amfora herstarten",
+        "health": "Controleren of alles gezond is"
+      },
+      "handoverNote": "De server pakt het verzoek binnen enkele seconden op.",
+      "restartingNote": "Amfora is even weg terwijl het herstart.",
+      "done": "Amfora {version} is geïnstalleerd.",
+      "failed": "De update is niet afgerond: {error}. De vorige versie blijft draaien.",
+      "failedUnknown": "De update is niet afgerond. De vorige versie blijft draaien.",
+      "signinAfterRestart": "Amfora is herstart; log opnieuw in om verder te gaan.",
+      "signin": "Je sessie is verlopen; log opnieuw in om te zien hoe de update is gegaan.",
+      "timeout": "Dit duurt langer dan verwacht. Bekijk update.log in de map ota-state op de host.",
+      "reload": "Herladen"
+    }
   },
   "uploadFile": {
     "title": "Bestand uploaden",

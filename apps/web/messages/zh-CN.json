@@ -2083,7 +2083,29 @@
     "checkDisabled": "此安装已关闭更新检查。",
     "hostSideMissing": "从此处更新需要先安装主机端。请参阅文档。",
     "statusFailed": "无法读取更新状态。",
-    "applyFailed": "无法开始更新。"
+    "applyFailed": "无法开始更新。",
+    "progress": {
+      "title": "正在安装 {version}",
+      "titleNoVersion": "正在安装更新",
+      "steps": {
+        "requested": "已请求更新",
+        "handover": "正在移交给服务器",
+        "verifying": "正在检查已签名的版本",
+        "backup": "正在备份你的数据",
+        "pulling": "正在下载新版本",
+        "restarting": "正在重启 Amfora",
+        "health": "正在检查运行是否正常"
+      },
+      "handoverNote": "服务器会在几秒内接收请求。",
+      "restartingNote": "Amfora 重启期间会短暂无法访问。",
+      "done": "Amfora {version} 已安装。",
+      "failed": "更新未完成：{error}。旧版本将继续运行。",
+      "failedUnknown": "更新未完成。旧版本将继续运行。",
+      "signinAfterRestart": "Amfora 已重启；请重新登录以继续。",
+      "signin": "你的会话已结束；请重新登录以查看更新结果。",
+      "timeout": "耗时比预期更长。请检查主机上 ota-state 文件夹中的 update.log。",
+      "reload": "重新加载"
+    }
   },
   "uploadFile": {
     "title": "上传文件",

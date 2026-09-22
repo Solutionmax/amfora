@@ -1,18 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IconCircleCheck, IconDownload, IconInfoCircle, IconRefresh } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { applyUpdate, getUpdateStatus, type UpdateStatus } from "@/http/endpoints/update";
+import { UpdateProgressDialog } from "./update-progress-dialog";
 
 export function UpdateCard() {
   const t = useTranslations();
   const [status, setStatus] = useState<UpdateStatus | null>(null);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [progressOpen, setProgressOpen] = useState(false);
+  const [progressTarget, setProgressTarget] = useState<string | null>(null);
+  // Opening on its own happens once per page load, not again after the dialog is closed.
+  const reopenedRef = useRef(false);
 
   const load = useCallback(
     async (refresh = false) => {
@@ -34,17 +39,32 @@ export function UpdateCard() {
     load();
   }, [load]);
 
+  // An update that was already running when the page loaded gets the same dialog.
+  useEffect(() => {
+    if (!status?.applying || reopenedRef.current) return;
+    reopenedRef.current = true;
+    setProgressTarget(status.latestVersion);
+    setProgressOpen(true);
+  }, [status]);
+
   const onApply = async () => {
     setIsBusy(true);
     setError(null);
     try {
       await applyUpdate();
-      await load();
+      reopenedRef.current = true;
+      setProgressTarget(status?.latestVersion ?? null);
+      setProgressOpen(true);
     } catch {
       setError(t("updates.applyFailed"));
     } finally {
       setIsBusy(false);
     }
+  };
+
+  const onProgressClosed = () => {
+    setProgressOpen(false);
+    load();
   };
 
   if (!status) return null;
@@ -96,6 +116,8 @@ export function UpdateCard() {
 
         {error && <span className="text-xs text-destructive">{error}</span>}
       </CardContent>
+
+      <UpdateProgressDialog open={progressOpen} targetVersion={progressTarget} onClose={onProgressClosed} />
     </Card>
   );
 }
