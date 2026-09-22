@@ -317,6 +317,20 @@ bash infra/build-docker.sh local</code></pre>
                   <a href="/brandpack/">How to get one</a>.
                 </li>
               </ul>
+              <h3>Security</h3>
+              <ul>
+                <li>
+                  The settings routes skipped authentication on installations
+                  with a single user, which is most of them: configuration,
+                  including the SMTP password, was readable and writable without
+                  a session. Fixed; the exception now applies only during first
+                  run. Upgrade for this alone.
+                </li>
+                <li>
+                  Uploaded html, svg, xml or javascript files are served as
+                  attachments in a sandbox, never as a page on your origin.
+                </li>
+              </ul>
               <h3>Before you upgrade</h3>
               <p>
                 Pull the image or press Update. No data changes; three app
