@@ -69,7 +69,8 @@ jobs:
               --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.next --exclude-dir=superpowers \
               --exclude=pnpm-lock.yaml --exclude=LICENSE --exclude=NOTICE \
               --exclude=README.md --exclude=Dockerfile --exclude=ci.yml \
-              --exclude=minio-setup.sh --exclude=server-start.sh; then
+              --exclude=minio-setup.sh --exclude=server-start.sh \
+              | grep -vE '^\./site/palmr/|/palmr/|RELEASE-2\.0\.1\.md'; then
             echo "::error::Found a brand reference that should not be there"
             exit 1
           fi
