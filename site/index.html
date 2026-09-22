@@ -1,805 +1,96 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Amfora: Send files. Collect files. Keep control.</title>
-    <meta
-      name="description"
-      content="Send download links, collect client files and manage every handoff from a self hosted workspace. Your branding, your storage, your control."
-    />
-    <meta name="robots" content="noindex,nofollow" />
-    <meta name="theme-color" content="#fbfcfe" />
-    <link rel="canonical" href="https://amfora.solutionmax.net/" />
-    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="Amfora: Send files. Collect files. Keep control."
-    />
-    <meta
-      property="og:description"
-      content="Send download links, collect client files and manage every handoff from a self hosted workspace. Your branding, your storage, your control."
-    />
-    <meta
-      property="og:image"
-      content="https://amfora.solutionmax.net/assets/screenshots/download.webp?v=2.0.0"
-    />
-    <link
-      rel="preload"
-      href="/assets/fonts/archivo-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link rel="stylesheet" href="/assets/site.css?v=2.0.0" />
-    <script src="/assets/site.js?v=real-screens-20260918" defer></script>
-  </head>
-  <body class="product-site">
-    <a class="skip" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="wrap header-inner">
-        <a class="brand" href="/" aria-label="Amfora home"
-          ><svg
-            aria-hidden="true"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g
-              fill="none"
-              stroke="currentColor"
-              stroke-width="6.5"
-              stroke-linecap="round"
-            >
-              <path d="M45 21 C30 25 22 38 32 52" />
-              <path d="M55 21 C70 25 78 38 68 52" />
-            </g>
-            <g fill="currentColor">
-              <rect x="35" y="9" width="30" height="8" rx="4" />
-              <path d="M44 17 H56 L55 30 H45 Z" />
-              <path
-                d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"
-              />
-              <rect x="41" y="83" width="18" height="7" rx="3.5" />
-            </g></svg
-          ><span>amfora<span class="brand-dot">.</span></span></a
-        >
-        <button
-          class="menu-toggle"
-          aria-controls="navigation"
-          aria-expanded="false"
-        >
-          Menu <span aria-hidden="true">＋</span>
-        </button>
-        <nav id="navigation" aria-label="Main navigation">
-          <a href="/#features">Product</a
-          ><a href="/#how-it-works">How it works</a
-          ><a href="/#hosting">Where it runs</a><a href="/brandpack/">Brandpack</a
-          ><a href="/docs/">Docs</a
-          ><a href="/releases/">Releases</a><a href="/#faq">FAQ</a
-          ><a href="/#contact">Contact</a>
-          <a
-            class="nav-github"
-            href="https://github.com/Solutionmax/amfora"
-            title="Public source repository"
-            ><svg
-              class="gh-ico"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-              /></svg
-            >GitHub</a
-          >
-          <a class="nav-source nav-contact" href="/#install"
-            >Install Amfora <span aria-hidden="true">↓</span></a
-          >
-        </nav>
-      </div>
-    </header>
-    <main id="main">
-      <section class="product-hero">
-        <div class="wrap product-hero-grid">
-          <div class="product-pitch">
-            <p class="product-label">
-              <span class="status-dot"></span> Self hosted file sharing
-            </p>
-            <h1>Good work.<br />Great handoffs.<br /><em>Your control.</em></h1>
-            <p class="product-lead">
-              Send files beautifully.<br />Get what you need back.
-            </p>
-            <p class="product-description">
-              Send a download link. Collect client files. Manage it all in a
-              workspace on your own infrastructure.
-            </p>
-            <div class="actions">
-              <a class="button primary" href="#install"
-                >Install Amfora <span aria-hidden="true">↓</span></a
-              ><a class="button secondary" href="#features"
-                >See the product <span aria-hidden="true">↓</span></a
-              >
-            </div>
-            <ul class="product-assurances">
-              <li>No recipient accounts</li>
-              <li>Your brand</li>
-              <li>Your storage</li>
-            </ul>
-          </div>
-          <figure class="product-visual">
-            <div class="visual-topline">
-              <span>THE AMFORA EXPERIENCE</span><span>01 / FILE DELIVERY</span>
-            </div>
-            <a
-              class="hero-app-frame"
-              href="/assets/screenshots/download.webp?v=2.0.0"
-              target="_blank"
-              rel="noopener"
-              aria-label="View the full Amfora download screenshot"
-            >
-              <span class="app-chrome"
-                ><span class="window-dots" aria-hidden="true">● ● ●</span
-                ><span>Amfora / Shared with you</span
-                ><span aria-hidden="true">↗</span></span
-              >
-              <img
-                src="/assets/screenshots/download.webp?v=2.0.0"
-                width="1440"
-                height="1000"
-                alt="Amfora download page: the Launch video final share with three files listed as a manifest and the Download All button"
-                fetchpriority="high"
-              />
-            </a>
-            <figcaption>
-              <span
-                ><strong>A better first impression.</strong> A simple next
-                step.</span
-              ><a href="#features">Explore both sides ↗</a>
-            </figcaption>
-            <div class="handoff-note">
-              <span class="handoff-note-icon" aria-hidden="true">↗</span>
-              <div>
-                <strong>One link. Everything they need.</strong
-                ><span>Files, context and a clear way forward.</span>
-              </div>
-            </div>
-          </figure>
-        </div>
-        <div class="product-ribbon">
-          <div class="wrap">
-            <span>BUILT AROUND THE WAY YOU WORK</span
-            ><span>Client deliveries</span><span>Creative teams</span
-            ><span>Project submissions</span>
-          </div>
-        </div>
-      </section>
-      <section class="section install-section" id="install">
-        <div class="wrap install-grid">
-          <div>
-            <p class="eyebrow">START ON YOUR OWN SERVER</p>
-            <h2>Your files.<br /><em>Your infrastructure.</em></h2>
-            <p>
-              One Docker installation. A workspace for your team, clear links
-              for everyone else.
-            </p>
-            <a class="text-link" href="/docs/#getting-started"
-              >Read the installation guide →</a
-            >
-          </div>
-          <div class="hero-install">
-            <p class="eyebrow">INSTALL WITH DOCKER</p>
-            <pre
-              class="install-command"
-            ><code>curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker</code></pre>
-            <p class="install-requirements">
-              Requires curl, Docker, Compose, Buildx, Git and Bash. Public
-              source. No GitHub account required.
-              <a href="/docs/#getting-started">Requirements &amp; setup ↗</a>
-            </p>
-          </div>
-        </div>
-      </section>
-      <section class="section explanation" id="how-it-works">
-        <div class="wrap">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">TWO DIRECTIONS. ONE WORKSPACE.</p>
-              <h2>Two directions.<br /><em>One place.</em></h2>
-            </div>
-            <p>
-              Amfora handles both sides of file sharing. You manage the files
-              and links. Everyone else gets one clear action.
-            </p>
-          </div>
-          <div class="direction-grid">
-            <article class="direction-card">
-              <div class="direction-title">
-                <span class="direction-icon">↗</span>
-                <div>
-                  <span class="mini-label">SEND FILES</span>
-                  <h3>You have the files.</h3>
-                </div>
-              </div>
-              <p>
-                Deliver a project, share a collection or hand over the final
-                version. Send one link instead of a pile of attachments.
-              </p>
-              <ol class="flow-line">
-                <li><span>01</span>Upload</li>
-                <li><span>02</span>Create a link</li>
-                <li><span>03</span>They download</li>
-              </ol>
-              <a href="/docs/#sharing">How to send files ↗</a>
-            </article>
-            <article class="direction-card receive-card">
-              <div class="direction-title">
-                <span class="direction-icon">↙</span>
-                <div>
-                  <span class="mini-label">COLLECT FILES</span>
-                  <h3>You need their files.</h3>
-                </div>
-              </div>
-              <p>
-                Give a client, colleague or collaborator a place to send their
-                work. The files arrive in your workspace.
-              </p>
-              <ol class="flow-line">
-                <li><span>01</span>Create a request</li>
-                <li><span>02</span>They upload</li>
-                <li><span>03</span>You review</li>
-              </ol>
-              <a href="/docs/#receiving">How to collect files ↗</a>
-            </article>
-          </div>
-        </div>
-      </section>
-      <section class="section screens-section" id="features">
-        <div class="wrap">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">THE EXPERIENCE THEY SEE</p>
-              <h2>Your work deserves<br /><em>a better delivery.</em></h2>
-            </div>
-            <p>
-              No app to install. No account to create. Just a clear, branded
-              page for the files you share or request.
-            </p>
-          </div>
-          <article class="screen-story">
-            <div class="screen-frame">
-              <div class="frame-top">
-                <span class="window-dots" aria-hidden="true">● ● ●</span
-                ><span>AMFORA / DOWNLOAD</span
-                ><a
-                  href="/assets/screenshots/download.webp?v=2.0.0"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="View full download screenshot"
-                  >Expand ↗</a
-                >
-              </div>
-              <a
-                class="screenshot-link"
-                href="/assets/screenshots/download.webp?v=2.0.0"
-                target="_blank"
-                rel="noopener"
-                aria-label="View full download screenshot"
-              >
-                <img
-                  src="/assets/screenshots/download.webp?v=2.0.0"
-                  width="1440"
-                  height="1000"
-                  alt="Amfora download page showing the Launch video final share, three files with type tiles, the total size and the Download All button"
-                  loading="lazy"
-                />
-              </a>
-            </div>
-            <div class="story-copy">
-              <span class="chapter">01 / A LINK WORTH OPENING</span>
-              <h3>Send the work.<br />Make it feel finished.</h3>
-              <p>
-                A focused download page with your identity, file details and a
-                clear next step. Add a password or expiry when the handoff calls
-                for it.
-              </p>
-              <ul class="check-list">
-                <li>Files together in one shared link</li>
-                <li>Password and expiry controls</li>
-                <li>Link copying and downloadable QR codes</li>
-              </ul>
-              <a class="text-link" href="/docs/#sharing">Explore sharing ↗</a>
-            </div>
-          </article>
-          <article class="screen-story reversed">
-            <div class="screen-frame">
-              <div class="frame-top">
-                <span class="window-dots" aria-hidden="true">● ● ●</span
-                ><span>AMFORA / UPLOAD REQUEST</span
-                ><a
-                  href="/assets/screenshots/upload.webp?v=2.0.0"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="View full upload screenshot"
-                  >Expand ↗</a
-                >
-              </div>
-              <a
-                class="screenshot-link"
-                href="/assets/screenshots/upload.webp?v=2.0.0"
-                target="_blank"
-                rel="noopener"
-                aria-label="View full upload screenshot"
-              >
-                <img
-                  src="/assets/screenshots/upload.webp?v=2.0.0"
-                  width="1440"
-                  height="1000"
-                  alt="Amfora receive page with the drop area, optional sender details and the Powered by Amfora credit"
-                  loading="lazy"
-                />
-              </a>
-            </div>
-            <div class="story-copy">
-              <span class="chapter">02 / AN OPEN INVITATION</span>
-              <h3>Collect the work.<br />Skip the back and forth.</h3>
-              <p>
-                Send an upload request and let people deliver their files
-                through a dedicated page. Set limits and ask for the details you
-                need.
-              </p>
-              <ul class="check-list">
-                <li>No sender account required</li>
-                <li>File size, count and type limits</li>
-                <li>Optional sender name and email</li>
-              </ul>
-              <a class="text-link" href="/docs/#receiving"
-                >Explore upload requests ↗</a
-              >
-            </div>
-          </article>
-        </div>
-      </section>
-      <section class="workspace-section">
-        <div class="wrap">
-          <div class="workspace-heading">
-            <div>
-              <p class="eyebrow">THE WORKSPACE YOU USE</p>
-              <h2>A clear workspace.<br /><em>A little more headspace.</em></h2>
-            </div>
-            <p>
-              Sign in and get straight to work. Manage files, folders, shared
-              links and upload requests from one place.
-            </p>
-          </div>
-          <div class="workspace-frame">
-            <div class="frame-top">
-              <span class="window-dots" aria-hidden="true">● ● ●</span
-              ><span>AMFORA / YOUR WORKSPACE</span
-              ><a
-                href="/assets/screenshots/dashboard.webp?v=2.0.0"
-                target="_blank"
-                rel="noopener"
-                aria-label="View full workspace screenshot"
-                >Expand ↗</a
-              >
-            </div>
-            <a
-              class="screenshot-link"
-              href="/assets/screenshots/dashboard.webp?v=2.0.0"
-              target="_blank"
-              rel="noopener"
-              aria-label="View full workspace screenshot"
-            >
-              <img
-                src="/assets/screenshots/dashboard.webp?v=2.0.0"
-                width="1425"
-                height="1475"
-                alt="Amfora dashboard with the greeting, Send files and Receive files tiles, storage, shares, downloads and files, and recent activity"
-                loading="lazy"
-              />
-            </a>
-          </div>
-          <div class="workspace-features">
-            <article>
-              <span>01</span>
-              <h3>Find your files.</h3>
-              <p>
-                Keep files and folders organized. Review your recent uploads and
-                manage what you share.
-              </p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Make it your own.</h3>
-              <p>
-                Set your logo, colors and typography. Carry the same identity
-                from sign in to delivery.
-              </p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Manage access.</h3>
-              <p>
-                Invite users, manage accounts and enable two factor
-                authentication or the sign in providers you need.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-      <section class="section hosting-section" id="hosting">
-        <div class="wrap hosting-grid">
-          <div>
-            <p class="eyebrow">YOUR FILES LIVE WITH YOU</p>
-            <h2>Your infrastructure.<br /><em>A friendlier front door.</em></h2>
-            <p>
-              Run Amfora with Docker on your own server. Use the bundled storage
-              or connect an S3 compatible provider. You operate the
-              infrastructure; Amfora gives it a friendly front door.
-            </p>
-            <a class="button dark" href="/docs/#deployment"
-              >Read the deployment guide ↗</a
-            >
-          </div>
-          <figure class="screen-frame hosting-preview">
-            <div class="frame-top">
-              <span class="window-dots" aria-hidden="true">● ● ●</span>
-              <span>AMFORA / SIGN IN</span>
-              <a
-                href="/assets/screenshots/login.webp?v=2.0.0"
-                target="_blank"
-                rel="noopener"
-                aria-label="View full login screenshot"
-                >Expand ↗</a
-              >
-            </div>
-            <a
-              class="screenshot-link"
-              href="/assets/screenshots/login.webp?v=2.0.0"
-              target="_blank"
-              rel="noopener"
-              aria-label="View full login screenshot"
-            >
-              <img
-                src="/assets/screenshots/login.webp?v=2.0.0"
-                width="1440"
-                height="1000"
-                alt="The Amfora sign-in page with the welcome statement, email and password fields"
-                loading="lazy"
-              />
-            </a>
-            <figcaption>Your team's front door. Hosted by you.</figcaption>
-          </figure>
-        </div>
-      </section>
-      <section class="section walkthrough-section" id="walkthrough-guide">
-        <div class="wrap walkthrough-grid">
-          <div>
-            <p class="eyebrow">A SMALL WORKFLOW. A BETTER HANDOFF.</p>
-            <h2>From your files<br />to their next step.</h2>
-            <p>
-              Your workspace, their download, their upload. Explore the actual
-              Amfora screens on both sides of a handoff.
-            </p>
-            <a class="text-link" href="/docs/#sharing"
-              >Read the sharing guide ↗</a
-            >
-            <div class="workflow-note">
-              <strong>Simple for them. Flexible for you.</strong>
-              <p>
-                Recipients get a focused page. You keep the tools to manage
-                files, links and access.
-              </p>
-            </div>
-          </div>
-          <div class="product-tour" id="walkthrough">
-            <div
-              class="tour-tabs"
-              role="tablist"
-              aria-label="Explore the Amfora app"
-            >
-              <button
-                id="tour-tab-workspace"
-                role="tab"
-                aria-selected="true"
-                aria-controls="tour-workspace"
-              >
-                <span aria-hidden="true">01</span>Workspace
-              </button>
-              <button
-                id="tour-tab-download"
-                role="tab"
-                aria-selected="false"
-                aria-controls="tour-download"
-                tabindex="-1"
-              >
-                <span aria-hidden="true">02</span>Download
-              </button>
-              <button
-                id="tour-tab-upload"
-                role="tab"
-                aria-selected="false"
-                aria-controls="tour-upload"
-                tabindex="-1"
-              >
-                <span aria-hidden="true">03</span>Upload
-              </button>
-            </div>
-            <div
-              class="tour-panel"
-              id="tour-workspace"
-              role="tabpanel"
-              aria-labelledby="tour-tab-workspace"
-              tabindex="0"
-            >
-              <figure>
-                <a
-                  class="tour-image"
-                  href="/assets/screenshots/dashboard.webp?v=2.0.0"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="View full workspace screenshot"
-                >
-                  <img
-                    src="/assets/screenshots/dashboard.webp?v=2.0.0"
-                    width="1425"
-                    height="1475"
-                    alt="Amfora dashboard with Send files, Receive files, the figures strip and recent activity"
-                    loading="lazy"
-                  />
-                </a>
-                <figcaption>
-                  <div>
-                    <h3>Start in your workspace.</h3>
-                    <p>
-                      Manage files, create shares and keep track of upload
-                      requests.
-                    </p>
-                  </div>
-                  <a
-                    href="/assets/screenshots/dashboard.webp?v=2.0.0"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label="View full workspace screenshot"
-                    >Expand ↗</a
-                  >
-                </figcaption>
-              </figure>
-            </div>
-            <div
-              class="tour-panel"
-              id="tour-download"
-              role="tabpanel"
-              aria-labelledby="tour-tab-download"
-              tabindex="0"
-              hidden
-            >
-              <figure>
-                <a
-                  class="tour-image"
-                  href="/assets/screenshots/download.webp?v=2.0.0"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="View full download screenshot"
-                >
-                  <img
-                    src="/assets/screenshots/download.webp?v=2.0.0"
-                    width="1440"
-                    height="1000"
-                    alt="Amfora download page with the Launch video final share and the Download All button"
-                    loading="lazy"
-                  />
-                </a>
-                <figcaption>
-                  <div>
-                    <h3>What they receive.</h3>
-                    <p>
-                      A shared link opens this download page with your files and
-                      a Download All button.
-                    </p>
-                  </div>
-                  <a
-                    href="/assets/screenshots/download.webp?v=2.0.0"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label="View full download screenshot"
-                    >Expand ↗</a
-                  >
-                </figcaption>
-              </figure>
-            </div>
-            <div
-              class="tour-panel"
-              id="tour-upload"
-              role="tabpanel"
-              aria-labelledby="tour-tab-upload"
-              tabindex="0"
-              hidden
-            >
-              <figure>
-                <a
-                  class="tour-image"
-                  href="/assets/screenshots/upload.webp?v=2.0.0"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="View full upload screenshot"
-                >
-                  <img
-                    src="/assets/screenshots/upload.webp?v=2.0.0"
-                    width="1440"
-                    height="1000"
-                    alt="Amfora receive page with the drop area and optional sender details"
-                    loading="lazy"
-                  />
-                </a>
-                <figcaption>
-                  <div>
-                    <h3>What they send back.</h3>
-                    <p>
-                      An upload request opens this page. Senders select files
-                      and add optional details.
-                    </p>
-                  </div>
-                  <a
-                    href="/assets/screenshots/upload.webp?v=2.0.0"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label="View full upload screenshot"
-                    >Expand ↗</a
-                  >
-                </figcaption>
-              </figure>
-            </div>
-            <p class="tour-note">Actual app screenshots with sample content.</p>
-          </div>
-        </div>
-      </section>
-      <section class="section faq-section" id="faq">
-        <div class="wrap faq-grid">
-          <div>
-            <p class="eyebrow">BEFORE YOU START</p>
-            <h2>Good questions.<br />Clear answers.</h2>
-          </div>
-          <div class="faq-list">
-            <details>
-              <summary>Is Amfora a hosted service?</summary>
-              <p>
-                Amfora runs on your own infrastructure, with bundled storage or
-                an S3 compatible provider. You choose where the application and
-                files live.
-              </p>
-            </details>
-            <details>
-              <summary>How do I get Amfora?</summary>
-              <p>
-                Amfora is publicly available on
-                <a href="https://github.com/Solutionmax/amfora">GitHub</a>. Browse
-                the source, download a
-                <a href="https://github.com/Solutionmax/amfora/releases"
-                  >release</a
-                >, or follow the
-                <a href="/docs/#getting-started">installation guide</a>. No
-                GitHub account is required. Contact
-                <a href="https://solutionmax.net/#start">SolutionMAX</a>
-                for help with your installation.
-              </p>
-            </details>
-            <details>
-              <summary>Is Amfora free, and can I remove "Powered by Amfora"?</summary>
-              <p>
-                Amfora is free and open source under Apache License 2.0, with
-                every feature and every update. Your name, logo, colour, font
-                and corner radius are free too. Free installations show
-                "Powered by Amfora" on the public pages; the
-                <a href="/brandpack/">brandpack</a> (€79 once, for your whole
-                organisation) removes it and unlocks a background image and
-                custom CSS.
-              </p>
-            </details>
-            <details>
-              <summary>Do other people need an account?</summary>
-              <p>
-                No account is required to use a shared download link or upload
-                request. Your configured passwords, limits and expiry rules
-                still apply.
-              </p>
-            </details>
-            <details>
-              <summary>Are the files end to end encrypted?</summary>
-              <p>
-                No. Use HTTPS for traffic and appropriate security controls on
-                your host or storage provider. Amfora does not currently provide
-                end to end encryption.
-              </p>
-            </details>
-            <details>
-              <summary>Do I need every sign in provider?</summary>
-              <p>
-                No. Local accounts are enough to get started. Two factor
-                authentication is available, and external sign in providers are
-                optional. Enable only what your team uses.
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
-      <section class="closing" id="contact">
-        <div class="wrap closing-grid">
-          <div>
-            <p class="eyebrow">MAKE THE NEXT HANDOFF BETTER</p>
-            <h2>Better handoffs.<br /><em>On your terms.</em></h2>
-          </div>
-          <div>
-            <p>
-              Make your next file handoff<br />feel like part of your brand.
-            </p>
-            <!--email_off--><a
-              class="button light"
-              href="mailto:mail@solutionmax.net?subject=Amfora"
-              >Email us about Amfora ↗</a
-            ><!--/email_off--><a class="closing-source" href="/docs/"
-              >Explore the documentation ↗</a
-            >
-            <p class="contact-privacy">
-              Your email is used to answer your enquiry.
-              <a href="/legal.html#privacy">Privacy notice</a>.
-            </p>
-          </div>
-        </div>
-      </section>
-    </main>
-    <footer class="site-footer">
-      <div class="wrap footer-grid">
-        <div>
-          <h2>Amfora</h2>
-          <a href="/#features">Product</a
-          ><a href="/#how-it-works">Send &amp; collect</a
-          ><a href="/brandpack/">Brandpack</a
-          ><a href="/#walkthrough-guide">Product walkthrough</a
-          ><a href="/#faq">Common questions</a><a href="/#contact">Contact</a>
-        </div>
-        <div>
-          <h2>Install</h2>
-          <a href="/#install">Docker installation</a
-          ><a href="/docs/#getting-started">Requirements &amp; setup</a
-          ><a href="/docs/#storage">Storage &amp; S3</a
-          ><a href="/docs/#operations">Backups &amp; updates</a
-          ><a href="/docs/#troubleshooting">Troubleshooting</a>
-        </div>
-        <div>
-          <h2>Resources</h2>
-          <a href="/docs/">Documentation</a><a href="/releases/">Releases</a
-          ><a href="/docs/#sharing">Sharing files</a
-          ><a href="/docs/#receiving">Upload requests</a
-          ><a href="/docs/#branding">Your branding</a
-          ><a href="https://github.com/Solutionmax/amfora">GitHub repository</a
-          ><a href="/LICENSE">Licence: Apache License 2.0</a
-          ><a href="/NOTICE">Third party notices</a>
-        </div>
-        <div>
-          <h2>SolutionMAX</h2>
-          <a href="https://solutionmax.net/">About SolutionMAX</a
-          ><a href="https://pharos.solutionmax.net/">Pharos</a
-          ><a href="https://portalis.sh/">Portalis</a
-          ><a href="https://buymeacoffee.com/solutionmax">Support the work ↗</a
-          ><a href="/legal.html#imprint">Legal notice</a
-          ><a href="/legal.html#terms">Terms &amp; refunds</a
-          ><a href="/legal.html#privacy">Privacy</a
-          ><a href="/legal.html#cookies">Cookies</a>
-        </div>
-      </div>
-      <div class="wrap footer-bottom">
-        <span
-          >Amfora, a
-          <a href="https://solutionmax.net/">SolutionMAX</a> product</span
-        ><a href="/legal.html">Legal &amp; privacy</a
-        ><span>Self hosted file sharing</span
-        ><span>© 2026 SolutionMAX · ES</span>
-      </div>
-    </footer>
-    <p class="toast" role="status" aria-live="polite"></p>
-  </body>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amfora: self-hosted file sharing under your own name</title>
+<meta name="description" content="Send download links and collect files from clients on your own server, under your own brand. Open source, Apache-2.0, one Docker command. Brandpack to remove the credit.">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f6f9fd">
+<link rel="canonical" href="https://amfora.solutionmax.net/"><link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<meta property="og:type" content="website"><meta property="og:title" content="Amfora: your files, your name, your server"><meta property="og:description" content="Self-hosted file sharing. Send download links, collect client files, under your own brand."><meta property="og:image" content="https://amfora.solutionmax.net/assets/screenshots/download.webp?v=2.0.0">
+<link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css?v=2.1"><script src="/assets/site.js?v=2.1" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Amfora","applicationCategory":"BusinessApplication","operatingSystem":"Docker","url":"https://amfora.solutionmax.net/","description":"Self-hosted file sharing: send download links and collect files from clients under your own brand.","license":"https://www.apache.org/licenses/LICENSE-2.0","softwareVersion":"2.0.0","offers":[{"@type":"Offer","name":"Amfora","price":"0","priceCurrency":"EUR"},{"@type":"Offer","name":"Brandpack","price":"79","priceCurrency":"EUR","url":"https://amfora.solutionmax.net/brandpack/"}],"author":{"@type":"Organization","name":"SolutionMAX","url":"https://solutionmax.net"}}</script>
+</head>
+<body class="home">
+<a class="skip" href="#main">Skip to content</a>
+<header class="hdr"><div class="wrap"><a class="brand" href="/" aria-label="Amfora home"><svg viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"><path d="M38 14 H62"/><path d="M42 14 V24"/><path d="M58 14 V24"/><path d="M34 24 H66"/><path d="M28 38 C18 42 16 54 24 58"/><path d="M72 38 C82 42 84 54 76 58"/><path d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"/><rect x="41" y="83" width="18" height="7" rx="3.5"/></g></svg><span>amfora<i>.</i></span></a>
+<button class="menu-toggle" aria-controls="navigation" aria-expanded="false">Menu</button>
+<nav class="nav" id="navigation" aria-label="Main navigation"><a href="/#product" aria-current="page">Product</a><a href="/brandpack/">Brandpack</a><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a class="btn btn-p" href="/#run">Install</a></nav></div></header>
+
+
+<main id="main">
+<section class="stage grain hero"><div class="wrap">
+  <div><p class="eyebrow">Self-hosted file sharing</p><h1>Your files.<br><em>Your name.</em></h1>
+  <p class="quote">Send download links and collect files from clients, on your own server, under your own brand. No account for the people you send to.</p>
+  <div class="chips"><span class="chip"><b>&#10003;</b> No recipient accounts</span><span class="chip"><b>&#10003;</b> Your logo and colour</span><span class="chip"><b>&#10003;</b> Your storage</span><span class="chip"><b>&#10003;</b> Apache-2.0</span></div>
+  <div class="actions"><a class="btn btn-p btn-lg" href="#run">Install Amfora</a><a class="btn btn-o btn-lg" href="#product">See what it does</a></div></div>
+  <div class="scene" aria-hidden="true">
+    <div class="card sc-qr"><div class="qr"><i style="grid-area:1/1"></i><i style="grid-area:1/2"></i><i style="grid-area:1/3"></i><i style="grid-area:1/4"></i><i style="grid-area:1/5"></i><i style="grid-area:1/6"></i><i style="grid-area:1/7"></i><i style="grid-area:1/8"></i><i style="grid-area:1/9"></i><i style="grid-area:2/1"></i><i style="grid-area:2/2"></i><i style="grid-area:2/3"></i><i style="grid-area:2/6"></i><i style="grid-area:2/7"></i><i style="grid-area:2/8"></i><i style="grid-area:2/9"></i><i style="grid-area:3/1"></i><i style="grid-area:3/2"></i><i style="grid-area:3/3"></i><i style="grid-area:3/6"></i><i style="grid-area:3/7"></i><i style="grid-area:3/8"></i><i style="grid-area:3/9"></i><i style="grid-area:4/1"></i><i style="grid-area:4/2"></i><i style="grid-area:4/3"></i><i style="grid-area:4/4"></i><i style="grid-area:4/5"></i><i style="grid-area:4/6"></i><i style="grid-area:4/7"></i><i style="grid-area:4/8"></i><i style="grid-area:4/9"></i><i style="grid-area:5/3"></i><i style="grid-area:5/6"></i><i style="grid-area:5/9"></i><i style="grid-area:6/3"></i><i style="grid-area:6/6"></i><i style="grid-area:6/9"></i><i style="grid-area:7/1"></i><i style="grid-area:7/2"></i><i style="grid-area:7/3"></i><i style="grid-area:7/4"></i><i style="grid-area:7/5"></i><i style="grid-area:7/6"></i><i style="grid-area:7/7"></i><i style="grid-area:7/8"></i><i style="grid-area:7/9"></i><i style="grid-area:8/1"></i><i style="grid-area:8/2"></i><i style="grid-area:8/3"></i><i style="grid-area:8/6"></i><i style="grid-area:8/9"></i><i style="grid-area:9/1"></i><i style="grid-area:9/2"></i><i style="grid-area:9/3"></i><i style="grid-area:9/6"></i><i style="grid-area:9/9"></i></div><b>Scan to open</b><span>share.acme.studio/s/launch</span></div>
+    <div class="card sc-lock"><span class="tile tp">&#128274;</span><div><b style="font-size:13px">Protected</b><br><span>expires 27 Sep &middot; 20 views</span></div></div>
+    <div class="float sc-panel"><div class="cover grain"><div class="play">&#9654;</div><div class="name"><b>launch-video-final-v3.mp4</b>Video</div></div><div class="manifest">
+      <div class="row"><span class="tile tv">MP4</span><div class="n"><b>launch-video-final-v3.mp4</b><span>Video</span></div><span class="s mono">2.9 MB</span></div>
+      <div class="row"><span class="tile td">PDF</span><div class="n"><b>poster-a2-print.pdf</b><span>Document</span></div><span class="s mono">390.6 KB</span></div>
+      <div class="row"><span class="tile tz">ZIP</span><div class="n"><b>fonts-and-assets.zip</b><span>Archive</span></div><span class="s mono">117.2 KB</span></div>
+      <div class="total"><span>3 files</span><b class="mono">3.4 MB</b></div><button class="btn btn-p" style="width:100%" data-toast="The real page looks exactly like this. Install Amfora to send one.">&#8681;&nbsp; Download all</button></div></div>
+    <div class="card sc-count"><b id="cnt">23</b><span>downloads<br>counted, nothing tracked</span></div>
+    <div class="card sc-recv"><div class="h"><span>Incoming &middot; Acme Studio</span><span class="mono">2 of 20</span></div><div class="q"><span class="tile ti" style="width:28px;height:28px;border-radius:7px">JPG</span>selects-day1.jpg<span class="bar"><i style="--w:100%"></i></span><small>done</small></div><div class="q"><span class="tile tv" style="width:28px;height:28px;border-radius:7px">MOV</span>interview-raw.mov<span class="bar"><i style="--w:66%"></i></span><small>66%</small></div></div>
+    <div class="sc-toast">&#10003; Link copied</div>
+  </div>
+</div></section>
+
+<div class="strip"><div class="wrap"><div><small>Licence</small><b>Apache-2.0</b><span>the whole product, free</span></div><div><small>Install</small><b class="mono">1 command</b><span>Docker, bundled storage</span></div><div><small>Interface</small><b>23 languages</b><span>light and dark</span></div><div><small>Brandpack</small><b>&euro;79 once</b><span>your name, no credit</span></div></div></div>
+
+<section class="sec" id="product"><div class="wrap">
+  <div class="sec-head rv"><div><p class="eyebrow">What it does</p><h2>Everything a handoff needs.<br><em>Nothing it does not.</em></h2></div><p>Send, receive, know what was collected, and make it look like you. Real pieces of the interface below, not pictures of it.</p></div>
+  <div class="bento">
+    <div class="card b b-send rv"><p class="k">SEND</p><h3>A link with rules you set</h3><p>Password, end date, view limit, recipient notifications. The rest is one button.</p>
+      <div class="form"><div><label>Share name</label><div class="inp">Launch video final</div></div><div><label>Link</label><div class="inp mono" style="font-size:12px">/s/launch-video</div></div>
+      <div class="tog"><span class="on" data-t><i></i>Password</span><span class="on" data-t><i></i>Expires 27 Sep</span><span data-t><i></i>Max 20 views</span><span class="on" data-t><i></i>Notify recipients</span></div></div></div>
+    <div class="card b b-recv rv"><p class="k">RECEIVE</p><h3>Files come to you</h3><p>A link clients upload to. No account, limits are yours.</p><div class="drop"><b>Drop files here</b><span>up to 4.7 GB per file</span></div><div class="q" style="padding:8px 0 0"><span class="tile ti" style="width:28px;height:28px;border-radius:7px">JPG</span><span style="flex:1;font-size:13px">selects-day1.jpg</span><small class="mono" style="font-size:11px;color:var(--ok)">done</small></div></div>
+    <div class="card b b-count rv"><p class="k">KNOW</p><h3>Downloads, counted</h3><div class="big mono" data-count="1284">0</div><p>Per file, for you only. No who, no where.</p></div>
+    <div class="card b b-brand rv"><p class="k">BRAND</p><h3>Your colour, everywhere</h3><p>Name, logo, accent, radius and font, stored on the server. Pick a colour: every share page, email and link preview follows.</p>
+      <div class="bp"><div class="sw" id="sw"><button style="background:#0079d2" aria-pressed="true" data-c="#0079d2"></button><button style="background:#d9480f" data-c="#d9480f"></button><button style="background:#1a7f4b" data-c="#1a7f4b"></button><button style="background:#6941c6" data-c="#6941c6"></button><button style="background:#b42318" data-c="#b42318"></button><button style="background:#0c1626" data-c="#0c1626"></button></div>
+      <div class="mini" id="mini"><div class="l"><b>3 files,<br><em>ready for you.</em></b><span>via Acme Transfer</span></div><div class="r"><i></i><i style="width:70%"></i><i style="width:85%"></i><b></b></div></div></div></div>
+    <div class="card b b-store rv"><p class="k">STORAGE</p><h3>Bundled or S3</h3><div class="meter"><svg viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M38 14 H62M42 14 V24M58 14 V24M34 24 H66M28 38 C18 42 16 54 24 58M72 38 C82 42 84 54 76 58"/><path d="M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"/></g></svg><div class="bar"><i></i><span>85.7 GB of 118 GB &middot; MinIO, or any bucket</span></div></div></div>
+    <div class="card b b-upd rv"><p class="k">UPDATES</p><h3>Signed, one click</h3><div class="sig">eyJwdXJwb3NlIjoiYW1mb3JhLXJlbGVhc2UiLCJ2ZXJzaW9uIjoiMi4wLjAi&hellip; <b>&#10003; verified</b></div></div>
+    <div class="card b b-lang rv"><p class="k">INTERFACE</p><h3>23 languages</h3><div class="flags"><span>English</span><span>Nederlands</span><span>Deutsch</span><span>Espa&ntilde;ol</span><span>Fran&ccedil;ais</span><span>Portugu&ecirc;s</span><span>&#26085;&#26412;&#35486;</span><span>&#1593;&#1585;&#1576;&#1610;</span><span>+15</span></div></div>
+  </div>
+</div></section>
+
+<section class="sec stage-soft grain" style="padding-top:64px"><div class="wrap">
+  <div class="sec-head rv"><div><p class="eyebrow">The workspace</p><h2>One place for<br><em>every handoff.</em></h2></div><p>Dashboard, files, shares, receive links, users and customization. The screens change by themselves; click a tab to hold one.</p></div>
+  <div class="shows rv">
+    <div class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" aria-selected="true" data-i="0"><b>Dashboard</b><span>Greeting, two actions, four figures</span><i></i></button>
+      <button class="tab" role="tab" aria-selected="false" data-i="1"><b>Files</b><span>Type tiles, sizes, download counts</span><i></i></button>
+      <button class="tab" role="tab" aria-selected="false" data-i="2"><b>Download page</b><span>What your recipient sees</span><i></i></button>
+      <button class="tab" role="tab" aria-selected="false" data-i="3"><b>Receive page</b><span>What your client sees</span><i></i></button>
+      <button class="tab" role="tab" aria-selected="false" data-i="4"><b>Customization</b><span>Everything on the server</span><i></i></button>
+    </div>
+    <figure class="float" style="margin:0"><div class="frame-top"><span id="showlabel">AMFORA / DASHBOARD</span><span>real interface, demo data</span></div><div class="show" id="show"><img class="on" src="https://amfora.solutionmax.net/assets/screenshots/dashboard.webp?v=2.0.0" alt=""><img src="https://amfora.solutionmax.net/assets/screenshots/files.webp?v=2.0.0" alt=""><img src="https://amfora.solutionmax.net/assets/screenshots/download.webp?v=2.0.0" alt=""><img src="https://amfora.solutionmax.net/assets/screenshots/upload.webp?v=2.0.0" alt=""><img src="https://amfora.solutionmax.net/assets/screenshots/customization.webp?v=2.0.0" alt=""></div></figure>
+  </div>
+</div>
+</div></section>
+
+<section class="sec brandsec" id="brand"><div class="wrap">
+  <div class="rv"><p class="eyebrow">Brandpack</p><h2>Ours off the page.<br><em>Yours on it.</em></h2><p class="quote">Name, logo, colour, radius and font are free for everyone. The brandpack removes "Powered by Amfora" and adds a background image and your own CSS.</p>
+  <ul class="ticks"><li>One organisation, every installation</li><li>Never expires, also not across versions</li><li>Verified locally, no phone-home</li></ul><div class="price"><b>&euro;79</b> once</div> <a class="btn btn-o btn-lg" style="margin:22px 0 0 8px;vertical-align:bottom" href="/brandpack/">Everything about the brandpack &rarr;</a></div>
+  <div class="cmp rv auto" id="cmp"><img src="https://amfora.solutionmax.net/assets/screenshots/brandpack-free.webp?v=2.0.0" alt=""><img class="after" src="https://amfora.solutionmax.net/assets/screenshots/brandpack-branded.webp?v=2.0.0" alt=""><span class="tag l">Free</span><span class="tag r">Brandpack</span><div class="bar"></div><div class="knob">&#8596;</div><input type="range" min="0" max="100" value="52" aria-label="Compare"></div>
+</div></section>
+
+<section class="run grain" id="run"><div class="glow"></div><div class="wrap">
+  <div class="rv"><p class="eyebrow">Run it</p><h2>One command.<br><em>Your server.</em></h2><p>Docker with bundled storage, or point it at any S3-compatible bucket. Updates are signed and one click. Nothing phones home.</p><div class="cmd"><code id="type" data-text="curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker"></code><span class="cur"></span><button data-copy="#type">Copy</button></div><div class="out" id="out"><span><b>&#10003;</b> Docker 27.3, Compose 2.29, Buildx 0.30</span><span><b>&#10003;</b> Image built, storage bucket created</span><span><b>&#10003;</b> Amfora is up on http://localhost:5487</span></div></div>
+  <div class="stack rv"><div><span class="k">STORAGE</span><div><b>Bundled MinIO or S3</b><span>Backblaze, Hetzner, Wasabi, AWS. Your files never sit with us.</span></div></div><div><span class="k">UPDATES</span><div><b>Signed manifest, exact image</b><span>Press Update; the host pulls with a backup first.</span></div></div><div><span class="k">ACCESS</span><div><b>Invites, roles, 2FA, OIDC</b><span>Google, GitHub, Authentik and any OIDC provider.</span></div></div><div><span class="k">SOURCE</span><div><b>Apache-2.0 on GitHub</b><span>Fork it, change it, run it for customers.</span></div></div></div>
+</div></section>
+
+<div class="ticker" aria-hidden="true"><div class="t"><span><span class="tile tv">MP4</span>Video with a real cover</span><span><span class="tile td">PDF</span>Documents</span><span><span class="tile tz">ZIP</span>Archives</span><span><span class="tile ti">JPG</span>Images as their own cover</span><span><span class="tile tp">QR</span>QR codes</span><span><span class="tile tp">2FA</span>Two-factor sign-in</span><span><span class="tile tp">S3</span>Any S3 bucket</span><span><span class="tile tp">OTA</span>Signed updates</span><span><span class="tile tp">23</span>Languages</span><span><span class="tile tp">0</span>Recipient accounts</span><span><span class="tile tv">MP4</span>Video with a real cover</span><span><span class="tile td">PDF</span>Documents</span><span><span class="tile tz">ZIP</span>Archives</span><span><span class="tile ti">JPG</span>Images as their own cover</span><span><span class="tile tp">QR</span>QR codes</span><span><span class="tile tp">2FA</span>Two-factor sign-in</span><span><span class="tile tp">S3</span>Any S3 bucket</span><span><span class="tile tp">OTA</span>Signed updates</span><span><span class="tile tp">23</span>Languages</span><span><span class="tile tp">0</span>Recipient accounts</span></div></div>
+<section class="sec"><div class="wrap faq">
+  <div class="rv"><p class="eyebrow">Before you start</p><h2>Straight<br><em>answers.</em></h2></div>
+  <div class="rv"><details><summary>Is Amfora a hosted service?</summary><p>No. It runs on your own server or VPS, with bundled storage or a bucket you own.</p></details><details><summary>Do the people I send to need an account?</summary><p>Never. A download link opens in the browser; a receive link lets them upload without signing up.</p></details><details><summary>Is it really free?</summary><p>Yes, all of it, under Apache-2.0. The free version shows "Powered by Amfora" on public pages; the brandpack removes that for &euro;79 once.</p></details><details><summary>How do updates work?</summary><p>The app checks a signed manifest and can apply it in one click when the host updater is installed. Otherwise you pull the image yourself.</p></details></div>
+</div></section>
+<section class="cta"><div class="wrap"><div class="tile-hero grain rv"><svg class="mark" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M38 14 H62 M42 14 V24 M58 14 V24 M34 24 H66 M28 38 C18 42 16 54 24 58 M72 38 C82 42 84 54 76 58 M46 28 C34 35 28 50 34 64 C37 72 41 79 44 84 H56 C59 79 63 72 66 64 C72 50 66 35 54 28 Z"/></g></svg><div><p class="eyebrow" style="color:#fff;opacity:.8">Get started</p><h2>Ten minutes from an empty server<br>to your first share.</h2></div><div class="actions" style="margin:0"><a class="btn btn-o btn-lg" href="#run">Install Amfora</a><a class="btn ghost btn-lg" href="/docs/">Read the docs &rarr;</a></div></div></div></section>
+</main>
+<footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.0 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+<p class="toast" role="status" aria-live="polite"></p>
+</body>
 </html>
