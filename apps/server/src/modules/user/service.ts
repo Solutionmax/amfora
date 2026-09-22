@@ -40,6 +40,13 @@ export class UserService {
       isAdmin,
     });
 
+    if (isAdmin) {
+      // The setup window closes the moment the first administrator exists. Leaving it to the
+      // browser to switch the flag off kept admin routes open whenever that second call did
+      // not happen, for example when the account was created through the API.
+      await prisma.appConfig.updateMany({ where: { key: "firstUserAccess" }, data: { value: "false" } });
+    }
+
     return UserResponseSchema.parse(user);
   }
 
