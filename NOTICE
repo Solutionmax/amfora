@@ -6,7 +6,9 @@ Copyright 2025 Daniel Luiz Alves (danielalves96) - Kyantech Solutions, Inc.
 Licensed under the Apache License, Version 2.0.
 
 The original project (https://github.com/kyantech/Palmr) was archived on
-2026-02-27. This is a modified fork: branding, theme, default settings and
+2026-02-27. Amfora starts from the Palmr source tree at upstream commit
+8ce00c4 (Palmr 3.3.2-beta plus the archive notice); that snapshot is the
+first commit of this repository. This is a modified fork: branding, theme, default settings and
 several source files have been changed by SolutionMAX. A copy of the Apache
 License 2.0 is included in the LICENSE file.
 
