@@ -1,50 +1,19 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 
-import { prisma } from "../../shared/prisma";
+import { createAdminGuard } from "../../shared/admin-guard";
 import { AppController } from "./controller";
 import { BulkUpdateConfigSchema, ConfigResponseSchema } from "./dto";
 
 export async function appRoutes(app: FastifyInstance) {
   const appController = new AppController();
 
-  const adminPreValidation = async (request: any, reply: any) => {
-    try {
-      // First run only: no user yet, or the one user just registered and the setup
-      // flag is still on. Every other single-admin installation needs a real admin.
-      const usersCount = await prisma.user.count();
-      if (usersCount === 0) return;
-      if (usersCount === 1) {
-        const first = await prisma.appConfig.findUnique({ where: { key: "firstUserAccess" } });
-        if (first?.value === "true") return;
-      }
-
-      await request.jwtVerify();
-
-      if (!request.user.isAdmin) {
-        return reply.status(403).send({
-          error: "Access restricted to administrators",
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      return reply.status(401).send({
-        error: "Unauthorized",
-      });
-    }
-  };
+  // First run only: no user yet, or the one user just registered and the setup flag is
+  // still on. Every other single-admin installation needs a real, current admin.
+  const adminPreValidation = createAdminGuard({ firstRun: "setup" });
 
   /** No first-run exception here: nothing about a brandpack or a background belongs to setup. */
-  const strictAdminPreValidation = async (request: any, reply: any) => {
-    try {
-      await request.jwtVerify();
-    } catch {
-      return reply.status(401).send({ error: "Unauthorized" });
-    }
-    if (!request.user?.isAdmin) {
-      return reply.status(403).send({ error: "Access restricted to administrators" });
-    }
-  };
+  const strictAdminPreValidation = createAdminGuard();
 
   app.get(
     "/app/info",

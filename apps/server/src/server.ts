@@ -4,20 +4,7 @@ import fastifyMultipart from "@fastify/multipart";
 
 import { buildApp } from "./app";
 import { directoriesConfig } from "./config/directories.config";
-import { appRoutes } from "./modules/app/routes";
-import { authProvidersRoutes } from "./modules/auth-providers/routes";
-import { authRoutes } from "./modules/auth/routes";
-import { fileRoutes } from "./modules/file/routes";
-import { folderRoutes } from "./modules/folder/routes";
-import { healthRoutes } from "./modules/health/routes";
-import { inviteRoutes } from "./modules/invite/routes";
-import { reverseShareRoutes } from "./modules/reverse-share/routes";
-import { s3StorageRoutes } from "./modules/s3-storage/routes";
-import { shareRoutes } from "./modules/share/routes";
-import { storageRoutes } from "./modules/storage/routes";
-import { twoFactorRoutes } from "./modules/two-factor/routes";
-import { updateRoutes } from "./modules/update/routes";
-import { userRoutes } from "./modules/user/routes";
+import { registerRoutes } from "./routes";
 
 if (typeof globalThis.crypto === "undefined") {
   globalThis.crypto = crypto.webcrypto as any;
@@ -65,20 +52,7 @@ async function startServer() {
     },
   });
 
-  app.register(authRoutes);
-  app.register(authProvidersRoutes, { prefix: "/auth" });
-  app.register(twoFactorRoutes, { prefix: "/auth" });
-  app.register(inviteRoutes);
-  app.register(userRoutes);
-  app.register(folderRoutes);
-  app.register(fileRoutes);
-  app.register(shareRoutes);
-  app.register(reverseShareRoutes);
-  app.register(storageRoutes);
-  app.register(appRoutes);
-  app.register(healthRoutes);
-  app.register(s3StorageRoutes);
-  app.register(updateRoutes);
+  registerRoutes(app);
 
   if (isInternalStorage) {
     console.log("📦 Using internal storage (auto-configured)");

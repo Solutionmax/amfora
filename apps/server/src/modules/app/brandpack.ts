@@ -1,4 +1,5 @@
 import { verifySigned } from "../update/manifest";
+import { BRANDPACK_PUBLIC_KEY } from "./brandpack-key";
 
 /** A brandpack signed for another purpose (a release manifest, say) is not a brandpack. */
 export const BRANDPACK_PURPOSE = "amfora-brandpack";
@@ -12,8 +13,9 @@ export interface Brandpack {
  * A brandpack is what a paying customer receives: a signed statement that this
  * organisation may run Amfora without the credit and with the paid customization.
  * It never expires and is not bound to a domain; the signature is the whole check.
+ * The key parameter exists for tests; production code relies on the built-in key.
  */
-export function verifyBrandpack(token: string, publicKeyHex: string): Brandpack | null {
+export function verifyBrandpack(token: string, publicKeyHex: string = BRANDPACK_PUBLIC_KEY): Brandpack | null {
   const payload = verifySigned(token, publicKeyHex, BRANDPACK_PURPOSE);
   if (!payload) return null;
 
