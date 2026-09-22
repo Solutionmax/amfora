@@ -80,13 +80,16 @@ and the delivery email lives in `infra/mail/`:
 | `infra/mail/brandpack-issued.txt` | the plain-text alternative, first line is the subject |
 | `infra/mail/amfora-terms-<date>.txt` | the terms as sold, attached to the email; a new version is a new file, old ones stay |
 
-The flow mirrors the Pharos portal (`pharos-portal`, Laravel on edge-01): checkout on Stripe
-with the consumer consent checkbox for immediate delivery, `checkout.session.completed`
-webhook, the signer produces the pack for the organisation name given at checkout, the
-email above goes out with the terms attached, and the order reference (the Stripe session
-id) is stored with the terms version that was accepted. Until that is wired up, the buy
-buttons on the sales page open an email order; the key is then signed by hand with
-`node infra/sign-brandpack.js "<organisation>"` and pasted into the template.
+Sales run through the shared licence portal (`pharos-portal`, Laravel on edge-01), served
+under `https://amfora.solutionmax.net/account`. The buy buttons open
+`/account/buy/amfora-brandpack` and `/account/buy/amfora-setup`: a Stripe Checkout with the
+organisation name as a required field, the terms acceptance, and for the brandpack the
+express consent to immediate delivery. On `checkout.session.completed` the portal signs the
+pack for that organisation with the Amfora key (mounted read-only in the container), stores
+the licence, mails the key with the terms attached (the portal's own Blade version of the
+template above), and keeps the Stripe session id with the accepted terms version. Customers
+fetch their keys again at `/account` with a sign-in link. A pack can still be signed by hand
+with `node infra/sign-brandpack.js "<organisation>"` for a sale by invoice.
 
 What the signer needs on the machine that sends: the Ed25519 secret as a mounted read-only
 file, never in the image and never in git. The public half ships in `env.ts`; changing the
