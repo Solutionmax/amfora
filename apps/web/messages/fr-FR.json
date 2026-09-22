@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Retour à l'accueil",
       "password": {
-        "title": "Ce lien est",
-        "text": "protégé par un mot de passe. Demandez-le à la personne qui vous l'a envoyé."
+        "title": "Mot de passe requis.",
+        "text": "Ce lien est protégé par un mot de passe. Demandez-le à la personne qui vous l'a envoyé."
       },
       "missing": {
         "title": "Rien ici.",
         "text": "Ce lien n'existe pas, ou il a été supprimé."
+      },
+      "expired": {
+        "title": "Ce lien a expiré.",
+        "text": "L'expéditeur a défini une date de fin et celle-ci est passée. Demandez-lui un nouveau lien."
+      },
+      "maxViews": {
+        "title": "Ce lien est épuisé.",
+        "text": "Il ne pouvait être ouvert qu'un nombre limité de fois et cette limite est atteinte. Demandez un nouveau lien à l'expéditeur."
       }
     }
   },

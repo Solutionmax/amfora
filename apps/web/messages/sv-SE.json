@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Tillbaka till start",
       "password": {
-        "title": "Den här länken är",
-        "text": "skyddad med ett lösenord. Fråga personen som skickade den."
+        "title": "Lösenord krävs.",
+        "text": "Den här länken är skyddad med ett lösenord. Fråga personen som skickade den."
       },
       "missing": {
         "title": "Inget här.",
         "text": "Länken finns inte, eller så har den tagits bort."
+      },
+      "expired": {
+        "title": "Den här länken har gått ut.",
+        "text": "Avsändaren angav ett slutdatum och det har passerat. Be avsändaren om en ny länk."
+      },
+      "maxViews": {
+        "title": "Den här länken är förbrukad.",
+        "text": "Den kunde bara öppnas ett begränsat antal gånger och den gränsen har nåtts. Be avsändaren om en ny länk."
       }
     }
   },

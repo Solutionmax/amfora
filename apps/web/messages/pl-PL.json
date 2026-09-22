@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Powrót do początku",
       "password": {
-        "title": "Ten link jest",
-        "text": "chroniony hasłem. Zapytaj osobę, która go wysłała."
+        "title": "Wymagane hasło.",
+        "text": "Ten link jest chroniony hasłem. Zapytaj osobę, która go wysłała."
       },
       "missing": {
         "title": "Nic tutaj nie ma.",
         "text": "Ten link nie istnieje albo został usunięty."
+      },
+      "expired": {
+        "title": "Ten link wygasł.",
+        "text": "Nadawca ustawił datę wygaśnięcia i ona już minęła. Poproś go o nowy link."
+      },
+      "maxViews": {
+        "title": "Ten link został wyczerpany.",
+        "text": "Mógł zostać otwarty ograniczoną liczbę razy i ten limit został osiągnięty. Poproś nadawcę o nowy link."
       }
     }
   },

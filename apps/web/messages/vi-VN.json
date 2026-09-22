@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Về trang chủ",
       "password": {
-        "title": "Liên kết này được",
-        "text": "bảo vệ bằng mật khẩu. Hãy hỏi người đã gửi cho bạn."
+        "title": "Cần mật khẩu.",
+        "text": "Liên kết này được bảo vệ bằng mật khẩu. Hãy hỏi người đã gửi cho bạn."
       },
       "missing": {
         "title": "Không có gì ở đây.",
         "text": "Liên kết này không tồn tại, hoặc đã bị gỡ bỏ."
+      },
+      "expired": {
+        "title": "Liên kết này đã hết hạn.",
+        "text": "Người gửi đã đặt ngày hết hạn và ngày đó đã qua. Hãy xin họ một liên kết mới."
+      },
+      "maxViews": {
+        "title": "Liên kết này đã hết lượt sử dụng.",
+        "text": "Liên kết này chỉ có thể mở một số lần giới hạn và đã đạt đến giới hạn đó. Hãy xin người gửi một liên kết mới."
       }
     }
   },

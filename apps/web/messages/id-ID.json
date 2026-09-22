@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Kembali ke awal",
       "password": {
-        "title": "Tautan ini",
-        "text": "dilindungi dengan kata sandi. Tanyakan kepada orang yang mengirimkannya."
+        "title": "Diperlukan kata sandi.",
+        "text": "Tautan ini dilindungi dengan kata sandi. Tanyakan kepada orang yang mengirimkannya."
       },
       "missing": {
         "title": "Tidak ada apa-apa di sini.",
         "text": "Tautan ini tidak ada, atau telah dihapus."
+      },
+      "expired": {
+        "title": "Tautan ini telah kedaluwarsa.",
+        "text": "Pengirim menetapkan tanggal berakhir dan tanggal itu telah lewat. Minta tautan baru kepadanya."
+      },
+      "maxViews": {
+        "title": "Tautan ini telah habis.",
+        "text": "Tautan ini hanya bisa dibuka sejumlah kali terbatas dan batas itu telah tercapai. Minta tautan baru kepada pengirim."
       }
     }
   },

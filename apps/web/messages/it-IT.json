@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Torna all'inizio",
       "password": {
-        "title": "Questo link è",
-        "text": "protetto da una password. Chiedila a chi te lo ha inviato."
+        "title": "Password richiesta.",
+        "text": "Questo link è protetto da una password. Chiedila a chi te lo ha inviato."
       },
       "missing": {
         "title": "Niente qui.",
         "text": "Questo link non esiste, oppure è stato rimosso."
+      },
+      "expired": {
+        "title": "Questo link è scaduto.",
+        "text": "Il mittente ha impostato una data di scadenza ed è già passata. Chiedigli un nuovo link."
+      },
+      "maxViews": {
+        "title": "Questo link è esaurito.",
+        "text": "Poteva essere aperto un numero limitato di volte e quel limite è stato raggiunto. Chiedi un nuovo link al mittente."
       }
     }
   },

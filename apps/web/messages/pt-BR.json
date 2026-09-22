@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Voltar ao início",
       "password": {
-        "title": "Este link está",
-        "text": "protegido por senha. Peça para quem te enviou o link."
+        "title": "Senha necessária.",
+        "text": "Este link está protegido por senha. Peça para quem te enviou o link."
       },
       "missing": {
         "title": "Nada por aqui.",
         "text": "Este link não existe ou foi removido."
+      },
+      "expired": {
+        "title": "Este link expirou.",
+        "text": "Quem enviou definiu uma data de término e ela já passou. Peça um novo link a essa pessoa."
+      },
+      "maxViews": {
+        "title": "Este link se esgotou.",
+        "text": "Ele podia ser aberto um número limitado de vezes e esse limite foi atingido. Peça um novo link a quem enviou."
       }
     }
   },

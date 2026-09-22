@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Başa Dön",
       "password": {
-        "title": "Bu Bağlantı",
-        "text": "bir şifreyle korunuyor. Gönderen kişiye sorun."
+        "title": "Şifre Gerekli.",
+        "text": "Bu bağlantı bir şifreyle korunuyor. Gönderen kişiye sorun."
       },
       "missing": {
         "title": "Burada Bir Şey Yok.",
         "text": "Bu bağlantı mevcut değil veya kaldırılmış."
+      },
+      "expired": {
+        "title": "Bu Bağlantının Süresi Doldu.",
+        "text": "Gönderen bir bitiş tarihi belirledi ve bu tarih geçti. Ondan yeni bir bağlantı isteyin."
+      },
+      "maxViews": {
+        "title": "Bu Bağlantı Tükendi.",
+        "text": "Yalnızca sınırlı sayıda açılabiliyordu ve bu sınıra ulaşıldı. Gönderen kişiden yeni bir bağlantı isteyin."
       }
     }
   },
