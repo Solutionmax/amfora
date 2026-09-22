@@ -33,9 +33,6 @@ browser link where they can send files back without creating an account.
   <img src="site/assets/screenshots/dashboard.webp?v=2.0.0" alt="Amfora workspace dashboard" width="100%" />
 </p>
 
-Amfora is a maintained fork of [Palmr](https://github.com/kyantech/Palmr).
-See [NOTICE](NOTICE) for attribution and bundled MinIO licensing information.
-
 ## The workflow
 
 ### 1. Keep files in one workspace
@@ -221,6 +218,12 @@ cd apps/server && pnpm install && pnpm dev   # http://localhost:3333
 Run server tests with `cd apps/server && pnpm test`. Before opening a change,
 the web checks `pnpm format:check` and `pnpm type-check` are useful alongside
 the repository’s normal build and lint commands.
+
+## Origins
+
+Amfora began as a fork of [Palmr](https://github.com/kyantech/Palmr), archived in
+February 2026, and has been developed independently since. Attribution and
+modification notices are in [NOTICE](NOTICE).
 
 ## Licence and attribution
 
