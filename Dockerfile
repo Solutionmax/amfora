@@ -3,7 +3,7 @@
 FROM quay.io/minio/minio:RELEASE.2024-10-13T13-34-11Z@sha256:9535594ad4122b7a78c6632788a989b96d9199b483d3bd71a5ceae73a922cdfa AS storage-server
 FROM quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727 AS storage-client
 
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 
 # Install system dependencies
 RUN apk add --no-cache \
