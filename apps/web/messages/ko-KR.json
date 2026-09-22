@@ -255,6 +255,18 @@
         "font": "글꼴",
         "fontDefault": "기본값 (Archivo와 Public Sans)"
       },
+      "downloadPage": {
+        "title": "다운로드 페이지",
+        "cover": "다운로드 페이지 커버",
+        "coverHint": "모든 다운로드 페이지 상단에 파일 이름과 함께 표시됩니다. WhatsApp, Slack 등의 앱에서 링크 미리보기로도 사용됩니다. 너비 1200 px 이상을 권장하며 최대 3 MB입니다.",
+        "linkPreview": "기본 링크 미리보기 이미지",
+        "linkPreviewHint": "커버가 설정되지 않은 상태에서 다운로드 또는 수신 링크를 WhatsApp, Slack 등의 앱에 붙여 넣으면 표시됩니다. 1200 × 630 px를 권장하며 최대 3 MB입니다.",
+        "upload": "이미지 업로드",
+        "replace": "이미지 교체",
+        "remove": "삭제",
+        "playback": "다운로드 페이지에서 동영상과 오디오 재생",
+        "playbackHint": "끄면 동영상과 오디오 파일은 다운로드만 할 수 있으며 재생 버튼과 미리보기가 없습니다. 이미지, PDF, 텍스트는 계속 미리볼 수 있습니다."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "유료",

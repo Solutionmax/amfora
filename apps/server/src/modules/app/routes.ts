@@ -2,8 +2,17 @@ import { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import { createAdminGuard } from "../../shared/admin-guard";
+import { backgroundImage, BrandingImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { AppController } from "./controller";
 import { BulkUpdateConfigSchema, ConfigResponseSchema } from "./dto";
+
+const linkPreviewInfo = z
+  .object({
+    width: z.number().describe("Width of the og:image rendition"),
+    height: z.number().describe("Height of the og:image rendition"),
+    version: z.string().describe("Changes on every upload, for cache busting"),
+  })
+  .nullable();
 
 export async function appRoutes(app: FastifyInstance) {
   const appController = new AppController();
@@ -37,6 +46,9 @@ export async function appRoutes(app: FastifyInstance) {
               .boolean()
               .describe("Whether a public-page background image is set (needs a valid brandpack)"),
             appCustomCss: z.string().describe("Custom CSS, sanitised, empty without a valid brandpack"),
+            appShareCover: linkPreviewInfo.describe("The download page cover (free), or null"),
+            appLinkPreview: linkPreviewInfo.describe("The default link preview image (free), or null"),
+            appSharePlayback: z.boolean().describe("Whether video and audio play on public download pages"),
             brandpack: z
               .object({ organisation: z.string(), issuedAt: z.string() })
               .nullable()
@@ -269,48 +281,95 @@ export async function appRoutes(app: FastifyInstance) {
     403: z.object({ error: z.string().describe("Error message") }),
   };
 
-  app.get(
-    "/app/background",
+  const brandingImages: Array<{
+    path: string;
+    image: BrandingImage;
+    operation: string;
+    title: string;
+    note: string;
+  }> = [
     {
-      schema: {
-        tags: ["App"],
-        operationId: "getBackground",
-        summary: "Public-page background image",
-        description: "Streams the uploaded background image, or 404 when there is none",
-      },
+      path: "/app/background",
+      image: backgroundImage,
+      operation: "Background",
+      title: "public-page background image",
+      note: "brandpack needed for it to show",
     },
-    appController.getBackground.bind(appController)
-  );
+    {
+      path: "/app/share-cover",
+      image: shareCoverImage,
+      operation: "ShareCover",
+      title: "download page cover image",
+      note: "shown on every download page and used for link previews",
+    },
+    {
+      path: "/app/link-preview",
+      image: linkPreviewImage,
+      operation: "LinkPreview",
+      title: "default link preview image",
+      note: "og:image when no cover is set",
+    },
+  ];
 
-  app.post(
-    "/app/background",
-    {
-      preValidation: strictAdminPreValidation,
-      schema: {
-        tags: ["App"],
-        operationId: "uploadBackground",
-        summary: "Upload the public-page background image",
-        description: "Upload a background image (admin only, brandpack needed for it to show)",
-        response: { 200: z.object({ message: z.string() }), ...adminErrors },
+  for (const { path, image, operation, title, note } of brandingImages) {
+    app.get(
+      path,
+      {
+        schema: {
+          tags: ["App"],
+          operationId: `get${operation}`,
+          summary: `The ${title}`,
+          description: `Streams the ${title} as WebP, or 404 when there is none`,
+        },
       },
-    },
-    appController.uploadBackground.bind(appController)
-  );
+      appController.getBrandingImage(image)
+    );
 
-  app.delete(
-    "/app/background",
-    {
-      preValidation: strictAdminPreValidation,
-      schema: {
-        tags: ["App"],
-        operationId: "removeBackground",
-        summary: "Remove the public-page background image",
-        description: "Remove the background image (admin only)",
-        response: { 200: z.object({ message: z.string() }), ...adminErrors },
+    if (image.options.withLinkPreview) {
+      app.get(
+        `${path}/og`,
+        {
+          schema: {
+            tags: ["App"],
+            operationId: `get${operation}LinkPreview`,
+            summary: `The ${title} for og:image`,
+            description: `Streams a 1200 px JPEG of the ${title}, or 404 when there is none`,
+          },
+        },
+        appController.getBrandingLinkPreview(image)
+      );
+    }
+
+    app.post(
+      path,
+      {
+        preValidation: strictAdminPreValidation,
+        schema: {
+          tags: ["App"],
+          operationId: `upload${operation}`,
+          summary: `Upload the ${title}`,
+          description: `Upload the ${title} (admin only, ${note}); max 3 MB`,
+          response: { 200: z.object({ message: z.string() }), ...adminErrors },
+        },
       },
-    },
-    appController.removeBackground.bind(appController)
-  );
+      appController.uploadBrandingImage(image)
+    );
+
+    app.delete(
+      path,
+      {
+        preValidation: strictAdminPreValidation,
+        schema: {
+          tags: ["App"],
+          operationId: `remove${operation}`,
+          summary: `Remove the ${title}`,
+          description: `Remove the ${title} (admin only)`,
+          response: { 200: z.object({ message: z.string() }), ...adminErrors },
+        },
+      },
+      appController.removeBrandingImage(image)
+    );
+  }
 
   app.put(
     "/app/brandpack",

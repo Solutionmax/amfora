@@ -1,10 +1,14 @@
+import type { LinkPreviewInfo } from "@/http/endpoints/app/types";
 import { DEFAULT_BRAND } from "./brand";
 
 /**
- * Unfurl bots (Slack, WhatsApp, Discord) fetch og:image over HTTP. An uploaded
- * app logo is stored as a `data:` URI, which renders as a broken image everywhere,
- * so it is served through `/api/app/logo` instead. No logo at all falls back to
- * the static product card.
+ * Unfurl bots (Slack, WhatsApp, Discord) fetch og:image over HTTP, so every candidate is
+ * an absolute URL on this origin. The order is: the download page cover, the default link
+ * preview image, the app logo, the static product card. A file from the share itself is
+ * never used: whoever pastes a link must not publish its contents by doing so.
+ *
+ * An uploaded app logo is stored as a `data:` URI, which renders as a broken image
+ * everywhere, so it is served through `/api/app/logo` instead.
  */
 export interface OgImage {
   url: string;
@@ -13,19 +17,31 @@ export interface OgImage {
   alt: string;
 }
 
-export function buildOgImage(
-  baseUrl: string,
-  previewObjectName?: string | null,
-  appLogo?: string | null,
-  appName?: string | null
-): OgImage {
+export interface OgImageSources {
+  cover?: LinkPreviewInfo | null;
+  linkPreview?: LinkPreviewInfo | null;
+  appLogo?: string | null;
+  appName?: string | null;
+}
+
+function uploaded(baseUrl: string, path: string, info: LinkPreviewInfo, alt: string): OgImage {
+  return {
+    url: `${baseUrl}${path}?v=${encodeURIComponent(info.version)}`,
+    width: info.width,
+    height: info.height,
+    alt,
+  };
+}
+
+export function buildOgImage(baseUrl: string, { cover, linkPreview, appLogo, appName }: OgImageSources = {}): OgImage {
   const alt = appName || DEFAULT_BRAND.name;
 
-  if (previewObjectName) {
-    return {
-      url: `${baseUrl}/api/files/download?objectName=${encodeURIComponent(previewObjectName)}&preview=1`,
-      alt: "Shared file",
-    };
+  if (cover) {
+    return uploaded(baseUrl, "/api/app/share-cover/og", cover, alt);
+  }
+
+  if (linkPreview) {
+    return uploaded(baseUrl, "/api/app/link-preview/og", linkPreview, alt);
   }
 
   if (appLogo && /^https?:\/\//i.test(appLogo)) {

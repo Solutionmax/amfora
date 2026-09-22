@@ -255,6 +255,18 @@
         "font": "字体",
         "fontDefault": "默认（Archivo 与 Public Sans）"
       },
+      "downloadPage": {
+        "title": "下载页面",
+        "cover": "下载页面封面",
+        "coverHint": "显示在每个下载页面顶部，文件名叠加在上面。也会用作 WhatsApp、Slack 等应用中的链接预览。建议宽度至少 1200 px；最大 3 MB。",
+        "linkPreview": "默认链接预览图",
+        "linkPreviewHint": "未设置封面时，将下载或接收链接粘贴到 WhatsApp、Slack 等应用中会显示此图。建议 1200 × 630 px；最大 3 MB。",
+        "upload": "上传图片",
+        "replace": "替换图片",
+        "remove": "移除",
+        "playback": "在下载页面播放视频和音频",
+        "playbackHint": "关闭时，视频和音频文件只能下载：没有播放按钮，也没有预览。图片、PDF 和文本仍可预览。"
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "付费",

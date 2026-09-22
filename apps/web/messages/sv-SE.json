@@ -255,6 +255,18 @@
         "font": "Teckensnitt",
         "fontDefault": "Standard (Archivo och Public Sans)"
       },
+      "downloadPage": {
+        "title": "Nedladdningssida",
+        "cover": "Omslagsbild för nedladdningssidan",
+        "coverHint": "Visas överst på varje nedladdningssida, med filnamnet ovanpå. Används också som länkförhandsvisning i WhatsApp, Slack och liknande appar. Minst 1200 px bred fungerar bäst; upp till 3 MB.",
+        "linkPreview": "Standardbild för länkförhandsvisning",
+        "linkPreviewHint": "Visas när en nedladdnings- eller mottagningslänk klistras in i WhatsApp, Slack och liknande appar och inget omslag är valt. 1200 × 630 px fungerar bäst; upp till 3 MB.",
+        "upload": "Ladda upp bild",
+        "replace": "Byt bild",
+        "remove": "Ta bort",
+        "playback": "Spela upp video och ljud på nedladdningssidor",
+        "playbackHint": "Av: video- och ljudfiler kan bara laddas ned, utan uppspelningsknapp och utan förhandsvisning. Bilder, PDF:er och text behåller sin förhandsvisning."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Betald",

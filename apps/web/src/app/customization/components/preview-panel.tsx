@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { BrandCredit } from "@/components/brand/brand-credit";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Cover } from "@/components/brand/cover";
+import { coverImageSrc } from "@/components/brand/cover-pick";
 import { FileManifest } from "@/components/brand/file-manifest";
 import { Button } from "@/components/ui/button";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -12,7 +13,7 @@ import { useAppInfo } from "@/contexts/app-info-context";
 /** A small download page that reads the live brand, so every change is visible at once. */
 export function PreviewPanel() {
   const t = useTranslations();
-  const { appName, appBackground } = useAppInfo();
+  const { appName, appBackground, appShareCover } = useAppInfo();
 
   return (
     <div className="card-soft rounded-[calc(var(--radius)+4px)] border border-line bg-surface p-4">
@@ -31,6 +32,7 @@ export function PreviewPanel() {
         <div className="float">
           <Cover
             compact
+            coverSrc={coverImageSrc(appShareCover)}
             files={[
               { name: "launch-video.mp4", kind: "video" },
               { name: "poster.pdf", kind: "document" },

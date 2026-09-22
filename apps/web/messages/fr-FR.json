@@ -255,6 +255,18 @@
         "font": "Police",
         "fontDefault": "Par défaut (Archivo et Public Sans)"
       },
+      "downloadPage": {
+        "title": "Page de téléchargement",
+        "cover": "Image de couverture de la page de téléchargement",
+        "coverHint": "Affichée en haut de chaque page de téléchargement, avec le nom du fichier par dessus. Sert aussi d'aperçu du lien dans WhatsApp, Slack et les applications similaires. Idéalement au moins 1200 px de large ; jusqu'à 3 Mo.",
+        "linkPreview": "Image d'aperçu de lien par défaut",
+        "linkPreviewHint": "Affichée lorsqu'un lien de téléchargement ou de réception est collé dans WhatsApp, Slack et les applications similaires et qu'aucune couverture n'est définie. Idéalement 1200 × 630 px ; jusqu'à 3 Mo.",
+        "upload": "Téléverser une image",
+        "replace": "Remplacer l'image",
+        "remove": "Supprimer",
+        "playback": "Lire la vidéo et l'audio sur les pages de téléchargement",
+        "playbackHint": "Désactivé, les fichiers vidéo et audio peuvent seulement être téléchargés : pas de bouton de lecture ni d'aperçu. Les images, les PDF et le texte gardent leur aperçu."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Payant",

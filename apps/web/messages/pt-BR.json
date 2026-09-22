@@ -255,6 +255,18 @@
         "font": "Fonte",
         "fontDefault": "Padrão (Archivo e Public Sans)"
       },
+      "downloadPage": {
+        "title": "Página de download",
+        "cover": "Capa da página de download",
+        "coverHint": "Exibida no topo de cada página de download, com o nome do arquivo por cima. Também usada como prévia do link no WhatsApp, Slack e apps semelhantes. O ideal é pelo menos 1200 px de largura; até 3 MB.",
+        "linkPreview": "Imagem padrão para prévia de links",
+        "linkPreviewHint": "Exibida quando um link de download ou de recebimento é colado no WhatsApp, Slack e apps semelhantes e nenhuma capa está definida. O ideal é 1200 × 630 px; até 3 MB.",
+        "upload": "Enviar imagem",
+        "replace": "Substituir imagem",
+        "remove": "Remover",
+        "playback": "Reproduzir vídeo e áudio nas páginas de download",
+        "playbackHint": "Desativado, arquivos de vídeo e áudio só podem ser baixados: sem botão de reprodução e sem prévia. Imagens, PDFs e texto mantêm a prévia."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Pago",

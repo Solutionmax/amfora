@@ -59,6 +59,14 @@ const defaultConfigs = [
     group: "general",
   },
   {
+    // Off by default, also for installs from before the switch existed: a download page
+    // offers the file, it does not stream it.
+    key: "appSharePlayback",
+    value: "false",
+    type: "boolean",
+    group: "general",
+  },
+  {
     key: "hideVersion",
     value: "false",
     type: "boolean",

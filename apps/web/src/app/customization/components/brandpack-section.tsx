@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IconCheck, IconLock } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { activateBrandpack, removeBackground, removeBrandpack, updateConfig, uploadBackground } from "@/http/endpoints";
 import { DEFAULT_BRAND } from "@/lib/brand";
+import { ImageUploadField } from "./image-upload-field";
 import { Section } from "./section";
 
 const BRANDPACK_URL = `${DEFAULT_BRAND.url}brandpack`;
@@ -23,7 +24,6 @@ export function BrandpackSection() {
   const [token, setToken] = useState("");
   const [css, setCss] = useState(appCustomCss);
   const [busy, setBusy] = useState(false);
-  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => setCss(appCustomCss), [appCustomCss]);
 
@@ -106,46 +106,19 @@ export function BrandpackSection() {
           />
         </div>
 
-        <div className="space-y-1.5">
-          <Label>{t("customization.v2.pack.background")}</Label>
-          <p className="text-xs text-ink-3">{t("customization.v2.pack.backgroundHint")}</p>
-          <input
-            ref={fileInput}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) run(() => uploadBackground(file), t("customization.v2.saved"));
-              e.target.value = "";
-            }}
-          />
-          <div className="flex items-center gap-2">
-            {appBackground && (
-              <img alt="" src="/api/app/background" className="h-14 w-24 rounded-md border border-line object-cover" />
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => fileInput.current?.click()}
-              disabled={busy || !brandpack}
-            >
-              {appBackground
-                ? t("customization.v2.pack.backgroundReplace")
-                : t("customization.v2.pack.backgroundUpload")}
-            </Button>
-            {appBackground && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => run(() => removeBackground(), t("customization.v2.saved"))}
-                disabled={busy}
-              >
-                {t("customization.v2.pack.backgroundRemove")}
-              </Button>
-            )}
-          </div>
-        </div>
+        <ImageUploadField
+          label={t("customization.v2.pack.background")}
+          hint={t("customization.v2.pack.backgroundHint")}
+          src={appBackground ? "/api/app/background" : null}
+          disabled={busy || !brandpack}
+          onUpload={(file) => run(() => uploadBackground(file), t("customization.v2.saved"))}
+          onRemove={() => run(() => removeBackground(), t("customization.v2.saved"))}
+          labels={{
+            upload: t("customization.v2.pack.backgroundUpload"),
+            replace: t("customization.v2.pack.backgroundReplace"),
+            remove: t("customization.v2.pack.backgroundRemove"),
+          }}
+        />
 
         <div className="space-y-1.5">
           <Label htmlFor="custom-css">{t("customization.v2.pack.css")}</Label>

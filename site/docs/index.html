@@ -401,6 +401,20 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             </p>
             <pre><code>docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-password.sh'
 docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-password.sh --list'</code></pre>
+                      <h3>Download page cover and link previews</h3>
+            <p>
+              Under Customization, Download page, upload one image to use as the
+              cover at the top of every download page. The same image is the
+              preview in WhatsApp, Slack and similar apps; a separate default link
+              preview image is used when no cover is set. Files from a share are
+              never used for either.
+            </p>
+            <p>
+              <b>Play video and audio on download pages</b> is off by default.
+              While it is off, visitors see no play or Preview button for video
+              and audio and the server refuses to stream those files to them;
+              they download instead.
+            </p>
           </section>
           <section class="docs-section" id="operations">
             <p class="section-kicker">07 / Operate</p>
@@ -513,7 +527,7 @@ docker compose up -d</code></pre>
         </p>
       </div>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.1 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.1.0 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>

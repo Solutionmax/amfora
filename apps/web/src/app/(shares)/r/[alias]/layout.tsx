@@ -47,7 +47,12 @@ export async function generateMetadata({ params }: { params: Promise<{ alias: st
 
   const baseUrl = await getBaseUrl();
   const shareUrl = `${baseUrl}/r/${resolvedParams.alias}`;
-  const ogImage = buildOgImage(baseUrl, null, appInfo.appLogo, appInfo.appName);
+  const ogImage = buildOgImage(baseUrl, {
+    cover: appInfo.appShareCover,
+    linkPreview: appInfo.appLinkPreview,
+    appLogo: appInfo.appLogo,
+    appName: appInfo.appName,
+  });
 
   return {
     title,

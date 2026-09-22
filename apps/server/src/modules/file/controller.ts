@@ -26,6 +26,7 @@ import {
   UpdateFileSchema,
 } from "./dto";
 import { isPubliclyEmbeddable } from "./embed-access";
+import { MEDIA_PREVIEW_REFUSED, refusesMediaPreview } from "./media-preview";
 import { isOwnedMultipartObject } from "./multipart-access";
 import { FileService } from "./service";
 import { folderAndAncestorIds } from "./share-access";
@@ -34,6 +35,28 @@ import { shareGrantSubject } from "./share-download-grant";
 export class FileController {
   private fileService = new FileService();
   private configService = new ConfigService();
+
+  /** A missing row (an install from before the switch) reads as off. */
+  private async isPublicPlaybackEnabled(): Promise<boolean> {
+    return this.configService
+      .getValue("appSharePlayback")
+      .then((value) => value === "true")
+      .catch(() => false);
+  }
+
+  private async refusesPreview(
+    fileRecord: { name: string; userId: string },
+    preview: string | undefined,
+    requesterId: string | null
+  ) {
+    if (preview !== "1") return false;
+    return refusesMediaPreview({
+      isPreview: true,
+      contentType: getContentType(fileRecord.name),
+      isOwner: requesterId === fileRecord.userId,
+      playbackEnabled: await this.isPublicPlaybackEnabled(),
+    });
+  }
 
   private async getSharesForFile(fileRecord: { id: string; folderId: string | null; userId: string }) {
     const ownerFolders = fileRecord.folderId
@@ -277,6 +300,10 @@ export class FileController {
         return reply.status(401).send({ error: "Unauthorized access to file." });
       }
 
+      if (await this.refusesPreview(fileRecord, preview, requesterId)) {
+        return reply.status(403).send({ error: MEDIA_PREVIEW_REFUSED });
+      }
+
       const fileName = fileRecord.name;
       const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
 
@@ -391,6 +418,10 @@ export class FileController {
 
       if (!hasAccess) {
         return reply.status(401).send({ error: "Unauthorized access to file." });
+      }
+
+      if (await this.refusesPreview(fileRecord, preview, requesterId)) {
+        return reply.status(403).send({ error: MEDIA_PREVIEW_REFUSED });
       }
 
       if (

@@ -12,6 +12,8 @@ credit and with the paid customization switched on.
 | Accent colour, corner radius, font | yes | yes |
 | "Powered by Amfora" credit | always shown | can be hidden |
 | Public-page background image | no | yes |
+| Download page cover, default link preview image | yes | yes |
+| Play video and audio on download pages (switch) | yes | yes |
 | Custom CSS | no | yes |
 
 Everything else in the product is identical. The Apache licence and the `NOTICE` file
@@ -64,6 +66,23 @@ customer; they paste it under Customization, Brandpack, Activate.
 | `GET` | `/app/background` | public | streams the background image or 404 |
 | `POST` | `/app/background` | admin | uploads an image (max 3 MB, stored as WebP under `branding/`) |
 | `DELETE` | `/app/background` | admin | removes it |
+
+The free branding images use the same upload code and validation (PNG, JPEG, WebP, GIF or
+AVIF by magic bytes, max 3 MB, at least 600 px wide, stored as WebP under `branding/`),
+plus a 1200 px JPEG for `og:image`:
+
+| Method | Path | Who | Does |
+| --- | --- | --- | --- |
+| `GET` | `/app/share-cover`, `/app/link-preview` | public | streams the WebP or 404 |
+| `GET` | `/app/share-cover/og`, `/app/link-preview/og` | public | streams the og:image JPEG or 404 |
+| `POST` | `/app/share-cover`, `/app/link-preview` | admin | uploads an image |
+| `DELETE` | `/app/share-cover`, `/app/link-preview` | admin | removes it |
+
+`og:image` on `/s/...` and `/r/...` is the cover, else the default link preview image, else
+the app logo, else `/og-card.jpg`; never a file from the share. The switch
+`appSharePlayback` (default `false`) decides whether download pages play video and audio;
+when it is off the API answers 403 to a `preview=1` request for video or audio from anyone
+but the owner.
 
 Custom CSS is stored through the normal config endpoint as `appCustomCss` and is
 sanitised on the way out: `@import`, `expression(`, `behavior:` and `url(` to anything

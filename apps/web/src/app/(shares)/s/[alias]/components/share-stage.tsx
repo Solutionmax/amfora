@@ -5,9 +5,11 @@ import { IconDownload, IconEye, IconLoader2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Cover } from "@/components/brand/cover";
+import { canPreviewOnDownloadPage, coverImageSrc, isPlayable } from "@/components/brand/cover-pick";
 import { kindFromName } from "@/components/brand/file-kind";
 import { FileManifest, type ManifestItem } from "@/components/brand/file-manifest";
 import { Button } from "@/components/ui/button";
+import { useAppInfo } from "@/contexts/app-info-context";
 
 interface ShareFile {
   id: string;
@@ -38,6 +40,7 @@ export function ShareStage({
   onPreview?: (file: ShareFile) => void;
 }) {
   const t = useTranslations();
+  const { appShareCover, appSharePlayback } = useAppInfo();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const itemCount = files.length + folders.length;
@@ -60,17 +63,11 @@ export function ShareStage({
       return onBulkDownload?.() ?? Promise.resolve();
     });
 
-  const coverFiles = files.map((file) => {
-    const kind = kindFromName(file.name);
-    return {
-      name: file.name,
-      kind,
-      previewUrl:
-        kind === "image"
-          ? `/api/files/download?objectName=${encodeURIComponent(file.objectName)}&preview=1`
-          : undefined,
-    };
-  });
+  const coverFiles = files.map((file) => ({ name: file.name, kind: kindFromName(file.name) }));
+  // Video and audio only play here when the admin allows it; the API refuses the preview otherwise.
+  const first = files[0];
+  const openPreview =
+    onPreview && first && canPreviewOnDownloadPage(first.name, appSharePlayback) ? () => onPreview(first) : undefined;
 
   const items: ManifestItem[] = [
     ...folders.map((folder) => ({
@@ -94,7 +91,9 @@ export function ShareStage({
     <div>
       <Cover
         files={coverFiles}
-        onOpen={onPreview && files[0] ? () => onPreview(files[0]) : undefined}
+        onOpen={openPreview}
+        coverSrc={coverImageSrc(appShareCover)}
+        showPlay={!!first && isPlayable(first.name)}
         caption={files[0] ? t(`public.kind.${kindFromName(files[0].name)}`) : undefined}
       />
       <div className="px-5 pb-6 pt-5 md:px-6">
@@ -118,8 +117,8 @@ export function ShareStage({
             {isDownloading ? <IconLoader2 className="size-5 animate-spin" /> : <IconDownload className="size-5" />}
             {single ? t("share.download") : t("share.downloadAll")}
           </Button>
-          {onPreview && files[0] && (
-            <Button type="button" size="lg" variant="outline" onClick={() => onPreview(files[0])}>
+          {openPreview && (
+            <Button type="button" size="lg" variant="outline" onClick={openPreview}>
               <IconEye className="size-5" />
               {t("public.download.preview")}
             </Button>

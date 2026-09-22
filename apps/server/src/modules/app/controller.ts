@@ -1,55 +1,72 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { EmailService } from "../email/service";
-import { BACKGROUND_MAX_BYTES, BackgroundService } from "./background.service";
+import { BRANDING_IMAGE_MAX_BYTES, BrandingImage } from "./branding-image";
 import { LogoService } from "./logo.service";
 import { AppService } from "./service";
 
 export class AppController {
   private appService = new AppService();
   private logoService = new LogoService();
-  private backgroundService = new BackgroundService();
   private emailService = new EmailService();
 
-  async getBackground(_request: FastifyRequest, reply: FastifyReply) {
-    const image = await this.backgroundService.read();
-    if (!image) {
-      return reply.status(404).send();
-    }
-    return reply.header("Content-Type", "image/webp").header("Cache-Control", "public, max-age=300").send(image);
+  /** Public: streams the page rendition, or 404 when none is set. */
+  getBrandingImage(image: BrandingImage) {
+    return async (_request: FastifyRequest, reply: FastifyReply) => {
+      const buffer = await image.read();
+      if (!buffer) {
+        return reply.status(404).send();
+      }
+      return reply.header("Content-Type", "image/webp").header("Cache-Control", "public, max-age=300").send(buffer);
+    };
   }
 
-  async uploadBackground(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const file = await request.file();
-      if (!file) {
-        return reply.status(400).send({ error: "No file uploaded" });
+  /** Public: the JPEG that og:image points at. The URL carries a version, so it may be cached longer. */
+  getBrandingLinkPreview(image: BrandingImage) {
+    return async (_request: FastifyRequest, reply: FastifyReply) => {
+      const buffer = await image.readLinkPreview();
+      if (!buffer) {
+        return reply.status(404).send();
       }
-      if (!file.mimetype.startsWith("image/")) {
-        return reply.status(400).send({ error: "Only images are allowed" });
-      }
+      return reply.header("Content-Type", "image/jpeg").header("Cache-Control", "public, max-age=3600").send(buffer);
+    };
+  }
 
-      const chunks: Buffer[] = [];
-      let totalSize = 0;
-      for await (const chunk of file.file) {
-        totalSize += chunk.length;
-        if (totalSize > BACKGROUND_MAX_BYTES) {
-          throw new Error("Background image too large. Maximum size is 3MB.");
+  uploadBrandingImage(image: BrandingImage) {
+    return async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const file = await request.file();
+        if (!file) {
+          return reply.status(400).send({ error: "No file uploaded" });
         }
-        chunks.push(chunk);
-      }
+        if (!file.mimetype.startsWith("image/")) {
+          return reply.status(400).send({ error: "Only images are allowed" });
+        }
 
-      await this.backgroundService.save(Buffer.concat(chunks));
-      return reply.send({ message: "Background saved" });
-    } catch (error: any) {
-      console.error("Background upload error:", error);
-      return reply.status(400).send({ error: error.message });
-    }
+        const chunks: Buffer[] = [];
+        let totalSize = 0;
+        for await (const chunk of file.file) {
+          totalSize += chunk.length;
+          if (totalSize > BRANDING_IMAGE_MAX_BYTES) {
+            throw new Error(`${image.options.label} too large. Maximum size is 3MB.`);
+          }
+          chunks.push(chunk);
+        }
+
+        await image.save(Buffer.concat(chunks));
+        return reply.send({ message: `${image.options.label} saved` });
+      } catch (error: any) {
+        console.error(`${image.options.label} upload error:`, error);
+        return reply.status(400).send({ error: error.message });
+      }
+    };
   }
 
-  async removeBackground(_request: FastifyRequest, reply: FastifyReply) {
-    await this.backgroundService.remove();
-    return reply.send({ message: "Background removed" });
+  removeBrandingImage(image: BrandingImage) {
+    return async (_request: FastifyRequest, reply: FastifyReply) => {
+      await image.remove();
+      return reply.send({ message: `${image.options.label} removed` });
+    };
   }
 
   async activateBrandpack(request: FastifyRequest, reply: FastifyReply) {
