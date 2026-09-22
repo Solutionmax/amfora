@@ -1,13 +1,12 @@
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
 import { resolvePaidAppearance } from "./appearance";
-import { BackgroundService } from "./background.service";
+import { backgroundImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { verifyBrandpack } from "./brandpack";
 import { BRANDPACK_PUBLIC_KEY } from "./brandpack-key";
 
 export class AppService {
   private configService = new ConfigService();
-  private backgroundService = new BackgroundService();
 
   /** The key is a constructor argument only so tests can use their own; nothing reads it from env. */
   constructor(private readonly brandpackPublicKey: string = BRANDPACK_PUBLIC_KEY) {}
@@ -25,7 +24,10 @@ export class AppService {
       appHideCredit,
       appCustomCss,
       appBrandpack,
+      appSharePlayback,
       backgroundExists,
+      appShareCover,
+      appLinkPreview,
     ] = await Promise.all([
       this.configService.getValue("appName"),
       this.configService.getValue("appDescription"),
@@ -37,7 +39,10 @@ export class AppService {
       value("appHideCredit"),
       value("appCustomCss"),
       value("appBrandpack"),
-      this.backgroundService.exists(),
+      value("appSharePlayback"),
+      backgroundImage.exists(),
+      shareCoverImage.linkPreviewInfo(),
+      linkPreviewImage.linkPreviewInfo(),
     ]);
 
     const brandpack = appBrandpack ? verifyBrandpack(appBrandpack, this.brandpackPublicKey) : null;
@@ -53,6 +58,10 @@ export class AppService {
       appPrimaryColor: appPrimaryColor ?? "",
       appFontFamily: appFontFamily ?? "",
       appRadius: appRadius ?? "",
+      appShareCover,
+      appLinkPreview,
+      // Missing config (an install from before the switch existed) means off.
+      appSharePlayback: appSharePlayback === "true",
       ...resolvePaidAppearance({ appHideCredit, appCustomCss, backgroundExists }, brandpack),
     };
   }

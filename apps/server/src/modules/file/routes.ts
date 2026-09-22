@@ -124,6 +124,8 @@ export async function fileRoutes(app: FastifyInstance) {
             expiresIn: z.number().describe("The expiration time in seconds"),
           }),
           400: z.object({ error: z.string().describe("Error message") }),
+          401: z.object({ error: z.string().describe("No access to the file") }),
+          403: z.object({ error: z.string().describe("Video or audio preview is switched off for download pages") }),
           404: z.object({ error: z.string().describe("Error message") }),
           500: z.object({ error: z.string().describe("Error message") }),
         },

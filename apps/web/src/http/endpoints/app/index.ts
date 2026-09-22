@@ -112,18 +112,33 @@ export const testSmtpConnection = (
   return apiInstance.post(`/api/app/test-smtp`, body || {}, options);
 };
 
-export const uploadBackground = (file: File, options?: AxiosRequestConfig): Promise<{ data: { message: string } }> => {
+/** Admin-uploaded images, each served publicly from `/api/app/<kind>`. */
+export type BrandingImageKind = "background" | "share-cover" | "link-preview";
+
+export const uploadBrandingImage = (
+  kind: BrandingImageKind,
+  file: File,
+  options?: AxiosRequestConfig
+): Promise<{ data: { message: string } }> => {
   const formData = new FormData();
   formData.append("file", file);
-  return apiInstance.post(`/api/app/background`, formData, {
+  return apiInstance.post(`/api/app/${kind}`, formData, {
     ...options,
     headers: { "Content-Type": "multipart/form-data", ...options?.headers },
   });
 };
 
-export const removeBackground = (options?: AxiosRequestConfig): Promise<{ data: { message: string } }> => {
-  return apiInstance.delete(`/api/app/background`, options);
+export const removeBrandingImage = (
+  kind: BrandingImageKind,
+  options?: AxiosRequestConfig
+): Promise<{ data: { message: string } }> => {
+  return apiInstance.delete(`/api/app/${kind}`, options);
 };
+
+export const uploadBackground = (file: File, options?: AxiosRequestConfig) =>
+  uploadBrandingImage("background", file, options);
+
+export const removeBackground = (options?: AxiosRequestConfig) => removeBrandingImage("background", options);
 
 export const activateBrandpack = (
   token: string,

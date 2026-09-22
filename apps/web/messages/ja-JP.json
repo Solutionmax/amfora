@@ -255,6 +255,18 @@
         "font": "フォント",
         "fontDefault": "デフォルト（ArchivoとPublic Sans）"
       },
+      "downloadPage": {
+        "title": "ダウンロードページ",
+        "cover": "ダウンロードページのカバー画像",
+        "coverHint": "すべてのダウンロードページの上部に、ファイル名を重ねて表示されます。WhatsApp や Slack などのリンクプレビューにも使われます。幅 1200 px 以上がおすすめです。最大 3 MB。",
+        "linkPreview": "デフォルトのリンクプレビュー画像",
+        "linkPreviewHint": "カバー画像が未設定のとき、ダウンロードリンクや受け取りリンクを WhatsApp や Slack などに貼り付けると表示されます。1200 × 630 px がおすすめです。最大 3 MB。",
+        "upload": "画像をアップロード",
+        "replace": "画像を差し替え",
+        "remove": "削除",
+        "playback": "ダウンロードページで動画と音声を再生する",
+        "playbackHint": "オフのとき、動画と音声のファイルはダウンロードのみ可能で、再生ボタンもプレビューもありません。画像、PDF、テキストはプレビューできます。"
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "有料",

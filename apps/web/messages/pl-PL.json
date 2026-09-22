@@ -255,6 +255,18 @@
         "font": "Czcionka",
         "fontDefault": "Domyślna (Archivo i Public Sans)"
       },
+      "downloadPage": {
+        "title": "Strona pobierania",
+        "cover": "Okładka strony pobierania",
+        "coverHint": "Wyświetlana na górze każdej strony pobierania, z nazwą pliku na wierzchu. Używana też jako podgląd linku w WhatsApp, Slack i podobnych aplikacjach. Najlepiej co najmniej 1200 px szerokości; do 3 MB.",
+        "linkPreview": "Domyślny obraz podglądu linku",
+        "linkPreviewHint": "Wyświetlany, gdy link do pobrania lub odbioru zostanie wklejony w WhatsApp, Slack i podobnych aplikacjach, a okładka nie jest ustawiona. Najlepiej 1200 × 630 px; do 3 MB.",
+        "upload": "Prześlij obraz",
+        "replace": "Zastąp obraz",
+        "remove": "Usuń",
+        "playback": "Odtwarzaj wideo i audio na stronach pobierania",
+        "playbackHint": "Gdy wyłączone, pliki wideo i audio można tylko pobrać: bez przycisku odtwarzania i bez podglądu. Obrazy, pliki PDF i tekst zachowują podgląd."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Płatne",

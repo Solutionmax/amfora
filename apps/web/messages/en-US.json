@@ -255,6 +255,18 @@
         "font": "Font",
         "fontDefault": "Default (Archivo and Public Sans)"
       },
+      "downloadPage": {
+        "title": "Download page",
+        "cover": "Download page cover",
+        "coverHint": "Shown at the top of every download page, with the file name over it. Also used as the link preview in WhatsApp, Slack and similar apps. At least 1200 px wide works best; up to 3 MB.",
+        "linkPreview": "Default link preview image",
+        "linkPreviewHint": "Shown when a download or receive link is pasted into WhatsApp, Slack and similar apps and no cover is set. 1200 × 630 px works best; up to 3 MB.",
+        "upload": "Upload image",
+        "replace": "Replace image",
+        "remove": "Remove",
+        "playback": "Play video and audio on download pages",
+        "playbackHint": "When off, video and audio files can only be downloaded: no play button and no preview. Images, PDFs and text keep their preview."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Paid",

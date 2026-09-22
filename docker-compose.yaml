@@ -2,7 +2,7 @@ services:
   amfora:
     # The published image. To run your own build instead:
     #   make build TAG=local && AMFORA_IMAGE=amfora:local docker compose up -d
-    image: ${AMFORA_IMAGE:-ghcr.io/solutionmax/amfora:2.0.1}
+    image: ${AMFORA_IMAGE:-ghcr.io/solutionmax/amfora:2.1.0}
     # Over the air updates are optional and need a one time install on the host:
     #   sudo COMPOSE_DIR=/opt/amfora bash ota/install-ota.sh
     # then uncomment the ota-state mount under volumes. See docs/OTA.md.

@@ -255,6 +255,18 @@
         "font": "Lettertype",
         "fontDefault": "Standaard (Archivo en Public Sans)"
       },
+      "downloadPage": {
+        "title": "Downloadpagina",
+        "cover": "Omslagafbeelding downloadpagina",
+        "coverHint": "Staat bovenaan elke downloadpagina, met de bestandsnaam erover. Wordt ook gebruikt als linkvoorbeeld in WhatsApp, Slack en vergelijkbare apps. Minstens 1200 px breed werkt het best; maximaal 3 MB.",
+        "linkPreview": "Standaardafbeelding voor linkvoorbeelden",
+        "linkPreviewHint": "Getoond als een download- of ontvangstlink in WhatsApp, Slack en vergelijkbare apps wordt geplakt en er geen omslag is ingesteld. 1200 × 630 px werkt het best; maximaal 3 MB.",
+        "upload": "Afbeelding uploaden",
+        "replace": "Afbeelding vervangen",
+        "remove": "Verwijderen",
+        "playback": "Video en audio afspelen op downloadpagina's",
+        "playbackHint": "Uit: video- en audiobestanden kunnen alleen gedownload worden, zonder afspeelknop en zonder voorbeeld. Afbeeldingen, pdf's en tekst houden hun voorbeeld."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Betaald",

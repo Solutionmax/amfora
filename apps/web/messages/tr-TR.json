@@ -255,6 +255,18 @@
         "font": "Yazı Tipi",
         "fontDefault": "Varsayılan (Archivo ve Public Sans)"
       },
+      "downloadPage": {
+        "title": "İndirme sayfası",
+        "cover": "İndirme sayfası kapağı",
+        "coverHint": "Her indirme sayfasının üstünde, dosya adıyla birlikte gösterilir. WhatsApp, Slack ve benzeri uygulamalarda bağlantı önizlemesi olarak da kullanılır. En az 1200 px genişlik idealdir; en fazla 3 MB.",
+        "linkPreview": "Varsayılan bağlantı önizleme görseli",
+        "linkPreviewHint": "Bir indirme veya alma bağlantısı WhatsApp, Slack ve benzeri uygulamalara yapıştırıldığında ve kapak ayarlanmamışsa gösterilir. 1200 × 630 px idealdir; en fazla 3 MB.",
+        "upload": "Görsel yükle",
+        "replace": "Görseli değiştir",
+        "remove": "Kaldır",
+        "playback": "İndirme sayfalarında video ve ses oynat",
+        "playbackHint": "Kapalıyken video ve ses dosyaları yalnızca indirilebilir: oynat düğmesi ve önizleme yoktur. Görseller, PDF'ler ve metin önizlemesini korur."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Ücretli",

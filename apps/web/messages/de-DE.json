@@ -255,6 +255,18 @@
         "font": "Schriftart",
         "fontDefault": "Standard (Archivo und Public Sans)"
       },
+      "downloadPage": {
+        "title": "Downloadseite",
+        "cover": "Titelbild der Downloadseite",
+        "coverHint": "Erscheint oben auf jeder Downloadseite, mit dem Dateinamen darüber. Wird auch als Linkvorschau in WhatsApp, Slack und ähnlichen Apps verwendet. Mindestens 1200 px breit ist ideal; bis zu 3 MB.",
+        "linkPreview": "Standardbild für Linkvorschauen",
+        "linkPreviewHint": "Wird angezeigt, wenn ein Download- oder Empfangslink in WhatsApp, Slack und ähnliche Apps eingefügt wird und kein Titelbild gesetzt ist. 1200 × 630 px ist ideal; bis zu 3 MB.",
+        "upload": "Bild hochladen",
+        "replace": "Bild ersetzen",
+        "remove": "Entfernen",
+        "playback": "Video und Audio auf Downloadseiten abspielen",
+        "playbackHint": "Wenn deaktiviert, können Video- und Audiodateien nur heruntergeladen werden: keine Wiedergabetaste und keine Vorschau. Bilder, PDFs und Text behalten ihre Vorschau."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Kostenpflichtig",

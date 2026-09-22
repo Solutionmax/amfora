@@ -25,6 +25,13 @@ export interface CheckUploadAllowed200 extends DiskSpaceInfo {
 
 export type GetDiskSpace200 = DiskSpaceInfo;
 
+/** The og:image rendition of an uploaded image; `version` changes on every upload. */
+export interface LinkPreviewInfo {
+  width: number;
+  height: number;
+  version: string;
+}
+
 export interface GetAppInfo200 {
   appName: string;
   appDescription: string;
@@ -34,6 +41,9 @@ export interface GetAppInfo200 {
   appHideCredit?: boolean;
   appBackground?: boolean;
   appCustomCss?: string;
+  appShareCover?: LinkPreviewInfo | null;
+  appLinkPreview?: LinkPreviewInfo | null;
+  appSharePlayback?: boolean;
   brandpack?: { organisation: string; issuedAt: string } | null;
   appLogo: string;
   firstUserAccess: boolean;

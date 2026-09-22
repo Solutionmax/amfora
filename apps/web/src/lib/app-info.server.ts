@@ -1,3 +1,4 @@
+import type { LinkPreviewInfo } from "@/http/endpoints/app/types";
 import { DEFAULT_BRAND } from "./brand";
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3333";
@@ -6,6 +7,8 @@ export interface PublicAppInfo {
   appName: string;
   appDescription: string;
   appLogo: string | null;
+  appShareCover?: LinkPreviewInfo | null;
+  appLinkPreview?: LinkPreviewInfo | null;
 }
 
 const FALLBACK: PublicAppInfo = { appName: DEFAULT_BRAND.name, appDescription: DEFAULT_BRAND.tagline, appLogo: null };

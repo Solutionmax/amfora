@@ -255,6 +255,18 @@
         "font": "Font",
         "fontDefault": "Default (Archivo dan Public Sans)"
       },
+      "downloadPage": {
+        "title": "Halaman unduhan",
+        "cover": "Sampul halaman unduhan",
+        "coverHint": "Ditampilkan di bagian atas setiap halaman unduhan, dengan nama file di atasnya. Juga dipakai sebagai pratinjau tautan di WhatsApp, Slack, dan aplikasi serupa. Sebaiknya lebar minimal 1200 px; maksimal 3 MB.",
+        "linkPreview": "Gambar pratinjau tautan bawaan",
+        "linkPreviewHint": "Ditampilkan saat tautan unduhan atau penerimaan ditempel di WhatsApp, Slack, dan aplikasi serupa dan belum ada sampul. Sebaiknya 1200 × 630 px; maksimal 3 MB.",
+        "upload": "Unggah gambar",
+        "replace": "Ganti gambar",
+        "remove": "Hapus",
+        "playback": "Putar video dan audio di halaman unduhan",
+        "playbackHint": "Jika nonaktif, file video dan audio hanya bisa diunduh: tanpa tombol putar dan tanpa pratinjau. Gambar, PDF, dan teks tetap punya pratinjau."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Berbayar",

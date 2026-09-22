@@ -255,6 +255,18 @@
         "font": "Phông chữ",
         "fontDefault": "Mặc định (Archivo và Public Sans)"
       },
+      "downloadPage": {
+        "title": "Trang tải xuống",
+        "cover": "Ảnh bìa trang tải xuống",
+        "coverHint": "Hiển thị ở đầu mỗi trang tải xuống, với tên tệp đè lên trên. Cũng được dùng làm ảnh xem trước liên kết trong WhatsApp, Slack và các ứng dụng tương tự. Tốt nhất rộng ít nhất 1200 px; tối đa 3 MB.",
+        "linkPreview": "Ảnh xem trước liên kết mặc định",
+        "linkPreviewHint": "Hiển thị khi một liên kết tải xuống hoặc nhận tệp được dán vào WhatsApp, Slack và các ứng dụng tương tự mà chưa đặt ảnh bìa. Tốt nhất 1200 × 630 px; tối đa 3 MB.",
+        "upload": "Tải ảnh lên",
+        "replace": "Thay ảnh",
+        "remove": "Xóa",
+        "playback": "Phát video và âm thanh trên trang tải xuống",
+        "playbackHint": "Khi tắt, tệp video và âm thanh chỉ có thể tải xuống: không có nút phát và không có bản xem trước. Ảnh, PDF và văn bản vẫn giữ bản xem trước."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Trả phí",

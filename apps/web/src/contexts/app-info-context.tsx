@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { getAppInfo } from "@/http/endpoints";
+import type { LinkPreviewInfo } from "@/http/endpoints/app/types";
 
 interface AppInfoStore {
   appName: string;
@@ -12,6 +13,9 @@ interface AppInfoStore {
   appHideCredit: boolean;
   appBackground: boolean;
   appCustomCss: string;
+  appShareCover: LinkPreviewInfo | null;
+  appLinkPreview: LinkPreviewInfo | null;
+  appSharePlayback: boolean;
   brandpack: { organisation: string; issuedAt: string } | null;
   firstAccess: boolean | null;
   isLoading: boolean;
@@ -35,6 +39,9 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     appHideCredit: false,
     appBackground: false,
     appCustomCss: "",
+    appShareCover: null,
+    appLinkPreview: null,
+    appSharePlayback: false,
     brandpack: null,
     firstAccess: null,
     isLoading: true,
@@ -54,6 +61,9 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appHideCredit: response.data.appHideCredit ?? false,
           appBackground: response.data.appBackground ?? false,
           appCustomCss: response.data.appCustomCss ?? "",
+          appShareCover: response.data.appShareCover ?? null,
+          appLinkPreview: response.data.appLinkPreview ?? null,
+          appSharePlayback: response.data.appSharePlayback ?? false,
           brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
@@ -91,6 +101,9 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appHideCredit: response.data.appHideCredit ?? false,
           appBackground: response.data.appBackground ?? false,
           appCustomCss: response.data.appCustomCss ?? "",
+          appShareCover: response.data.appShareCover ?? null,
+          appLinkPreview: response.data.appLinkPreview ?? null,
+          appSharePlayback: response.data.appSharePlayback ?? false,
           brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
