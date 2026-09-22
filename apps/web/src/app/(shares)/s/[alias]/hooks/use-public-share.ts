@@ -73,6 +73,7 @@ export function usePublicShare() {
   const [password, setPassword] = useState("");
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
+  const [reason, setReason] = useState<"missing" | "expired" | "maxViews">("missing");
 
   const [browseState, setBrowseState] = useState<ShareBrowseState>({
     folders: [],
@@ -106,9 +107,11 @@ export function usePublicShare() {
           setShare(null);
         } else if (error.response?.data?.error === "Invalid password") {
           setIsPasswordError(true);
-          toast.error(t("share.errors.invalidPassword"));
         } else {
-          toast.error(t("share.errors.loadFailed"));
+          const message = String(error.response?.data?.error || "");
+          setReason(/expired/i.test(message) ? "expired" : /maximum views/i.test(message) ? "maxViews" : "missing");
+          // A share that is gone is a page state, not an error toast.
+          if (!error.response) toast.error(t("share.errors.loadFailed"));
         }
       };
 
@@ -551,6 +554,7 @@ export function usePublicShare() {
     password,
     isPasswordModalOpen,
     isPasswordError,
+    reason,
     setPassword,
     handlePasswordSubmit,
     handleDownload,

@@ -25,7 +25,6 @@ interface ShareFolder {
 export function ShareStage({
   files,
   folders,
-  views,
   onDownload,
   onDownloadFolder,
   onBulkDownload,
@@ -33,7 +32,6 @@ export function ShareStage({
 }: {
   files: ShareFile[];
   folders: ShareFolder[];
-  views: number;
   onDownload: (objectName: string, fileName: string) => Promise<void>;
   onDownloadFolder: (folderId: string, folderName: string) => Promise<void>;
   onBulkDownload?: () => Promise<void>;
@@ -104,7 +102,7 @@ export function ShareStage({
           <FileManifest
             items={items}
             total={{
-              label: `${t("share.itemCount", { count: itemCount })} · ${t("public.download.downloaded", { count: views })}`,
+              label: t("share.itemCount", { count: itemCount }),
               size: totalBytes,
             }}
           />

@@ -10,10 +10,13 @@ export async function appRoutes(app: FastifyInstance) {
 
   const adminPreValidation = async (request: any, reply: any) => {
     try {
+      // First run only: no user yet, or the one user just registered and the setup
+      // flag is still on. Every other single-admin installation needs a real admin.
       const usersCount = await prisma.user.count();
-
-      if (usersCount <= 1) {
-        return;
+      if (usersCount === 0) return;
+      if (usersCount === 1) {
+        const first = await prisma.appConfig.findUnique({ where: { key: "firstUserAccess" } });
+        if (first?.value === "true") return;
       }
 
       await request.jwtVerify();
@@ -26,7 +29,7 @@ export async function appRoutes(app: FastifyInstance) {
     } catch (err) {
       console.error(err);
       return reply.status(401).send({
-        error: ".",
+        error: "Unauthorized",
       });
     }
   };

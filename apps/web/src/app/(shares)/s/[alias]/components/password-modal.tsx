@@ -11,7 +11,7 @@ export function PasswordModal({ isOpen, password, isError, onPasswordChange, onS
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}} modal>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md [&>button.absolute]:hidden">
         <DialogHeader className="gap-3">
           <div className="tile">
             <IconLock className="size-5" />

@@ -40,8 +40,7 @@ export default function ReverseShareUploadPage() {
         statement={<Statement title={t("public.state.password.title")} quote={t("public.state.password.text")} />}
       >
         <div className="px-6 py-8">
-          <h2 className="font-display text-xl font-semibold">{t("reverseShares.upload.password.title")}</h2>
-          <p className="mt-2 text-sm text-ink-3">{t("reverseShares.upload.password.description")}</p>
+          <p className="text-sm text-ink-3">{t("reverseShares.upload.password.description")}</p>
         </div>
         <PasswordModal
           isOpen={isPasswordModalOpen}

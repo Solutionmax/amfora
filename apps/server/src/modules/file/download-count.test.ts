@@ -22,3 +22,11 @@ test("handing out a presigned URL has no range to judge, so it counts on its own
   assert.equal(shouldCountDownload({ isPreview: true, isOwner: false }), false);
   assert.equal(shouldCountDownload({ isPreview: false, isOwner: true }), false);
 });
+
+test("active content is served as an attachment", async () => {
+  const { dispositionFor } = await import("./disposition");
+  assert.equal(dispositionFor("text/html"), "attachment");
+  assert.equal(dispositionFor("image/svg+xml"), "attachment");
+  assert.equal(dispositionFor("application/pdf"), "inline");
+  assert.equal(dispositionFor("image/png"), "inline");
+});

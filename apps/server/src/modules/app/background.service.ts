@@ -7,6 +7,7 @@ import { directoriesConfig } from "../../config/directories.config";
 const FILE = "background.webp";
 export const BACKGROUND_MAX_BYTES = 3 * 1024 * 1024;
 const MAX_PIXELS = 40_000_000;
+const MIN_WIDTH = 1200;
 
 /** The multipart content type is whatever the client says; the bytes are not. SVG is refused: it is a document, not a picture. */
 export function isRasterImage(buffer: Buffer): boolean {
@@ -37,6 +38,9 @@ export class BackgroundService {
     const metadata = await sharp(buffer, { limitInputPixels: MAX_PIXELS }).metadata();
     if (!metadata.width || !metadata.height) {
       throw new Error("Invalid image file");
+    }
+    if (metadata.width < MIN_WIDTH) {
+      throw new Error(`Background image too small. Use at least ${MIN_WIDTH} pixels wide.`);
     }
 
     const webp = await sharp(buffer, { limitInputPixels: MAX_PIXELS })

@@ -819,12 +819,20 @@
     "state": {
       "backHome": "Back to start",
       "password": {
-        "title": "This link is",
-        "text": "protected with a password. Ask the person who sent it."
+        "title": "Password required.",
+        "text": "This link is protected with a password. Ask the person who sent it."
       },
       "missing": {
         "title": "Nothing here.",
         "text": "This link does not exist, or it has been removed."
+      },
+      "expired": {
+        "title": "This link has expired.",
+        "text": "The sender set an end date and it has passed. Ask them for a new link."
+      },
+      "maxViews": {
+        "title": "This link is used up.",
+        "text": "It could be opened a limited number of times and that limit has been reached. Ask the sender for a new link."
       }
     }
   },
