@@ -57,6 +57,11 @@ export async function GET(req: NextRequest) {
     if (contentDisposition) {
       res.headers.set("Content-Disposition", contentDisposition);
     }
+    // The API sandboxes html and similar uploads; that header has to reach the browser too.
+    const csp = apiRes.headers.get("content-security-policy");
+    if (csp) {
+      res.headers.set("Content-Security-Policy", csp);
+    }
     if (contentLength) {
       res.headers.set("Content-Length", contentLength);
     }
