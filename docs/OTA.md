@@ -9,7 +9,7 @@ install on the host; neither is required to run Amfora.
 The vendor publishes a manifest at `https://amfora.solutionmax.net/releases/latest.json`:
 
 ```
-base64url({"purpose":"amfora-release","version":"1.2.0","image":"ghcr.io/solutionmax/amfora",
+base64url({"purpose":"amfora-release","version":"2.0.1","image":"ghcr.io/solutionmax/amfora",
            "digest":"sha256:…","notes":"…","released_at":"2026-09-21"}) . base64url(signature)
 ```
 
@@ -90,7 +90,7 @@ trigger, so the app does not sit in "updating" forever.
 ## Releasing (vendor side)
 
 ```bash
-bash infra/release-manifest.sh 1.2.0 "One line of release notes"
+bash infra/release-manifest.sh X.Y.Z "One line of release notes"
 ```
 
 It reads the digest back from the registry, so the manifest can only point at an image

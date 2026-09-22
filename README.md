@@ -112,36 +112,57 @@ Details for operators are in [docs/BRANDPACK.md](docs/BRANDPACK.md).
 
 ## Install Amfora
 
-The source repository is public. No GitHub account is required to download it.
-You need curl, Git, Bash, and Docker with Compose and Buildx 0.30 or later.
-The installer checks these requirements,
-builds from source, and starts Amfora in a new `amfora` directory. It refuses
-existing installations; it does not install Docker or enable automatic updates.
+You need Docker with Compose v2. The installer creates an `amfora` directory,
+writes a compose file pinned to the current release, pulls
+`ghcr.io/solutionmax/amfora` (amd64 and arm64) and starts it. It refuses
+existing installations and does not install Docker.
 
 ```bash
-curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker
+curl -fsSL https://amfora.solutionmax.net/get | sh
 ```
 
 Open <http://localhost:5487>. On a new database, the first account created
 through the first run screen becomes the administrator. Later accounts are
 ordinary users unless an administrator invites or promotes them.
 
-The sample Compose file publishes the web interface on `5487` and bundled
-storage on `9379`. The browser must be able to reach `STORAGE_URL`; the local
-example uses `http://127.0.0.1:9379`. The API listens on `3333` inside the
-container and is not published by the sample Compose file.
+The compose file publishes the web interface on `5487` and bundled storage on
+`9379`. The browser must be able to reach `STORAGE_URL`; the local example uses
+`http://127.0.0.1:9379`. The API listens on `3333` inside the container and is
+not published.
 
-To build the image separately:
+Prefer plain compose? Use [docker-compose.yaml](docker-compose.yaml) from this
+repository, which documents every option, and run `docker compose up -d`.
+
+### Build from source
+
+`curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --source` clones the
+release tag and builds it (Git, Bash and Buildx 0.30 or later). From a checkout:
 
 ```bash
 make build TAG=local
-docker compose up -d --no-build
+AMFORA_IMAGE=amfora:local docker compose up -d
 ```
 
 The dedicated builder reuses layers and bounds unused cache to a 4 GB target.
 `make clean` reclaims only build cache, preserving images and application data.
-See [build and cache management](docs/deployment/build-cache.md). Keep the running
-image and a tested rollback image when upgrading.
+See [build and cache management](docs/deployment/build-cache.md).
+
+## Updating
+
+Your files and settings live in the `amfora_data` volume; an update only
+replaces the image.
+
+```bash
+cd amfora
+# set the new version in docker-compose.yaml, for example ghcr.io/solutionmax/amfora:2.0.1
+docker compose pull
+docker compose up -d
+```
+
+The admin area shows when a newer release is out. To have the host install
+signed releases for you, set up [over the air updates](docs/OTA.md) once. Every
+release is listed on the [releases page](https://amfora.solutionmax.net/releases/).
+Keep the previous image until the new one runs, so you can switch back.
 
 ## Storage and deployment
 
