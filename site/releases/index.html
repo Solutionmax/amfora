@@ -199,10 +199,12 @@ bash infra/build-docker.sh local</code></pre>
                 <li>The brandpack key is built into the server; a key pair of your own and a self signed pack are refused.</li>
                 <li>Administrator checks read the account from the database on every request, so a demoted or deactivated administrator loses access at once.</li>
                 <li>The unused <code>/s3/*</code> routes, which answered without a session, are removed.</li>
+                <li>Registering the first administrator closes the setup window on the server, instead of waiting for the browser to do it.</li>
                 <li>New tests for the administrator guard, these routes and the attachment rule for uploaded HTML and SVG.</li>
               </ul>
               <h3>Install</h3>
               <ul>
+                <li><strong>Fresh installs without <code>AMFORA_UID</code> start again</strong>: the server ran as a different user than the bundled storage and could not read its credentials. CI now starts the image the way the installer does.</li>
                 <li>The installer pulls the published image, pinned to the release: Docker with Compose v2 is enough, and a new install starts in about a minute. <code>--source</code> builds the release tag.</li>
                 <li>The repository's <code>docker-compose.yaml</code> uses the published image; the README and docs explain how to update.</li>
               </ul>
