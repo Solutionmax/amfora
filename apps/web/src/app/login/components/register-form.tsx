@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAppInfo } from "@/contexts/app-info-context";
-import { registerUser, updateConfig } from "@/http/endpoints";
+import { registerUser } from "@/http/endpoints";
 import { MultiProviderButtons } from "./multi-provider-buttons";
 import { PasswordVisibilityToggle } from "./password-visibility-toggle";
 
@@ -50,10 +50,6 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
     try {
       await registerUser({
         ...data,
-      });
-
-      await updateConfig("firstUserAccess", {
-        value: "false",
       });
 
       await refreshAppInfo();

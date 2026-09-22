@@ -54,8 +54,24 @@ jobs:
         with:
           context: .
           push: false
+          load: true
+          tags: amfora:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      # A fresh install exactly as the installer writes it: no AMFORA_UID, empty volume.
+      # 2.0.0 failed here (server ran as uid 1000 and could not read the storage credentials).
+      - name: Fresh start smoke test
+        run: |
+          docker run -d --name smoke -p 5487:5487 -p 9379:9379 \
+            -e APP_URL=http://localhost:5487 -e STORAGE_URL=http://127.0.0.1:9379 amfora:ci
+          for i in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://localhost:5487/; then ok=1; break; fi
+            sleep 5
+          done
+          docker logs smoke > smoke.log 2>&1 || true
+          if grep -q EACCES smoke.log; then grep EACCES smoke.log | head; echo "::error::permission errors on a fresh start"; exit 1; fi
+          [ "${ok:-}" = 1 ] || { tail -60 smoke.log; echo "::error::no answer on 5487 after 5 minutes"; exit 1; }
+          echo "fresh start answers on 5487"
 
   brand:
     runs-on: ubuntu-latest

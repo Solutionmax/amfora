@@ -31,8 +31,10 @@ if [ -f "/app/load-minio-credentials.sh" ]; then
     . /app/load-minio-credentials.sh
 fi
 
-TARGET_UID=${AMFORA_UID:-1000}
-TARGET_GID=${AMFORA_GID:-1000}
+# Same default as the storage side (Dockerfile start script, minio-setup.sh): the amfora
+# user. uid 1000 is "node" in this image, which cannot read the storage credentials.
+TARGET_UID=${AMFORA_UID:-$(id -u amfora 2>/dev/null || echo 1001)}
+TARGET_GID=${AMFORA_GID:-$(id -g amfora 2>/dev/null || echo 1001)}
 
 if [ -n "$AMFORA_UID" ] || [ -n "$AMFORA_GID" ]; then
     echo "🔧 Runtime UID/GID: $TARGET_UID:$TARGET_GID"

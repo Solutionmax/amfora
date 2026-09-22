@@ -140,3 +140,29 @@ test("first run: open with 0 users or the single first user while firstUserAcces
   await resetUsers([]);
   assert.equal((await get("/update/status")).statusCode, 401);
 });
+
+test("registering the first user closes the setup window on the server", async () => {
+  await prisma.user.deleteMany();
+  await prisma.appConfig.update({ where: { key: "firstUserAccess" }, data: { value: "true" } });
+
+  const open = await app.inject({ method: "GET", url: "/app/configs" });
+  assert.equal(open.statusCode, 200, "with no users the setup window is open");
+
+  const created = await app.inject({
+    method: "POST",
+    url: "/auth/register",
+    payload: {
+      firstName: "First",
+      lastName: "Admin",
+      username: "firstadmin",
+      email: "first@example.test",
+      password: "A-long-enough-Passw0rd!",
+    },
+  });
+  assert.equal(created.statusCode, 201, created.body);
+
+  const flag = await prisma.appConfig.findUnique({ where: { key: "firstUserAccess" } });
+  assert.equal(flag?.value, "false");
+  const closed = await app.inject({ method: "GET", url: "/app/configs" });
+  assert.equal(closed.statusCode, 401, "no session after the first admin exists");
+});
