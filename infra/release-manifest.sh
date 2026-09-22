@@ -2,7 +2,7 @@
 # Builds and signs the update manifest for a published release, then writes it where
 # the website serves it from. Vendor side only.
 #
-#   bash infra/release-manifest.sh 1.2.0 "One line of release notes"
+#   bash infra/release-manifest.sh X.Y.Z "One line of release notes"
 #
 # The digest is read back from the registry rather than passed in, so the manifest can
 # only ever point at an image that was really published under that tag.
