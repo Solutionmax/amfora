@@ -12,10 +12,18 @@ A security and install release. Update if you run 2.0.0.
 - The unused `/s3/*` routes are gone. They offered presigned upload and download links and a
   delete for any object without a session; the web app never called them and the API port is
   not published by default, but they no longer exist to be reached.
+- Registering the first administrator closes the setup window on the server. It used to wait
+  for the browser to switch it off, so an account created through the API left settings such as
+  the SMTP password readable without a session.
 - Tests for the administrator guard (including the first run exception), for these routes and
   for the attachment rule that keeps uploaded HTML and SVG from running in the browser.
 
 ## Install
+
+- **Fresh installs without `AMFORA_UID` start again.** The server fell back to uid 1000 while
+  the bundled storage runs as the amfora user, so a new installation could not read its storage
+  credentials and never came up. Existing installations that set `AMFORA_UID` were not affected.
+  CI now starts the image exactly as the installer does before anything is released.
 
 - The installer pulls the published image by default, pinned to the current release: Docker
   with Compose v2 is all you need, and a new install starts in about a minute instead of a
