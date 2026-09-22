@@ -8,10 +8,9 @@
       name="description"
       content="Download Amfora, read what changed in version 2.0.0 and prepare your installation or upgrade."
     />
-    <meta name="robots" content="noindex,nofollow" />
     <meta name="theme-color" content="#fbfcfe" />
     <link rel="canonical" href="https://amfora.solutionmax.net/releases/" />
-    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" /><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
@@ -59,13 +58,14 @@
             <p class="eyebrow">
               <span class="status-dot" aria-hidden="true"></span> LATEST RELEASE
             </p>
-            <h2 id="latest-title">Amfora 2.0.0</h2>
+            <h2 id="latest-title">Amfora 2.0.1</h2>
             <p class="release-date">
               Released <time datetime="2026-09-22">22 September 2026</time>
             </p>
             <p>
-              A new interface front and back, your brand from one place on the
-              server, and the brandpack for running it under your own name.
+              Security and install release: the brandpack key is built in,
+              administrator rights are checked against the database, and a new
+              install pulls the published image in about a minute.
             </p>
             <div class="release-actions">
               <a class="button primary" href="/docs/#getting-started"
@@ -73,7 +73,7 @@
               >
               <a
                 class="button release-secondary"
-                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.0.0.zip"
+                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.0.1.zip"
                 >Download source ZIP ↓</a
               >
             </div>
@@ -93,15 +93,15 @@
             <p class="eyebrow">01 / FIRST INSTALLATION</p>
             <h2>Start on your server.</h2>
             <p>
-              The installer checks requirements, builds the current source
-              branch and starts Amfora with Docker.
+              The installer checks Docker and Compose, pulls the published
+              image for the current release and starts Amfora.
             </p>
             <pre
               class="install-command"
-            ><code>curl -fsSL https://amfora.solutionmax.net/get | sh -s -- --docker</code></pre>
+            ><code>curl -fsSL https://amfora.solutionmax.net/get | sh</code></pre>
             <p class="release-detail">
-              Requires Git, Bash, Docker Compose and Buildx 0.30 or later. Use a
-              new directory.
+              Requires Docker with Compose v2. Use a new directory. Add
+              <code>--source</code> to build the release tag yourself.
             </p>
             <a class="text-link" href="/docs/#getting-started"
               >Requirements &amp; installation →</a
@@ -111,12 +111,12 @@
             <p class="eyebrow">02 / DOCKER IMAGE</p>
             <h2>Use a published version.</h2>
             <p>
-              Pull version 2.0.0. No account and no login needed. Docker selects
+              Pull version 2.0.1. No account and no login needed. Docker selects
               the image for your processor.
             </p>
             <pre
               class="install-command"
-            ><code>docker pull ghcr.io/solutionmax/amfora:2.0.0</code></pre>
+            ><code>docker pull ghcr.io/solutionmax/amfora:2.0.1</code></pre>
             <p class="release-detail">
               Version 1.0.0 remains under <code>ghcr.io/raym0nz82/amfora</code>.
               Keep the repository's Compose settings for storage and persistent
@@ -124,7 +124,7 @@
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/blob/v2.0.0/docker-compose.yaml"
+              href="https://github.com/Solutionmax/amfora/blob/v2.0.1/docker-compose.yaml"
               >View the Compose configuration ↗</a
             >
           </article>
@@ -132,12 +132,12 @@
             <p class="eyebrow">03 / SOURCE CODE</p>
             <h2>Build a specific release.</h2>
             <p>
-              Download the version 2.0.0 source archive or check out its tag to
+              Download the version 2.0.1 source archive or check out its tag to
               build this release yourself.
             </p>
             <pre
               class="install-command"
-            ><code>git clone --branch v2.0.0 --depth 1 https://github.com/Solutionmax/amfora.git
+            ><code>git clone --branch v2.0.1 --depth 1 https://github.com/Solutionmax/amfora.git
 cd amfora
 bash infra/build-docker.sh local</code></pre>
             <p class="release-detail">
@@ -146,7 +146,7 @@ bash infra/build-docker.sh local</code></pre>
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/tree/v2.0.0"
+              href="https://github.com/Solutionmax/amfora/tree/v2.0.1"
               >Browse the release source ↗</a
             >
           </article>
@@ -157,6 +157,10 @@ bash infra/build-docker.sh local</code></pre>
           <aside class="release-index">
             <p class="eyebrow">RELEASE HISTORY</p>
             <nav aria-label="Release versions">
+              <a href="#v2-0-1"
+                ><strong>2.0.1</strong
+                ><time datetime="2026-09-22">22 Sep 2026</time></a
+              >
               <a href="#v2-0-0"
                 ><strong>2.0.0</strong
                 ><time datetime="2026-09-22">22 Sep 2026</time></a
@@ -181,10 +185,38 @@ bash infra/build-docker.sh local</code></pre>
             >
           </aside>
           <div class="release-entries">
-            <article class="release-entry" id="v2-0-0">
+            <article class="release-entry" id="v2-0-1">
               <div class="release-entry-heading">
                 <div>
                   <p class="eyebrow">LATEST RELEASE</p>
+                  <h2>Amfora 2.0.1</h2>
+                </div>
+                <time datetime="2026-09-22">22 September 2026</time>
+              </div>
+              <p>A security and install release. Update if you run 2.0.0.</p>
+              <h3>Security</h3>
+              <ul>
+                <li>The brandpack key is built into the server; a key pair of your own and a self signed pack are refused.</li>
+                <li>Administrator checks read the account from the database on every request, so a demoted or deactivated administrator loses access at once.</li>
+                <li>The unused <code>/s3/*</code> routes, which answered without a session, are removed.</li>
+                <li>New tests for the administrator guard, these routes and the attachment rule for uploaded HTML and SVG.</li>
+              </ul>
+              <h3>Install</h3>
+              <ul>
+                <li>The installer pulls the published image, pinned to the release: Docker with Compose v2 is enough, and a new install starts in about a minute. <code>--source</code> builds the release tag.</li>
+                <li>The repository's <code>docker-compose.yaml</code> uses the published image; the README and docs explain how to update.</li>
+              </ul>
+              <h3>Website</h3>
+              <ul>
+                <li>Findable by search engines, with a sitemap, a link preview image, icons and lazily loaded screenshots.</li>
+                <li>New guide: <a href="/palmr/">moving from Palmr</a>.</li>
+                <li>Buying opens a confirmation page first; only its button starts a Stripe checkout.</li>
+              </ul>
+            </article>
+            <article class="release-entry" id="v2-0-0">
+              <div class="release-entry-heading">
+                <div>
+                  <p class="eyebrow">RELEASE</p>
                   <h2>Amfora 2.0.0</h2>
                 </div>
                 <time datetime="2026-09-22">22 September 2026</time>
@@ -559,7 +591,7 @@ docker compose up -d --no-build amfora</code></pre>
         </div>
       </section>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.0 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.0.1 &middot; released 22 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>
