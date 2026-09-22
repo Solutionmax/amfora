@@ -26,6 +26,7 @@ if tool=='docker':
  if args[:2]==['buildx','prune']:
   print('old options' if mode=='old' else '--max-used-space --reserved-space --min-free-space')
  if args[:1]==['inspect'] or args[:2]==['volume','inspect']:sys.exit(0 if mode=='existing-data' else 1)
+ if args[:2]==['compose','pull']:sys.exit(1 if mode=='pull' else 0)
  if args[:3]==['compose','up','-d']:sys.exit(1 if mode=='start' else 0)
 '''
             for tool in ['git', 'docker']:
@@ -40,23 +41,46 @@ if tool=='docker':
             result = subprocess.run(['sh', '-s', '--', *args], input=INSTALLER.read_text(), cwd=root, env=env, capture_output=True, text=True)
             calls = (root/'calls').read_text() if (root/'calls').exists() else ''
             if existing:self.assertEqual((root/'amfora/keep').read_text(), 'keep')
+            compose = root/'amfora/docker-compose.yaml'
+            self.compose = compose.read_text() if compose.exists() else ''
             return result, calls
 
-    def test_success(self):
-        r,c=self.run_installer(); self.assertEqual(r.returncode,0,r.stderr); self.assertIn('compose up -d --no-build',c); self.assertIn('localhost:5487',r.stdout)
+    def version(self):
+        return next(l.split('"')[1] for l in INSTALLER.read_text().splitlines() if 'AMFORA_VERSION="' in l)
+
+    # Default: the published image, pinned to the release.
+    def test_image_success(self):
+        for args in (('--docker',), ()):
+            with self.subTest(args=args):
+                r,c=self.run_installer(args=args); self.assertEqual(r.returncode,0,r.stderr)
+                self.assertIn('compose pull',c); self.assertIn('compose up -d',c); self.assertNotIn('git',c); self.assertNotIn('buildx',c)
+                self.assertIn('ghcr.io/solutionmax/amfora:'+self.version(),self.compose); self.assertIn('localhost:5487',r.stdout)
     def test_help_without_dependencies(self):
         r,c=self.run_installer(args=('--help',)); self.assertEqual(r.returncode,0); self.assertEqual(c,'')
-    def test_reject_php(self):
+    def test_reject_unknown(self):
         r,c=self.run_installer(args=('--php',)); self.assertNotEqual(r.returncode,0); self.assertEqual(c,'')
     def test_existing_directory_untouched(self):
-        r,c=self.run_installer(existing=True); self.assertNotEqual(r.returncode,0); self.assertNotIn('clone',c)
-    def test_preflight_failures_do_not_clone(self):
-        for mode in ['auth','daemon','old','existing-data']:
+        r,c=self.run_installer(existing=True); self.assertNotEqual(r.returncode,0); self.assertNotIn('pull',c); self.assertNotIn('clone',c)
+    def test_preflight_failures_do_nothing(self):
+        for mode in ['daemon','existing-data']:
             with self.subTest(mode=mode):
-                r,c=self.run_installer(mode); self.assertNotEqual(r.returncode,0); self.assertNotIn('git clone',c)
-    def test_build_failure_does_not_start(self):
-        r,c=self.run_installer('build'); self.assertNotEqual(r.returncode,0); self.assertNotIn('compose up',c)
+                r,c=self.run_installer(mode); self.assertNotEqual(r.returncode,0); self.assertNotIn('pull',c); self.assertEqual(self.compose,'')
+    def test_pull_failure_does_not_start(self):
+        r,c=self.run_installer('pull'); self.assertNotEqual(r.returncode,0); self.assertNotIn('compose up',c)
     def test_start_failure_is_reported(self):
-        r,c=self.run_installer('start'); self.assertNotEqual(r.returncode,0); self.assertNotIn('Installation complete',r.stdout)
+        r,c=self.run_installer('start'); self.assertNotEqual(r.returncode,0); self.assertNotIn('is starting',r.stdout)
+
+    # --source: clone the release tag and build it.
+    def test_source_success(self):
+        r,c=self.run_installer(args=('--source',)); self.assertEqual(r.returncode,0,r.stderr)
+        self.assertIn('git clone --branch v'+self.version()+' --depth 1',c); self.assertIn('compose up -d',c)
+    def test_source_preflight_failures_do_not_clone(self):
+        for mode in ['old','daemon','existing-data']:
+            with self.subTest(mode=mode):
+                r,c=self.run_installer(mode,args=('--source',)); self.assertNotEqual(r.returncode,0); self.assertNotIn('git clone',c)
+    def test_source_clone_failure(self):
+        r,c=self.run_installer('auth',args=('--source',)); self.assertNotEqual(r.returncode,0); self.assertNotIn('compose up',c)
+    def test_source_build_failure_does_not_start(self):
+        r,c=self.run_installer('build',args=('--source',)); self.assertNotEqual(r.returncode,0); self.assertNotIn('compose up',c)
 
 if __name__ == '__main__': unittest.main()
