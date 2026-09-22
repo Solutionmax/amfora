@@ -49,6 +49,18 @@ A new interface, front and back, and a white-label model that runs on the server
   no first-run exception. See `docs/BRANDPACK.md`.
 - Buying one: <https://amfora.solutionmax.net/brandpack/>.
 
+## Security
+
+- The admin guard on the application settings routes skipped authentication whenever the
+  installation had one user or fewer, which is every single-admin installation: the
+  configuration, including the SMTP password, could be read and changed without a session.
+  The exception now applies only during first run. Upgrade for this alone.
+- Files that recipients upload through a receive link are streamed as an attachment with a
+  sandbox policy when they are html, svg, xml or javascript, so an uploaded page can never run
+  on the application origin when an administrator opens it.
+- Custom CSS (new in 2.0) is escaped so it can never close its style element, and CSS escape
+  sequences are decoded before the filter runs.
+
 ## Upgrading
 
 Pull the image or press Update. `prisma db push` adds nothing new; three app configs are
