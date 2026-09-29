@@ -846,6 +846,20 @@
         "title": "Bu Bağlantı Tükendi.",
         "text": "Yalnızca sınırlı sayıda açılabiliyordu ve bu sınıra ulaşıldı. Gönderen kişiden yeni bir bağlantı isteyin."
       }
+    },
+    "stage": {
+      "ready": "İndirmeye hazır",
+      "shared": "bunu seninle paylaştı · {date}",
+      "availableFor": "Kalan süre",
+      "total": "Toplam",
+      "files": "Dosyalar",
+      "left": "{days}g {hours}s {minutes}dk",
+      "seconds": "{seconds}sn",
+      "ended": "Süresi doldu",
+      "maxSize": "Maks. dosya boyutu",
+      "perUpload": "Yükleme başına dosya",
+      "transfer": "Aktarım",
+      "encrypted": "Şifreli"
     }
   },
   "qrCodeModal": {

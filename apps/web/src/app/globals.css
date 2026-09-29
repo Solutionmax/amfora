@@ -288,6 +288,152 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
+  /* Download and receive pages: the cover (or accent) fills the screen and drifts slowly. */
+  .share-backdrop {
+    position: fixed;
+    inset: -24px;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--primary) 85%, #0c1626),
+      color-mix(in oklab, var(--primary) 55%, #0c1626) 60%,
+      #0c1626
+    );
+    transition: translate 0.4s ease-out;
+  }
+  .share-backdrop-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .share-backdrop-bg {
+    position: absolute;
+    inset: 0;
+    background-image: var(--public-bg-image);
+    background-size: cover;
+    background-position: center;
+  }
+  /* Always there, so a light accent or a bright cover never washes out the white type. */
+  .share-backdrop-shade {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 18, 34, 0.25);
+  }
+  .share-backdrop-photo .share-backdrop-shade {
+    background: rgba(8, 18, 34, 0.58);
+  }
+  @media (min-width: 1024px) {
+    .share-backdrop-photo .share-backdrop-shade {
+      background: linear-gradient(100deg, rgba(8, 18, 34, 0.75), rgba(8, 18, 34, 0.35));
+    }
+  }
+  .share-text {
+    text-shadow: 0 1px 12px rgba(8, 18, 34, 0.35);
+  }
+  .share-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    will-change: transform;
+  }
+  .share-blob-1 {
+    width: 55vw;
+    height: 55vw;
+    left: -10vw;
+    top: -20vw;
+    opacity: 0.7;
+    background: color-mix(in oklab, var(--primary) 65%, white);
+    animation: share-drift-a 26s ease-in-out infinite alternate;
+  }
+  .share-blob-2 {
+    width: 45vw;
+    height: 45vw;
+    right: -12vw;
+    top: 10vh;
+    opacity: 0.45;
+    background: color-mix(in oklab, var(--primary) 40%, white);
+    animation: share-drift-b 32s ease-in-out infinite alternate;
+  }
+  .share-blob-3 {
+    width: 50vw;
+    height: 50vw;
+    left: 25vw;
+    bottom: -30vw;
+    opacity: 0.8;
+    background: #0c1626;
+    animation: share-drift-a 38s ease-in-out infinite alternate-reverse;
+  }
+  /* Over a photo the light only tints, it does not paint over the picture. */
+  .share-backdrop-photo .share-blob {
+    mix-blend-mode: soft-light;
+  }
+  .share-dots {
+    position: absolute;
+    inset: 0;
+    opacity: 0.14;
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+    background-size: 16px 16px;
+    mask-image: radial-gradient(80% 70% at 70% 40%, #000, transparent);
+  }
+  .share-rings {
+    position: absolute;
+    right: 8vw;
+    top: 50%;
+    width: 70vh;
+    height: 70vh;
+    margin-top: -35vh;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    animation: share-spin 90s linear infinite;
+  }
+  .share-rings::before,
+  .share-rings::after {
+    content: "";
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.14);
+  }
+  .share-rings::after {
+    inset: 28%;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .share-rings > i {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--primary) 35%, white);
+    box-shadow: 0 0 16px color-mix(in oklab, var(--primary) 35%, white);
+  }
+  .share-card {
+    transition: translate 0.3s ease-out;
+    animation: share-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+  .share-rise {
+    animation: share-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .share-word {
+    display: inline-block;
+    animation: share-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @media (max-width: 900px) {
+    .share-rings {
+      display: none;
+    }
+  }
+  /* The global rule only shortens animations; these would then jump to their end state. */
+  @media (prefers-reduced-motion: reduce) {
+    .share-blob,
+    .share-rings {
+      animation: none;
+    }
+  }
   .workspace-surface {
     background: var(--surface);
     border: 1px solid var(--line);
@@ -319,6 +465,29 @@
   }
   to {
     transform: translateX(300%);
+  }
+}
+
+/* Download and receive pages: slow light, a turning ring, content rising into place. */
+@keyframes share-drift-a {
+  to {
+    transform: translate(12vw, 8vh) scale(1.15);
+  }
+}
+@keyframes share-drift-b {
+  to {
+    transform: translate(-10vw, 14vh) scale(0.9);
+  }
+}
+@keyframes share-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes share-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
 

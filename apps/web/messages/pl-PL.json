@@ -846,6 +846,20 @@
         "title": "Ten link został wyczerpany.",
         "text": "Mógł zostać otwarty ograniczoną liczbę razy i ten limit został osiągnięty. Poproś nadawcę o nowy link."
       }
+    },
+    "stage": {
+      "ready": "Gotowe do pobrania",
+      "shared": "udostępnił(a) Ci to · {date}",
+      "availableFor": "Dostępne jeszcze",
+      "total": "Łącznie",
+      "files": "Pliki",
+      "left": "{days}d {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Wygasło",
+      "maxSize": "Maks. rozmiar pliku",
+      "perUpload": "Plików na przesyłanie",
+      "transfer": "Transfer",
+      "encrypted": "Szyfrowane"
     }
   },
   "qrCodeModal": {

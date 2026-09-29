@@ -846,6 +846,20 @@
         "title": "このリンクは使用回数の上限に達しました。",
         "text": "開ける回数に制限があり、その上限に達しました。送信者に新しいリンクをリクエストしてください。"
       }
+    },
+    "stage": {
+      "ready": "ダウンロードの準備ができました",
+      "shared": "があなたと共有しました · {date}",
+      "availableFor": "残り時間",
+      "total": "合計",
+      "files": "ファイル",
+      "left": "{days}日 {hours}時間 {minutes}分",
+      "seconds": "{seconds}秒",
+      "ended": "期限切れ",
+      "maxSize": "最大ファイルサイズ",
+      "perUpload": "1回のアップロードあたり",
+      "transfer": "転送",
+      "encrypted": "暗号化済み"
     }
   },
   "qrCodeModal": {

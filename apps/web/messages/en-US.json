@@ -846,6 +846,20 @@
         "title": "This link is used up.",
         "text": "It could be opened a limited number of times and that limit has been reached. Ask the sender for a new link."
       }
+    },
+    "stage": {
+      "ready": "Ready to download",
+      "shared": "shared this with you · {date}",
+      "availableFor": "Available for",
+      "total": "Total",
+      "files": "Files",
+      "left": "{days}d {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Expired",
+      "maxSize": "Max file size",
+      "perUpload": "Files per upload",
+      "transfer": "Transfer",
+      "encrypted": "Encrypted"
     }
   },
   "qrCodeModal": {

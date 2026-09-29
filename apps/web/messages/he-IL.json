@@ -846,6 +846,20 @@
         "title": "הקישור הזה נוצל עד תום.",
         "text": "ניתן היה לפתוח אותו מספר מוגבל של פעמים והמגבלה הזו הושגה. בקש מהשולח קישור חדש."
       }
+    },
+    "stage": {
+      "ready": "מוכן להורדה",
+      "shared": "שיתף/ה את זה איתך · {date}",
+      "availableFor": "זמין עוד",
+      "total": "סה״כ",
+      "files": "קבצים",
+      "left": "{days}י {hours}ש {minutes}ד",
+      "seconds": "{seconds}ש׳",
+      "ended": "פג תוקף",
+      "maxSize": "גודל קובץ מרבי",
+      "perUpload": "קבצים להעלאה",
+      "transfer": "העברה",
+      "encrypted": "מוצפן"
     }
   },
   "qrCodeModal": {

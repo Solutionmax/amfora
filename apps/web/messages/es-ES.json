@@ -846,6 +846,20 @@
         "title": "Este enlace se ha agotado.",
         "text": "Podía abrirse un número limitado de veces y se ha alcanzado ese límite. Pide a quien lo envió un enlace nuevo."
       }
+    },
+    "stage": {
+      "ready": "Listo para descargar",
+      "shared": "ha compartido esto contigo · {date}",
+      "availableFor": "Disponible durante",
+      "total": "Total",
+      "files": "Archivos",
+      "left": "{days}d {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Caducado",
+      "maxSize": "Tamaño máx. de archivo",
+      "perUpload": "Archivos por envío",
+      "transfer": "Transferencia",
+      "encrypted": "Cifrado"
     }
   },
   "qrCodeModal": {

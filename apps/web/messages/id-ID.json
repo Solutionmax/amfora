@@ -846,6 +846,20 @@
         "title": "Tautan ini telah habis.",
         "text": "Tautan ini hanya bisa dibuka sejumlah kali terbatas dan batas itu telah tercapai. Minta tautan baru kepada pengirim."
       }
+    },
+    "stage": {
+      "ready": "Siap diunduh",
+      "shared": "membagikan ini dengan Anda · {date}",
+      "availableFor": "Tersedia selama",
+      "total": "Total",
+      "files": "File",
+      "left": "{days}h {hours}j {minutes}m",
+      "seconds": "{seconds}d",
+      "ended": "Kedaluwarsa",
+      "maxSize": "Ukuran file maks.",
+      "perUpload": "File per unggahan",
+      "transfer": "Transfer",
+      "encrypted": "Terenkripsi"
     }
   },
   "qrCodeModal": {

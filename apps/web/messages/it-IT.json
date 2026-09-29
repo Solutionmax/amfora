@@ -846,6 +846,20 @@
         "title": "Questo link è esaurito.",
         "text": "Poteva essere aperto un numero limitato di volte e quel limite è stato raggiunto. Chiedi un nuovo link al mittente."
       }
+    },
+    "stage": {
+      "ready": "Pronto per il download",
+      "shared": "ha condiviso questo con te · {date}",
+      "availableFor": "Disponibile ancora",
+      "total": "Totale",
+      "files": "File",
+      "left": "{days}g {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Scaduto",
+      "maxSize": "Dimensione max file",
+      "perUpload": "File per caricamento",
+      "transfer": "Trasferimento",
+      "encrypted": "Crittografato"
     }
   },
   "qrCodeModal": {

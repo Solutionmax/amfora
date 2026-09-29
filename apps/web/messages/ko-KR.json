@@ -846,6 +846,20 @@
         "title": "이 링크는 사용이 끝났습니다.",
         "text": "제한된 횟수만큼만 열 수 있었고 그 한도에 도달했습니다. 보낸 사람에게 새 링크를 요청하세요."
       }
+    },
+    "stage": {
+      "ready": "다운로드 준비 완료",
+      "shared": "님이 공유했습니다 · {date}",
+      "availableFor": "남은 시간",
+      "total": "합계",
+      "files": "파일",
+      "left": "{days}일 {hours}시간 {minutes}분",
+      "seconds": "{seconds}초",
+      "ended": "만료됨",
+      "maxSize": "최대 파일 크기",
+      "perUpload": "업로드당 파일 수",
+      "transfer": "전송",
+      "encrypted": "암호화됨"
     }
   },
   "qrCodeModal": {

@@ -846,6 +846,20 @@
         "title": "Dieser Link ist aufgebraucht.",
         "text": "Er konnte nur eine begrenzte Anzahl von Malen geöffnet werden, und dieses Limit ist erreicht. Bitten Sie den Absender um einen neuen Link."
       }
+    },
+    "stage": {
+      "ready": "Bereit zum Download",
+      "shared": "hat das mit dir geteilt · {date}",
+      "availableFor": "Verfügbar noch",
+      "total": "Gesamt",
+      "files": "Dateien",
+      "left": "{days}T {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Abgelaufen",
+      "maxSize": "Max. Dateigröße",
+      "perUpload": "Dateien pro Upload",
+      "transfer": "Übertragung",
+      "encrypted": "Verschlüsselt"
     }
   },
   "qrCodeModal": {

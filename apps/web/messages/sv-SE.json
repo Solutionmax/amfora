@@ -846,6 +846,20 @@
         "title": "Den här länken är förbrukad.",
         "text": "Den kunde bara öppnas ett begränsat antal gånger och den gränsen har nåtts. Be avsändaren om en ny länk."
       }
+    },
+    "stage": {
+      "ready": "Redo att ladda ner",
+      "shared": "delade detta med dig · {date}",
+      "availableFor": "Tillgänglig i",
+      "total": "Totalt",
+      "files": "Filer",
+      "left": "{days}d {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Utgången",
+      "maxSize": "Max filstorlek",
+      "perUpload": "Filer per uppladdning",
+      "transfer": "Överföring",
+      "encrypted": "Krypterad"
     }
   },
   "qrCodeModal": {

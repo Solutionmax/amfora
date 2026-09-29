@@ -1,33 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { IconLock } from "@tabler/icons-react";
-import { format } from "date-fns";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 
-import { Chip, Statement } from "@/components/brand/statement";
-import { TransferShell } from "@/components/brand/transfer-shell";
+import { Countdown, StageShell, StageStory, type StageFact } from "@/components/brand/stage-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { FilePreviewModal } from "@/components/modals/file-preview-modal";
+import { Button } from "@/components/ui/button";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { formatFileSize } from "@/utils/format-file-size";
 import { PasswordModal } from "./components/password-modal";
-import { ShareNotFound } from "./components/share-not-found";
 import { ShareStage } from "./components/share-stage";
 import { usePublicShare } from "./hooks/use-public-share";
-
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
 
 export default function PublicSharePage() {
   const { appName } = useAppInfo();
   const t = useTranslations();
+  const locale = useLocale();
   const {
     isLoading,
     share,
@@ -57,50 +47,60 @@ export default function PublicSharePage() {
   const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
   const senderName = share?.name || appName;
 
-  const statement = share ? (
-    <Statement
-      title={t("public.download.title", { count: itemCount })}
-      accentLine={t("public.download.accent")}
-      quote={share.description || undefined}
-      chips={
-        <>
-          {share.security?.hasPassword && <Chip icon={<IconLock />}>{t("public.download.passwordVerified")}</Chip>}
-          {share.expiration && (
-            <Chip>{t("public.download.expires", { date: format(new Date(share.expiration), "d MMM") })}</Chip>
-          )}
-          <Chip>{formatFileSize(totalBytes)}</Chip>
-        </>
+  const sharedAt = new Date(share?.createdAt ?? "");
+  const sharedAtFormat = new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const facts: StageFact[] = share
+    ? [
+        ...(share.expiration
+          ? [{ label: t("public.stage.availableFor"), value: <Countdown until={share.expiration} />, wide: true }]
+          : []),
+        { label: t("public.stage.total"), value: formatFileSize(totalBytes) },
+        { label: t("public.stage.files"), value: itemCount },
+      ]
+    : [];
+
+  const story = share ? (
+    <StageStory
+      sender={{
+        name: senderName,
+        line: Number.isNaN(sharedAt.getTime())
+          ? ""
+          : t("public.stage.shared", { date: sharedAtFormat.format(sharedAt) }),
+      }}
+      headline={
+        share.description || `${t("public.download.title", { count: itemCount })} ${t("public.download.accent")}`
       }
-    >
-      <div className="order-first flex items-center gap-3">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-surface font-display text-base font-semibold text-primary shadow-[0_1px_0_var(--line),0_8px_20px_-10px_rgba(12,22,38,.35)]">
-          {initials(senderName) || "A"}
-        </span>
-        <span className="min-w-0">
-          <b className="block truncate text-[15px] font-semibold">{senderName}</b>
-          <span className="block text-[13px] text-ink-3">{t("public.download.via", { app: appName })}</span>
-        </span>
-      </div>
-    </Statement>
+      facts={facts}
+    />
   ) : isPasswordModalOpen ? (
-    <Statement title={t("public.state.password.title")} quote={t("public.state.password.text")} />
+    <StageStory headline={t("public.state.password.title")} text={t("public.state.password.text")} />
   ) : (
-    <Statement title={t(`public.state.${reason}.title`)} quote={t(`public.state.${reason}.text`)} />
+    <StageStory headline={t(`public.state.${reason}.title`)} text={t(`public.state.${reason}.text`)}>
+      <Button asChild size="lg" variant="secondary">
+        <Link href="/">{t("public.state.backHome")}</Link>
+      </Button>
+    </StageStory>
   );
 
+  const card = share ? (
+    <ShareStage
+      files={files}
+      folders={folders}
+      hasPassword={share.security?.hasPassword}
+      onDownload={handleDownload}
+      onDownloadFolder={(folderId, folderName) => handleDownload(`folder:${folderId}`, folderName)}
+      onBulkDownload={handleBulkDownload}
+      onPreview={setPreviewFile}
+    />
+  ) : undefined;
+
   return (
-    <TransferShell statement={statement}>
-      {!isPasswordModalOpen && !share && <ShareNotFound reason={reason} />}
-      {share && (
-        <ShareStage
-          files={files}
-          folders={folders}
-          onDownload={handleDownload}
-          onDownloadFolder={(folderId, folderName) => handleDownload(`folder:${folderId}`, folderName)}
-          onBulkDownload={handleBulkDownload}
-          onPreview={setPreviewFile}
-        />
-      )}
+    <StageShell story={story} card={card}>
       {previewFile && (
         <FilePreviewModal
           isOpen={!!previewFile}
@@ -116,6 +116,6 @@ export default function PublicSharePage() {
         onPasswordChange={setPassword}
         onSubmit={handlePasswordSubmit}
       />
-    </TransferShell>
+    </StageShell>
   );
 }

@@ -846,6 +846,20 @@
         "title": "此链接已用完。",
         "text": "此链接只能打开有限次数，现已达到该限制。请向发送者索取新链接。"
       }
+    },
+    "stage": {
+      "ready": "可以下载了",
+      "shared": "与你分享了此内容 · {date}",
+      "availableFor": "剩余时间",
+      "total": "总计",
+      "files": "文件",
+      "left": "{days}天 {hours}时 {minutes}分",
+      "seconds": "{seconds}秒",
+      "ended": "已过期",
+      "maxSize": "最大文件大小",
+      "perUpload": "每次上传文件数",
+      "transfer": "传输",
+      "encrypted": "已加密"
     }
   },
   "qrCodeModal": {

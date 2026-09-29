@@ -846,6 +846,20 @@
         "title": "Este link se esgotou.",
         "text": "Ele podia ser aberto um número limitado de vezes e esse limite foi atingido. Peça um novo link a quem enviou."
       }
+    },
+    "stage": {
+      "ready": "Pronto para baixar",
+      "shared": "compartilhou isto com você · {date}",
+      "availableFor": "Disponível por",
+      "total": "Total",
+      "files": "Arquivos",
+      "left": "{days}d {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Expirado",
+      "maxSize": "Tamanho máx. do arquivo",
+      "perUpload": "Arquivos por envio",
+      "transfer": "Transferência",
+      "encrypted": "Criptografado"
     }
   },
   "qrCodeModal": {

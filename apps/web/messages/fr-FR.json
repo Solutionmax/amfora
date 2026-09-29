@@ -846,6 +846,20 @@
         "title": "Ce lien est épuisé.",
         "text": "Il ne pouvait être ouvert qu'un nombre limité de fois et cette limite est atteinte. Demandez un nouveau lien à l'expéditeur."
       }
+    },
+    "stage": {
+      "ready": "Prêt à télécharger",
+      "shared": "a partagé ceci avec vous · {date}",
+      "availableFor": "Disponible encore",
+      "total": "Total",
+      "files": "Fichiers",
+      "left": "{days}j {hours}h {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Expiré",
+      "maxSize": "Taille max. du fichier",
+      "perUpload": "Fichiers par envoi",
+      "transfer": "Transfert",
+      "encrypted": "Chiffré"
     }
   },
   "qrCodeModal": {

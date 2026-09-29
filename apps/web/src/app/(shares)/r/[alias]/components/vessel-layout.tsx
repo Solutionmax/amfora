@@ -2,7 +2,7 @@
 
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
 
-import { TransferShell } from "@/components/brand/transfer-shell";
+import { StageShell } from "@/components/brand/stage-shell";
 import { MESSAGE_TYPES } from "../constants";
 import { VesselLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
@@ -90,5 +90,5 @@ export function VesselLayout({
     );
   };
 
-  return <TransferShell statement={<ReceiveStatement reverseShare={reverseShare} />}>{uploadSection()}</TransferShell>;
+  return <StageShell story={<ReceiveStatement reverseShare={reverseShare} />} card={uploadSection()} />;
 }

@@ -846,6 +846,20 @@
         "title": "Deze link is op.",
         "text": "Hij kon een beperkt aantal keren geopend worden en die limiet is bereikt. Vraag de afzender om een nieuwe link."
       }
+    },
+    "stage": {
+      "ready": "Klaar om te downloaden",
+      "shared": "heeft dit met je gedeeld · {date}",
+      "availableFor": "Beschikbaar nog",
+      "total": "Totaal",
+      "files": "Bestanden",
+      "left": "{days}d {hours}u {minutes}m",
+      "seconds": "{seconds}s",
+      "ended": "Verlopen",
+      "maxSize": "Max. bestandsgrootte",
+      "perUpload": "Bestanden per upload",
+      "transfer": "Overdracht",
+      "encrypted": "Versleuteld"
     }
   },
   "qrCodeModal": {

@@ -846,6 +846,20 @@
         "title": "Liên kết này đã hết lượt sử dụng.",
         "text": "Liên kết này chỉ có thể mở một số lần giới hạn và đã đạt đến giới hạn đó. Hãy xin người gửi một liên kết mới."
       }
+    },
+    "stage": {
+      "ready": "Sẵn sàng tải xuống",
+      "shared": "đã chia sẻ với bạn · {date}",
+      "availableFor": "Còn khả dụng",
+      "total": "Tổng",
+      "files": "Tệp",
+      "left": "{days}n {hours}g {minutes}p",
+      "seconds": "{seconds}g",
+      "ended": "Đã hết hạn",
+      "maxSize": "Kích thước tệp tối đa",
+      "perUpload": "Tệp mỗi lần tải lên",
+      "transfer": "Truyền tải",
+      "encrypted": "Đã mã hóa"
     }
   },
   "qrCodeModal": {
