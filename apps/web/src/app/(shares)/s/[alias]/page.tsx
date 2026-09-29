@@ -68,9 +68,8 @@ export default function PublicSharePage() {
     <StageStory
       sender={{
         name: senderName,
-        line: Number.isNaN(sharedAt.getTime())
-          ? ""
-          : t("public.stage.shared", { date: sharedAtFormat.format(sharedAt) }),
+        action: t("public.stage.shared"),
+        line: Number.isNaN(sharedAt.getTime()) ? undefined : sharedAtFormat.format(sharedAt),
       }}
       headline={
         share.description || `${t("public.download.title", { count: itemCount })} ${t("public.download.accent")}`
@@ -100,7 +99,7 @@ export default function PublicSharePage() {
   ) : undefined;
 
   return (
-    <StageShell story={story} card={card}>
+    <StageShell story={story} card={card} footnote={t("public.stage.sharedSecurely")}>
       {previewFile && (
         <FilePreviewModal
           isOpen={!!previewFile}

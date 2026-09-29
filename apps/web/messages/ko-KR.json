@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "다운로드 준비 완료",
-      "shared": "님이 공유했습니다 · {date}",
+      "shared": "님이 공유했습니다",
       "availableFor": "남은 시간",
       "total": "합계",
       "files": "파일",
@@ -859,7 +859,10 @@
       "maxSize": "최대 파일 크기",
       "perUpload": "업로드당 파일 수",
       "transfer": "전송",
-      "encrypted": "암호화됨"
+      "encrypted": "암호화됨",
+      "linkOnly": "링크로만 공유",
+      "noAccount": "계정 필요 없음",
+      "sharedSecurely": "안전하게 공유됨"
     }
   },
   "qrCodeModal": {

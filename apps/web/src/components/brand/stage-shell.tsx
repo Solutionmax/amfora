@@ -32,7 +32,17 @@ export function initials(name: string): string {
  * accent) fills the screen with slow drifting light; the story sits on it in large white type,
  * the working card floats beside it. Stacked on small screens.
  */
-export function StageShell({ story, card, children }: { story: ReactNode; card?: ReactNode; children?: ReactNode }) {
+export function StageShell({
+  story,
+  card,
+  footnote,
+  children,
+}: {
+  story: ReactNode;
+  card?: ReactNode;
+  footnote?: string;
+  children?: ReactNode;
+}) {
   const { appName, appLogo, appBackground, appShareCover } = useAppInfo();
   const backdrop = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLElement>(null);
@@ -68,14 +78,14 @@ export function StageShell({ story, card, children }: { story: ReactNode; card?:
         <div className="share-blob share-blob-1" />
         <div className="share-blob share-blob-2" />
         <div className="share-blob share-blob-3" />
-        <div className="share-backdrop-shade" />
+        {(cover || appBackground) && <div className="share-backdrop-shade" />}
         <div className="share-dots" />
         <div className="share-rings">
           <i />
         </div>
       </div>
 
-      <div className="relative mx-auto grid min-h-screen w-full max-w-[1320px] grid-rows-[auto_1fr_auto] px-4 py-5 md:px-10 md:py-7 lg:px-16">
+      <div className="relative grid min-h-screen w-full grid-rows-[auto_1fr_auto] px-4 py-5 md:px-[5vw] md:py-7 2xl:px-20">
         <header className="flex items-center justify-between gap-4">
           <Link href="/" className="flex min-w-0 items-center gap-2.5 text-white no-underline">
             <BrandMark className={cn("size-8 shrink-0 text-white", appLogo && "rounded-md bg-white/90 p-1")} />
@@ -94,7 +104,7 @@ export function StageShell({ story, card, children }: { story: ReactNode; card?:
 
         <main
           className={cn(
-            "grid items-center gap-8 py-8 lg:gap-24 lg:py-12",
+            "grid items-center gap-8 py-8 lg:gap-[clamp(24px,5vw,96px)] lg:py-12",
             card && "lg:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.9fr)]"
           )}
         >
@@ -106,7 +116,8 @@ export function StageShell({ story, card, children }: { story: ReactNode; card?:
           )}
         </main>
 
-        <footer className="flex items-center justify-center text-xs text-white/70 lg:justify-end">
+        <footer className="flex items-center justify-center text-xs text-white/70 lg:justify-between">
+          {footnote && <span className="hidden px-2 lg:inline">{footnote}</span>}
           <BrandCredit className="rounded-md px-2 py-1.5 hover:bg-white/10 hover:text-white" />
         </footer>
       </div>
@@ -131,7 +142,7 @@ export function StageStory({
   children,
 }: {
   eyebrow?: string;
-  sender?: { name: string; line: string };
+  sender?: { name: string; action: string; line?: string };
   headline: string;
   text?: string | null;
   facts?: StageFact[];
@@ -149,8 +160,10 @@ export function StageStory({
             {initials(sender.name) || "A"}
           </span>
           <span className="min-w-0">
-            <b className="block truncate font-semibold">{sender.name}</b>
-            <small className="block text-[13px] text-white/80">{sender.line}</small>
+            <span className="block truncate">
+              <b className="font-semibold">{sender.name}</b> {sender.action}
+            </span>
+            {sender.line && <small className="block text-[13px] text-white/80">{sender.line}</small>}
           </span>
         </div>
       )}

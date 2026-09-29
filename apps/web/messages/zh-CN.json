@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "可以下载了",
-      "shared": "与你分享了此内容 · {date}",
+      "shared": "与你分享了此内容",
       "availableFor": "剩余时间",
       "total": "总计",
       "files": "文件",
@@ -859,7 +859,10 @@
       "maxSize": "最大文件大小",
       "perUpload": "每次上传文件数",
       "transfer": "传输",
-      "encrypted": "已加密"
+      "encrypted": "已加密",
+      "linkOnly": "仅限链接访问",
+      "noAccount": "无需账户",
+      "sharedSecurely": "安全分享"
     }
   },
   "qrCodeModal": {

@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "Ready to download",
-      "shared": "shared this with you · {date}",
+      "shared": "shared this with you",
       "availableFor": "Available for",
       "total": "Total",
       "files": "Files",
@@ -859,7 +859,10 @@
       "maxSize": "Max file size",
       "perUpload": "Files per upload",
       "transfer": "Transfer",
-      "encrypted": "Encrypted"
+      "encrypted": "Encrypted",
+      "linkOnly": "Link only",
+      "noAccount": "No account needed",
+      "sharedSecurely": "Shared securely"
     }
   },
   "qrCodeModal": {

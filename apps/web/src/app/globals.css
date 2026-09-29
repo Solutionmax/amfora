@@ -293,12 +293,7 @@
     position: fixed;
     inset: -24px;
     overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--primary) 85%, #0c1626),
-      color-mix(in oklab, var(--primary) 55%, #0c1626) 60%,
-      #0c1626
-    );
+    background: linear-gradient(135deg, var(--primary), color-mix(in oklab, var(--primary) 55%, #0c1626) 60%, #0c1626);
     transition: translate 0.4s ease-out;
   }
   .share-backdrop-image {
@@ -315,13 +310,10 @@
     background-size: cover;
     background-position: center;
   }
-  /* Always there, so a light accent or a bright cover never washes out the white type. */
+  /* Over a cover or background photo, so a bright picture never washes out the white type. */
   .share-backdrop-shade {
     position: absolute;
     inset: 0;
-    background: rgba(8, 18, 34, 0.25);
-  }
-  .share-backdrop-photo .share-backdrop-shade {
     background: rgba(8, 18, 34, 0.58);
   }
   @media (min-width: 1024px) {
@@ -344,7 +336,7 @@
     left: -10vw;
     top: -20vw;
     opacity: 0.7;
-    background: color-mix(in oklab, var(--primary) 65%, white);
+    background: color-mix(in oklab, var(--primary) 75%, white);
     animation: share-drift-a 26s ease-in-out infinite alternate;
   }
   .share-blob-2 {
@@ -353,7 +345,7 @@
     right: -12vw;
     top: 10vh;
     opacity: 0.45;
-    background: color-mix(in oklab, var(--primary) 40%, white);
+    background: color-mix(in oklab, var(--primary) 50%, white);
     animation: share-drift-b 32s ease-in-out infinite alternate;
   }
   .share-blob-3 {
@@ -412,6 +404,10 @@
     box-shadow: 0 0 16px color-mix(in oklab, var(--primary) 35%, white);
   }
   .share-card {
+    background: color-mix(in oklab, var(--surface) 94%, transparent);
+    backdrop-filter: blur(20px);
+    border-color: color-mix(in oklab, white 50%, transparent);
+    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55);
     transition: translate 0.3s ease-out;
     animation: share-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
   }

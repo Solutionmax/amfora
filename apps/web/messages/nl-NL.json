@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "Klaar om te downloaden",
-      "shared": "heeft dit met je gedeeld · {date}",
+      "shared": "heeft dit met je gedeeld",
       "availableFor": "Beschikbaar nog",
       "total": "Totaal",
       "files": "Bestanden",
@@ -859,7 +859,10 @@
       "maxSize": "Max. bestandsgrootte",
       "perUpload": "Bestanden per upload",
       "transfer": "Overdracht",
-      "encrypted": "Versleuteld"
+      "encrypted": "Versleuteld",
+      "linkOnly": "Alleen via link",
+      "noAccount": "Geen account nodig",
+      "sharedSecurely": "Veilig gedeeld"
     }
   },
   "qrCodeModal": {

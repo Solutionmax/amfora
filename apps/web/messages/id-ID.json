@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "Siap diunduh",
-      "shared": "membagikan ini dengan Anda · {date}",
+      "shared": "membagikan ini dengan Anda",
       "availableFor": "Tersedia selama",
       "total": "Total",
       "files": "File",
@@ -859,7 +859,10 @@
       "maxSize": "Ukuran file maks.",
       "perUpload": "File per unggahan",
       "transfer": "Transfer",
-      "encrypted": "Terenkripsi"
+      "encrypted": "Terenkripsi",
+      "linkOnly": "Hanya lewat tautan",
+      "noAccount": "Tidak perlu akun",
+      "sharedSecurely": "Dibagikan dengan aman"
     }
   },
   "qrCodeModal": {

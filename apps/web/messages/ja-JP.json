@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "ダウンロードの準備ができました",
-      "shared": "があなたと共有しました · {date}",
+      "shared": "があなたと共有しました",
       "availableFor": "残り時間",
       "total": "合計",
       "files": "ファイル",
@@ -859,7 +859,10 @@
       "maxSize": "最大ファイルサイズ",
       "perUpload": "1回のアップロードあたり",
       "transfer": "転送",
-      "encrypted": "暗号化済み"
+      "encrypted": "暗号化済み",
+      "linkOnly": "リンクを知っている人のみ",
+      "noAccount": "アカウント不要",
+      "sharedSecurely": "安全に共有"
     }
   },
   "qrCodeModal": {

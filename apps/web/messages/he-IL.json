@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "מוכן להורדה",
-      "shared": "שיתף/ה את זה איתך · {date}",
+      "shared": "שיתף/ה את זה איתך",
       "availableFor": "זמין עוד",
       "total": "סה״כ",
       "files": "קבצים",
@@ -859,7 +859,10 @@
       "maxSize": "גודל קובץ מרבי",
       "perUpload": "קבצים להעלאה",
       "transfer": "העברה",
-      "encrypted": "מוצפן"
+      "encrypted": "מוצפן",
+      "linkOnly": "דרך קישור בלבד",
+      "noAccount": "אין צורך בחשבון",
+      "sharedSecurely": "שותף באופן מאובטח"
     }
   },
   "qrCodeModal": {

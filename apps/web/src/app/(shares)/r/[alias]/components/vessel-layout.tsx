@@ -1,6 +1,7 @@
 "use client";
 
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
 import { StageShell } from "@/components/brand/stage-shell";
 import { MESSAGE_TYPES } from "../constants";
@@ -20,6 +21,7 @@ export function VesselLayout({
   isLinkNotFound,
   isLinkExpired,
 }: VesselLayoutProps) {
+  const t = useTranslations();
   const uploadSection = () => {
     if (hasUploadedSuccessfully) {
       return (
@@ -90,5 +92,11 @@ export function VesselLayout({
     );
   };
 
-  return <StageShell story={<ReceiveStatement reverseShare={reverseShare} />} card={uploadSection()} />;
+  return (
+    <StageShell
+      story={<ReceiveStatement reverseShare={reverseShare} />}
+      card={uploadSection()}
+      footnote={t("public.stage.sharedSecurely")}
+    />
+  );
 }

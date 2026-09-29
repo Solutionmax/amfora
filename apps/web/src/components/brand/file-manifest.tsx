@@ -24,11 +24,14 @@ export function FileManifest({
   items,
   total,
   compact = false,
+  accentTiles = false,
   className,
 }: {
   items: ManifestItem[];
   total?: { label: ReactNode; size?: number };
   compact?: boolean;
+  /** One accent colour for every tile instead of a colour per file type. */
+  accentTiles?: boolean;
   className?: string;
 }) {
   return (
@@ -38,7 +41,7 @@ export function FileManifest({
           const Icon = getFileIcon(item.name).icon;
           const row = (
             <>
-              <span className={cn("tile", compact && "tile-sm", TILE_CLASS[item.kind])}>
+              <span className={cn("tile", compact && "tile-sm", !accentTiles && TILE_CLASS[item.kind])}>
                 {item.icon ?? <Icon className={compact ? "size-4" : "size-5"} strokeWidth={1.75} />}
               </span>
               <span className="min-w-0">

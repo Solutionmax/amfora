@@ -849,7 +849,7 @@
     },
     "stage": {
       "ready": "Sẵn sàng tải xuống",
-      "shared": "đã chia sẻ với bạn · {date}",
+      "shared": "đã chia sẻ với bạn",
       "availableFor": "Còn khả dụng",
       "total": "Tổng",
       "files": "Tệp",
@@ -859,7 +859,10 @@
       "maxSize": "Kích thước tệp tối đa",
       "perUpload": "Tệp mỗi lần tải lên",
       "transfer": "Truyền tải",
-      "encrypted": "Đã mã hóa"
+      "encrypted": "Đã mã hóa",
+      "linkOnly": "Chỉ qua liên kết",
+      "noAccount": "Không cần tài khoản",
+      "sharedSecurely": "Chia sẻ an toàn"
     }
   },
   "qrCodeModal": {

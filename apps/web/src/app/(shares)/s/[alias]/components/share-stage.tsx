@@ -73,20 +73,22 @@ export function ShareStage({
   const openPreview =
     onPreview && first && canPreviewOnDownloadPage(first.name, appSharePlayback) ? () => onPreview(first) : undefined;
 
+  const rowIcon = <IconDownload className="size-[18px] text-ink-3" aria-hidden="true" />;
   const items: ManifestItem[] = [
     ...folders.map((folder) => ({
       id: `folder:${folder.id}`,
       name: folder.name,
       kind: "other" as const,
       subline: t("public.download.folder"),
+      trailing: rowIcon,
       onClick: () => runDownload(() => onDownloadFolder(folder.id, folder.name)),
     })),
     ...files.map((file) => ({
       id: file.id,
       name: file.name,
-      size: Number(file.size || 0),
       kind: kindFromName(file.name),
-      subline: t(`public.kind.${kindFromName(file.name)}`),
+      subline: `${t(`public.kind.${kindFromName(file.name)}`)} · ${formatFileSize(Number(file.size || 0))}`,
+      trailing: rowIcon,
       onClick: () => runDownload(() => onDownload(file.objectName, file.name)),
     })),
   ];
@@ -105,7 +107,7 @@ export function ShareStage({
         {formatFileSize(totalBytes)}
       </p>
 
-      {!single && itemCount > 0 && <FileManifest items={items} className="mt-4" />}
+      {!single && itemCount > 0 && <FileManifest items={items} accentTiles className="mt-4" />}
 
       <div className="mt-5 flex gap-2.5">
         <Button
@@ -117,7 +119,7 @@ export function ShareStage({
         >
           {isDownloading ? <IconLoader2 className="size-5 animate-spin" /> : <IconDownload className="size-5" />}
           {single ? t("share.download") : t("share.downloadAll")}
-          <span className="font-normal opacity-80">· {formatFileSize(totalBytes)}</span>
+          <span>· {formatFileSize(totalBytes)}</span>
         </Button>
         {openPreview && (
           <Button type="button" size="lg" variant="outline" className="h-12" onClick={openPreview}>
@@ -128,13 +130,11 @@ export function ShareStage({
       </div>
 
       <p className="mt-3.5 flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1 text-xs text-ink-3">
-        {hasPassword && (
-          <span className="inline-flex items-center gap-1">
-            <IconLock className="size-3.5 text-primary" />
-            {t("public.download.passwordVerified")}
-          </span>
-        )}
-        <span>{single ? t("public.download.noteSingle") : t("public.download.noteZip")}</span>
+        <span className="inline-flex items-center gap-1">
+          <IconLock className="size-3.5 text-primary" />
+          {hasPassword ? t("public.download.passwordVerified") : t("public.stage.linkOnly")}
+        </span>
+        <span>{t("public.stage.noAccount")}</span>
       </p>
     </div>
   );
