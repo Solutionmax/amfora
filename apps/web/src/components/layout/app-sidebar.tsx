@@ -143,19 +143,25 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         </div>
 
         <div className="flex items-center gap-2.5 border-t border-line px-1.5 pt-3">
-          <Avatar className="size-[30px]">
-            <AvatarImage src={user?.image as string | undefined} />
-            <AvatarFallback className="bg-primary-soft text-xs font-semibold text-primary">
-              {user?.firstName?.[0]}
-              {user?.lastName?.[0]}
-            </AvatarFallback>
-          </Avatar>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-semibold">
-              {user?.firstName} {user?.lastName}
-            </p>
-            <p className="truncate text-xs text-ink-3">{isAdmin ? t("navbar.roleAdmin") : t("navbar.roleUser")}</p>
-          </div>
+          <Link
+            href="/profile"
+            onClick={onNavigate}
+            className="-m-1 flex min-w-0 flex-1 items-center gap-2.5 rounded-[var(--radius)] p-1 transition-colors duration-150 hover:bg-surface-2"
+          >
+            <Avatar className="size-[30px]">
+              <AvatarImage src={user?.image as string | undefined} />
+              <AvatarFallback className="bg-primary-soft text-xs font-semibold text-primary">
+                {user?.firstName?.[0]}
+                {user?.lastName?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-semibold">
+                {user?.firstName} {user?.lastName}
+              </p>
+              <p className="truncate text-xs text-ink-3">{isAdmin ? t("navbar.roleAdmin") : t("navbar.roleUser")}</p>
+            </div>
+          </Link>
           <Button variant="ghost" size="icon" className="size-8" onClick={handleLogout} aria-label={t("navbar.logout")}>
             <IconLogout className="size-[18px]" />
           </Button>
