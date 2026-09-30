@@ -2278,5 +2278,18 @@
     "passwordMinLength": "Wachtwoord moet minimaal 6 tekens bevatten",
     "nameRequired": "Naam is verplicht",
     "required": "Dit veld is verplicht"
+  },
+  "ui": {
+    "unsavedChanges": "Niet opgeslagen wijzigingen",
+    "discard": "Verwerpen",
+    "back": "Terug",
+    "tags": {
+      "neverExpires": "Verloopt nooit",
+      "active": "Actief",
+      "expired": "Verlopen",
+      "inactive": "Inactief",
+      "protected": "Beveiligd",
+      "public": "Openbaar"
+    }
   }
 }

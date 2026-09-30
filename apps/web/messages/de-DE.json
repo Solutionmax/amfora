@@ -2278,5 +2278,18 @@
     "passwordRequired": "Passwort ist erforderlich",
     "nameRequired": "Name ist erforderlich",
     "required": "Dieses Feld ist erforderlich"
+  },
+  "ui": {
+    "unsavedChanges": "Nicht gespeicherte Änderungen",
+    "discard": "Verwerfen",
+    "back": "Zurück",
+    "tags": {
+      "neverExpires": "Läuft nie ab",
+      "active": "Aktiv",
+      "expired": "Abgelaufen",
+      "inactive": "Inaktiv",
+      "protected": "Geschützt",
+      "public": "Öffentlich"
+    }
   }
 }

@@ -237,11 +237,11 @@ export function GlobalDropZone({ onSuccess, children, currentFolderId }: GlobalD
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "uploading":
-        return <IconLoader size={14} className="animate-spin text-blue-500" />;
+        return <IconLoader size={14} className="animate-spin text-primary" />;
       case "success":
-        return <IconCloudUpload size={14} className="text-green-500" />;
+        return <IconCloudUpload size={14} className="text-ok" />;
       case "error":
-        return <IconX size={14} className="text-red-500" />;
+        return <IconX size={14} className="text-bad" />;
       default:
         return null;
     }
@@ -252,11 +252,11 @@ export function GlobalDropZone({ onSuccess, children, currentFolderId }: GlobalD
       {children}
 
       {isDragOver && (
-        <div className="fixed inset-0 z-50 dark:bg-black/80 bg-white/90 border-2 border-dashed dark:border-primary/50 border-primary/90 rounded-lg m-1 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 m-2 flex items-center justify-center rounded-2xl border-2 border-dashed border-primary bg-background/90 backdrop-blur-[2px]">
           <div className="text-center">
-            <IconCloudUpload size={64} className="text-primary mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-primary mb-2">{t("uploadFile.globalDrop.title")}</h3>
-            <p className="text-lg dark:text-muted-foreground text-black">{t("uploadFile.globalDrop.description")}</p>
+            <IconCloudUpload size={44} stroke={1.5} className="text-primary mx-auto mb-3" />
+            <h3 className="font-display text-2xl font-bold text-ink mb-1.5">{t("uploadFile.globalDrop.title")}</h3>
+            <p className="text-ink-3">{t("uploadFile.globalDrop.description")}</p>
           </div>
         </div>
       )}

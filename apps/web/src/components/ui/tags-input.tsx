@@ -66,8 +66,7 @@ export function TagsInput({ value = [], onChange, placeholder, disabled, classNa
           variant="outline"
           className={cn(
             "flex items-center gap-1 pl-2 pr-1 h-6 text-xs mt-[1px] rounded-[6px]",
-            "bg-slate-300 text-gray-800 border-slate-200  hover:text-gray-800",
-            "dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700",
+            "border-line-2 bg-surface-2 text-ink-2 hover:text-ink-2",
             "hover:cursor-default"
           )}
         >

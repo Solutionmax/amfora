@@ -212,10 +212,10 @@ export function RecipientSelector({ shareId, selectedRecipients, shareAlias, onS
         </div>
 
         {hasSelection && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-primary-soft rounded-lg">
             <div className="flex items-center gap-2">
-              <IconCheck className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+              <IconCheck className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-ink">
                 {t("recipientSelector.selectedCount", { count: selectedForAction.size })}
               </span>
             </div>
@@ -270,7 +270,7 @@ export function RecipientSelector({ shareId, selectedRecipients, shareAlias, onS
                     <div
                       key={index}
                       className={`flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors ${
-                        isSelected ? "bg-blue-50 dark:bg-blue-950/30" : ""
+                        isSelected ? "bg-primary-soft" : ""
                       }`}
                     >
                       <Checkbox
@@ -280,8 +280,8 @@ export function RecipientSelector({ shareId, selectedRecipients, shareAlias, onS
                       />
 
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                          <IconMail className="h-4 w-4 text-primary" />
+                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center">
+                          <IconMail className="h-[17px] w-[17px] text-ink-icon" />
                         </div>
                         <span className="truncate font-medium">{email}</span>
                       </div>
@@ -291,7 +291,7 @@ export function RecipientSelector({ shareId, selectedRecipients, shareAlias, onS
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                            className="h-8 w-8 p-0 text-primary hover:bg-primary-soft hover:text-primary"
                             onClick={async () => {
                               const link = `${window.location.origin}/s/${shareAlias}`;
                               const loadingToast = toast.loading(t("recipientSelector.sendingNotifications"));
