@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 
-import { Countdown, StageShell, StageStory, type StageFact } from "@/components/brand/stage-shell";
+import { PublicShell, type PublicStory } from "@/components/brand/public-shell";
+import { Countdown, type StageFact } from "@/components/brand/stage-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { FilePreviewModal } from "@/components/modals/file-preview-modal";
 import { Button } from "@/components/ui/button";
@@ -64,27 +65,29 @@ export default function PublicSharePage() {
       ]
     : [];
 
-  const story = share ? (
-    <StageStory
-      sender={{
-        name: senderName,
-        action: t("public.stage.shared"),
-        line: Number.isNaN(sharedAt.getTime()) ? undefined : sharedAtFormat.format(sharedAt),
-      }}
-      headline={
-        share.description || `${t("public.download.title", { count: itemCount })} ${t("public.download.accent")}`
+  const readyTitle = `${t("public.download.title", { count: itemCount })} ${t("public.download.accent")}`;
+  const story: PublicStory = share
+    ? {
+        sender: {
+          name: senderName,
+          action: t("public.stage.shared"),
+          line: Number.isNaN(sharedAt.getTime()) ? undefined : sharedAtFormat.format(sharedAt),
+        },
+        headline: share.description || readyTitle,
+        title: readyTitle,
+        facts,
       }
-      facts={facts}
-    />
-  ) : isPasswordModalOpen ? (
-    <StageStory headline={t("public.state.password.title")} text={t("public.state.password.text")} />
-  ) : (
-    <StageStory headline={t(`public.state.${reason}.title`)} text={t(`public.state.${reason}.text`)}>
-      <Button asChild size="lg" variant="secondary">
-        <Link href="/">{t("public.state.backHome")}</Link>
-      </Button>
-    </StageStory>
-  );
+    : isPasswordModalOpen
+      ? { headline: t("public.state.password.title"), text: t("public.state.password.text") }
+      : {
+          headline: t(`public.state.${reason}.title`),
+          text: t(`public.state.${reason}.text`),
+          action: (
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/">{t("public.state.backHome")}</Link>
+            </Button>
+          ),
+        };
 
   const card = share ? (
     <ShareStage
@@ -99,7 +102,7 @@ export default function PublicSharePage() {
   ) : undefined;
 
   return (
-    <StageShell story={story} card={card} footnote={t("public.stage.sharedSecurely")}>
+    <PublicShell story={story} card={card} footnote={t("public.stage.sharedSecurely")}>
       {previewFile && (
         <FilePreviewModal
           isOpen={!!previewFile}
@@ -115,6 +118,6 @@ export default function PublicSharePage() {
         onPasswordChange={setPassword}
         onSubmit={handlePasswordSubmit}
       />
-    </StageShell>
+    </PublicShell>
   );
 }

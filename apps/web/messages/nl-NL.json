@@ -267,6 +267,16 @@
         "playback": "Video en audio afspelen op downloadpagina's",
         "playbackHint": "Uit: video- en audiobestanden kunnen alleen gedownload worden, zonder afspeelknop en zonder voorbeeld. Afbeeldingen, pdf's en tekst houden hun voorbeeld."
       },
+      "theme": {
+        "title": "Publieke pagina's",
+        "hint": "Hoe de inlog-, download- en ontvangstpagina's eruitzien voor elke bezoeker.",
+        "stage": "Podium",
+        "stageHint": "Kleur over het hele scherm, het bericht in grote letters.",
+        "workbench": "Werkbank",
+        "workbenchHint": "Een rustige zandkleurige werkbank naast een wit paneel.",
+        "seal": "Zegel",
+        "sealHint": "Eén kaart in het midden. Past het best bij je eigen merk."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Betaald",

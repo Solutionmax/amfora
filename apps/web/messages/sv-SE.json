@@ -267,6 +267,16 @@
         "playback": "Spela upp video och ljud på nedladdningssidor",
         "playbackHint": "Av: video- och ljudfiler kan bara laddas ned, utan uppspelningsknapp och utan förhandsvisning. Bilder, PDF:er och text behåller sin förhandsvisning."
       },
+      "theme": {
+        "title": "Publika sidor",
+        "hint": "Hur inloggnings-, nedladdnings- och mottagningssidorna ser ut för varje besökare.",
+        "stage": "Scen",
+        "stageHint": "Färg över hela skärmen, meddelandet i stor text.",
+        "workbench": "Arbetsbänk",
+        "workbenchHint": "En lugn sandfärgad bänk bredvid en vit panel.",
+        "seal": "Sigill",
+        "sealHint": "Ett centrerat kort. Passar bäst med ditt eget varumärke."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Betald",

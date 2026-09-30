@@ -3,11 +3,11 @@
 import { IconAlertTriangle, IconCheck, IconClock, IconInfoCircle } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { StageShell } from "@/components/brand/stage-shell";
+import { PublicShell } from "@/components/brand/public-shell";
 import { MESSAGE_TYPES } from "../constants";
 import { VesselLayoutProps } from "../types";
 import { FileUploadSection } from "./file-upload-section";
-import { ReceiveStatement } from "./receive-statement";
+import { useReceiveStory } from "./receive-statement";
 import { VesselStatusMessage } from "./shared/status-message";
 
 export function VesselLayout({
@@ -22,6 +22,7 @@ export function VesselLayout({
   isLinkExpired,
 }: VesselLayoutProps) {
   const t = useTranslations();
+  const story = useReceiveStory(reverseShare);
   const uploadSection = () => {
     if (hasUploadedSuccessfully) {
       return (
@@ -92,11 +93,5 @@ export function VesselLayout({
     );
   };
 
-  return (
-    <StageShell
-      story={<ReceiveStatement reverseShare={reverseShare} />}
-      card={uploadSection()}
-      footnote={t("public.stage.sharedSecurely")}
-    />
-  );
+  return <PublicShell story={story} card={uploadSection()} footnote={t("public.stage.sharedSecurely")} />;
 }

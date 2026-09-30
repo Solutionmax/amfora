@@ -3,8 +3,7 @@
 import { IconInbox, IconLock, IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Statement } from "@/components/brand/statement";
-import { TransferShell } from "@/components/brand/transfer-shell";
+import { PublicShell, type PublicStory } from "@/components/brand/public-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { LoginForm } from "./components/login-form";
@@ -28,53 +27,46 @@ export default function LoginPage() {
     return <LoadingScreen />;
   }
 
-  const statement = (
-    <Statement
-      title={firstAccess ? t("public.login.firstTitle") : t("public.login.title")}
-      accentLine={firstAccess ? t("public.login.firstAccent") : t("public.login.accent")}
-      quote={appDescription || undefined}
-    >
-      <div className="grid gap-3">
-        {TRUST.map(({ key, icon: Icon }) => (
-          <div key={key} className="flex items-start gap-3">
-            <span className="tile tile-sm border border-[color-mix(in_oklab,var(--line)_70%,transparent)] bg-[color-mix(in_oklab,var(--surface)_75%,transparent)] backdrop-blur-sm">
-              <Icon className="size-4" strokeWidth={1.75} />
-            </span>
-            <span>
-              <b className="block text-sm font-semibold">{t(`public.login.trust.${key}.title`)}</b>
-              <span className="block text-[13px] text-ink-3">{t(`public.login.trust.${key}.text`)}</span>
-            </span>
-          </div>
-        ))}
-      </div>
-    </Statement>
-  );
+  const story: PublicStory = {
+    headline: firstAccess
+      ? `${t("public.login.firstTitle")} ${t("public.login.firstAccent")}`
+      : `${t("public.login.title")} ${t("public.login.accent")}`,
+    text: appDescription || undefined,
+    trust: TRUST.map(({ key, icon }) => ({
+      icon,
+      title: t(`public.login.trust.${key}.title`),
+      text: t(`public.login.trust.${key}.text`),
+    })),
+  };
 
   return (
-    <TransferShell statement={statement}>
-      <div className="flex flex-col gap-5 px-6 py-7 md:px-7">
-        <LoginHeader firstAccess={firstAccess === true} />
-        {firstAccess ? (
-          <RegisterForm isVisible={login.isVisible} onToggleVisibility={login.toggleVisibility} />
-        ) : login.requiresTwoFactor ? (
-          <TwoFactorVerification
-            twoFactorCode={login.twoFactorCode}
-            setTwoFactorCode={login.setTwoFactorCode}
-            onSubmit={login.onTwoFactorSubmit}
-            error={login.error}
-            isSubmitting={login.isSubmitting}
-          />
-        ) : (
-          <LoginForm
-            error={login.error}
-            isVisible={login.isVisible}
-            onSubmit={login.onSubmit}
-            onToggleVisibility={login.toggleVisibility}
-            passwordAuthEnabled={login.passwordAuthEnabled}
-            authConfigLoading={login.authConfigLoading}
-          />
-        )}
-      </div>
-    </TransferShell>
+    <PublicShell
+      story={story}
+      card={
+        <div className="flex flex-col gap-5 px-6 py-7 md:px-7">
+          <LoginHeader firstAccess={firstAccess === true} />
+          {firstAccess ? (
+            <RegisterForm isVisible={login.isVisible} onToggleVisibility={login.toggleVisibility} />
+          ) : login.requiresTwoFactor ? (
+            <TwoFactorVerification
+              twoFactorCode={login.twoFactorCode}
+              setTwoFactorCode={login.setTwoFactorCode}
+              onSubmit={login.onTwoFactorSubmit}
+              error={login.error}
+              isSubmitting={login.isSubmitting}
+            />
+          ) : (
+            <LoginForm
+              error={login.error}
+              isVisible={login.isVisible}
+              onSubmit={login.onSubmit}
+              onToggleVisibility={login.toggleVisibility}
+              passwordAuthEnabled={login.passwordAuthEnabled}
+              authConfigLoading={login.authConfigLoading}
+            />
+          )}
+        </div>
+      }
+    />
   );
 }

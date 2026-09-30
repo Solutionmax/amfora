@@ -267,6 +267,16 @@
         "playback": "Reproducir vídeo y audio en las páginas de descarga",
         "playbackHint": "Desactivado, los archivos de vídeo y audio solo se pueden descargar: sin botón de reproducción ni vista previa. Las imágenes, los PDF y el texto conservan su vista previa."
       },
+      "theme": {
+        "title": "Páginas públicas",
+        "hint": "Cómo se ven las páginas de acceso, descarga y recepción para cada visitante.",
+        "stage": "Escenario",
+        "stageHint": "Color a pantalla completa, el mensaje en letra grande.",
+        "workbench": "Banco de trabajo",
+        "workbenchHint": "Un banco color arena y tranquilo junto a un panel blanco.",
+        "seal": "Sello",
+        "sealHint": "Una tarjeta centrada. Ideal con tu propia marca."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "De pago",

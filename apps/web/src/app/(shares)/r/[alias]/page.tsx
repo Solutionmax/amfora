@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import { StageShell, StageStory } from "@/components/brand/stage-shell";
+import { PublicShell } from "@/components/brand/public-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { DefaultLayout, PasswordModal } from "./components";
 import { useReverseShareUpload } from "./hooks/use-reverse-share-upload";
@@ -35,8 +35,8 @@ export default function ReverseShareUploadPage() {
 
   if (isPasswordModalOpen) {
     return (
-      <StageShell
-        story={<StageStory headline={t("public.state.password.title")} text={t("public.state.password.text")} />}
+      <PublicShell
+        story={{ headline: t("public.state.password.title"), text: t("public.state.password.text") }}
         card={
           <div className="px-6 py-8">
             <p className="text-sm text-ink-3">{t("reverseShares.upload.password.description")}</p>
@@ -48,7 +48,7 @@ export default function ReverseShareUploadPage() {
           onSubmit={handlePasswordSubmit}
           onClose={handlePasswordModalClose}
         />
-      </StageShell>
+      </PublicShell>
     );
   }
 

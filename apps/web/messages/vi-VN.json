@@ -267,6 +267,16 @@
         "playback": "Phát video và âm thanh trên trang tải xuống",
         "playbackHint": "Khi tắt, tệp video và âm thanh chỉ có thể tải xuống: không có nút phát và không có bản xem trước. Ảnh, PDF và văn bản vẫn giữ bản xem trước."
       },
+      "theme": {
+        "title": "Trang công khai",
+        "hint": "Giao diện trang đăng nhập, tải xuống và nhận tệp cho mọi khách truy cập.",
+        "stage": "Sân khấu",
+        "stageHint": "Màu toàn màn hình, lời nhắn chữ lớn.",
+        "workbench": "Bàn làm việc",
+        "workbenchHint": "Một bàn làm việc màu cát yên tĩnh cạnh bảng trắng.",
+        "seal": "Con dấu",
+        "sealHint": "Một thẻ ở giữa. Hợp nhất với thương hiệu riêng của bạn."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Trả phí",

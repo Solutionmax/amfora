@@ -4,6 +4,7 @@ import { resolvePaidAppearance } from "./appearance";
 import { backgroundImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { verifyBrandpack } from "./brandpack";
 import { BRANDPACK_PUBLIC_KEY } from "./brandpack-key";
+import { assertPublicTheme, normalizePublicTheme } from "./public-theme";
 
 export class AppService {
   private configService = new ConfigService();
@@ -25,6 +26,7 @@ export class AppService {
       appCustomCss,
       appBrandpack,
       appSharePlayback,
+      appPublicTheme,
       backgroundExists,
       appShareCover,
       appLinkPreview,
@@ -40,6 +42,7 @@ export class AppService {
       value("appCustomCss"),
       value("appBrandpack"),
       value("appSharePlayback"),
+      value("appPublicTheme"),
       backgroundImage.exists(),
       shareCoverImage.linkPreviewInfo(),
       linkPreviewImage.linkPreviewInfo(),
@@ -62,6 +65,7 @@ export class AppService {
       appLinkPreview,
       // Missing config (an install from before the switch existed) means off.
       appSharePlayback: appSharePlayback === "true",
+      appPublicTheme: normalizePublicTheme(appPublicTheme),
       ...resolvePaidAppearance({ appHideCredit, appCustomCss, backgroundExists }, brandpack),
     };
   }
@@ -128,6 +132,7 @@ export class AppService {
     if (key === "jwtSecret") {
       throw new Error("JWT Secret cannot be updated through this endpoint");
     }
+    if (key === "appPublicTheme") assertPublicTheme(value);
 
     if (key === "passwordAuthEnabled") {
       if (value === "false") {
@@ -158,6 +163,7 @@ export class AppService {
     if (updates.some((update) => update.key === "jwtSecret")) {
       throw new Error("JWT Secret cannot be updated through this endpoint");
     }
+    updates.filter((update) => update.key === "appPublicTheme").forEach((update) => assertPublicTheme(update.value));
     const passwordAuthUpdate = updates.find((update) => update.key === "passwordAuthEnabled");
     if (passwordAuthUpdate && passwordAuthUpdate.value === "false") {
       const canDisable = await this.configService.validatePasswordAuthDisable();

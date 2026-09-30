@@ -5,6 +5,7 @@ import { createAdminGuard } from "../../shared/admin-guard";
 import { backgroundImage, BrandingImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { AppController } from "./controller";
 import { BulkUpdateConfigSchema, ConfigResponseSchema } from "./dto";
+import { PUBLIC_THEMES } from "./public-theme";
 
 const linkPreviewInfo = z
   .object({
@@ -49,6 +50,9 @@ export async function appRoutes(app: FastifyInstance) {
             appShareCover: linkPreviewInfo.describe("The download page cover (free), or null"),
             appLinkPreview: linkPreviewInfo.describe("The default link preview image (free), or null"),
             appSharePlayback: z.boolean().describe("Whether video and audio play on public download pages"),
+            appPublicTheme: z
+              .enum(PUBLIC_THEMES)
+              .describe("How the sign-in, download and receive pages look: stage, workbench or seal"),
             brandpack: z
               .object({ organisation: z.string(), issuedAt: z.string() })
               .nullable()

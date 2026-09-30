@@ -267,6 +267,16 @@
         "playback": "Play video and audio on download pages",
         "playbackHint": "When off, video and audio files can only be downloaded: no play button and no preview. Images, PDFs and text keep their preview."
       },
+      "theme": {
+        "title": "Public pages",
+        "hint": "How the sign-in, download and receive pages look for every visitor.",
+        "stage": "Stage",
+        "stageHint": "Full-screen colour, the message in large type.",
+        "workbench": "Workbench",
+        "workbenchHint": "A calm sand bench beside a clean white panel.",
+        "seal": "Seal",
+        "sealHint": "One centred card. Best with your own brand."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Paid",

@@ -267,6 +267,16 @@
         "playback": "Video und Audio auf Downloadseiten abspielen",
         "playbackHint": "Wenn deaktiviert, können Video- und Audiodateien nur heruntergeladen werden: keine Wiedergabetaste und keine Vorschau. Bilder, PDFs und Text behalten ihre Vorschau."
       },
+      "theme": {
+        "title": "Öffentliche Seiten",
+        "hint": "So sehen Anmelde-, Download- und Empfangsseiten für jeden Besucher aus.",
+        "stage": "Bühne",
+        "stageHint": "Vollflächige Farbe, die Nachricht in großer Schrift.",
+        "workbench": "Werkbank",
+        "workbenchHint": "Eine ruhige sandfarbene Werkbank neben einem weißen Panel.",
+        "seal": "Siegel",
+        "sealHint": "Eine zentrierte Karte. Passt am besten zur eigenen Marke."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Kostenpflichtig",

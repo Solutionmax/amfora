@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+import { normalizePublicTheme, type PublicTheme } from "@/components/brand/public-theme";
 import { getAppInfo } from "@/http/endpoints";
 import type { LinkPreviewInfo } from "@/http/endpoints/app/types";
 
@@ -16,9 +17,12 @@ interface AppInfoStore {
   appShareCover: LinkPreviewInfo | null;
   appLinkPreview: LinkPreviewInfo | null;
   appSharePlayback: boolean;
+  appPublicTheme: PublicTheme;
   brandpack: { organisation: string; issuedAt: string } | null;
   firstAccess: boolean | null;
   isLoading: boolean;
+  /** True once the first load finished, so public pages never flash the wrong theme. */
+  infoLoaded: boolean;
   setAppName: (name: string) => void;
   setAppLogo: (logo: string) => void;
   refreshAppInfo: () => Promise<void>;
@@ -42,9 +46,11 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     appShareCover: null,
     appLinkPreview: null,
     appSharePlayback: false,
+    appPublicTheme: "stage" as PublicTheme,
     brandpack: null,
     firstAccess: null,
     isLoading: true,
+    infoLoaded: false,
   };
 
   const loadAppInfo = async () => {
@@ -64,14 +70,16 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appShareCover: response.data.appShareCover ?? null,
           appLinkPreview: response.data.appLinkPreview ?? null,
           appSharePlayback: response.data.appSharePlayback ?? false,
+          appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
           brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
+          infoLoaded: true,
         });
         updateTitle(response.data.appName);
       } catch (error) {
         console.error("Failed to fetch app info:", error);
-        set({ isLoading: false });
+        set({ isLoading: false, infoLoaded: true });
       }
     }
   };
@@ -104,14 +112,16 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appShareCover: response.data.appShareCover ?? null,
           appLinkPreview: response.data.appLinkPreview ?? null,
           appSharePlayback: response.data.appSharePlayback ?? false,
+          appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
           brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
           isLoading: false,
+          infoLoaded: true,
         });
         updateTitle(response.data.appName);
       } catch (error) {
         console.error("Failed to fetch app info:", error);
-        set({ isLoading: false });
+        set({ isLoading: false, infoLoaded: true });
       }
     },
   };

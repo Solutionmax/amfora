@@ -1,5 +1,7 @@
 import type { AxiosResponse } from "axios";
 
+import type { PublicTheme } from "@/components/brand/public-theme";
+
 export interface FileSizeInfo {
   bytes: number;
   kb: number;
@@ -44,6 +46,7 @@ export interface GetAppInfo200 {
   appShareCover?: LinkPreviewInfo | null;
   appLinkPreview?: LinkPreviewInfo | null;
   appSharePlayback?: boolean;
+  appPublicTheme?: PublicTheme;
   brandpack?: { organisation: string; issuedAt: string } | null;
   appLogo: string;
   firstUserAccess: boolean;

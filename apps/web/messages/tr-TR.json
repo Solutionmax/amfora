@@ -267,6 +267,16 @@
         "playback": "İndirme sayfalarında video ve ses oynat",
         "playbackHint": "Kapalıyken video ve ses dosyaları yalnızca indirilebilir: oynat düğmesi ve önizleme yoktur. Görseller, PDF'ler ve metin önizlemesini korur."
       },
+      "theme": {
+        "title": "Herkese açık sayfalar",
+        "hint": "Giriş, indirme ve alma sayfalarının her ziyaretçiye nasıl görüneceği.",
+        "stage": "Sahne",
+        "stageHint": "Tam ekran renk, mesaj büyük yazıyla.",
+        "workbench": "Tezgâh",
+        "workbenchHint": "Beyaz bir panelin yanında sakin, kum rengi bir tezgâh.",
+        "seal": "Mühür",
+        "sealHint": "Ortada tek bir kart. Kendi markanızla en iyisi."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Ücretli",

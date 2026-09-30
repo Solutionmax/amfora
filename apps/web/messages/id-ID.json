@@ -267,6 +267,16 @@
         "playback": "Putar video dan audio di halaman unduhan",
         "playbackHint": "Jika nonaktif, file video dan audio hanya bisa diunduh: tanpa tombol putar dan tanpa pratinjau. Gambar, PDF, dan teks tetap punya pratinjau."
       },
+      "theme": {
+        "title": "Halaman publik",
+        "hint": "Tampilan halaman masuk, unduh, dan terima untuk setiap pengunjung.",
+        "stage": "Panggung",
+        "stageHint": "Warna layar penuh, pesan dengan huruf besar.",
+        "workbench": "Meja kerja",
+        "workbenchHint": "Meja kerja berwarna pasir yang tenang di samping panel putih.",
+        "seal": "Segel",
+        "sealHint": "Satu kartu di tengah. Paling cocok dengan merek Anda sendiri."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Berbayar",

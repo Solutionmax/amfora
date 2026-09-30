@@ -67,6 +67,13 @@ const defaultConfigs = [
     group: "general",
   },
   {
+    // Look of the sign-in, download and receive pages: stage, workbench or seal.
+    key: "appPublicTheme",
+    value: "stage",
+    type: "string",
+    group: "general",
+  },
+  {
     key: "hideVersion",
     value: "false",
     type: "boolean",

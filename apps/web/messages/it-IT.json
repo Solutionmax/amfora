@@ -267,6 +267,16 @@
         "playback": "Riproduci video e audio nelle pagine di download",
         "playbackHint": "Se disattivato, i file video e audio si possono solo scaricare: nessun pulsante di riproduzione e nessuna anteprima. Immagini, PDF e testo mantengono l'anteprima."
       },
+      "theme": {
+        "title": "Pagine pubbliche",
+        "hint": "L'aspetto delle pagine di accesso, download e ricezione per ogni visitatore.",
+        "stage": "Palco",
+        "stageHint": "Colore a tutto schermo, il messaggio in grande.",
+        "workbench": "Banco da lavoro",
+        "workbenchHint": "Un banco color sabbia e tranquillo accanto a un pannello bianco.",
+        "seal": "Sigillo",
+        "sealHint": "Una scheda centrata. Ideale con il tuo marchio."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "A pagamento",

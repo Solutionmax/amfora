@@ -267,6 +267,16 @@
         "playback": "Odtwarzaj wideo i audio na stronach pobierania",
         "playbackHint": "Gdy wyłączone, pliki wideo i audio można tylko pobrać: bez przycisku odtwarzania i bez podglądu. Obrazy, pliki PDF i tekst zachowują podgląd."
       },
+      "theme": {
+        "title": "Strony publiczne",
+        "hint": "Jak strony logowania, pobierania i odbioru wyglądają dla każdego odwiedzającego.",
+        "stage": "Scena",
+        "stageHint": "Kolor na cały ekran, wiadomość dużą czcionką.",
+        "workbench": "Warsztat",
+        "workbenchHint": "Spokojny piaskowy warsztat obok białego panelu.",
+        "seal": "Pieczęć",
+        "sealHint": "Jedna wyśrodkowana karta. Najlepsza z własną marką."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Płatne",

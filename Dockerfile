@@ -1,7 +1,8 @@
-# Pin the official MinIO images to the exact binaries used by this release.
-# Both programs remain unmodified; their licensing and source are documented in NOTICE.
-FROM quay.io/minio/minio:RELEASE.2024-10-13T13-34-11Z@sha256:9535594ad4122b7a78c6632788a989b96d9199b483d3bd71a5ceae73a922cdfa AS storage-server
-FROM quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727 AS storage-client
+# The unmodified MinIO server and client binaries (licensing and source in NOTICE).
+# quay.io/minio stopped serving anonymous pulls, so they are copied out of the published
+# Amfora 2.2.0 image, which carries the exact same binaries (minio RELEASE.2024-10-13T13-34-11Z,
+# mc RELEASE.2025-08-13T08-35-41Z). Pinned by the multi-arch index digest.
+FROM ghcr.io/solutionmax/amfora:2.2.0@sha256:f0dc8a02b3a32234ca9f764c3959f3c66cc2f46d34349116338c3ff7a80be0f9 AS storage-binaries
 
 FROM node:24-alpine AS base
 
@@ -18,8 +19,8 @@ RUN apk add --no-cache \
 RUN corepack enable pnpm
 
 # Install storage system and client from their official images
-COPY --from=storage-server /usr/bin/minio /usr/local/bin/minio
-COPY --from=storage-client /usr/bin/mc /usr/local/bin/mc
+COPY --from=storage-binaries /usr/local/bin/minio /usr/local/bin/minio
+COPY --from=storage-binaries /usr/local/bin/mc /usr/local/bin/mc
 RUN chmod +x /usr/local/bin/minio /usr/local/bin/mc && minio --version && mc --version
 
 # Set working directory

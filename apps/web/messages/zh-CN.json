@@ -267,6 +267,16 @@
         "playback": "在下载页面播放视频和音频",
         "playbackHint": "关闭时，视频和音频文件只能下载：没有播放按钮，也没有预览。图片、PDF 和文本仍可预览。"
       },
+      "theme": {
+        "title": "公开页面",
+        "hint": "登录、下载和接收页面对每位访客的外观。",
+        "stage": "舞台",
+        "stageHint": "全屏色彩，消息以大字显示。",
+        "workbench": "工作台",
+        "workbenchHint": "安静的沙色工作台，旁边是干净的白色面板。",
+        "seal": "印章",
+        "sealHint": "居中的一张卡片。最适合使用自有品牌。"
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "付费",

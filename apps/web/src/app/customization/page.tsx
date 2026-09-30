@@ -9,6 +9,7 @@ import { BrandSection } from "./components/brand-section";
 import { BrandpackSection } from "./components/brandpack-section";
 import { DownloadPageSection } from "./components/download-page-section";
 import { PreviewPanel } from "./components/preview-panel";
+import { PublicThemeSection } from "./components/public-theme-section";
 
 export default function CustomizationPage() {
   const t = useTranslations();
@@ -20,6 +21,7 @@ export default function CustomizationPage() {
           <div className="card-soft rounded-[calc(var(--radius)+4px)] border border-line bg-surface">
             <BrandSection />
             <AppearanceSection />
+            <PublicThemeSection />
             <DownloadPageSection />
             <BrandpackSection />
           </div>

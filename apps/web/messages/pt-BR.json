@@ -267,6 +267,16 @@
         "playback": "Reproduzir vídeo e áudio nas páginas de download",
         "playbackHint": "Desativado, arquivos de vídeo e áudio só podem ser baixados: sem botão de reprodução e sem prévia. Imagens, PDFs e texto mantêm a prévia."
       },
+      "theme": {
+        "title": "Páginas públicas",
+        "hint": "Como as páginas de login, download e recebimento aparecem para cada visitante.",
+        "stage": "Palco",
+        "stageHint": "Cor em tela cheia, a mensagem em letras grandes.",
+        "workbench": "Bancada",
+        "workbenchHint": "Uma bancada cor de areia e tranquila ao lado de um painel branco.",
+        "seal": "Selo",
+        "sealHint": "Um cartão centralizado. Ideal com sua própria marca."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Pago",

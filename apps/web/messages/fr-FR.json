@@ -267,6 +267,16 @@
         "playback": "Lire la vidéo et l'audio sur les pages de téléchargement",
         "playbackHint": "Désactivé, les fichiers vidéo et audio peuvent seulement être téléchargés : pas de bouton de lecture ni d'aperçu. Les images, les PDF et le texte gardent leur aperçu."
       },
+      "theme": {
+        "title": "Pages publiques",
+        "hint": "L'apparence des pages de connexion, de téléchargement et de réception pour chaque visiteur.",
+        "stage": "Scène",
+        "stageHint": "Couleur plein écran, le message en grands caractères.",
+        "workbench": "Établi",
+        "workbenchHint": "Un établi sable et calme à côté d'un panneau blanc.",
+        "seal": "Sceau",
+        "sealHint": "Une carte centrée. Idéal avec votre propre marque."
+      },
       "pack": {
         "title": "Brandpack",
         "paid": "Payant",
