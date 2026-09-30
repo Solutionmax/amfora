@@ -10,7 +10,7 @@ export interface SectionItem {
   icon?: React.ComponentType<{ className?: string }>;
 }
 
-/** Compact section tabs using the same page surface as the file workspace. */
+/** Text tabs over a hairline; the active one is underlined in ink. */
 export function SectionLayout({
   sections,
   activeId,
@@ -25,8 +25,8 @@ export function SectionLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0 space-y-8">
-      <nav aria-label={label} className="flex min-w-0 flex-wrap gap-1 rounded-xl border border-border bg-card p-1.5">
+    <div className="min-w-0">
+      <nav aria-label={label} className="mb-8 flex min-w-0 gap-6 overflow-x-auto border-b border-line">
         {sections.map((section) => {
           const active = section.id === activeId;
 
@@ -37,20 +37,18 @@ export function SectionLayout({
               onClick={() => onSelect(section.id)}
               aria-pressed={active}
               className={cn(
-                "flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors",
+                "-mb-px shrink-0 whitespace-nowrap border-b-2 py-2.5 text-[13px] transition-colors",
                 active
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "border-ink font-semibold text-ink"
+                  : "border-transparent font-medium text-ink-3 hover:text-ink"
               )}
             >
-              {section.icon && React.createElement(section.icon, { className: "size-[18px]" })}
               {section.label}
             </button>
           );
         })}
       </nav>
-
-      <div className="min-w-0 rounded-xl border border-border bg-card p-5 sm:p-8">{children}</div>
+      <div className="min-w-0">{children}</div>
     </div>
   );
 }

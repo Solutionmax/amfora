@@ -13,46 +13,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const languages = {
-  "en-US": "English",
-  "pt-BR": "Português",
-  "fr-FR": "Français",
-  "es-ES": "Español",
-  "de-DE": "Deutsch",
-  "it-IT": "Italiano",
-  "nl-NL": "Nederlands",
-  "pl-PL": "Polski",
-  "tr-TR": "Türkçe (Turkish)",
-  "ru-RU": "Русский (Russian)",
-  "hi-IN": "हिन्दी (Hindi)",
-  "ar-SA": "العربية (Arabic)",
-  "zh-CN": "中文 (Chinese)",
-  "ja-JP": "日本語 (Japanese)",
-  "ko-KR": "한국어 (Korean)",
-  "th-TH": "ไทย (Thai)",
-  "vi-VN": "Tiếng Việt (Vietnamese)",
-  "uk-UA": "Українська (Ukrainian)",
-  "fa-IR": "فارسی (Persian)",
-  "sv-SE": "Svenska (Swedish)",
-  "id-ID": "Bahasa Indonesia (Indonesian)",
-  "el-GR": "Ελληνικά (Greek)",
-  "he-IL": "עברית (Hebrew)",
-};
+import { LANGUAGES } from "@/i18n/locales";
 
 const COOKIE_LANG_KEY = "NEXT_LOCALE";
 const COOKIE_MAX_AGE = 365 * 24 * 60 * 60;
-
-const RTL_LANGUAGES = ["ar-SA", "fa-IR", "he-IL"];
 
 export function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
 
   const changeLanguage = (fullLocale: string) => {
-    const isRTL = RTL_LANGUAGES.includes(fullLocale);
-    document.documentElement.dir = isRTL ? "rtl" : "ltr";
-
     Cookies.set(COOKIE_LANG_KEY, fullLocale, {
       expires: COOKIE_MAX_AGE / 86400,
       path: "/",
@@ -72,7 +42,7 @@ export function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {Object.entries(languages).map(([code, name]) => {
+        {Object.entries(LANGUAGES).map(([code, name]) => {
           const isCurrentLocale = locale === code;
 
           return (

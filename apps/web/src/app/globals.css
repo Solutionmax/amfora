@@ -9,6 +9,8 @@
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
+  --color-ink-icon: var(--ink-icon);
+  --color-sidebar-bg: var(--sidebar-bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
@@ -65,14 +67,15 @@
   --radius: 0.5rem;
   --primary: #0079d2;
   --primary-foreground: #ffffff;
-  --primary-soft: color-mix(in oklab, var(--primary) 10%, #ffffff);
-  --ink: #0c1626;
-  --ink-2: #46566b;
-  --ink-3: #667085;
+  --primary-soft: color-mix(in oklab, var(--primary) 7%, #ffffff);
+  --ink: #0e2036;
+  --ink-2: #3a4a5c;
+  --ink-3: #6f7b8b;
+  --ink-icon: #9aa4b1;
   --surface: #ffffff;
-  --surface-2: #f1f5fa;
-  --line: #e3e9f2;
-  --line-2: #cbd5e1;
+  --surface-2: #f6f7f9;
+  --line: #eceef1;
+  --line-2: #dde1e6;
   --ok: #1a7f4b;
   --ok-soft: #e4f5eb;
   --warn: #9a5b00;
@@ -81,7 +84,8 @@
   --bad-soft: #fbe9e7;
   --info: #0b5cad;
   --info-soft: #e8f2fb;
-  --background: #f6f9fd;
+  --background: #ffffff;
+  --sidebar-bg: #fbfbfc;
   --foreground: var(--ink);
   --card: var(--surface);
   --card-foreground: var(--ink);
@@ -115,14 +119,15 @@
 .dark {
   --primary: #3b9cf0;
   --primary-foreground: #06111f;
-  --primary-soft: color-mix(in oklab, var(--primary) 25%, #121c2e);
-  --ink: #e6edf7;
-  --ink-2: #b4c0d3;
-  --ink-3: #8a97ad;
-  --surface: #121c2e;
-  --surface-2: #182540;
-  --line: #22304a;
-  --line-2: #33456a;
+  --primary-soft: color-mix(in oklab, var(--primary) 18%, #0d1520);
+  --ink: #e8edf3;
+  --ink-2: #b7c2cf;
+  --ink-3: #8a96a6;
+  --ink-icon: #5f6d7e;
+  --surface: #0d1520;
+  --surface-2: #142030;
+  --line: #1c2735;
+  --line-2: #2a3747;
   --ok: #5bd08f;
   --ok-soft: #10301f;
   --warn: #f2b950;
@@ -131,7 +136,8 @@
   --bad-soft: #3a1512;
   --info: #7dbdf5;
   --info-soft: #12253b;
-  --background: #0b1220;
+  --background: #0d1520;
+  --sidebar-bg: #0a111a;
   --shadow-float: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 30px 60px -30px rgba(0, 0, 0, 0.8);
   --shadow-card: 0 20px 40px -30px rgba(0, 0, 0, 0.6);
 }
@@ -171,6 +177,12 @@
 
 /* Shared material: colour washes, floating panels, file-type tiles, chips. */
 @layer components {
+  /* Quiet status pill: tinted by --tc (set per variant). */
+  .tag-tint {
+    color: var(--tc);
+    background: color-mix(in oklab, var(--tc) 9%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tc) 22%, transparent);
+  }
   .stage {
     position: relative;
     overflow: hidden;

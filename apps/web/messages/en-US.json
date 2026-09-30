@@ -2278,5 +2278,18 @@
     "passwordMinLength": "Password must be at least 6 characters",
     "nameRequired": "Name is required",
     "required": "This field is required"
+  },
+  "ui": {
+    "unsavedChanges": "Unsaved changes",
+    "discard": "Discard",
+    "back": "Back",
+    "tags": {
+      "neverExpires": "Never expires",
+      "active": "Active",
+      "expired": "Expired",
+      "inactive": "Inactive",
+      "protected": "Protected",
+      "public": "Public"
+    }
   }
 }

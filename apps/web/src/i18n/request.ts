@@ -1,34 +1,10 @@
 import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 
-const supportedLocales = [
-  "en-US",
-  "pt-BR",
-  "fr-FR",
-  "es-ES",
-  "de-DE",
-  "it-IT",
-  "nl-NL",
-  "pl-PL",
-  "tr-TR",
-  "ru-RU",
-  "hi-IN",
-  "ar-SA",
-  "zh-CN",
-  "ja-JP",
-  "ko-KR",
-  "th-TH",
-  "vi-VN",
-  "uk-UA",
-  "fa-IR",
-  "sv-SE",
-  "id-ID",
-  "el-GR",
-  "he-IL",
-];
+import { isSupportedLocale } from "./locales";
 
 const envDefault = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || "en-US";
-const DEFAULT_LOCALE = supportedLocales.includes(envDefault) ? envDefault : "en-US";
+const DEFAULT_LOCALE = isSupportedLocale(envDefault) ? envDefault : "en-US";
 
 export default getRequestConfig(async ({ locale }) => {
   const cookieStore = cookies();
@@ -36,7 +12,7 @@ export default getRequestConfig(async ({ locale }) => {
   const localeCookie = cookiesList.get("NEXT_LOCALE");
 
   const resolvedLocale = localeCookie?.value || locale || DEFAULT_LOCALE;
-  const finalLocale = supportedLocales.includes(resolvedLocale) ? resolvedLocale : DEFAULT_LOCALE;
+  const finalLocale = isSupportedLocale(resolvedLocale) ? resolvedLocale : DEFAULT_LOCALE;
 
   try {
     return {
