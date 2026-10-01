@@ -948,6 +948,39 @@
       "expiredOn": "expiré {date}",
       "remove": "Supprimer",
       "removeAll": "Tout supprimer"
+    },
+    "apiKeys": {
+      "title": "Clés API",
+      "hint": "Laissez d'autres outils travailler avec vos fichiers et vos liens.",
+      "empty": "Aucune clé API pour l'instant. Créez-en une pour connecter un helpdesk, un script ou un autre outil.",
+      "create": "Nouvelle clé",
+      "createTitle": "Nouvelle clé API",
+      "createDescription": "Une clé agit en votre nom. Donnez-lui seulement l'accès nécessaire.",
+      "name": "Nom",
+      "nameHint": "À quoi sert la clé, pour la reconnaître plus tard.",
+      "access": "Accès",
+      "read": "Lecture seule",
+      "readHint": "Peut lister et télécharger. Ne peut rien modifier.",
+      "full": "Accès complet",
+      "fullHint": "Peut aussi créer, modifier et supprimer des fichiers et des liens. Jamais votre compte ni les réglages.",
+      "expires": "Expire",
+      "never": "Jamais",
+      "afterDays": "{count, plural, =365 {Après 1 an} other {Après # jours}}",
+      "expiresOn": "expire le {date}",
+      "createButton": "Créer la clé",
+      "createdTitle": "Copiez votre clé",
+      "createdDescription": "La clé n'est affichée que maintenant. Conservez-la en lieu sûr.",
+      "copy": "Copier la clé",
+      "copied": "Clé copiée",
+      "copyFailed": "Copie impossible. Sélectionnez la clé et copiez-la à la main.",
+      "done": "Terminé",
+      "removeTitle": "Supprimer la clé API",
+      "removeDescription": "Tout ce qui utilise cette clé cesse aussitôt de fonctionner.",
+      "removeButton": "Supprimer la clé",
+      "removed": "Clé API supprimée",
+      "loadFailed": "Impossible de charger les clés API",
+      "createFailed": "Impossible de créer la clé API",
+      "removeFailed": "Impossible de supprimer la clé API"
     }
   },
   "public": {
@@ -2585,6 +2618,22 @@
       }
     }
   },
+  "ui": {
+    "unsavedChanges": "Modifications non enregistrées",
+    "discard": "Annuler",
+    "back": "Retour",
+    "tags": {
+      "neverExpires": "N'expire jamais",
+      "active": "Actif",
+      "expired": "Expiré",
+      "inactive": "Inactif",
+      "protected": "Protégé",
+      "public": "Public"
+    },
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "menu": "Menu"
+  },
   "updates": {
     "title": "Mises à jour",
     "running": "Version {version} en cours d'exécution",
@@ -2824,21 +2873,5 @@
     "passwordRequired": "Le mot de passe est requis",
     "nameRequired": "Le nom est requis",
     "required": "Ce champ est requis"
-  },
-  "ui": {
-    "unsavedChanges": "Modifications non enregistrées",
-    "discard": "Annuler",
-    "back": "Retour",
-    "tags": {
-      "neverExpires": "N'expire jamais",
-      "active": "Actif",
-      "expired": "Expiré",
-      "inactive": "Inactif",
-      "protected": "Protégé",
-      "public": "Public"
-    },
-    "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe",
-    "menu": "Menu"
   }
 }

@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify";
 
+import { registerApiKeyAuth } from "./modules/api-key/auth";
+import { apiKeyRoutes } from "./modules/api-key/routes";
 import { appRoutes } from "./modules/app/routes";
 import { authProvidersRoutes } from "./modules/auth-providers/routes";
 import { authRoutes } from "./modules/auth/routes";
@@ -16,6 +18,9 @@ import { userRoutes } from "./modules/user/routes";
 
 /** Every HTTP route the server exposes, in one place so a test can see the whole surface. */
 export function registerRoutes(app: FastifyInstance) {
+  // Before the routes: a hook only reaches the route plugins registered after it.
+  registerApiKeyAuth(app);
+
   app.register(authRoutes);
   app.register(authProvidersRoutes, { prefix: "/auth" });
   app.register(twoFactorRoutes, { prefix: "/auth" });
@@ -29,4 +34,5 @@ export function registerRoutes(app: FastifyInstance) {
   app.register(appRoutes);
   app.register(healthRoutes);
   app.register(updateRoutes);
+  app.register(apiKeyRoutes);
 }

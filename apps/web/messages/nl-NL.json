@@ -948,6 +948,39 @@
       "expiredOn": "verlopen {date}",
       "remove": "Verwijderen",
       "removeAll": "Alles verwijderen"
+    },
+    "apiKeys": {
+      "title": "API sleutels",
+      "hint": "Laat andere tools met je bestanden en links werken.",
+      "empty": "Nog geen API sleutels. Maak er een om een helpdesk, script of andere tool te koppelen.",
+      "create": "Nieuwe sleutel",
+      "createTitle": "Nieuwe API sleutel",
+      "createDescription": "Een sleutel handelt namens jou. Geef alleen de toegang die nodig is.",
+      "name": "Naam",
+      "nameHint": "Waar de sleutel voor is, zodat je hem later herkent.",
+      "access": "Toegang",
+      "read": "Alleen lezen",
+      "readHint": "Kan lijsten opvragen en downloaden. Kan niets wijzigen.",
+      "full": "Volledige toegang",
+      "fullHint": "Kan ook bestanden en links maken, wijzigen en verwijderen. Nooit je account of instellingen.",
+      "expires": "Verloopt",
+      "never": "Nooit",
+      "afterDays": "{count, plural, =365 {Na 1 jaar} other {Na # dagen}}",
+      "expiresOn": "verloopt {date}",
+      "createButton": "Sleutel maken",
+      "createdTitle": "Kopieer je sleutel",
+      "createdDescription": "De sleutel wordt alleen nu getoond. Bewaar hem op een veilige plek.",
+      "copy": "Sleutel kopiëren",
+      "copied": "Sleutel gekopieerd",
+      "copyFailed": "Kopiëren lukte niet. Selecteer de sleutel en kopieer hem met de hand.",
+      "done": "Klaar",
+      "removeTitle": "API sleutel verwijderen",
+      "removeDescription": "Alles wat deze sleutel gebruikt stopt direct met werken.",
+      "removeButton": "Sleutel verwijderen",
+      "removed": "API sleutel verwijderd",
+      "loadFailed": "API sleutels laden mislukt",
+      "createFailed": "API sleutel maken mislukt",
+      "removeFailed": "API sleutel verwijderen mislukt"
     }
   },
   "public": {
@@ -2585,6 +2618,22 @@
       }
     }
   },
+  "ui": {
+    "unsavedChanges": "Niet opgeslagen wijzigingen",
+    "discard": "Verwerpen",
+    "back": "Terug",
+    "tags": {
+      "neverExpires": "Verloopt nooit",
+      "active": "Actief",
+      "expired": "Verlopen",
+      "inactive": "Inactief",
+      "protected": "Beveiligd",
+      "public": "Openbaar"
+    },
+    "showPassword": "Wachtwoord tonen",
+    "hidePassword": "Wachtwoord verbergen",
+    "menu": "Menu"
+  },
   "updates": {
     "title": "Updates",
     "running": "Draait {version}",
@@ -2824,21 +2873,5 @@
     "passwordMinLength": "Wachtwoord moet minimaal 6 tekens bevatten",
     "nameRequired": "Naam is verplicht",
     "required": "Dit veld is verplicht"
-  },
-  "ui": {
-    "unsavedChanges": "Niet opgeslagen wijzigingen",
-    "discard": "Verwerpen",
-    "back": "Terug",
-    "tags": {
-      "neverExpires": "Verloopt nooit",
-      "active": "Actief",
-      "expired": "Verlopen",
-      "inactive": "Inactief",
-      "protected": "Beveiligd",
-      "public": "Openbaar"
-    },
-    "showPassword": "Wachtwoord tonen",
-    "hidePassword": "Wachtwoord verbergen",
-    "menu": "Menu"
   }
 }

@@ -948,6 +948,39 @@
       "expiredOn": "caducado {date}",
       "remove": "Quitar",
       "removeAll": "Quitar todos"
+    },
+    "apiKeys": {
+      "title": "Claves API",
+      "hint": "Deja que otras herramientas trabajen con tus archivos y enlaces.",
+      "empty": "Aún no hay claves API. Crea una para conectar un helpdesk, un script u otra herramienta.",
+      "create": "Nueva clave",
+      "createTitle": "Nueva clave API",
+      "createDescription": "Una clave actúa en tu nombre. Dale solo el acceso que necesita.",
+      "name": "Nombre",
+      "nameHint": "Para qué sirve la clave, así la reconoces después.",
+      "access": "Acceso",
+      "read": "Solo lectura",
+      "readHint": "Puede listar y descargar. No puede cambiar nada.",
+      "full": "Acceso completo",
+      "fullHint": "También puede crear, cambiar y eliminar archivos y enlaces. Nunca tu cuenta ni los ajustes.",
+      "expires": "Caduca",
+      "never": "Nunca",
+      "afterDays": "{count, plural, =365 {Después de 1 año} other {Después de # días}}",
+      "expiresOn": "caduca el {date}",
+      "createButton": "Crear clave",
+      "createdTitle": "Copia tu clave",
+      "createdDescription": "La clave solo se muestra ahora. Guárdala en un lugar seguro.",
+      "copy": "Copiar clave",
+      "copied": "Clave copiada",
+      "copyFailed": "No se pudo copiar. Selecciona la clave y cópiala a mano.",
+      "done": "Listo",
+      "removeTitle": "Eliminar clave API",
+      "removeDescription": "Todo lo que use esta clave deja de funcionar al instante.",
+      "removeButton": "Eliminar clave",
+      "removed": "Clave API eliminada",
+      "loadFailed": "No se pudieron cargar las claves API",
+      "createFailed": "No se pudo crear la clave API",
+      "removeFailed": "No se pudo eliminar la clave API"
     }
   },
   "public": {
@@ -2585,6 +2618,22 @@
       }
     }
   },
+  "ui": {
+    "unsavedChanges": "Cambios sin guardar",
+    "discard": "Descartar",
+    "back": "Volver",
+    "tags": {
+      "neverExpires": "No caduca",
+      "active": "Activo",
+      "expired": "Caducado",
+      "inactive": "Inactivo",
+      "protected": "Protegido",
+      "public": "Público"
+    },
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "menu": "Menú"
+  },
   "updates": {
     "title": "Actualizaciones",
     "running": "Ejecutando {version}",
@@ -2824,21 +2873,5 @@
     "passwordRequired": "Se requiere la contraseña",
     "nameRequired": "El nombre es obligatorio",
     "required": "Este campo es obligatorio"
-  },
-  "ui": {
-    "unsavedChanges": "Cambios sin guardar",
-    "discard": "Descartar",
-    "back": "Volver",
-    "tags": {
-      "neverExpires": "No caduca",
-      "active": "Activo",
-      "expired": "Caducado",
-      "inactive": "Inactivo",
-      "protected": "Protegido",
-      "public": "Público"
-    },
-    "showPassword": "Mostrar contraseña",
-    "hidePassword": "Ocultar contraseña",
-    "menu": "Menú"
   }
 }

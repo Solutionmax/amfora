@@ -948,6 +948,39 @@
       "expiredOn": "abgelaufen {date}",
       "remove": "Entfernen",
       "removeAll": "Alle entfernen"
+    },
+    "apiKeys": {
+      "title": "API-Schlüssel",
+      "hint": "Lass andere Tools mit deinen Dateien und Links arbeiten.",
+      "empty": "Noch keine API-Schlüssel. Erstelle einen, um ein Helpdesk, ein Skript oder ein anderes Tool zu verbinden.",
+      "create": "Neuer Schlüssel",
+      "createTitle": "Neuer API-Schlüssel",
+      "createDescription": "Ein Schlüssel handelt in deinem Namen. Gib ihm nur den Zugriff, den er braucht.",
+      "name": "Name",
+      "nameHint": "Wofür der Schlüssel ist, damit du ihn später erkennst.",
+      "access": "Zugriff",
+      "read": "Nur lesen",
+      "readHint": "Kann auflisten und herunterladen. Kann nichts ändern.",
+      "full": "Vollzugriff",
+      "fullHint": "Kann auch Dateien und Links erstellen, ändern und löschen. Nie dein Konto oder die Einstellungen.",
+      "expires": "Läuft ab",
+      "never": "Nie",
+      "afterDays": "{count, plural, =365 {Nach 1 Jahr} other {Nach # Tagen}}",
+      "expiresOn": "läuft ab am {date}",
+      "createButton": "Schlüssel erstellen",
+      "createdTitle": "Kopiere deinen Schlüssel",
+      "createdDescription": "Der Schlüssel wird nur jetzt angezeigt. Bewahre ihn sicher auf.",
+      "copy": "Schlüssel kopieren",
+      "copied": "Schlüssel kopiert",
+      "copyFailed": "Kopieren fehlgeschlagen. Markiere den Schlüssel und kopiere ihn von Hand.",
+      "done": "Fertig",
+      "removeTitle": "API-Schlüssel entfernen",
+      "removeDescription": "Alles, was diesen Schlüssel verwendet, funktioniert sofort nicht mehr.",
+      "removeButton": "Schlüssel entfernen",
+      "removed": "API-Schlüssel entfernt",
+      "loadFailed": "API-Schlüssel konnten nicht geladen werden",
+      "createFailed": "API-Schlüssel konnte nicht erstellt werden",
+      "removeFailed": "API-Schlüssel konnte nicht entfernt werden"
     }
   },
   "public": {
@@ -2585,6 +2618,22 @@
       }
     }
   },
+  "ui": {
+    "unsavedChanges": "Nicht gespeicherte Änderungen",
+    "discard": "Verwerfen",
+    "back": "Zurück",
+    "tags": {
+      "neverExpires": "Läuft nie ab",
+      "active": "Aktiv",
+      "expired": "Abgelaufen",
+      "inactive": "Inaktiv",
+      "protected": "Geschützt",
+      "public": "Öffentlich"
+    },
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
+    "menu": "Menü"
+  },
   "updates": {
     "title": "Updates",
     "running": "Läuft mit {version}",
@@ -2824,21 +2873,5 @@
     "passwordRequired": "Passwort ist erforderlich",
     "nameRequired": "Name ist erforderlich",
     "required": "Dieses Feld ist erforderlich"
-  },
-  "ui": {
-    "unsavedChanges": "Nicht gespeicherte Änderungen",
-    "discard": "Verwerfen",
-    "back": "Zurück",
-    "tags": {
-      "neverExpires": "Läuft nie ab",
-      "active": "Aktiv",
-      "expired": "Abgelaufen",
-      "inactive": "Inaktiv",
-      "protected": "Geschützt",
-      "public": "Öffentlich"
-    },
-    "showPassword": "Passwort anzeigen",
-    "hidePassword": "Passwort verbergen",
-    "menu": "Menü"
   }
 }

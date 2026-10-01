@@ -33,6 +33,7 @@ model User {
   loginAttempts LoginAttempt?
 
   passwordResets PasswordReset[]
+  apiKeys        ApiKey[]
   authProviders  UserAuthProvider[]
   trustedDevices TrustedDevice[]
 
@@ -332,23 +333,45 @@ model InviteToken {
 
 // Pending public uploads are scoped to a receive link; browser-chosen object keys are never trusted.
 model ReverseUpload {
-  objectName     String @id
+  objectName     String   @id
   filename       String
   size           BigInt
   reverseShareId String
   uploadId       String?
   expiresAt      DateTime
-  consumed       Boolean @default(false)
+  consumed       Boolean  @default(false)
+
   @@index([reverseShareId, expiresAt])
   @@map("reverse_uploads")
 }
 
 model LoginChallenge {
-  id          String @id
+  id          String   @id
   userId      String
   fingerprint String
   expiresAt   DateTime
-  attempts    Int @default(0)
+  attempts    Int      @default(0)
+
   @@index([expiresAt])
   @@map("login_challenges")
+}
+
+/// A long lived credential for other tools. Only the SHA-256 of the key is stored.
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  /// First characters of the key, shown so the owner can tell keys apart.
+  prefix     String
+  hash       String    @unique
+  /// "read" or "full". Anything else is treated as "read".
+  scope      String    @default("read")
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("api_keys")
 }

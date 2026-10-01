@@ -948,6 +948,39 @@
       "expiredOn": "expired {date}",
       "remove": "Remove",
       "removeAll": "Remove all"
+    },
+    "apiKeys": {
+      "title": "API keys",
+      "hint": "Let other tools work with your files and links.",
+      "empty": "No API keys yet. Create one to connect a helpdesk, a script or another tool.",
+      "create": "New key",
+      "createTitle": "New API key",
+      "createDescription": "A key acts as you. Give it only the access it needs.",
+      "name": "Name",
+      "nameHint": "What the key is for, so you recognise it later.",
+      "access": "Access",
+      "read": "Read only",
+      "readHint": "Can list and download. Cannot change anything.",
+      "full": "Full access",
+      "fullHint": "Can also create, change and delete files and links. Never your account or settings.",
+      "expires": "Expires",
+      "never": "Never",
+      "afterDays": "{count, plural, =365 {After 1 year} other {After # days}}",
+      "expiresOn": "expires {date}",
+      "createButton": "Create key",
+      "createdTitle": "Copy your key",
+      "createdDescription": "This is the only time the key is shown. Store it somewhere safe.",
+      "copy": "Copy key",
+      "copied": "Key copied",
+      "copyFailed": "Could not copy. Select the key and copy it by hand.",
+      "done": "Done",
+      "removeTitle": "Remove API key",
+      "removeDescription": "Anything that uses this key stops working at once.",
+      "removeButton": "Remove key",
+      "removed": "API key removed",
+      "loadFailed": "Failed to load API keys",
+      "createFailed": "Failed to create the API key",
+      "removeFailed": "Failed to remove the API key"
     }
   },
   "public": {
@@ -2585,6 +2618,22 @@
       }
     }
   },
+  "ui": {
+    "unsavedChanges": "Unsaved changes",
+    "discard": "Discard",
+    "back": "Back",
+    "tags": {
+      "neverExpires": "Never expires",
+      "active": "Active",
+      "expired": "Expired",
+      "inactive": "Inactive",
+      "protected": "Protected",
+      "public": "Public"
+    },
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "menu": "Menu"
+  },
   "updates": {
     "title": "Updates",
     "running": "Running {version}",
@@ -2824,21 +2873,5 @@
     "passwordMinLength": "Password must be at least 6 characters",
     "nameRequired": "Name is required",
     "required": "This field is required"
-  },
-  "ui": {
-    "unsavedChanges": "Unsaved changes",
-    "discard": "Discard",
-    "back": "Back",
-    "tags": {
-      "neverExpires": "Never expires",
-      "active": "Active",
-      "expired": "Expired",
-      "inactive": "Inactive",
-      "protected": "Protected",
-      "public": "Public"
-    },
-    "showPassword": "Show password",
-    "hidePassword": "Hide password",
-    "menu": "Menu"
   }
 }
