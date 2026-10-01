@@ -18,10 +18,11 @@ export function useAuthProviders() {
   const t = useTranslations();
   const [providers, setProviders] = useState<AuthProvider[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [saving, setSaving] = useState<string | null>(null);
   const [editingProvider, setEditingProvider] = useState<AuthProvider | null>(null);
   const [editingFormData, setEditingFormData] = useState<Record<string, any>>({});
-  const [hideDisabledProviders, setHideDisabledProviders] = useState<boolean>(true);
+  const [hideDisabledProviders, setHideDisabledProviders] = useState<boolean>(false);
   const [providerToDelete, setProviderToDelete] = useState<{
     id: string;
     name: string;
@@ -32,21 +33,22 @@ export function useAuthProviders() {
   const loadProviders = useCallback(async () => {
     try {
       setLoading(true);
+      setLoadError(false);
       const response = await getAllProviders();
       const data = response.data;
 
       if (data.success) {
-        setProviders(data.data.sort((a: AuthProvider, b: AuthProvider) => a.sortOrder - b.sortOrder));
+        setProviders([...data.data].sort((a: AuthProvider, b: AuthProvider) => a.sortOrder - b.sortOrder));
       } else {
-        toast.error(t("authProviders.messages.loadFailed"));
+        setLoadError(true);
       }
     } catch (error) {
       console.error("Error loading providers:", error);
-      toast.error(t("authProviders.messages.loadFailed"));
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     loadProviders();
@@ -72,7 +74,8 @@ export function useAuthProviders() {
     }
   };
 
-  const addProvider = async (newProvider: NewProvider) => {
+  /** Resolves to true when the provider was created, so a dialog knows it can close. */
+  const addProvider = async (newProvider: NewProvider): Promise<boolean> => {
     try {
       setSaving("new");
       const response = await createProvider({
@@ -94,12 +97,14 @@ export function useAuthProviders() {
       if (data.success) {
         await loadProviders();
         toast.success(t("authProviders.messages.providerAdded"));
-      } else {
-        toast.error(t("authProviders.messages.addFailed"));
+        return true;
       }
+      toast.error(t("authProviders.messages.addFailed"));
+      return false;
     } catch (error) {
       console.error("Error adding provider:", error);
       toast.error(t("authProviders.messages.addFailed"));
+      return false;
     } finally {
       setSaving(null);
     }
@@ -223,6 +228,7 @@ export function useAuthProviders() {
     // State
     providers,
     loading,
+    loadError,
     saving,
     editingProvider,
     editingFormData,

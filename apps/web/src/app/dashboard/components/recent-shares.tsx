@@ -1,74 +1,109 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { IconShare } from "@tabler/icons-react";
+import Link from "next/link";
+import { IconChevronRight, IconCopy, IconLink, IconPlus, IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { SharesTable } from "@/components/tables/shares-table";
+import { linkStatus, LinkTags } from "@/components/general/share-tags";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Pagination } from "@/components/ui/pagination";
-import { paginate } from "@/lib/paginate";
-import { RecentSharesProps } from "../types";
-import { EmptySharesState } from "./empty-shares-state";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LineList, LineRow } from "@/components/ui/line-list";
+import type { Share } from "@/http/endpoints/shares/types";
+import { SectionHeading } from "./section-heading";
 
-const SHARES_PER_PAGE = 5;
+const SHOWN = 4;
 
-export function RecentShares({ shares, shareManager, onOpenCreateModal, onCopyLink }: RecentSharesProps) {
+export function isOpenShare(share: Share) {
+  const status = linkStatus({ expiration: share.expiration });
+  return status === "active" || status === "neverExpires";
+}
+
+/** Shares whose link still works: name, tags, Copy link and a way into the share. */
+export function RecentShares({
+  shares,
+  onCopyLink,
+  onCreateLink,
+  onCreateShare,
+}: {
+  shares: Share[];
+  onCopyLink: (share: Share) => void;
+  onCreateLink: (share: Share) => void;
+  onCreateShare: () => void;
+}) {
   const t = useTranslations();
-  const router = useRouter();
-  const [requestedPage, setRequestedPage] = useState(1);
-  const { items: pageShares, page, totalPages } = paginate(shares, requestedPage, SHARES_PER_PAGE);
+  const open = shares.filter(isOpenShare).slice(0, SHOWN);
 
   return (
-    <Card className="card-soft gap-0 overflow-hidden py-0">
-      <CardContent className="p-0">
-        <div className="flex flex-col gap-0">
-          <div className="flex items-center justify-between gap-3 border-b border-line px-[18px] py-3.5">
-            <h2 className="flex items-center gap-2 font-display text-sm font-semibold">{t("recentShares.title")}</h2>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              <Button
-                className="h-8 px-2 text-[13px] font-semibold text-primary hover:bg-primary-soft"
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push("/shares")}
+    <section aria-labelledby="active-shares">
+      <SectionHeading
+        title={<span id="active-shares">{t("dashboard.calm.activeShares")}</span>}
+        href="/shares"
+        linkLabel={t("dashboard.calm.allShares")}
+      />
+      {open.length === 0 ? (
+        <EmptyState
+          className="border-t border-line py-10"
+          icon={<IconShare />}
+          title={t("dashboard.calm.noActiveShares")}
+          description={t("dashboard.calm.noActiveSharesHint")}
+          action={
+            <Button variant="outline" onClick={onCreateShare}>
+              <IconPlus />
+              {t("dashboard.calm.newShare")}
+            </Button>
+          }
+        />
+      ) : (
+        <LineList top>
+          {open.map((share) => {
+            const name = share.name || t("dashboard.calm.untitledShare");
+            const items = (share.files?.length ?? 0) + (share.folders?.length ?? 0);
+            return (
+              <LineRow
+                key={share.id}
+                icon={<IconShare stroke={1.8} />}
+                title={name}
+                sub={
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    {t("dashboard.calm.shareMeta", { items, views: share.views ?? 0 })}
+                    <span className="sm:hidden">
+                      <LinkTags expiration={share.expiration} hasPassword={!!share.security?.hasPassword} />
+                    </span>
+                  </span>
+                }
               >
-                <IconShare className="h-4 w-4" />
-                {t("recentShares.viewAll")}
-              </Button>
-            </div>
-          </div>
-
-          <div className="px-0 py-0">
-            {shares.length > 0 ? (
-              <SharesTable
-                shares={pageShares}
-                onCopyLink={onCopyLink}
-                onDelete={shareManager.setShareToDelete}
-                onBulkDelete={shareManager.handleBulkDelete}
-                onBulkDownload={shareManager.handleBulkDownload}
-                onDownloadShareFiles={shareManager.handleDownloadShareFiles}
-                onEdit={shareManager.setShareToEdit}
-                onUpdateName={shareManager.handleUpdateName}
-                onUpdateDescription={shareManager.handleUpdateDescription}
-                onUpdateSecurity={shareManager.setShareToManageSecurity}
-                onUpdateExpiration={shareManager.setShareToManageExpiration}
-                onGenerateLink={shareManager.setShareToGenerateLink}
-                onManageFiles={shareManager.setShareToManageFiles}
-                onManageRecipients={shareManager.setShareToManageRecipients}
-                onNotifyRecipients={shareManager.handleNotifyRecipients}
-                onViewQrCode={shareManager.setShareToViewQrCode}
-                onViewDetails={shareManager.setShareToViewDetails}
-                setClearSelectionCallback={shareManager.setClearSelectionCallback}
-              />
-            ) : (
-              <EmptySharesState onCreate={onOpenCreateModal} />
-            )}
-          </div>
-
-          <Pagination page={page} totalPages={totalPages} onPageChange={setRequestedPage} />
-        </div>
-      </CardContent>
-    </Card>
+                <span className="max-sm:hidden">
+                  <LinkTags expiration={share.expiration} hasPassword={!!share.security?.hasPassword} />
+                </span>
+                {share.alias?.alias ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onCopyLink(share)}
+                    aria-label={t("dashboard.calm.copyLinkFor", { name })}
+                  >
+                    <IconCopy />
+                    <span className="max-sm:hidden">{t("dashboard.calm.copyLink")}</span>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onCreateLink(share)}
+                    aria-label={t("dashboard.calm.createLinkFor", { name })}
+                  >
+                    <IconLink />
+                    <span className="max-sm:hidden">{t("dashboard.calm.createLink")}</span>
+                  </Button>
+                )}
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href={`/shares?id=${share.id}`} aria-label={t("dashboard.calm.openShare", { name })}>
+                    <IconChevronRight />
+                  </Link>
+                </Button>
+              </LineRow>
+            );
+          })}
+        </LineList>
+      )}
+    </section>
   );
 }

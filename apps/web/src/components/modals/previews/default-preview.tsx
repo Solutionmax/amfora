@@ -1,6 +1,7 @@
+import { IconLoader2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { getFileIcon } from "@/utils/file-icons";
+import { FileTypeIcon } from "@/components/files/file-type-icon";
 
 interface DefaultPreviewProps {
   fileName: string;
@@ -8,24 +9,24 @@ interface DefaultPreviewProps {
   message?: string;
 }
 
+/** Quiet placeholder while a preview loads, or when a type has no preview. */
 export function DefaultPreview({ fileName, isLoading, message }: DefaultPreviewProps) {
   const t = useTranslations();
-  const { icon: FileIcon, color } = getFileIcon(fileName);
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 gap-4">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-        <p className="text-muted-foreground">{t("filePreview.loading")}</p>
+      <div className="flex h-72 flex-col items-center justify-center gap-3 rounded-xl bg-surface-2 text-[13px] text-ink-3">
+        <IconLoader2 size={22} aria-hidden className="animate-spin text-ink-icon" />
+        {t("filePreview.loading")}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-96 gap-4">
-      <FileIcon className={`h-12 w-12 ${color}`} />
-      <p className="text-muted-foreground">{message || t("filePreview.notAvailable")}</p>
-      <p className="text-sm text-muted-foreground">{t("filePreview.downloadToView")}</p>
+    <div className="flex h-72 flex-col items-center justify-center gap-2 rounded-xl bg-surface-2 px-6 text-center">
+      <FileTypeIcon name={fileName} size={28} className="mb-1" />
+      <p className="font-semibold">{message || t("filePreview.notAvailable")}</p>
+      <p className="text-[13px] text-ink-3">{t("filePreview.downloadToView")}</p>
     </div>
   );
 }

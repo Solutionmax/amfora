@@ -37,8 +37,6 @@ export interface ShareManagerHook {
   handleBulkDownloadWithZip: (shares: Share[], zipName: string) => Promise<void>;
   handleDeleteBulk: () => Promise<void>;
   handleEdit: (shareId: string, data: any) => Promise<void>;
-  handleUpdateName: (shareId: string, newName: string) => Promise<void>;
-  handleUpdateDescription: (shareId: string, newDescription: string) => Promise<void>;
   handleUpdateSecurity: (share: Share) => Promise<void>;
   handleUpdateExpiration: (share: Share) => Promise<void>;
   handleManageFiles: () => Promise<void>;
@@ -109,26 +107,6 @@ export function useShareManager(onSuccess: () => void) {
       toast.success(t("shareManager.updateSuccess"));
       onSuccess();
       setShareToEdit(null);
-    } catch {
-      toast.error(t("shareManager.updateError"));
-    }
-  };
-
-  const handleUpdateName = async (shareId: string, newName: string) => {
-    try {
-      await updateShare({ id: shareId, name: newName });
-      await onSuccess();
-      toast.success(t("shareManager.updateSuccess"));
-    } catch {
-      toast.error(t("shareManager.updateError"));
-    }
-  };
-
-  const handleUpdateDescription = async (shareId: string, newDescription: string) => {
-    try {
-      await updateShare({ id: shareId, description: newDescription });
-      await onSuccess();
-      toast.success(t("shareManager.updateSuccess"));
     } catch {
       toast.error(t("shareManager.updateError"));
     }
@@ -342,8 +320,6 @@ export function useShareManager(onSuccess: () => void) {
     handleBulkDelete,
     handleDeleteBulk,
     handleEdit,
-    handleUpdateName,
-    handleUpdateDescription,
     handleUpdateSecurity,
     handleUpdateExpiration,
     handleManageFiles,

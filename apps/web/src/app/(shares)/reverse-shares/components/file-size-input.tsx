@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +10,7 @@ export interface FileSizeInputProps {
   disabled?: boolean;
   error?: any;
   placeholder?: string;
+  id?: string;
 }
 
 type Unit = "MB" | "GB" | "TB" | "PB";
@@ -57,7 +59,8 @@ function humanReadableToBytes(value: string, unit: Unit): string {
   return Math.floor(numValue * UNIT_MULTIPLIERS[unit]).toString();
 }
 
-export function FileSizeInput({ value, onChange, disabled = false, error, placeholder = "0" }: FileSizeInputProps) {
+export function FileSizeInput({ value, onChange, disabled = false, error, placeholder = "0", id }: FileSizeInputProps) {
+  const t = useTranslations();
   const [displayValue, setDisplayValue] = useState("");
   const [selectedUnit, setSelectedUnit] = useState<Unit>("MB");
 
@@ -104,7 +107,9 @@ export function FileSizeInput({ value, onChange, disabled = false, error, placeh
   return (
     <div className="flex gap-2">
       <Input
+        id={id}
         type="text"
+        inputMode="decimal"
         value={displayValue}
         onChange={(e) => handleValueChange(e.target.value)}
         placeholder={placeholder}
@@ -118,7 +123,7 @@ export function FileSizeInput({ value, onChange, disabled = false, error, placeh
         onValueChange={handleUnitChange}
         disabled={disabled}
       >
-        <SelectTrigger className="w-20">
+        <SelectTrigger className="w-20" aria-label={t("reverseShares.calm.sizeUnit")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

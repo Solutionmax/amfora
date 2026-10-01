@@ -4,19 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { useSecureConfigValue } from "@/hooks/use-secure-configs";
-import { listUserShares, notifyRecipients } from "@/http/endpoints";
+import { listUserShares } from "@/http/endpoints";
 import { Share } from "@/http/endpoints/shares/types";
 import { copyText } from "@/lib/clipboard";
+import { shareUrl } from "../lib/share-list";
 
+/** Loads the signed-in user's shares, newest first, with an inline error state. */
 export function useShares() {
   const t = useTranslations();
   const [shares, setShares] = useState<Share[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [shareToGenerateLink, setShareToGenerateLink] = useState<Share | null>(null);
-
-  const { value: smtpEnabled } = useSecureConfigValue("smtpEnabled");
+  const [loadError, setLoadError] = useState(false);
 
   const loadShares = useCallback(async () => {
     try {
@@ -25,60 +23,35 @@ export function useShares() {
       const sortedShares = [...allShares].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
-
       setShares(sortedShares);
-    } catch {
-      toast.error(t("shares.errors.loadFailed"));
+      setLoadError(false);
+    } catch (error) {
+      console.error("Failed to load shares:", error);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
-  }, [t]);
+  }, []);
 
-  useEffect(() => {
-    loadShares();
+  const retry = useCallback(() => {
+    setIsLoading(true);
+    setLoadError(false);
+    void loadShares();
   }, [loadShares]);
 
-  const filteredShares = shares.filter(
-    (share) => share.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
-  );
+  useEffect(() => {
+    void loadShares();
+  }, [loadShares]);
 
   const handleCopyLink = async (share: Share) => {
     if (!share.alias?.alias) return;
-
-    const link = `${window.location.origin}/s/${share.alias.alias}`;
-
     try {
-      await copyText(link);
+      await copyText(shareUrl(window.location.origin, share.alias.alias));
       toast.success(t("shares.messages.linkCopied"));
     } catch {
       toast.error(t("common.unexpectedError"));
     }
   };
 
-  const handleNotifyRecipients = async (share: Share) => {
-    if (!share.alias?.alias) return;
-
-    const link = `${window.location.origin}/s/${share.alias.alias}`;
-
-    try {
-      await notifyRecipients(share.id, { shareLink: link });
-      toast.success(t("shares.messages.recipientsNotified"));
-    } catch {
-      toast.error(t("shares.errors.notifyFailed"));
-    }
-  };
-
-  return {
-    shares,
-    isLoading,
-    searchQuery,
-    shareToGenerateLink,
-    filteredShares,
-    smtpEnabled: smtpEnabled || "false",
-    setSearchQuery,
-    setShareToGenerateLink,
-    handleCopyLink,
-    handleNotifyRecipients,
-    loadShares,
-  };
+  return { shares, isLoading, loadError, retry, loadShares, handleCopyLink };
 }

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { getEnabledProviders } from "@/http/endpoints";
 import type { EnabledAuthProvider } from "@/http/endpoints/auth/types";
@@ -20,6 +21,7 @@ const ProviderIcon = dynamic(
 );
 
 interface MultiProviderButtonsProps {
+  /** A hairline with "or with email" under the buttons, when a password form follows. */
   showSeparator?: boolean;
 }
 
@@ -57,7 +59,7 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
 
   const handleProviderLogin = (provider: EnabledAuthProvider) => {
     if (!provider.authUrl) {
-      toast.error(`${provider.displayName} is not properly configured`);
+      toast.error(t("auth.calm.providerNotConfigured", { provider: provider.displayName }));
       return;
     }
 
@@ -69,11 +71,7 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
   }
 
   if (loading) {
-    return (
-      <div className="space-y-2">
-        <div className="h-10 animate-pulse rounded-[var(--radius)] bg-surface-2" />
-      </div>
-    );
+    return <Skeleton className="h-10 w-full" aria-hidden="true" />;
   }
 
   if (providers.length === 0) {
@@ -81,40 +79,34 @@ export function MultiProviderButtons({ showSeparator = true }: MultiProviderButt
   }
 
   return (
-    <div className="space-y-3">
-      {showSeparator && (
-        <div className="relative py-1">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-surface px-3 text-xs normal-case tracking-normal text-ink-3">
-              {t("public.login.or")}
-            </span>
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-2">
+    <div className="grid gap-4">
+      <div className="grid gap-2">
         {providers.map((provider) => (
           <Button
             key={provider.id}
             variant="outline"
-            className="h-11 w-full rounded-xl bg-background"
+            size="lg"
+            className="w-full"
             onClick={() => handleProviderLogin(provider)}
             type="button"
           >
-            <div className="flex items-center gap-2">
-              {provider.icon && (
-                <span className="text-lg">
-                  <ProviderIcon name={provider.icon} />
-                </span>
-              )}
-              <span>Continue with {provider.displayName}</span>
-            </div>
+            {provider.icon && (
+              <span className="text-base text-ink-icon" aria-hidden="true">
+                <ProviderIcon name={provider.icon} />
+              </span>
+            )}
+            {t("auth.calm.continueWith", { provider: provider.displayName })}
           </Button>
         ))}
       </div>
+
+      {showSeparator && (
+        <div className="flex items-center gap-3 text-[12.5px] text-ink-3">
+          <span className="h-px flex-1 bg-line" />
+          {t("public.login.or")}
+          <span className="h-px flex-1 bg-line" />
+        </div>
+      )}
     </div>
   );
 }

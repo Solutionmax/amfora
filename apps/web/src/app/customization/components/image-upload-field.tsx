@@ -1,14 +1,16 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
+import { IconUpload } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { LineRow } from "@/components/ui/line-list";
 
-/** One admin image on the customization page: thumbnail, upload or replace, remove. */
+/** One admin image as a line: thumbnail or grey icon, title and hint, upload or replace, remove. Saves at once. */
 export function ImageUploadField({
   label,
   hint,
+  icon,
   src,
   disabled,
   canRemove = true,
@@ -18,6 +20,7 @@ export function ImageUploadField({
 }: {
   label: string;
   hint: string;
+  icon: ReactNode;
   src: string | null;
   disabled: boolean;
   canRemove?: boolean;
@@ -28,31 +31,34 @@ export function ImageUploadField({
   const fileInput = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="space-y-1.5">
-      <Label>{label}</Label>
-      <p className="text-xs text-ink-3">{hint}</p>
+    <LineRow
+      icon={
+        src ? <img alt="" src={src} className="h-[34px] w-[52px] rounded-md border border-line object-cover" /> : icon
+      }
+      title={label}
+      sub={hint}
+    >
       <input
         ref={fileInput}
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
         className="hidden"
+        aria-label={label}
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) onUpload(file);
           e.target.value = "";
         }}
       />
-      <div className="flex items-center gap-2">
-        {src && <img alt="" src={src} className="h-14 w-24 rounded-md border border-line object-cover" />}
-        <Button variant="outline" size="sm" onClick={() => fileInput.current?.click()} disabled={disabled}>
-          {src ? labels.replace : labels.upload}
+      {src && canRemove && (
+        <Button type="button" variant="ghost" size="sm" onClick={onRemove} disabled={disabled}>
+          {labels.remove}
         </Button>
-        {src && canRemove && (
-          <Button variant="ghost" size="sm" onClick={onRemove} disabled={disabled}>
-            {labels.remove}
-          </Button>
-        )}
-      </div>
-    </div>
+      )}
+      <Button type="button" variant="outline" size="sm" onClick={() => fileInput.current?.click()} disabled={disabled}>
+        <IconUpload aria-hidden="true" />
+        {src ? labels.replace : labels.upload}
+      </Button>
+    </LineRow>
   );
 }

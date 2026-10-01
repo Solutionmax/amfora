@@ -4,6 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export interface FileSizeInputProps {
+  id?: string;
+  /** Accessible name of the unit picker. */
+  unitLabel?: string;
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
@@ -57,7 +60,15 @@ function humanReadableToBytes(value: string, unit: Unit): string {
   return Math.floor(numValue * UNIT_MULTIPLIERS[unit]).toString();
 }
 
-export function FileSizeInput({ value, onChange, disabled = false, error, placeholder = "0" }: FileSizeInputProps) {
+export function FileSizeInput({
+  id,
+  unitLabel,
+  value,
+  onChange,
+  disabled = false,
+  error,
+  placeholder = "0",
+}: FileSizeInputProps) {
   const [displayValue, setDisplayValue] = useState("");
   const [selectedUnit, setSelectedUnit] = useState<Unit>("MB");
 
@@ -104,7 +115,9 @@ export function FileSizeInput({ value, onChange, disabled = false, error, placeh
   return (
     <div className="flex gap-2">
       <Input
+        id={id}
         type="text"
+        inputMode="decimal"
         value={displayValue}
         onChange={(e) => handleValueChange(e.target.value)}
         placeholder={placeholder}
@@ -118,7 +131,7 @@ export function FileSizeInput({ value, onChange, disabled = false, error, placeh
         onValueChange={handleUnitChange}
         disabled={disabled}
       >
-        <SelectTrigger className="w-20">
+        <SelectTrigger className="w-[88px] shrink-0" aria-label={unitLabel}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

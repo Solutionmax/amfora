@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +13,7 @@ interface PasswordInputProps extends Omit<React.ComponentProps<"input">, "type">
 }
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(({ className, ...props }, ref) => {
+  const t = useTranslations();
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -28,11 +32,11 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(({ 
         disabled={props.disabled}
       >
         {showPassword ? (
-          <IconEyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+          <IconEyeOff className="h-4 w-4 text-ink-icon hover:text-ink" />
         ) : (
-          <IconEye className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+          <IconEye className="h-4 w-4 text-ink-icon hover:text-ink" />
         )}
-        <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+        <span className="sr-only">{showPassword ? t("ui.hidePassword") : t("ui.showPassword")}</span>
       </Button>
     </div>
   );

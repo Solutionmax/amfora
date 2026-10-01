@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 import { useEnhancedFileManager } from "@/hooks/use-enhanced-file-manager";
 import { listFiles } from "@/http/endpoints";
@@ -65,6 +64,7 @@ export function useFileBrowser() {
   const [allFolders, setAllFolders] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [clearSelectionCallback, setClearSelectionCallbackState] = useState<(() => void) | undefined>();
@@ -205,6 +205,7 @@ export function useFileBrowser() {
   const loadFiles = useCallback(async () => {
     try {
       setIsLoading(true);
+      setLoadError(null);
 
       const [filesResponse, foldersResponse] = await Promise.all([listFiles(), listFolders()]);
 
@@ -239,7 +240,7 @@ export function useFileBrowser() {
         setCurrentPath([]);
       }
     } catch {
-      toast.error(t("files.loadError"));
+      setLoadError(t("files.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -364,6 +365,8 @@ export function useFileBrowser() {
 
   return {
     isLoading,
+    hasLoaded: dataLoaded,
+    loadError,
     files,
     folders,
     currentPath,

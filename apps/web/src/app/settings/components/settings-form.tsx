@@ -1,70 +1,81 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { SaveBar } from "@/components/ui/save-bar";
 import { SectionLayout } from "@/components/ui/section-layout";
-import { createGroupMetadata } from "../constants";
+import { GROUP_ORDER, groupTitle } from "../constants";
 import { SettingsFormProps, ValidGroup } from "../types";
 import { AuthProvidersSettings } from "./auth-provider-form/auth-providers-settings";
-import { SettingsGroup } from "./settings-group";
+import { settingsFormId, SettingsGroup } from "./settings-group";
 
-const GROUP_ORDER: string[] = ["general", "security", "storage", "email", "auth-providers"];
+const orderOf = (group: string) => {
+  const index = GROUP_ORDER.indexOf(group);
 
+  return index === -1 ? GROUP_ORDER.length : index;
+};
+
+/** Text tabs, one per settings group. The tab is kept in the address (#email) so it survives a reload. */
 export function SettingsForm({ groupedConfigs, groupForms, onGroupSubmit }: SettingsFormProps) {
   const t = useTranslations();
-  const GROUP_METADATA = createGroupMetadata(t);
+  const groups = Object.keys(groupedConfigs).sort((a, b) => orderOf(a) - orderOf(b));
+  const [activeGroup, setActiveGroup] = useState<string>(groups[0] ?? "general");
 
-  const sortedGroups = Object.entries(groupedConfigs).sort(([a], [b]) => {
-    const indexA = GROUP_ORDER.indexOf(a);
-    const indexB = GROUP_ORDER.indexOf(b);
+  const groupKey = groups.join(",");
 
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
+  useEffect(() => {
+    const known = groupKey.split(",");
+    const fromHash = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash && known.includes(hash)) setActiveGroup(hash);
+    };
 
-    return indexA - indexB;
-  });
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
 
-  const [activeGroup, setActiveGroup] = useState<string>(sortedGroups[0]?.[0] ?? "general");
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, [groupKey]);
 
-  const renderPanel = (group: string, configs: (typeof sortedGroups)[number][1]) => {
-    if (group === "auth-providers") {
-      return <AuthProvidersSettings key={group} />;
-    }
+  const select = (group: string) => {
+    setActiveGroup(group);
+    window.history.replaceState(null, "", `#${group}`);
+  };
 
-    const form = groupForms[group as ValidGroup];
-    if (!form) {
-      return null;
-    }
+  const form = groupForms[activeGroup as ValidGroup];
+  const isDirty = !!form?.formState.isDirty;
+
+  const renderPanel = () => {
+    if (activeGroup === "auth-providers") return <AuthProvidersSettings />;
+    if (!form) return null;
 
     return (
       <SettingsGroup
-        key={group}
-        configs={configs}
+        key={activeGroup}
+        configs={groupedConfigs[activeGroup] ?? []}
         form={form}
-        group={group}
-        onSubmit={(data) => onGroupSubmit(group as ValidGroup, data)}
+        group={activeGroup}
+        onSubmit={(data) => onGroupSubmit(activeGroup as ValidGroup, data)}
       />
     );
   };
 
   return (
-    <SectionLayout
-      sections={sortedGroups.map(([group]) => {
-        const metadata = GROUP_METADATA[group as keyof typeof GROUP_METADATA];
-        return {
-          id: group,
-          label: t.has(`settings.groups.${group}.title`)
-            ? t(`settings.groups.${group}.title`)
-            : (metadata?.title ?? group),
-          icon: metadata?.icon,
-        };
-      })}
-      activeId={activeGroup}
-      onSelect={setActiveGroup}
-      label={t("settings.pageTitle")}
-    >
-      {sortedGroups.filter(([group]) => group === activeGroup).map(([group, configs]) => renderPanel(group, configs))}
-    </SectionLayout>
+    <>
+      <SectionLayout
+        sections={groups.map((group) => ({ id: group, label: groupTitle(t, group) }))}
+        activeId={activeGroup}
+        onSelect={select}
+        label={t("settings.pageTitle")}
+      >
+        {renderPanel()}
+      </SectionLayout>
+      <SaveBar
+        visible={isDirty}
+        saving={!!form?.formState.isSubmitting}
+        onDiscard={() => form?.reset()}
+        form={form ? settingsFormId(activeGroup) : undefined}
+      />
+    </>
   );
 }

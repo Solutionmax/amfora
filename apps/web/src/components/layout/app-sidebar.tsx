@@ -70,7 +70,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
 
   const admin: NavEntry[] = isAdmin
     ? [
-        { href: "/users-management", label: t("navbar.usersManagement"), icon: IconUsers },
+        { href: "/users-management", label: t("users.calm.title"), icon: IconUsers },
         { href: "/customization", label: t("customization.pageTitle"), icon: IconPalette },
         { href: "/settings", label: t("settings.pageTitle"), icon: IconSettings },
       ]

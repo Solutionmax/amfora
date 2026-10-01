@@ -1,133 +1,112 @@
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { createFieldDescriptions, createGroupMetadata } from "../constants";
-import { SettingsGroupProps } from "../types";
-import { isFieldHidden, SettingsInput } from "./settings-input";
+import { FormSection } from "@/components/ui/form-section";
+import { LineList } from "@/components/ui/line-list";
+import { blocksFor, SettingsRow, SMTP_FIELDS } from "../constants";
+import { Config, SettingsGroupProps } from "../types";
+import { isFieldHidden, SettingField, SettingsFormApi, SettingSwitchRow } from "./settings-input";
 import { SmtpTestButton } from "./smtp-test-button";
 
+export const settingsFormId = (group: string) => `settings-form-${group}`;
+
+/** Email fields follow the "send email" and "no authentication" switches. */
+function isVisible(key: string, form: SettingsFormApi): boolean {
+  const smtpEnabled = form.watch("configs.smtpEnabled");
+  const smtpNoAuth = form.watch("configs.smtpNoAuth");
+
+  if (SMTP_FIELDS.includes(key) && smtpEnabled !== "true") return false;
+  if ((key === "smtpUser" || key === "smtpPass") && smtpNoAuth === "true") return false;
+
+  return true;
+}
+
+/** Consecutive switches share one hairline list; other rows stand alone or in pairs. */
+function renderRows(rows: readonly SettingsRow[], byKey: Map<string, Config>, form: SettingsFormApi): ReactNode[] {
+  const out: ReactNode[] = [];
+  let switches: Config[] = [];
+
+  const flush = () => {
+    if (switches.length === 0) return;
+    const group = switches;
+    out.push(
+      <LineList key={`switches-${group[0].key}`} className="-my-3 min-w-0">
+        {group.map((config) => (
+          <SettingSwitchRow key={config.key} config={config} form={form} />
+        ))}
+      </LineList>
+    );
+    switches = [];
+  };
+
+  rows.forEach((row) => {
+    const configs = (typeof row === "string" ? [row] : [...row])
+      .filter((key) => isVisible(key, form))
+      .map((key) => byKey.get(key))
+      .filter((config): config is Config => !!config);
+
+    if (configs.length === 0) return;
+
+    if (configs.length === 1 && configs[0].type === "boolean") {
+      switches.push(configs[0]);
+      return;
+    }
+
+    flush();
+    out.push(
+      configs.length === 2 ? (
+        <div key={configs[0].key} className="grid gap-[18px] sm:grid-cols-2 sm:gap-3.5">
+          {configs.map((config) => (
+            <SettingField key={config.key} config={config} form={form} />
+          ))}
+        </div>
+      ) : (
+        <SettingField key={configs[0].key} config={configs[0]} form={form} />
+      )
+    );
+  });
+  flush();
+
+  return out;
+}
+
+/** One settings tab: a form made of FormSection blocks. Saving goes through the page's SaveBar. */
 export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupProps) {
   const t = useTranslations();
-  const GROUP_METADATA = createGroupMetadata(t);
-  const FIELD_DESCRIPTIONS = createFieldDescriptions(t);
-
-  const metadata = GROUP_METADATA[group as keyof typeof GROUP_METADATA] || {
-    title: group,
-    description: t("settings.groups.defaultDescription"),
-    icon: undefined,
-  };
-  const GroupIcon = metadata.icon;
-
-  const isEmailGroup = group === "email";
+  const visible = configs.filter((config) => !isFieldHidden(config.key));
+  const byKey = new Map(visible.map((config) => [config.key, config]));
+  const blocks = blocksFor(
+    group,
+    visible.map((config) => config.key)
+  );
+  const smtpOn = form.watch("configs.smtpEnabled") === "true";
+  const valueOf = (key: string, fallback: string) => String(form.getValues(`configs.${key}`) || fallback);
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <section className="max-w-4xl">
-        <header className="mb-6">
-          <div className="flex flex-row items-center gap-3">
-            {GroupIcon && (
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <GroupIcon className="size-4" />
-              </span>
-            )}
-            <div className="flex flex-col gap-1">
-              <h2 className="text-base font-semibold">
-                {t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title}
-              </h2>
-              <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-                {t.has(`settings.groups.${group}.description`)
-                  ? t(`settings.groups.${group}.description`)
-                  : metadata.description}
-              </p>
-            </div>
-          </div>
-        </header>
-        <div>
-          <div className="divide-y">
-            {configs
-              .filter((config) => !isFieldHidden(config.key))
-              .map((config) => {
-                const smtpEnabled = form.watch("configs.smtpEnabled");
-                const smtpNoAuth = form.watch("configs.smtpNoAuth");
-                const isSmtpAuthField = config.key === "smtpUser" || config.key === "smtpPass";
-
-                const smtpFields = [
-                  "smtpHost",
-                  "smtpPort",
-                  "smtpUser",
-                  "smtpPass",
-                  "smtpSecure",
-                  "smtpNoAuth",
-                  "smtpTrustSelfSigned",
-                  "smtpFromName",
-                  "smtpFromEmail",
-                ];
-
-                if (smtpEnabled !== "true" && smtpFields.includes(config.key)) {
-                  return null;
-                }
-
-                if (isSmtpAuthField && smtpNoAuth === "true") {
-                  return null;
-                }
-
-                return (
-                  <div key={config.key} className="py-5 first:pt-0 last:pb-0">
-                    <SettingsInput
-                      config={config}
-                      description={
-                        t.has(`settings.fields.${config.key}.description`)
-                          ? t(`settings.fields.${config.key}.description`)
-                          : FIELD_DESCRIPTIONS[config.key as keyof typeof FIELD_DESCRIPTIONS] ||
-                            config.description ||
-                            t("settings.fields.noDescription")
-                      }
-                      error={form.formState.errors.configs?.[config.key]}
-                      register={form.register}
-                      setValue={form.setValue}
-                      smtpEnabled={form.watch("configs.smtpEnabled")}
-                      authProvidersEnabled={form.watch("configs.authProvidersEnabled")}
-                      watch={form.watch}
-                    />
-                  </div>
-                );
+    <form id={settingsFormId(group)} onSubmit={form.handleSubmit(onSubmit)} noValidate>
+      {blocks.map((block) => (
+        <FormSection
+          key={block.id}
+          title={t(`settings.calm.blocks.${block.id}.title`)}
+          description={t(`settings.calm.blocks.${block.id}.description`)}
+        >
+          {renderRows(block.rows, byKey, form as SettingsFormApi)}
+          {group === "email" && block.id === "outgoing" && smtpOn && (
+            <SmtpTestButton
+              getFormValues={() => ({
+                smtpEnabled: valueOf("smtpEnabled", "false"),
+                smtpHost: valueOf("smtpHost", ""),
+                smtpPort: valueOf("smtpPort", ""),
+                smtpUser: valueOf("smtpUser", ""),
+                smtpPass: valueOf("smtpPass", ""),
+                smtpSecure: valueOf("smtpSecure", "auto"),
+                smtpNoAuth: valueOf("smtpNoAuth", "false"),
+                smtpTrustSelfSigned: valueOf("smtpTrustSelfSigned", "false"),
               })}
-          </div>
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
-            <div className="flex">
-              {isEmailGroup && form.watch("configs.smtpEnabled") === "true" && (
-                <SmtpTestButton
-                  smtpEnabled={form.watch("configs.smtpEnabled") || "false"}
-                  getFormValues={() => ({
-                    smtpEnabled: form.getValues("configs.smtpEnabled") || "false",
-                    smtpHost: form.getValues("configs.smtpHost") || "",
-                    smtpPort: form.getValues("configs.smtpPort") || "",
-                    smtpUser: form.getValues("configs.smtpUser") || "",
-                    smtpPass: form.getValues("configs.smtpPass") || "",
-                    smtpSecure: form.getValues("configs.smtpSecure") || "auto",
-                    smtpNoAuth: form.getValues("configs.smtpNoAuth") || "false",
-                    smtpTrustSelfSigned: form.getValues("configs.smtpTrustSelfSigned") || "false",
-                  })}
-                />
-              )}
-            </div>
-            <div className="flex">
-              <Button
-                variant="default"
-                disabled={form.formState.isSubmitting}
-                className="flex items-center gap-2"
-                type="submit"
-              >
-                {!form.formState.isSubmitting && <IconDeviceFloppy className="h-4 w-4" />}
-                {t("settings.buttons.save", {
-                  group: t.has(`settings.groups.${group}.title`) ? t(`settings.groups.${group}.title`) : metadata.title,
-                })}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+            />
+          )}
+        </FormSection>
+      ))}
     </form>
   );
 }

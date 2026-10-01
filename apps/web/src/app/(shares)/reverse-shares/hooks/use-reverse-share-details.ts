@@ -1,57 +1,31 @@
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
+import { formatFileSize as formatBytes } from "@/utils/format-file-size";
+import { formatDay, formatDayTime } from "../lib/receive-format";
+
+/** Formatting for the detail view, in the language the user picked. */
 export function useReverseShareDetails() {
   const t = useTranslations();
-  const [showAliasModal, setShowAliasModal] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const locale = useLocale();
 
+  /** "31 Oct, 14:12"; a dash-free fallback when there is no date. */
   const formatDate = (dateString: string | null) => {
     if (!dateString) return t("common.notAvailable");
-    try {
-      return new Date(dateString).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return t("common.invalidDate");
-    }
+    return formatDayTime(dateString, locale) || t("common.invalidDate");
   };
 
-  const formatFileSize = (size: string | number | null) => {
-    if (!size) return t("reverseShares.labels.noLimit");
-    const sizeInBytes = typeof size === "string" ? parseInt(size) : size;
-    if (sizeInBytes === 0) return "0 B";
-    const units = ["B", "KB", "MB", "GB"];
-    const k = 1024;
-    const i = Math.floor(Math.log(sizeInBytes) / Math.log(k));
-    return `${parseFloat((sizeInBytes / Math.pow(k, i)).toFixed(1))} ${units[i]}`;
+  /** "31 Oct". */
+  const formatShortDate = (dateString: string | null) => {
+    if (!dateString) return t("common.notAvailable");
+    return formatDay(dateString, locale) || t("common.invalidDate");
   };
 
-  const getDisplayValue = (reverseShare: any, field: string, pendingChanges: Record<string, any>) => {
-    const pendingChange = pendingChanges[field];
-    if (pendingChange !== undefined) {
-      return pendingChange;
-    }
-    return reverseShare?.[field];
+  /** Size limit in bytes to "2 GB"; no value means no limit. */
+  const formatFileSize = (size: string | number | null | undefined) => {
+    const bytes = typeof size === "string" ? parseInt(size, 10) : (size ?? 0);
+    if (!bytes || Number.isNaN(bytes)) return t("reverseShares.labels.noLimit");
+    return formatBytes(bytes);
   };
 
-  const generateReverseShareLink = (alias?: string) => {
-    if (!alias) return null;
-    return `${window.location.origin}/r/${alias}`;
-  };
-
-  return {
-    showAliasModal,
-    setShowAliasModal,
-    showPasswordModal,
-    setShowPasswordModal,
-    formatDate,
-    formatFileSize,
-    getDisplayValue,
-    generateReverseShareLink,
-  };
+  return { locale, formatDate, formatShortDate, formatFileSize };
 }

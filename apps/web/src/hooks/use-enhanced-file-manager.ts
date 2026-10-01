@@ -196,6 +196,7 @@ export function useEnhancedFileManager(
       });
       toast.success(t("files.updateSuccess"));
       setFileToRename(null);
+      await onRefresh();
     } catch (error) {
       console.error("Failed to update file:", error);
       toast.error(t("files.updateError"));
@@ -231,9 +232,7 @@ export function useEnhancedFileManager(
   const handleShareBulkSuccess = () => {
     setFilesToShare(null);
     setFoldersToShare(null);
-    if (clearSelectionCallback) {
-      clearSelectionCallback();
-    }
+    (clearSelectionCallback ?? clearSelection)?.();
   };
 
   const handleBulkDownload = (files: BulkFile[], folders?: BulkFolder[]) => {
@@ -241,9 +240,7 @@ export function useEnhancedFileManager(
     setFoldersToDownload(folders || null);
     setBulkDownloadModalOpen(true);
 
-    if (clearSelectionCallback) {
-      clearSelectionCallback();
-    }
+    (clearSelectionCallback ?? clearSelection)?.();
   };
 
   const handleBulkDownloadWithZip = async (files: BulkFile[], zipName: string) => {
@@ -335,9 +332,7 @@ export function useEnhancedFileManager(
       setBulkDownloadModalOpen(false);
       setFilesToDownload(null);
       setFoldersToDownload(null);
-      if (clearSelectionCallback) {
-        clearSelectionCallback();
-      }
+      (clearSelectionCallback ?? clearSelection)?.();
     } catch (error) {
       console.error("Error in bulk download:", error);
       setBulkDownloadModalOpen(false);
@@ -423,9 +418,7 @@ export function useEnhancedFileManager(
       await deleteFolder(folderId);
       toast.success(t("folderActions.folderDeleted"));
       setFolderToDelete(null);
-      if (clearSelectionCallback) {
-        clearSelectionCallback();
-      }
+      (clearSelectionCallback ?? clearSelection)?.();
     } catch (error) {
       console.error("Error deleting folder:", error);
       toast.error(t("folderActions.deleteFolderError"));

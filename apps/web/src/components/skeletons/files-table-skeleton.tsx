@@ -1,58 +1,37 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 interface FilesTableSkeletonProps {
   rowCount?: number;
+  /** Leave out the checkbox column (dashboard). */
+  withCheckbox?: boolean;
+  className?: string;
 }
 
-export function FilesTableSkeleton({ rowCount = 10 }: FilesTableSkeletonProps) {
+const NAME_WIDTHS = ["w-48", "w-36", "w-56", "w-40", "w-44", "w-32"];
+
+/** Hairline rows shaped like the file table while it loads. */
+export function FilesTableSkeleton({ rowCount = 8, withCheckbox = true, className }: FilesTableSkeletonProps) {
   return (
-    <div className="rounded-md border">
-      <div className="w-full">
-        {/* Table Header */}
-        <div className="border-b bg-muted/50">
-          <div className="grid grid-cols-[auto_1fr_120px_120px_80px] gap-4 p-4">
-            <Skeleton className="h-4 w-4" /> {/* Checkbox */}
-            <Skeleton className="h-4 w-24" /> {/* Name */}
-            <Skeleton className="h-4 w-16" /> {/* Size */}
-            <Skeleton className="h-4 w-20" /> {/* Modified */}
-            <Skeleton className="h-4 w-12" /> {/* Actions */}
-          </div>
-        </div>
-
-        {/* Table Rows */}
-        <div className="divide-y">
-          {Array.from({ length: rowCount }).map((_, index) => (
-            <div key={index} className="grid grid-cols-[auto_1fr_120px_120px_80px] gap-4 p-4 hover:bg-muted/50">
-              {/* Checkbox */}
-              <div className="flex items-center gap-2 min-w-0">
-                <Skeleton className="h-4 w-4" />
-              </div>
-
-              {/* Name column with icon */}
-              <div className="flex items-center gap-2 min-w-0">
-                <Skeleton className="h-6 w-6 rounded flex-shrink-0" />
-                <Skeleton className="h-4 w-full max-w-[200px]" />
-              </div>
-
-              {/* Size */}
-              <div className="flex items-center">
-                <Skeleton className="h-4 w-16" />
-              </div>
-
-              {/* Modified date */}
-              <div className="flex items-center">
-                <Skeleton className="h-4 w-24" />
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center justify-end gap-2">
-                <Skeleton className="h-6 w-6 rounded" />
-                <Skeleton className="h-6 w-6 rounded" />
-              </div>
-            </div>
-          ))}
-        </div>
+    <div className={cn("w-full", className)} aria-hidden>
+      <div className="flex h-9 items-center gap-3.5 border-b border-line px-3 max-sm:hidden">
+        {withCheckbox && <Skeleton className="size-4 rounded-[4px]" />}
+        <Skeleton className="h-3 w-12" />
       </div>
+      {Array.from({ length: rowCount }).map((_, index) => (
+        <div key={index} className="flex h-14 items-center gap-3.5 border-b border-line px-3 max-sm:px-1">
+          {withCheckbox && <Skeleton className="size-4 shrink-0 rounded-[4px] max-sm:hidden" />}
+          <Skeleton className="size-[17px] shrink-0 rounded-[5px]" />
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <Skeleton className={cn("h-3.5 max-w-full", NAME_WIDTHS[index % NAME_WIDTHS.length])} />
+            <Skeleton className="h-2.5 w-20 sm:hidden" />
+          </div>
+          <Skeleton className="h-3 w-14 max-sm:hidden" />
+          <Skeleton className="h-3 w-20 max-md:hidden" />
+          <Skeleton className="h-3 w-16 max-lg:hidden" />
+          <div className="w-[88px] max-sm:hidden" />
+        </div>
+      ))}
     </div>
   );
 }

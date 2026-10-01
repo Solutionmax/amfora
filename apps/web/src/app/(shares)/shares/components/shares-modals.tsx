@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+
 import { useTranslations } from "next-intl";
 
 import { CreateShareModal } from "@/components/modals/create-share-modal";
@@ -6,37 +7,45 @@ import { DeleteConfirmationModal } from "@/components/modals/delete-confirmation
 import { GenerateShareLinkModal } from "@/components/modals/generate-share-link-modal";
 import { QrCodeModal } from "@/components/modals/qr-code-modal";
 import { ShareActionsModals } from "@/components/modals/share-actions-modals";
-import { ShareDetailsModal } from "@/components/modals/share-details-modal";
 import { ShareExpirationModal } from "@/components/modals/share-expiration-modal";
-import { ShareMultipleItemsModal } from "@/components/modals/share-multiple-items-modal";
 import { ShareSecurityModal } from "@/components/modals/share-security-modal";
+import type { ShareManagerHook } from "@/hooks/use-share-manager";
 import { listFiles } from "@/http/endpoints";
 import { listFolders } from "@/http/endpoints/folders";
-import { SharesModalsProps } from "../types";
+import type { useShareDetailActions } from "../hooks/use-share-detail-actions";
+import { shareUrl } from "../lib/share-list";
+import { ConfirmDialog } from "./confirm-dialog";
+import { ShareViewLimitModal } from "./share-view-limit-modal";
 
+const loadFilesAndFolders = async () => {
+  const [filesResponse, foldersResponse] = await Promise.all([listFiles(), listFolders()]);
+  return {
+    files: filesResponse.data.files || [],
+    folders: foldersResponse.data.folders || [],
+  };
+};
+
+interface SharesModalsProps {
+  isCreateModalOpen: boolean;
+  onCloseCreateModal: () => void;
+  shareManager: ShareManagerHook;
+  detailActions: ReturnType<typeof useShareDetailActions>;
+  onDeleteShare: (shareId: string) => Promise<void>;
+  onSuccess: () => void;
+}
+
+/** Every dialog the shares page can open. The dialogs themselves live in components/modals. */
 export function SharesModals({
   isCreateModalOpen,
   onCloseCreateModal,
-  shareToViewDetails,
-  shareToGenerateLink,
   shareManager,
-  fileManager,
+  detailActions,
+  onDeleteShare,
   onSuccess,
-  onCloseViewDetails,
-  onCloseGenerateLink,
 }: SharesModalsProps) {
   const t = useTranslations();
-  const [shareDetailsRefresh, setShareDetailsRefresh] = useState(0);
-
-  const handleShareSuccess = () => {
-    setShareDetailsRefresh((prev) => prev + 1);
-    onSuccess();
-  };
-
-  const getShareLink = (share: any) => {
-    if (!share?.alias?.alias) return "";
-    return `${window.location.origin}/s/${share.alias.alias}`;
-  };
+  const qrShare = shareManager.shareToViewQrCode;
+  const removing = detailActions.itemToRemove;
 
   return (
     <>
@@ -44,13 +53,7 @@ export function SharesModals({
         isOpen={isCreateModalOpen}
         onClose={onCloseCreateModal}
         onSuccess={onSuccess}
-        getAllFilesAndFolders={async () => {
-          const [filesResponse, foldersResponse] = await Promise.all([listFiles(), listFolders()]);
-          return {
-            files: filesResponse.data.files || [],
-            folders: foldersResponse.data.folders || [],
-          };
-        }}
+        getAllFilesAndFolders={loadFilesAndFolders}
       />
 
       <ShareActionsModals
@@ -62,20 +65,19 @@ export function SharesModals({
         onCloseEdit={() => shareManager.setShareToEdit(null)}
         onCloseManageFiles={() => shareManager.setShareToManageFiles(null)}
         onCloseManageRecipients={() => shareManager.setShareToManageRecipients(null)}
-        onDelete={shareManager.handleDelete}
+        onDelete={onDeleteShare}
         onEdit={shareManager.handleEdit}
         onManageFiles={shareManager.handleManageFiles}
         onManageRecipients={shareManager.handleManageRecipients}
-        onSuccess={handleShareSuccess}
-        onEditFile={fileManager.handleRename}
+        onSuccess={onSuccess}
         onEditFolder={shareManager.handleEditFolder}
       />
 
       <QrCodeModal
-        isOpen={!!shareManager.shareToViewQrCode}
+        isOpen={!!qrShare?.alias?.alias}
         onClose={() => shareManager.setShareToViewQrCode(null)}
-        shareLink={getShareLink(shareManager.shareToViewQrCode)}
-        shareName={shareManager.shareToViewQrCode?.name || "Share"}
+        shareLink={qrShare?.alias?.alias ? shareUrl(window.location.origin, qrShare.alias.alias) : ""}
+        shareName={qrShare?.name || t("shares.calm.untitled")}
       />
 
       <DeleteConfirmationModal
@@ -84,54 +86,45 @@ export function SharesModals({
         onConfirm={shareManager.handleDeleteBulk}
         title={t("shareActions.bulkDeleteTitle")}
         description={t("shareActions.bulkDeleteConfirmation", { count: shareManager.sharesToDelete?.length || 0 })}
-        files={shareManager.sharesToDelete?.map((share: any) => share.name) || []}
+        files={shareManager.sharesToDelete?.map((share) => share.name || t("shares.calm.untitled")) || []}
         itemType="shares"
       />
 
-      <ShareDetailsModal
-        shareId={shareToViewDetails?.id || null}
-        onClose={onCloseViewDetails}
-        onUpdateName={shareManager.handleUpdateName}
-        onUpdateDescription={shareManager.handleUpdateDescription}
-        onUpdateSecurity={shareManager.handleUpdateSecurity}
-        onUpdateExpiration={shareManager.handleUpdateExpiration}
-        onGenerateLink={shareManager.handleGenerateLink}
-        onManageFiles={shareManager.setShareToManageFiles}
-        refreshTrigger={shareDetailsRefresh}
-        onSuccess={handleShareSuccess}
-      />
-
       <GenerateShareLinkModal
-        share={shareToGenerateLink}
-        shareId={shareToGenerateLink?.id || null}
-        onClose={onCloseGenerateLink}
+        share={shareManager.shareToGenerateLink}
+        shareId={shareManager.shareToGenerateLink?.id || null}
+        onClose={() => shareManager.setShareToGenerateLink(null)}
         onGenerate={shareManager.handleGenerateLink}
-        onSuccess={handleShareSuccess}
+        onSuccess={onSuccess}
       />
 
       <ShareSecurityModal
         shareId={shareManager.shareToManageSecurity?.id || null}
         share={shareManager.shareToManageSecurity || null}
         onClose={() => shareManager.setShareToManageSecurity(null)}
-        onSuccess={handleShareSuccess}
+        onSuccess={onSuccess}
       />
 
       <ShareExpirationModal
         shareId={shareManager.shareToManageExpiration?.id || null}
         share={shareManager.shareToManageExpiration || null}
         onClose={() => shareManager.setShareToManageExpiration(null)}
-        onSuccess={handleShareSuccess}
+        onSuccess={onSuccess}
       />
 
-      <ShareMultipleItemsModal
-        files={fileManager.filesToShare}
-        folders={null}
-        isOpen={!!fileManager.filesToShare}
-        onClose={() => fileManager.setFilesToShare(null)}
-        onSuccess={() => {
-          fileManager.handleShareBulkSuccess();
-          onSuccess();
-        }}
+      <ShareViewLimitModal
+        share={detailActions.shareForViewLimit}
+        onClose={() => detailActions.setShareForViewLimit(null)}
+        onSave={detailActions.saveViewLimit}
+      />
+
+      <ConfirmDialog
+        open={!!removing}
+        title={t("shares.calm.removeTitle", { name: removing?.item.name ?? "" })}
+        description={t("shares.calm.removeText")}
+        confirmLabel={t("shares.calm.remove")}
+        onConfirm={detailActions.confirmRemoveItem}
+        onClose={() => detailActions.setItemToRemove(null)}
       />
     </>
   );

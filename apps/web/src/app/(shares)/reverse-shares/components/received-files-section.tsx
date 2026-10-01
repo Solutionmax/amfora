@@ -1,14 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { IconDownload, IconEye, IconTrash } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+import { IconDotsVertical, IconDownload, IconEye, IconFolderShare, IconInbox, IconTrash } from "@tabler/icons-react";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { deleteReverseShareFile, downloadReverseShareFile } from "@/http/endpoints/reverse-shares";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LineList, LineRow } from "@/components/ui/line-list";
+import { copyReverseShareFileToUserFiles, deleteReverseShareFile } from "@/http/endpoints/reverse-shares";
 import type { ReverseShareFile } from "@/http/endpoints/reverse-shares/types";
-import { getFileIcon } from "@/utils/file-icons";
+import { formatFileSize } from "@/utils/format-file-size";
+import { formatDayTime } from "../lib/receive-format";
+import { copyErrorMessage, downloadReceivedFile, senderName } from "../lib/received-file-actions";
+import { ConfirmDialog } from "./confirm-dialog";
+import { FileKindIcon } from "./file-kind-icon";
 import { ReverseShareFilePreviewModal } from "./reverse-share-file-preview-modal";
 
 interface ReceivedFilesSectionProps {
@@ -16,142 +28,141 @@ interface ReceivedFilesSectionProps {
   onFileDeleted?: () => void;
 }
 
+/** What came in through a receive link, newest first, as hairline rows. */
 export function ReceivedFilesSection({ files, onFileDeleted }: ReceivedFilesSectionProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const [previewFile, setPreviewFile] = useState<ReverseShareFile | null>(null);
-
-  const getSenderDisplay = (file: ReverseShareFile) => {
-    if (file.uploaderName && file.uploaderEmail) {
-      return `${file.uploaderName}(${file.uploaderEmail})`;
-    }
-    if (file.uploaderName) return file.uploaderName;
-    if (file.uploaderEmail) return file.uploaderEmail;
-    return t("reverseShares.components.fileRow.anonymous");
-  };
-
-  const formatFileSize = (size: string | number | null) => {
-    if (!size) return "0 B";
-    const sizeInBytes = typeof size === "string" ? parseInt(size) : size;
-    if (sizeInBytes === 0) return "0 B";
-    const units = ["B", "KB", "MB", "GB"];
-    const k = 1024;
-    const i = Math.floor(Math.log(sizeInBytes) / Math.log(k));
-    return `${parseFloat((sizeInBytes / Math.pow(k, i)).toFixed(1))} ${units[i]}`;
-  };
-
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return t("reverseShares.modals.details.invalidDate");
-    }
-  };
+  const [fileToDelete, setFileToDelete] = useState<ReverseShareFile | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDownload = async (file: ReverseShareFile) => {
     try {
-      const loadingToast = toast.loading(t("reverseShares.modals.details.downloading") || "Downloading...");
-      const response = await downloadReverseShareFile(file.id);
-
-      const link = document.createElement("a");
-      link.href = response.data.url;
-      link.download = file.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      toast.dismiss(loadingToast);
-      toast.success(t("reverseShares.modals.details.downloadSuccess"));
+      await downloadReceivedFile(file);
     } catch (error) {
       console.error("Download error:", error);
       toast.error(t("reverseShares.modals.details.downloadError"));
     }
   };
 
-  const handleDeleteFile = async (file: ReverseShareFile) => {
+  const handleCopy = (file: ReverseShareFile) => {
+    toast.promise(copyReverseShareFileToUserFiles(file.id), {
+      loading: t("reverseShares.components.fileActions.copying"),
+      success: t("reverseShares.modals.receivedFiles.copySuccess"),
+      error: (error: unknown) => copyErrorMessage(error, t),
+    });
+  };
+
+  const confirmDelete = async () => {
+    if (!fileToDelete) return;
+    setIsDeleting(true);
     try {
-      await deleteReverseShareFile(file.id);
-      toast.success(t("fileManager.deleteSuccess"));
+      await deleteReverseShareFile(fileToDelete.id);
+      toast.success(t("reverseShares.modals.receivedFiles.deleteSuccess"));
+      setFileToDelete(null);
       onFileDeleted?.();
     } catch (error) {
       console.error("Error deleting file:", error);
-      toast.error(t("fileManager.deleteError"));
+      toast.error(t("reverseShares.modals.receivedFiles.deleteError"));
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   if (!files.length) {
-    return null;
+    return (
+      <div className="flex flex-col items-center gap-2.5 py-10 text-center text-[13px] text-ink-3">
+        <IconInbox className="size-[26px] text-ink-icon" stroke={1.6} aria-hidden="true" />
+        <p>{t("reverseShares.calm.nothingYet")}</p>
+      </div>
+    );
   }
+
+  const sorted = [...files].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   return (
     <>
-      <div className="space-y-3">
-        <h3 className="text-base font-medium text-foreground border-b pb-2">
-          {t("reverseShares.modals.details.files")} ({files.length})
-        </h3>
-        <div className="border rounded-lg bg-muted/10 p-2">
-          <div className="grid gap-1 max-h-40 overflow-y-auto">
-            {files.map((file) => {
-              const { icon: FileIcon, color } = getFileIcon(file.name);
-              return (
-                <div key={file.id} className="flex items-center gap-2 p-2 bg-background rounded border mr-2 group">
-                  <FileIcon className={`h-3.5 w-3.5 ${color} flex-shrink-0`} />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium truncate max-w-[200px]" title={file.name}>
-                      {file.name}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{formatFileSize(file.size)}</span>
-                      {(file.uploaderName || file.uploaderEmail) && (
-                        <>
-                          <span>•</span>
-                          <span title={getSenderDisplay(file)}>{getSenderDisplay(file)}</span>
-                        </>
-                      )}
-                      <span>•</span>
-                      <span>{formatDate(file.createdAt)}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0"
-                      onClick={() => setPreviewFile(file)}
-                      title={t("reverseShares.actions.viewDetails")}
-                    >
-                      <IconEye className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0"
-                      onClick={() => handleDownload(file)}
-                      title={t("common.download")}
-                    >
-                      <IconDownload className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
-                      onClick={() => handleDeleteFile(file)}
-                      title={t("common.delete")}
-                    >
-                      <IconTrash className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <LineList>
+        {sorted.map((file) => {
+          const size = formatFileSize(Number(file.size || 0));
+          const sender = senderName(file) ?? t("reverseShares.components.fileRow.anonymous");
+          const fullSender = [file.uploaderName, file.uploaderEmail].filter(Boolean).join(" · ");
+          return (
+            <LineRow
+              key={file.id}
+              icon={<FileKindIcon name={file.name} />}
+              title={<span title={file.name}>{file.name}</span>}
+              sub={
+                <span className="block truncate" title={fullSender || undefined}>
+                  <span className="sm:hidden">{size} · </span>
+                  {sender} · {formatDayTime(file.createdAt, locale)}
+                </span>
+              }
+            >
+              <span className="mr-1.5 hidden text-[13px] tabular-nums text-ink-2 sm:inline">{size}</span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="max-sm:hidden"
+                onClick={() => setPreviewFile(file)}
+                aria-label={t("reverseShares.components.fileActions.preview")}
+              >
+                <IconEye />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="max-sm:hidden"
+                onClick={() => handleDownload(file)}
+                aria-label={t("reverseShares.components.fileActions.download")}
+              >
+                <IconDownload />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t("reverseShares.calm.moreActionsFor", { name: file.name })}
+                  >
+                    <IconDotsVertical />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[210px]">
+                  <DropdownMenuItem className="sm:hidden" onClick={() => setPreviewFile(file)}>
+                    <IconEye />
+                    {t("reverseShares.components.fileActions.preview")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="sm:hidden" onClick={() => handleDownload(file)}>
+                    <IconDownload />
+                    {t("reverseShares.components.fileActions.download")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleCopy(file)}>
+                    <IconFolderShare />
+                    {t("reverseShares.calm.copyToMyFiles")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" onClick={() => setFileToDelete(file)}>
+                    <IconTrash />
+                    {t("reverseShares.components.fileActions.delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </LineRow>
+          );
+        })}
+      </LineList>
+
+      <ConfirmDialog
+        open={!!fileToDelete}
+        title={t("reverseShares.calm.deleteFileTitle", { name: fileToDelete?.name ?? "" })}
+        description={t("reverseShares.calm.deleteFileText")}
+        confirmLabel={t("reverseShares.components.fileActions.delete")}
+        busyLabel={t("common.deleting")}
+        busy={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => setFileToDelete(null)}
+      />
 
       {previewFile && (
         <ReverseShareFilePreviewModal isOpen={!!previewFile} onClose={() => setPreviewFile(null)} file={previewFile} />

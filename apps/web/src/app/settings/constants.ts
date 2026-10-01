@@ -1,102 +1,120 @@
-import { IconDatabase, IconMail, IconSettings, IconShield, IconUserCheck } from "@tabler/icons-react";
 import { createTranslator } from "next-intl";
 
-export const createGroupMetadata = (t: ReturnType<typeof createTranslator>) => ({
-  email: {
-    title: t("settings.groups.email.title"),
-    description: t("settings.groups.email.description"),
-    icon: IconMail,
-  },
-  general: {
-    title: t("settings.groups.general.title"),
-    description: t("settings.groups.general.description"),
-    icon: IconSettings,
-  },
-  "auth-providers": {
-    title: t("authProviders.title"),
-    description: t("authProviders.description"),
-    icon: IconUserCheck,
-  },
-  security: {
-    title: t("settings.groups.security.title"),
-    description: t("settings.groups.security.description"),
-    icon: IconShield,
-  },
-  storage: {
-    title: t("settings.groups.storage.title"),
-    description: t("settings.groups.storage.description"),
-    icon: IconDatabase,
-  },
-});
+type Translator = ReturnType<typeof createTranslator>;
 
-export const createFieldDescriptions = (t: ReturnType<typeof createTranslator>) => ({
-  // General settings
-  appLogo: t("settings.fields.appLogo.description"),
-  appName: t("settings.fields.appName.description"),
-  appDescription: t("settings.fields.appDescription.description"),
-  showHomePage: t("settings.fields.showHomePage.description"),
-  hideVersion: t("settings.fields.hideVersion.description"),
-  firstUserAccess: t("settings.fields.firstUserAccess.description"),
-  serverUrl: t("settings.fields.serverUrl.description"),
+/** A settings row: one field full width, or two fields side by side. */
+export type SettingsRow = string | readonly [string, string];
 
-  // Email settings
-  smtpEnabled: t("settings.fields.smtpEnabled.description"),
-  smtpHost: t("settings.fields.smtpHost.description"),
-  smtpPort: t("settings.fields.smtpPort.description"),
-  smtpUser: t("settings.fields.smtpUser.description"),
-  smtpPass: t("settings.fields.smtpPass.description"),
-  smtpFromName: t("settings.fields.smtpFromName.description"),
-  smtpFromEmail: t("settings.fields.smtpFromEmail.description"),
-  smtpSecure: t("settings.fields.smtpSecure.description"),
-  smtpNoAuth: t("settings.fields.smtpNoAuth.description"),
-  smtpTrustSelfSigned: t("settings.fields.smtpTrustSelfSigned.description"),
+export interface SettingsBlock {
+  /** Key under `settings.calm.blocks.<id>` for its title and description. */
+  id: string;
+  rows: readonly SettingsRow[];
+}
 
-  // Auth Providers settings
-  authProvidersEnabled: "Enable external authentication providers for SSO",
+/**
+ * How each group is laid out in blocks. Keys that are not listed (and not hidden)
+ * still show up, in a closing "More" block, so a new server setting is never lost.
+ */
+export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
+  general: [
+    { id: "brand", rows: ["appLogo", "appName", "appDescription"] },
+    { id: "publicPages", rows: ["appPublicTheme", "appSharePlayback"] },
+    { id: "behaviour", rows: ["showHomePage", "firstUserAccess", "hideVersion"] },
+  ],
+  security: [
+    { id: "signingIn", rows: ["passwordAuthEnabled", ["passwordMinLength", "passwordResetTokenExpiration"]] },
+    { id: "bruteForce", rows: [["maxLoginAttempts", "loginBlockDuration"]] },
+  ],
+  storage: [{ id: "limits", rows: ["maxFileSize", "maxTotalStoragePerUser"] }],
+  email: [
+    {
+      id: "outgoing",
+      rows: [
+        "smtpEnabled",
+        ["smtpHost", "smtpPort"],
+        "smtpSecure",
+        ["smtpUser", "smtpPass"],
+        ["smtpFromName", "smtpFromEmail"],
+        "smtpNoAuth",
+        "smtpTrustSelfSigned",
+      ],
+    },
+  ],
+};
 
-  // Security settings
-  maxLoginAttempts: t("settings.fields.maxLoginAttempts.description"),
-  loginBlockDuration: t("settings.fields.loginBlockDuration.description"),
-  passwordMinLength: t("settings.fields.passwordMinLength.description"),
-  passwordResetTokenExpiration: t("settings.fields.passwordResetTokenExpiration.description"),
+/** Order of the text tabs. Unknown groups go last. */
+export const GROUP_ORDER: readonly string[] = ["general", "security", "storage", "email", "auth-providers"];
 
-  // Storage settings
-  maxFileSize: t("settings.fields.maxFileSize.description"),
-  maxTotalStoragePerUser: t("settings.fields.maxTotalStoragePerUser.description"),
-});
+/** Fields that only make sense while sending email is on. */
+export const SMTP_FIELDS: readonly string[] = [
+  "smtpHost",
+  "smtpPort",
+  "smtpUser",
+  "smtpPass",
+  "smtpSecure",
+  "smtpNoAuth",
+  "smtpTrustSelfSigned",
+  "smtpFromName",
+  "smtpFromEmail",
+];
 
-export const createFieldTitles = (t: ReturnType<typeof createTranslator>) => ({
-  // General settings
-  appLogo: t("settings.fields.appLogo.title"),
-  appName: t("settings.fields.appName.title"),
-  appDescription: t("settings.fields.appDescription.title"),
-  showHomePage: t("settings.fields.showHomePage.title"),
-  hideVersion: t("settings.fields.hideVersion.title"),
-  firstUserAccess: t("settings.fields.firstUserAccess.title"),
-  serverUrl: t("settings.fields.serverUrl.title"),
+/** Values stored in seconds, shown with a unit next to the input. */
+export const SECONDS_FIELDS: readonly string[] = ["loginBlockDuration", "passwordResetTokenExpiration"];
 
-  // Email settings
-  smtpEnabled: t("settings.fields.smtpEnabled.title"),
-  smtpHost: t("settings.fields.smtpHost.title"),
-  smtpPort: t("settings.fields.smtpPort.title"),
-  smtpUser: t("settings.fields.smtpUser.title"),
-  smtpPass: t("settings.fields.smtpPass.title"),
-  smtpFromName: t("settings.fields.smtpFromName.title"),
-  smtpFromEmail: t("settings.fields.smtpFromEmail.title"),
-  smtpSecure: t("settings.fields.smtpSecure.title"),
-  smtpNoAuth: t("settings.fields.smtpNoAuth.title"),
-  smtpTrustSelfSigned: t("settings.fields.smtpTrustSelfSigned.title"),
+/** Keys that have no title in the shared messages; their text lives under `settings.calm.fields`. */
+const CALM_FIELDS = ["appPublicTheme", "appSharePlayback", "appBrandpack", "authProvidersEnabled"];
 
-  // Auth Providers settings
-  authProvidersEnabled: "Authentication Providers Enabled",
+function lookup(t: Translator, key: string, part: "title" | "description"): string | null {
+  const calm = `settings.calm.fields.${key}.${part}`;
+  const shared = `settings.fields.${key}.${part}`;
 
-  // Security settings
-  maxLoginAttempts: t("settings.fields.maxLoginAttempts.title"),
-  loginBlockDuration: t("settings.fields.loginBlockDuration.title"),
-  passwordMinLength: t("settings.fields.passwordMinLength.title"),
-  passwordResetTokenExpiration: t("settings.fields.passwordResetTokenExpiration.title"),
+  if (CALM_FIELDS.includes(key) || t.has(calm)) return t(calm);
+  if (t.has(shared)) return t(shared);
 
-  // Storage settings
-  maxFileSize: t("settings.fields.maxFileSize.title"),
-  maxTotalStoragePerUser: t("settings.fields.maxTotalStoragePerUser.title"),
-});
+  return null;
+}
+
+/** Title of a setting, never a raw key: falls back to a readable version of the key itself. */
+export function fieldTitle(t: Translator, key: string): string {
+  return lookup(t, key, "title") ?? key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
+}
+
+export function fieldDescription(t: Translator, key: string, fallback?: string): string | undefined {
+  return lookup(t, key, "description") ?? fallback;
+}
+
+export function groupTitle(t: Translator, group: string): string {
+  if (group === "auth-providers") return t("authProviders.title");
+  if (t.has(`settings.groups.${group}.title`)) return t(`settings.groups.${group}.title`);
+
+  return group;
+}
+
+/** Split a group's keys into the blocks above, plus a "more" block for anything unplaced. */
+export function blocksFor(group: string, keys: readonly string[]): SettingsBlock[] {
+  const layout = GROUP_LAYOUT[group] ?? [];
+  const present = new Set(keys);
+  const placed = new Set<string>();
+
+  const blocks = layout
+    .map((block) => {
+      const rows = block.rows
+        .map((row): SettingsRow | null => {
+          if (typeof row === "string") return present.has(row) ? row : null;
+          const [a, b] = row.filter((key) => present.has(key));
+          if (a && b) return [a, b] as const;
+
+          return a ?? null;
+        })
+        .filter((row): row is SettingsRow => row !== null);
+
+      rows.forEach((row) => (typeof row === "string" ? [row] : row).forEach((key) => placed.add(key)));
+
+      return { id: block.id, rows };
+    })
+    .filter((block) => block.rows.length > 0);
+
+  const rest = keys.filter((key) => !placed.has(key));
+
+  return rest.length > 0 ? [...blocks, { id: "more", rows: rest }] : blocks;
+}

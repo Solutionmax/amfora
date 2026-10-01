@@ -37,6 +37,7 @@ export function useUserManagement() {
   const { userSchema } = createSchemas(t);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [deleteModalUser, setDeleteModalUser] = useState<User | null>(null);
@@ -56,12 +57,13 @@ export function useUserManagement() {
       const response = await listUsers();
 
       setUsers(response.data);
+      setLoadError(false);
     } catch {
-      toast.error(t("users.errors.loadFailed"));
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     loadUsers();
@@ -114,6 +116,22 @@ export function useUserManagement() {
     }
   };
 
+  const reloadUsers = useCallback(() => {
+    setIsLoading(true);
+    loadUsers();
+  }, [loadUsers]);
+
+  /** Promote to administrator or back to a regular user, without opening the form. */
+  const handleToggleAdmin = async (user: User) => {
+    try {
+      await updateUser({ id: user.id, isAdmin: !user.isAdmin });
+      toast.success(t("users.messages.updateSuccess"));
+      loadUsers();
+    } catch {
+      toast.error(t("users.errors.submitFailed", { mode: t("users.modes.edit") }));
+    }
+  };
+
   const handleDeleteUser = async () => {
     if (!deleteModalUser) return;
 
@@ -148,6 +166,8 @@ export function useUserManagement() {
   return {
     users,
     isLoading,
+    loadError,
+    reloadUsers,
     currentUser,
     selectedUser,
     deleteModalUser,
@@ -170,6 +190,7 @@ export function useUserManagement() {
     handleEditUser,
     handleDeleteUser,
     handleToggleUserStatus,
+    handleToggleAdmin,
     onSubmit,
     formMethods,
   };

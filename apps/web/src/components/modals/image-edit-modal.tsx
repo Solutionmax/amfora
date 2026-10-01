@@ -1,14 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IconCheck, IconRotateClockwise, IconX, IconZoomIn, IconZoomOut } from "@tabler/icons-react";
+import { IconRotateClockwise, IconZoomIn, IconZoomOut } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from "react-image-crop";
 
 import "react-image-crop/dist/ReactCrop.css";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 
@@ -171,63 +178,64 @@ export function ImageEditModal({ isOpen, onClose, onSave, imageFile }: ImageEdit
     onClose();
   };
 
+  const toolbar = (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-3 border-y border-line py-3">
+      <Button variant="outline" size="sm" onClick={handleRotate} disabled={isLoading}>
+        <IconRotateClockwise />
+        {t("imageEdit.rotate")}
+      </Button>
+      <div className="flex min-w-[220px] flex-1 items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={t("files.calm.zoomOut")}
+          onClick={handleZoomOut}
+          disabled={isLoading || scale <= 0.5}
+        >
+          <IconZoomOut />
+        </Button>
+        <Slider
+          value={[scale]}
+          onValueChange={handleScaleChange}
+          max={3}
+          min={0.5}
+          step={0.1}
+          className="flex-1"
+          aria-label={t("imageEdit.zoom")}
+          disabled={isLoading}
+        />
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={t("files.calm.zoomIn")}
+          onClick={handleZoomIn}
+          disabled={isLoading || scale >= 3}
+        >
+          <IconZoomIn />
+        </Button>
+        <span className="w-11 text-right text-[12.5px] tabular-nums text-ink-3">{Math.round(scale * 100)}%</span>
+      </div>
+    </div>
+  );
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl h-fit overflow-hidden flex flex-col">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="flex h-fit flex-col overflow-hidden sm:max-w-[640px]">
         <DialogHeader>
           <DialogTitle>{t("imageEdit.title")}</DialogTitle>
+          <DialogDescription>{t("imageEdit.cropInstructions")}</DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-auto">
           {isImageLoading ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-20" />
-                  <Skeleton className="h-8 w-10" />
-                  <Skeleton className="h-8 w-10" />
-                </div>
-                <div className="flex-1 max-w-xs">
-                  <Skeleton className="h-4 w-16 mb-2" />
-                  <Skeleton className="h-2 w-full" />
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <Skeleton className="w-96 h-96" />
-              </div>
+            <div className="grid gap-4">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="mx-auto aspect-square w-full max-w-[400px] rounded-xl" />
             </div>
           ) : imageSrc ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={handleRotate} disabled={isLoading}>
-                    <IconRotateClockwise className="h-4 w-4" />
-                    {t("imageEdit.rotate")}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleZoomOut} disabled={isLoading || scale <= 0.5}>
-                    <IconZoomOut className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleZoomIn} disabled={isLoading || scale >= 3}>
-                    <IconZoomIn className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex-1 max-w-xs">
-                  <label className="text-sm font-medium mb-2 block">
-                    {t("imageEdit.zoom")}: {Math.round(scale * 100)}%
-                  </label>
-                  <Slider
-                    value={[scale]}
-                    onValueChange={handleScaleChange}
-                    max={3}
-                    min={0.5}
-                    step={0.1}
-                    className="w-full"
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-center">
+            <div className="grid gap-4">
+              {toolbar}
+              <div className="flex justify-center rounded-xl bg-surface-2 p-2">
                 <ReactCrop
                   crop={crop}
                   onChange={(c) => setCrop(c)}
@@ -236,11 +244,11 @@ export function ImageEditModal({ isOpen, onClose, onSave, imageFile }: ImageEdit
                   minWidth={100}
                   minHeight={100}
                   keepSelection
-                  className="max-w-full max-h-70%"
+                  className="max-w-full"
                 >
                   <img
                     ref={imgRef}
-                    alt="Crop me"
+                    alt={t("imageEdit.title")}
                     src={imageSrc}
                     style={{
                       transform: `scale(${scale}) rotate(${rotate}deg)`,
@@ -255,24 +263,17 @@ export function ImageEditModal({ isOpen, onClose, onSave, imageFile }: ImageEdit
           ) : null}
         </div>
 
-        <DialogFooter className="flex gap-2">
-          <Button variant="outline" onClick={handleClose} disabled={isLoading}>
-            <IconX className="h-4 w-4" />
+        <DialogFooter>
+          <Button variant="ghost" onClick={handleClose} disabled={isLoading}>
             {t("common.cancel")}
           </Button>
           <Button onClick={handleSave} disabled={isLoading || !completedCrop}>
-            <IconCheck className="h-4 w-4" />
             {isLoading ? t("common.saving") : t("common.save")}
           </Button>
         </DialogFooter>
 
-        {/* Hidden canvas for generating cropped image */}
-        <canvas
-          ref={previewCanvasRef}
-          style={{
-            display: "none",
-          }}
-        />
+        {/* Hidden canvas for generating the cropped image */}
+        <canvas ref={previewCanvasRef} className="hidden" />
       </DialogContent>
     </Dialog>
   );

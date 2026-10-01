@@ -8,7 +8,15 @@
       "auth_failed": "Échec de l'authentification. Veuillez réessayer."
     },
     "authenticationFailed": "Échec de l'authentification",
-    "successfullyAuthenticated": "Authentification réussie !"
+    "successfullyAuthenticated": "Authentification réussie !",
+    "calm": {
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "backToSignIn": "Retour à la connexion",
+      "passwordRule": "Au moins 8 caractères.",
+      "continueWith": "Continuer avec {provider}",
+      "providerNotConfigured": "{provider} n'est pas configuré correctement. Contactez votre administrateur."
+    }
   },
   "authProviders": {
     "title": "Fournisseurs d'authentification",
@@ -120,6 +128,22 @@
       "cancel": "Annuler",
       "delete": "Supprimer le fournisseur",
       "deleting": "Suppression..."
+    },
+    "calm": {
+      "description": "Permettez d'utiliser un compte déjà existant. La connexion par mot de passe continue de fonctionner.",
+      "typeOidc": "OpenID Connect",
+      "typeOauth2": "OAuth 2.0",
+      "notConfigured": "Non configuré",
+      "configure": "Configurer",
+      "configureName": "Configurer {name}",
+      "configureTitle": "Configurer {name}",
+      "configureDescription": "Les informations client du fournisseur, et qui peut se connecter.",
+      "add": "Ajouter un fournisseur",
+      "addTitle": "Ajouter un fournisseur",
+      "addDescription": "Un service OpenID Connect ou OAuth 2.0 personnalisé.",
+      "dragHint": "Faites glisser pour changer l'ordre sur la page de connexion.",
+      "deleteTitle": "Supprimer {name} ?",
+      "deleteDescription": "Les utilisateurs ne pourront plus se connecter avec ce fournisseur. Cette action est irréversible."
     }
   },
   "bulkDownload": {
@@ -156,7 +180,14 @@
     "copied": "Copié",
     "copy": "Copier",
     "invalidDate": "Date invalide",
-    "notAvailable": "Non disponible"
+    "notAvailable": "Non disponible",
+    "calm": {
+      "retry": "Réessayer",
+      "notFoundTitle": "Page introuvable",
+      "notFoundText": "Cette adresse ne mène nulle part. Elle a peut-être été déplacée, ou le lien contient une faute de frappe.",
+      "errorTitle": "Une erreur s'est produite",
+      "errorText": "Cette page a rencontré un problème. Réessayez, ou retournez à l'accueil."
+    }
   },
   "contextMenu": {
     "newFolder": "Nouveau dossier",
@@ -304,6 +335,36 @@
         "title": "Aperçu",
         "page": "Page de téléchargement"
       }
+    },
+    "calm": {
+      "subline": "Ce que voit chaque visiteur, y compris les liens publics.",
+      "loadFailed": "Impossible de charger les paramètres de marque.",
+      "nameRequired": "Donnez d'abord un nom au serveur.",
+      "colorInvalid": "Utilisez une couleur comme #0079d2.",
+      "upload": "Téléverser",
+      "logoHint": "PNG, SVG ou WebP. Sert aussi de favicon.",
+      "brandDescription": "Nom et logo dans le menu, les e-mails et l'onglet du navigateur.",
+      "tagline": "Slogan",
+      "colorDescription": "Les boutons, les liens et l'élément actif du menu suivent la couleur d'accent.",
+      "accent": "Accent",
+      "accentSwatch": "Accent {color}",
+      "radiusLabel": "{px} px, {feel, select, sharp {net} soft {doux} other {amical}}",
+      "themeDescription": "L'apparence des pages de connexion, de téléchargement et de réception.",
+      "downloadDescription": "Sert aussi d'aperçu du lien dans WhatsApp et Slack.",
+      "cover": "Image de couverture",
+      "coverHint": "En haut de chaque page de téléchargement. Au moins 1200 px de large, jusqu'à 3 Mo.",
+      "linkPreview": "Image d'aperçu du lien",
+      "linkPreviewHint": "Utilisée en l'absence de couverture. 1200 × 630 px, jusqu'à 3 Mo.",
+      "playback": "Lire les vidéos dans le navigateur",
+      "playbackHint": "Les visiteurs peuvent regarder ou écouter avant de télécharger.",
+      "creditHint": "Petite ligne en bas de chaque page publique.",
+      "creditLocked": "Petite ligne en bas de chaque page publique. La masquer nécessite un pack de marque.",
+      "packTitle": "Pack de marque",
+      "packDescription": "Marque blanche : votre propre arrière-plan, du CSS personnalisé et aucune mention de crédit.",
+      "packActive": "Actif pour {organisation}",
+      "packIssued": "Émis le {date}",
+      "packKey": "Clé du pack de marque",
+      "packKeyHint": "Collez la clé figurant dans l'e-mail de votre achat."
     }
   },
   "dashboard": {
@@ -339,6 +400,33 @@
       "downloads": "Téléchargements",
       "downloadsDetail": "sur l'ensemble des fichiers",
       "files": "Fichiers"
+    },
+    "calm": {
+      "subline": "{shares, plural, =0 {Aucun partage actif} =1 {# partage actif} other {# partages actifs}} et {links, plural, =0 {aucun lien de réception ouvert} =1 {# lien de réception ouvert} other {# liens de réception ouverts}}.",
+      "newShare": "Nouveau partage",
+      "inFolders": "{count, plural, =0 {aucun dossier pour l'instant} =1 {dans # dossier} other {dans # dossiers}}",
+      "received": "Reçus",
+      "viaLinks": "{count, plural, =0 {aucun lien de réception pour l'instant} =1 {via # lien de réception} other {via # liens de réception}}",
+      "recentFiles": "Fichiers récents",
+      "allFiles": "Tous les fichiers",
+      "noFilesHint": "Envoyez un fichier et il apparaîtra ici.",
+      "activeShares": "Partages actifs",
+      "allShares": "Tous les partages",
+      "noActiveShares": "Aucun partage actif",
+      "noActiveSharesHint": "Créez un partage pour envoyer des fichiers avec un seul lien.",
+      "untitledShare": "Partage sans titre",
+      "shareMeta": "{items, plural, =1 {# élément} other {# éléments}} · {views, plural, =1 {# vue} other {# vues}}",
+      "copyLink": "Copier le lien",
+      "copyLinkFor": "Copier le lien de {name}",
+      "createLink": "Créer le lien",
+      "createLinkFor": "Créer un lien pour {name}",
+      "openShare": "Ouvrir {name} dans Partages",
+      "justReceived": "Vient d'arriver",
+      "allReceiveLinks": "Tous les liens de réception",
+      "untitledLink": "Lien de réception",
+      "nothingReceived": "Rien reçu pour l'instant",
+      "nothingReceivedHint": "Les fichiers que des personnes vous envoient via vos liens de réception apparaissent ici.",
+      "receivedMeta": "{sender} via {link} · {when}"
     }
   },
   "deleteConfirmation": {
@@ -443,7 +531,9 @@
     "pdfPreviewNotAvailable": "L'aperçu PDF n'est pas disponible. Essayez la vue alternative ou téléchargez.",
     "tryAlternativeView": "Essayer la Vue Alternative",
     "loadingAlternative": "Chargement de la vue alternative...",
-    "loadingAudio": "Chargement de l'audio..."
+    "loadingAudio": "Chargement de l'audio...",
+    "downloading": "Téléchargement...",
+    "downloadSuccess": "Téléchargement lancé"
   },
   "fileSelector": {
     "availableFiles": "Fichiers Disponibles ({count})",
@@ -512,7 +602,70 @@
       "cannotMoveHere": "Impossible de déplacer les éléments vers cet emplacement"
     },
     "openFolder": "Ouvrir le dossier",
-    "subline": "{count, plural, =0 {Aucun fichier pour l'instant} =1 {# fichier} other {# fichiers}} · {size}"
+    "subline": "{count, plural, =0 {Aucun fichier pour l'instant} =1 {# fichier} other {# fichiers}} · {size}",
+    "calm": {
+      "subline": "{files, plural, =0 {Aucun fichier} =1 {# fichier} other {# fichiers}} et {folders, plural, =0 {aucun dossier} =1 {# dossier} other {# dossiers}} · {size}",
+      "columns": {
+        "name": "Nom",
+        "size": "Taille",
+        "added": "Ajouté",
+        "downloads": "Téléchargements"
+      },
+      "today": "Aujourd'hui, {time}",
+      "yesterday": "Hier",
+      "downloadsCount": "{count, plural, =1 {# téléchargement} other {# téléchargements}}",
+      "folderItems": "{count, plural, =0 {Vide} =1 {# élément} other {# éléments}}",
+      "moreActions": "Plus d'actions pour {name}",
+      "downloadItem": "Télécharger {name}",
+      "shareItem": "Partager {name}",
+      "selectItem": "Sélectionner {name}",
+      "editDetails": "Modifier le nom et la description",
+      "moveToFolder": "Déplacer vers un dossier",
+      "selected": "{count} sélectionnés",
+      "selectionActions": "Actions pour les éléments sélectionnés",
+      "clearSelection": "Effacer la sélection",
+      "downloadZip": "Télécharger en ZIP",
+      "location": "Emplacement du dossier",
+      "upOneLevel": "Remonter d'un niveau",
+      "searchPlaceholder": "Rechercher des fichiers et dossiers",
+      "listView": "Liste",
+      "noResultsHint": "Essayez un mot plus court ou différent.",
+      "clearSearch": "Effacer la recherche",
+      "emptyFolder": "Ce dossier est vide",
+      "emptyFolderHint": "Envoyez des fichiers ici ou glissez-les depuis Mes fichiers.",
+      "retry": "Réessayer",
+      "optional": "Facultatif",
+      "editFileHint": "Le type du fichier reste inchangé.",
+      "newFolderTitle": "Nouveau dossier",
+      "newFolderHint": "Gardez les fichiers liés ensemble.",
+      "editFolderHint": "Modifiez le nom ou la description.",
+      "deleteTitle": "Supprimer {name} ?",
+      "deleteFolderTitle": "Supprimer le dossier {name} ?",
+      "deleteFolderHint": "Tout son contenu est aussi supprimé. Cette action est irréversible.",
+      "bulkDeleteTitle": "Supprimer {count, plural, =1 {1 élément} other {# éléments}} ?",
+      "zipTitle": "Télécharger en ZIP",
+      "zipSummary": "{files, plural, =0 {Aucun fichier} =1 {# fichier} other {# fichiers}}{folders, plural, =0 {} =1 { et # dossier} other { et # dossiers}} dans un seul fichier ZIP",
+      "moveOne": "Choisissez où va {name}.",
+      "moveMany": "Choisissez où vont les {count} éléments.",
+      "moveTo": "Déplacé vers {name}",
+      "alreadyHere": "Les éléments sont déjà dans ce dossier.",
+      "moveHere": "Déplacer ici",
+      "moving": "Déplacement...",
+      "foldersLoadError": "Impossible de charger vos dossiers.",
+      "uploadTo": "Vers <b>{folder}</b>",
+      "dropTitle": "Choisissez des fichiers ou déposez-les ici",
+      "dropHint": "Ajoutez-en autant que vous voulez, puis lancez l'envoi.",
+      "uploadCount": "{count, plural, =0 {Envoyer} =1 {Envoyer 1 fichier} other {Envoyer # fichiers}}",
+      "uploading": "Envoi en cours...",
+      "uploaded": "Envoyé",
+      "uploadFailed": "Échec",
+      "uploadCancelled": "Annulé",
+      "removeFromList": "Retirer {name} de la liste",
+      "done": "Terminé",
+      "fullScreen": "Afficher en plein écran",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière"
+    }
   },
   "filesTable": {
     "ariaLabel": "Tableau des fichiers",
@@ -757,7 +910,45 @@
       "imageSuccess": "Image de profil mise à jour avec succès",
       "imageRemoved": "Image de profil supprimée avec succès"
     },
-    "pageTitle": "Profil"
+    "pageTitle": "Profil",
+    "calm": {
+      "memberSince": "membre depuis {date}",
+      "changePhoto": "Changer la photo",
+      "removePhoto": "Supprimer",
+      "account": "Compte",
+      "accountHint": "La façon dont vous apparaissez aux personnes avec qui vous partagez.",
+      "usernameHint": "Utilisé pour vous connecter, avec votre adresse e-mail.",
+      "password": "Mot de passe",
+      "passwordHint": "Au moins 8 caractères. Les autres sessions restent connectées.",
+      "passwordTooShort": "Utilisez au moins {count} caractères.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "changePassword": "Changer le mot de passe",
+      "twoFactorHint": "Demander un code de votre application d'authentification lors de la connexion.",
+      "off": "Désactivée",
+      "on": "Activée",
+      "offHint": "Seul votre mot de passe protège ce compte.",
+      "onHint": "Vous saisissez un code de votre application d'authentification lors de la connexion.",
+      "turnOn": "Activer",
+      "turnOff": "Désactiver",
+      "turnOffTitle": "Désactiver l'authentification à deux facteurs",
+      "scanHint": "Scannez avec votre application d'authentification, ou saisissez cette clé",
+      "copyKey": "Copier la clé",
+      "codeFromApp": "Code de l'application",
+      "verifyAndTurnOn": "Vérifier et activer",
+      "backupCodes": "Codes de secours",
+      "codesLeft": "{count, plural, =0 {Aucun code restant} =1 {1 code restant} other {# codes restants}}",
+      "backupHint": "Au cas où vous perdriez votre téléphone. Chaque code ne fonctionne qu'une fois.",
+      "download": "Télécharger",
+      "newCodes": "Nouveaux codes",
+      "trustedDevices": "Appareils de confiance",
+      "noDevices": "Aucun appareil de confiance. Lorsque vous cochez « Se souvenir de cet appareil » à la connexion, il apparaît ici.",
+      "usedWhen": "utilisé {when}",
+      "neverUsed": "jamais utilisé",
+      "trustedUntil": "approuvé jusqu'au {date}",
+      "expiredOn": "expiré {date}",
+      "remove": "Supprimer",
+      "removeAll": "Tout supprimer"
+    }
   },
   "public": {
     "login": {
@@ -989,7 +1180,10 @@
       "emailExists": "L'e-mail existe déjà",
       "createFailed": "Échec de la création du compte. Veuillez réessayer."
     },
-    "pageTitle": "Créer un Compte"
+    "pageTitle": "Créer un Compte",
+    "calm": {
+      "unusableTitle": "Cette invitation ne peut pas être utilisée"
+    }
   },
   "resetPassword": {
     "pageTitle": "Réinitialiser le Mot de Passe",
@@ -1472,6 +1666,112 @@
       "noFiles": "Rien n'est encore arrivé. Partagez le lien et les fichiers apparaîtront ici.",
       "receivedBy": "{sender} · {date}",
       "showAll": "Afficher les {count} fichiers"
+    },
+    "calm": {
+      "new": "Nouveau",
+      "filterLabel": "Filtrer les liens de réception",
+      "filters": {
+        "all": "Tous",
+        "active": "Actifs",
+        "inactive": "Inactifs"
+      },
+      "inCount": "{count} reçus",
+      "noMatches": "Aucun lien de réception ne correspond.",
+      "emptyTitle": "Aucun lien de réception pour l'instant",
+      "emptyText": "Créez un lien et toute personne qui l'a pourra vous envoyer des fichiers.",
+      "retry": "Réessayer",
+      "notFoundTitle": "Ce lien de réception n'existe pas",
+      "notFoundText": "Il a peut-être été supprimé, ou l'adresse est incorrecte.",
+      "backToList": "Retour à Recevoir des fichiers",
+      "receivedCount": "{count} reçus",
+      "openUntil": "ouvert jusqu'au {date}",
+      "noLinkHint": "Pas encore de lien. Créez-en un pour que les expéditeurs puissent vous joindre.",
+      "noLinkYet": "Pas encore de lien",
+      "copyLink": "Copier le lien",
+      "pause": "Mettre en pause",
+      "turnOn": "Activer",
+      "copyAll": "Tout copier dans Mes fichiers",
+      "copyToMyFiles": "Copier dans Mes fichiers",
+      "facts": {
+        "received": "Reçus",
+        "maxPerFile": "Taille max. par fichier",
+        "expires": "Expire"
+      },
+      "ofMax": "sur {max}",
+      "never": "Jamais",
+      "unlimited": "Illimité",
+      "receivedFiles": "Fichiers reçus",
+      "manageFiles": "Gérer les fichiers",
+      "nothingYet": "Rien n'est encore arrivé. Envoyez le lien pour commencer.",
+      "moreActionsFor": "Plus d'actions pour {name}",
+      "editDescription": "Modifier la description",
+      "deleteFileTitle": "Supprimer {name} ?",
+      "deleteFileText": "Le fichier est définitivement retiré de ce lien de réception.",
+      "deleteLink": "Supprimer le lien de réception",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteText": "Le lien cesse de fonctionner pour toutes les personnes qui l'ont.",
+      "deleteTextFiles": "Le lien cesse de fonctionner. {count, plural, =1 {Le fichier reçu est aussi supprimé.} other {Les # fichiers reçus sont aussi supprimés.}}",
+      "change": "Modifier",
+      "removeType": "Retirer {type}",
+      "rules": {
+        "title": "Règles pour les expéditeurs",
+        "name": "Nom de l'expéditeur",
+        "email": "E-mail de l'expéditeur",
+        "fieldRequired": "Obligatoire avant l'envoi.",
+        "fieldOptional": "Demandé, mais peut rester vide.",
+        "fieldHidden": "Non demandé.",
+        "password": "Mot de passe",
+        "passwordOn": "Les expéditeurs ont besoin d'un mot de passe.",
+        "passwordOff": "Toute personne disposant du lien peut envoyer des fichiers.",
+        "changePassword": "Modifier le mot de passe",
+        "types": "Types de fichiers autorisés",
+        "anyType": "Tous les types",
+        "typesHint": "Extensions sans point, comme pdf ou jpg. Laissez vide pour autoriser tous les types.",
+        "maxFiles": "Nombre max. de fichiers",
+        "maxFilesValue": "{count, plural, =1 {# fichier} other {# fichiers}} au total",
+        "maxSize": "Taille max. des fichiers",
+        "maxSizeValue": "{size} par fichier",
+        "emptyNoLimit": "Laissez vide pour ne pas fixer de limite.",
+        "layout": "Mise en page",
+        "layoutHint": "L'apparence de la page d'envoi pour les expéditeurs.",
+        "alias": "Lien personnalisé"
+      },
+      "alias": {
+        "createTitle": "Créer le lien",
+        "editTitle": "Modifier le lien",
+        "description": "Les expéditeurs utilisent cette adresse pour envoyer des fichiers. Lettres, chiffres, - et _.",
+        "oldStops": "L'ancienne adresse cesse de fonctionner.",
+        "create": "Créer le lien"
+      },
+      "password": {
+        "setTitle": "Définir un mot de passe",
+        "changeTitle": "Modifier le mot de passe",
+        "description": "Les expéditeurs le saisissent avant de pouvoir envoyer des fichiers.",
+        "newPassword": "Nouveau mot de passe"
+      },
+      "form": {
+        "createTitle": "Nouveau lien de réception",
+        "createDescription": "Toute personne disposant du lien peut vous envoyer des fichiers.",
+        "createButton": "Créer le lien",
+        "editTitle": "Modifier le lien de réception",
+        "name": "Nom",
+        "namePlaceholder": "Par exemple : Photos du shooting",
+        "message": "Message",
+        "messageHint": "Facultatif. Affiché sur la page d'envoi.",
+        "senders": "Expéditeurs",
+        "fieldsHint": "Obligatoire : à remplir. Facultatif : peut rester vide. Masqué : non demandé.",
+        "access": "Accès",
+        "expiryOn": "Le lien se ferme à la date de fin.",
+        "expiryOff": "Le lien reste ouvert jusqu'à ce que vous le mettiez en pause.",
+        "expiryKeep": "Une date de fin peut être repoussée, pas supprimée. Choisissez une date ultérieure pour le garder ouvert plus longtemps.",
+        "expiryRequired": "Choisissez une date de fin.",
+        "passwordKeep": "Laissez vide pour conserver le mot de passe actuel.",
+        "isActive": "Lien activé",
+        "isActiveHint": "Désactivez pour mettre les envois en pause sans rien supprimer."
+      },
+      "deleteSomeFailed": "{count, plural, =1 {1 fichier n'a pas pu être supprimé.} other {# fichiers n'ont pas pu être supprimés.}}",
+      "typesPlaceholder": "pdf jpg png",
+      "sizeUnit": "Unité"
     }
   },
   "searchBar": {
@@ -1644,6 +1944,67 @@
     "redirectUri": {
       "placeholder": "https://monsite.com",
       "previewLabel": "URL complète qui sera enregistrée :"
+    },
+    "calm": {
+      "subline": "Le comportement de ce serveur.",
+      "noLimit": "Sans limite",
+      "smtpTestHint": "Utilise les valeurs ci-dessus, même avant l'enregistrement.",
+      "units": {
+        "seconds": "secondes",
+        "unit": "Unité"
+      },
+      "blocks": {
+        "brand": {
+          "title": "Marque",
+          "description": "Nom et logo dans le menu, les e-mails et l'onglet du navigateur."
+        },
+        "publicPages": {
+          "title": "Pages publiques",
+          "description": "L'apparence des pages de connexion, de téléchargement et de réception. Plus d'options dans Personnalisation."
+        },
+        "behaviour": {
+          "title": "Comportement",
+          "description": "Quelques choix sur ce que voient les visiteurs."
+        },
+        "signingIn": {
+          "title": "Connexion",
+          "description": "Règles des mots de passe et liens de réinitialisation."
+        },
+        "bruteForce": {
+          "title": "Force brute",
+          "description": "Bloquer un compte après trop de tentatives erronées."
+        },
+        "limits": {
+          "title": "Limites",
+          "description": "La taille maximale des envois et du stockage personnel."
+        },
+        "outgoing": {
+          "title": "E-mails sortants",
+          "description": "Pour les invitations, les réinitialisations de mot de passe et les notifications de partage."
+        },
+        "more": {
+          "title": "Autres",
+          "description": "Les autres paramètres de ce groupe."
+        }
+      },
+      "fields": {
+        "appPublicTheme": {
+          "title": "Thème des pages publiques",
+          "description": "Stage, Workbench ou Seal. Aperçu dans Personnalisation."
+        },
+        "appSharePlayback": {
+          "title": "Lire les vidéos et les fichiers audio sur les pages de téléchargement",
+          "description": "Désactivé : les vidéos et les fichiers audio ne peuvent être que téléchargés."
+        },
+        "appBrandpack": {
+          "title": "Pack de marque",
+          "description": "Votre clé de marque blanche. Gérée dans Personnalisation."
+        },
+        "authProvidersEnabled": {
+          "title": "Connexion externe",
+          "description": "Permettre de se connecter avec un compte d'un autre service."
+        }
+      }
     }
   },
   "share": {
@@ -1877,7 +2238,128 @@
       "placeholder": "Rechercher des partages...",
       "results": "Trouvé {filtered} sur {total} partages"
     },
-    "pageTitle": "Partages"
+    "pageTitle": "Partages",
+    "calm": {
+      "new": "Nouveau",
+      "newShare": "Nouveau partage",
+      "filterLabel": "Filtrer les partages",
+      "filters": {
+        "all": "Tous",
+        "active": "Actifs",
+        "expired": "Expirés"
+      },
+      "search": "Rechercher",
+      "fileCount": "{count, plural, =0 {Aucun fichier} =1 {1 fichier} other {# fichiers}}",
+      "moreActions": "Plus d'actions",
+      "selectShares": "Sélectionner des partages",
+      "selectedCount": "{count} sélectionnés",
+      "downloadSelected": "Télécharger",
+      "deleteSelected": "Supprimer",
+      "doneSelecting": "Terminé",
+      "emptyTitle": "Aucun partage pour l'instant",
+      "emptyDescription": "Choisissez des fichiers, obtenez un lien, décidez qui peut l'ouvrir.",
+      "noResultsTitle": "Aucun partage ne correspond",
+      "noResultsDescription": "Essayez une autre recherche ou un autre filtre.",
+      "clearSearch": "Effacer la recherche",
+      "loadError": "Impossible de charger vos partages.",
+      "retry": "Réessayer",
+      "notFoundTitle": "Partage introuvable",
+      "notFoundDescription": "Il a peut-être été supprimé. Choisissez un autre partage dans la liste.",
+      "showAll": "Afficher tous les partages",
+      "created": "créé le {date}",
+      "expiresOn": "expire le {date}",
+      "expiredOn": "expiré le {date}",
+      "qrCode": "Code QR",
+      "copyLink": "Copier le lien",
+      "openLink": "Ouvrir le lien",
+      "noLink": "Ce partage n'a pas encore de lien.",
+      "createLink": "Créer le lien",
+      "edit": "Modifier",
+      "addFiles": "Ajouter des fichiers",
+      "recipients": "Destinataires",
+      "downloadAll": "Tout télécharger",
+      "views": "Vues",
+      "viewsOf": "sur {max}",
+      "files": "Fichiers",
+      "expires": "Expire",
+      "never": "Jamais",
+      "message": "Message",
+      "noFiles": "Aucun fichier dans ce partage pour l'instant.",
+      "folder": "Dossier",
+      "folderFiles": "Dossier, {count, plural, =0 {vide} =1 {1 fichier} other {# fichiers}}",
+      "remove": "Retirer",
+      "removeLabel": "Retirer {name} de ce partage",
+      "removeTitle": "Retirer {name} de ce partage ?",
+      "removeText": "Il reste dans Mes fichiers. Les personnes disposant du lien ne le voient plus.",
+      "removed": "Retiré du partage",
+      "removeError": "Impossible de le retirer du partage",
+      "access": "Accès",
+      "password": "Mot de passe",
+      "passwordOn": "Les visiteurs ont besoin d'un mot de passe pour télécharger.",
+      "passwordOff": "Toute personne disposant du lien peut télécharger.",
+      "passwordRemoved": "Mot de passe supprimé",
+      "passwordError": "Impossible de modifier le mot de passe",
+      "change": "Modifier",
+      "changePassword": "Modifier le mot de passe",
+      "changeExpiry": "Modifier la date d'expiration",
+      "changeViewLimit": "Modifier la limite de vues",
+      "changeLink": "Modifier le lien",
+      "neverExpires": "N'expire jamais",
+      "viewLimit": "Limite de vues",
+      "viewLimitValue": "{count, plural, =1 {1 vue} other {# vues}}",
+      "noLimit": "Aucune limite",
+      "customLink": "Lien",
+      "noRecipients": "Personne n'a encore été ajouté. Ajoutez des personnes pour leur envoyer le lien par e-mail.",
+      "manage": "Gérer",
+      "notifyAll": "Envoyer par e-mail",
+      "smtpOff": "L'e-mail n'est pas configuré, le lien ne peut donc pas être envoyé d'ici.",
+      "deleteShare": "Supprimer le partage",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteText": "Le lien cesse de fonctionner. Vos fichiers restent dans Mes fichiers.",
+      "untitled": "Partage sans titre",
+      "viewLimitTitle": "Limite de vues",
+      "viewLimitDescription": "Fermer le lien après un certain nombre de vues.",
+      "viewLimitLabel": "Nombre maximal de vues",
+      "viewLimitHint": "Laissez vide pour ne pas fixer de limite. Consulté {count, plural, =1 {1 fois} other {# fois}} jusqu'ici.",
+      "viewLimitInvalid": "Saisissez un nombre entier supérieur ou égal à 1.",
+      "viewLimitSaved": "Limite de vues enregistrée",
+      "viewLimitError": "Impossible d'enregistrer la limite de vues",
+      "modals": {
+        "stepDetails": "Étape 1 sur 2. Nommez le partage et choisissez qui peut l'ouvrir.",
+        "stepFiles": "Étape 2 sur 2. Choisissez les fichiers et dossiers à partager.",
+        "next": "Suivant",
+        "nameLabel": "Nom",
+        "descriptionLabel": "Message",
+        "descriptionHint": "Affiché sur la page de téléchargement.",
+        "passwordHint": "Les visiteurs en ont besoin avant de pouvoir télécharger.",
+        "expiresLabel": "Expire",
+        "expiresHint": "Laissez vide pour garder le lien ouvert.",
+        "maxViewsLabel": "Limite de vues",
+        "maxViewsHint": "Laissez vide pour ne pas fixer de limite.",
+        "selectedCount": "{count, plural, =0 {Aucun élément sélectionné} =1 {1 élément sélectionné} other {# éléments sélectionnés}}",
+        "editDescription": "Nom, message, expiration et limite de vues.",
+        "manageFilesDescription": "Cochez les fichiers et dossiers que ce partage doit contenir.",
+        "recipientsDescription": "Ajoutez des personnes par e-mail et envoyez-leur le lien.",
+        "securityDescription": "Demandez un mot de passe aux visiteurs avant qu'ils puissent télécharger.",
+        "passwordSet": "Un mot de passe est défini. Saisissez-en un nouveau pour le remplacer.",
+        "expirationDescription": "Choisissez quand le lien cesse de fonctionner.",
+        "expiresOn": "Expire le",
+        "expiresSwitch": "Définir une date d'expiration",
+        "expiresSwitchHint": "Sans date, le lien reste ouvert jusqu'à ce que vous le supprimiez.",
+        "linkDescription": "Choisissez la dernière partie du lien. Court et facile à saisir, c'est le mieux.",
+        "linkLabel": "Lien",
+        "linkReady": "Le lien est prêt. Copiez-le ou téléchargez le code QR.",
+        "qrDescription": "Scannez avec l'appareil photo d'un téléphone pour ouvrir le partage.",
+        "downloadQr": "Télécharger le code QR",
+        "itemsToShare": "{count, plural, =1 {1 élément} other {# éléments}}, {size} au total",
+        "shareItemDescription": "Un lien vers cet élément. Vous pourrez tout modifier plus tard.",
+        "shareMultipleDescription": "Un seul lien pour tout ce que vous avez sélectionné.",
+        "linkStepDescription": "Choisissez la dernière partie du lien.",
+        "createAndLink": "Créer le partage",
+        "deleteList": "Ces éléments seront supprimés",
+        "defaultMultiName": "{count} éléments partagés"
+      }
+    }
   },
   "sharesTable": {
     "ariaLabel": "Tableau des partages",
@@ -2136,6 +2618,12 @@
       "signin": "Votre session a expiré ; reconnectez-vous pour voir le résultat de la mise à jour.",
       "timeout": "Cela prend plus de temps que prévu. Consultez update.log dans le dossier ota-state sur l’hôte.",
       "reload": "Recharger"
+    },
+    "calm": {
+      "version": "Version {version}",
+      "upToDate": "Vous êtes à jour",
+      "checked": "vérifié {when}",
+      "install": "Installer"
     }
   },
   "uploadFile": {
@@ -2262,6 +2750,64 @@
     },
     "filters": {
       "all": "Tous"
+    },
+    "calm": {
+      "title": "Utilisateurs",
+      "subline": "{total, plural, one {# utilisateur} other {# utilisateurs}} · {active} actifs · {admins, plural, one {# administrateur} other {# administrateurs}}",
+      "inviteLink": "Lien d'invitation",
+      "addUser": "Ajouter un utilisateur",
+      "photo": "Photo",
+      "name": "Nom",
+      "email": "E-mail",
+      "role": "Rôle",
+      "created": "Créé le",
+      "you": "(vous)",
+      "deactivated": "Désactivé",
+      "administrator": "Administrateur",
+      "user": "Utilisateur",
+      "actionsFor": "Actions pour {name}",
+      "makeAdmin": "Passer administrateur",
+      "makeUser": "Passer utilisateur standard",
+      "searchLabel": "Rechercher des utilisateurs",
+      "searchPlaceholder": "Rechercher un nom ou un e-mail",
+      "filters": {
+        "label": "Filtrer les utilisateurs",
+        "all": "Tous",
+        "active": "Actifs",
+        "deactivated": "Désactivés",
+        "admins": "Administrateurs"
+      },
+      "empty": {
+        "search": "Aucun utilisateur ne correspond à « {query} ».",
+        "filter": "Aucun utilisateur dans cette vue.",
+        "clear": "Afficher tous les utilisateurs"
+      },
+      "form": {
+        "titleCreate": "Ajouter un utilisateur",
+        "titleEdit": "Modifier l'utilisateur",
+        "descriptionCreate": "Cette personne pourra se connecter tout de suite avec ce nom d'utilisateur et ce mot de passe.",
+        "descriptionEdit": "Modifiez les informations de @{username}.",
+        "newPassword": "Nouveau mot de passe",
+        "passwordHint": "Au moins 8 caractères."
+      },
+      "delete": {
+        "title": "Supprimer {name} ?",
+        "description": "Le compte est supprimé définitivement. Cette action est irréversible.",
+        "confirm": "Supprimer l'utilisateur"
+      },
+      "status": {
+        "deactivateTitle": "Désactiver {name} ?",
+        "deactivateText": "Cette personne ne pourra plus se connecter. Rien n'est supprimé et vous pourrez la réactiver plus tard.",
+        "activateTitle": "Activer {name} ?",
+        "activateText": "Cette personne pourra de nouveau se connecter."
+      },
+      "invite": {
+        "title": "Lien d'invitation",
+        "description": "Un lien à usage unique pour créer un compte utilisateur standard. Il expire dans 15 minutes.",
+        "create": "Créer le lien",
+        "linkLabel": "Lien",
+        "hint": "Utilisable une seule fois. Expire dans 15 minutes."
+      }
     }
   },
   "validation": {
@@ -2290,6 +2836,8 @@
       "inactive": "Inactif",
       "protected": "Protégé",
       "public": "Public"
-    }
+    },
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   }
 }

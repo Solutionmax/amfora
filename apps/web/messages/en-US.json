@@ -8,6 +8,14 @@
       "token_expired": "Token expired. Please try again.",
       "config_error": "Configuration error. Please contact support.",
       "auth_failed": "Authentication failed. Please try again."
+    },
+    "calm": {
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "backToSignIn": "Back to sign in",
+      "passwordRule": "At least 8 characters.",
+      "continueWith": "Continue with {provider}",
+      "providerNotConfigured": "{provider} is not set up correctly. Ask your administrator."
     }
   },
   "authProviders": {
@@ -120,6 +128,22 @@
       "cancel": "Cancel",
       "delete": "Delete Provider",
       "deleting": "Deleting..."
+    },
+    "calm": {
+      "description": "Let people use an account they already have. Password sign in keeps working.",
+      "typeOidc": "OpenID Connect",
+      "typeOauth2": "OAuth 2.0",
+      "notConfigured": "Not configured",
+      "configure": "Configure",
+      "configureName": "Configure {name}",
+      "configureTitle": "Configure {name}",
+      "configureDescription": "Client details from the provider, and who may sign in.",
+      "add": "Add provider",
+      "addTitle": "Add provider",
+      "addDescription": "A custom OpenID Connect or OAuth 2.0 service.",
+      "dragHint": "Drag to change the order on the sign in page.",
+      "deleteTitle": "Delete {name}?",
+      "deleteDescription": "People can no longer sign in with it. This cannot be undone."
     }
   },
   "bulkDownload": {
@@ -156,7 +180,14 @@
     "copy": "Copy",
     "copied": "Copied",
     "invalidDate": "Invalid date",
-    "notAvailable": "Not available"
+    "notAvailable": "Not available",
+    "calm": {
+      "retry": "Retry",
+      "notFoundTitle": "Page not found",
+      "notFoundText": "This address does not lead anywhere. It may have moved, or the link has a typo.",
+      "errorTitle": "Something went wrong",
+      "errorText": "This page ran into a problem. Try again, or go back to the start."
+    }
   },
   "contextMenu": {
     "newFolder": "New folder",
@@ -304,6 +335,36 @@
         "title": "Preview",
         "page": "Download page"
       }
+    },
+    "calm": {
+      "subline": "What every visitor sees, including the public links.",
+      "loadFailed": "The brand settings could not be loaded.",
+      "nameRequired": "Give the server a name first.",
+      "colorInvalid": "Use a colour like #0079d2.",
+      "upload": "Upload",
+      "logoHint": "PNG, SVG or WebP. Also used as the favicon.",
+      "brandDescription": "Name and logo in the menu, emails and browser tab.",
+      "tagline": "Tagline",
+      "colorDescription": "Buttons, links and the active menu item follow the accent.",
+      "accent": "Accent",
+      "accentSwatch": "Accent {color}",
+      "radiusLabel": "{px} px, {feel, select, sharp {sharp} soft {soft} other {friendly}}",
+      "themeDescription": "How the sign in, download and receive pages look.",
+      "downloadDescription": "Also the link preview in WhatsApp and Slack.",
+      "cover": "Cover image",
+      "coverHint": "Top of every download page. At least 1200 px wide, up to 3 MB.",
+      "linkPreview": "Link preview image",
+      "linkPreviewHint": "Used when there is no cover. 1200 × 630 px, up to 3 MB.",
+      "playback": "Play video in the browser",
+      "playbackHint": "Visitors can watch or listen before downloading.",
+      "creditHint": "Small line under every public page.",
+      "creditLocked": "Small line under every public page. Hiding it needs a brand pack.",
+      "packTitle": "Brand pack",
+      "packDescription": "White label: your own background, custom CSS and no credit line.",
+      "packActive": "Active for {organisation}",
+      "packIssued": "Issued {date}",
+      "packKey": "Brand pack key",
+      "packKeyHint": "Paste the key from your purchase email."
     }
   },
   "dashboard": {
@@ -339,6 +400,33 @@
       "downloads": "Downloads",
       "downloadsDetail": "across all files",
       "files": "Files"
+    },
+    "calm": {
+      "subline": "{shares, plural, =0 {No active shares} =1 {# active share} other {# active shares}} and {links, plural, =0 {no open receive links} =1 {# open receive link} other {# open receive links}}.",
+      "newShare": "New share",
+      "inFolders": "{count, plural, =0 {no folders yet} =1 {in # folder} other {in # folders}}",
+      "received": "Received",
+      "viaLinks": "{count, plural, =0 {no receive links yet} =1 {via # receive link} other {via # receive links}}",
+      "recentFiles": "Recent files",
+      "allFiles": "All files",
+      "noFilesHint": "Upload a file and it shows up here.",
+      "activeShares": "Active shares",
+      "allShares": "All shares",
+      "noActiveShares": "No active shares",
+      "noActiveSharesHint": "Create a share to send files with one link.",
+      "untitledShare": "Untitled share",
+      "shareMeta": "{items, plural, =1 {# item} other {# items}} · {views, plural, =1 {# view} other {# views}}",
+      "copyLink": "Copy link",
+      "copyLinkFor": "Copy link for {name}",
+      "createLink": "Create link",
+      "createLinkFor": "Create a link for {name}",
+      "openShare": "Open {name} in Shares",
+      "justReceived": "Just received",
+      "allReceiveLinks": "All receive links",
+      "untitledLink": "Receive link",
+      "nothingReceived": "Nothing received yet",
+      "nothingReceivedHint": "Files people send through your receive links show up here.",
+      "receivedMeta": "{sender} via {link} · {when}"
     }
   },
   "deleteConfirmation": {
@@ -443,7 +531,9 @@
     "pdfPreviewNotAvailable": "PDF preview unavailable. Try alternative view or download",
     "tryAlternativeView": "Try Alternative View",
     "loadingAlternative": "Loading alternative view...",
-    "loadingAudio": "Loading audio..."
+    "loadingAudio": "Loading audio...",
+    "downloading": "Downloading...",
+    "downloadSuccess": "Download started"
   },
   "fileSelector": {
     "availableFiles": "Available Files ({count})",
@@ -512,7 +602,70 @@
       "grid": "Grid",
       "label": "View"
     },
-    "subline": "{count, plural, =0 {No files yet} =1 {# file} other {# files}} · {size}"
+    "subline": "{count, plural, =0 {No files yet} =1 {# file} other {# files}} · {size}",
+    "calm": {
+      "subline": "{files, plural, =0 {No files} =1 {# file} other {# files}} and {folders, plural, =0 {no folders} =1 {# folder} other {# folders}} · {size}",
+      "columns": {
+        "name": "Name",
+        "size": "Size",
+        "added": "Added",
+        "downloads": "Downloads"
+      },
+      "today": "Today, {time}",
+      "yesterday": "Yesterday",
+      "downloadsCount": "{count, plural, =1 {# download} other {# downloads}}",
+      "folderItems": "{count, plural, =0 {Empty} =1 {# item} other {# items}}",
+      "moreActions": "More actions for {name}",
+      "downloadItem": "Download {name}",
+      "shareItem": "Share {name}",
+      "selectItem": "Select {name}",
+      "editDetails": "Edit name and description",
+      "moveToFolder": "Move to folder",
+      "selected": "{count} selected",
+      "selectionActions": "Actions for selected items",
+      "clearSelection": "Clear selection",
+      "downloadZip": "Download as zip",
+      "location": "Folder location",
+      "upOneLevel": "Up one level",
+      "searchPlaceholder": "Search files and folders",
+      "listView": "List",
+      "noResultsHint": "Try a shorter or different word.",
+      "clearSearch": "Clear search",
+      "emptyFolder": "This folder is empty",
+      "emptyFolderHint": "Upload files here or drag them in from My Files.",
+      "retry": "Retry",
+      "optional": "Optional",
+      "editFileHint": "The file type stays the same.",
+      "newFolderTitle": "New folder",
+      "newFolderHint": "Keep related files together.",
+      "editFolderHint": "Change the name or the description.",
+      "deleteTitle": "Delete {name}?",
+      "deleteFolderTitle": "Delete the folder {name}?",
+      "deleteFolderHint": "Everything inside it is deleted too. This cannot be undone.",
+      "bulkDeleteTitle": "Delete {count, plural, =1 {1 item} other {# items}}?",
+      "zipTitle": "Download as zip",
+      "zipSummary": "{files, plural, =0 {No files} =1 {# file} other {# files}}{folders, plural, =0 {} =1 { and # folder} other { and # folders}} in one zip file",
+      "moveOne": "Choose where {name} goes.",
+      "moveMany": "Choose where the {count} items go.",
+      "moveTo": "Moves to {name}",
+      "alreadyHere": "The items are already in this folder.",
+      "moveHere": "Move here",
+      "moving": "Moving...",
+      "foldersLoadError": "Could not load your folders.",
+      "uploadTo": "To <b>{folder}</b>",
+      "dropTitle": "Choose files or drop them here",
+      "dropHint": "Add as many as you like, then start the upload.",
+      "uploadCount": "{count, plural, =0 {Upload} =1 {Upload 1 file} other {Upload # files}}",
+      "uploading": "Uploading...",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Failed",
+      "uploadCancelled": "Cancelled",
+      "removeFromList": "Remove {name} from the list",
+      "done": "Done",
+      "fullScreen": "View full screen",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out"
+    }
   },
   "filesTable": {
     "ariaLabel": "Files table",
@@ -757,7 +910,45 @@
       "imageSuccess": "Profile image updated successfully",
       "imageRemoved": "Profile image removed successfully"
     },
-    "pageTitle": "Profile"
+    "pageTitle": "Profile",
+    "calm": {
+      "memberSince": "member since {date}",
+      "changePhoto": "Change photo",
+      "removePhoto": "Remove",
+      "account": "Account",
+      "accountHint": "How you appear to people you share with.",
+      "usernameHint": "Used to sign in, next to your email.",
+      "password": "Password",
+      "passwordHint": "At least 8 characters. Other sessions stay signed in.",
+      "passwordTooShort": "Use at least {count} characters.",
+      "passwordMismatch": "Passwords do not match.",
+      "changePassword": "Change password",
+      "twoFactorHint": "Ask for a code from your authenticator app when you sign in.",
+      "off": "Off",
+      "on": "On",
+      "offHint": "Only your password protects this account.",
+      "onHint": "You enter a code from your authenticator app when you sign in.",
+      "turnOn": "Turn on",
+      "turnOff": "Turn off",
+      "turnOffTitle": "Turn off two factor authentication",
+      "scanHint": "Scan with your authenticator app, or enter this key",
+      "copyKey": "Copy key",
+      "codeFromApp": "Code from the app",
+      "verifyAndTurnOn": "Verify and turn on",
+      "backupCodes": "Backup codes",
+      "codesLeft": "{count, plural, =0 {No codes left} =1 {1 code left} other {# codes left}}",
+      "backupHint": "For when you lose your phone. Each code works once.",
+      "download": "Download",
+      "newCodes": "New codes",
+      "trustedDevices": "Trusted devices",
+      "noDevices": "No trusted devices. When you tick \"Remember this device\" at sign in, it shows up here.",
+      "usedWhen": "used {when}",
+      "neverUsed": "never used",
+      "trustedUntil": "trusted until {date}",
+      "expiredOn": "expired {date}",
+      "remove": "Remove",
+      "removeAll": "Remove all"
+    }
   },
   "public": {
     "login": {
@@ -989,7 +1180,10 @@
       "emailExists": "Email already exists",
       "createFailed": "Failed to create account. Please try again."
     },
-    "pageTitle": "Create Account"
+    "pageTitle": "Create Account",
+    "calm": {
+      "unusableTitle": "This invitation cannot be used"
+    }
   },
   "resetPassword": {
     "pageTitle": "Reset Password",
@@ -1472,6 +1666,112 @@
       "noFiles": "Nothing has come in yet. Share the link and files show up here.",
       "receivedBy": "{sender} · {date}",
       "showAll": "Show all {count} files"
+    },
+    "calm": {
+      "new": "New",
+      "filterLabel": "Filter receive links",
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "inCount": "{count} in",
+      "noMatches": "No receive links match.",
+      "emptyTitle": "No receive links yet",
+      "emptyText": "Make a link and anyone who has it can send you files.",
+      "retry": "Retry",
+      "notFoundTitle": "This receive link does not exist",
+      "notFoundText": "It may have been deleted, or the address is wrong.",
+      "backToList": "Back to Receive Files",
+      "receivedCount": "{count} received",
+      "openUntil": "open until {date}",
+      "noLinkHint": "No link yet. Make one so senders can reach you.",
+      "noLinkYet": "No link yet",
+      "copyLink": "Copy link",
+      "pause": "Pause",
+      "turnOn": "Turn on",
+      "copyAll": "Copy all to My Files",
+      "copyToMyFiles": "Copy to My Files",
+      "facts": {
+        "received": "Received",
+        "maxPerFile": "Max size per file",
+        "expires": "Expires"
+      },
+      "ofMax": "of {max}",
+      "never": "Never",
+      "unlimited": "Unlimited",
+      "receivedFiles": "Received files",
+      "manageFiles": "Manage files",
+      "nothingYet": "Nothing has come in yet. Send the link to get started.",
+      "moreActionsFor": "More actions for {name}",
+      "editDescription": "Edit description",
+      "deleteFileTitle": "Delete {name}?",
+      "deleteFileText": "The file is removed from this receive link for good.",
+      "deleteLink": "Delete receive link",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteText": "The link stops working for everyone who has it.",
+      "deleteTextFiles": "The link stops working. {count, plural, =1 {The file you received is deleted too.} other {The # files you received are deleted too.}}",
+      "change": "Change",
+      "removeType": "Remove {type}",
+      "rules": {
+        "title": "Rules for senders",
+        "name": "Sender name",
+        "email": "Sender email",
+        "fieldRequired": "Required before uploading.",
+        "fieldOptional": "Asked, but may be left empty.",
+        "fieldHidden": "Not asked.",
+        "password": "Password",
+        "passwordOn": "Senders need a password.",
+        "passwordOff": "Anyone with the link can upload.",
+        "changePassword": "Change password",
+        "types": "Allowed file types",
+        "anyType": "Any type",
+        "typesHint": "Extensions without a dot, like pdf or jpg. Leave empty to allow any type.",
+        "maxFiles": "Max files",
+        "maxFilesValue": "{count, plural, =1 {# file} other {# files}} in total",
+        "maxSize": "Max file size",
+        "maxSizeValue": "{size} per file",
+        "emptyNoLimit": "Leave empty for no limit.",
+        "layout": "Page layout",
+        "layoutHint": "How the upload page looks to senders.",
+        "alias": "Custom link"
+      },
+      "alias": {
+        "createTitle": "Create the link",
+        "editTitle": "Change the link",
+        "description": "Senders use this address to upload. Letters, numbers, - and _.",
+        "oldStops": "The old address stops working.",
+        "create": "Create link"
+      },
+      "password": {
+        "setTitle": "Set a password",
+        "changeTitle": "Change password",
+        "description": "Senders type it before they can upload.",
+        "newPassword": "New password"
+      },
+      "form": {
+        "createTitle": "New receive link",
+        "createDescription": "Anyone with the link can send you files.",
+        "createButton": "Create link",
+        "editTitle": "Edit receive link",
+        "name": "Name",
+        "namePlaceholder": "For example: Photos from the shoot",
+        "message": "Message",
+        "messageHint": "Optional. Shown on the upload page.",
+        "senders": "Senders",
+        "fieldsHint": "Required must be filled in, optional may stay empty, hidden is not asked.",
+        "access": "Access",
+        "expiryOn": "The link closes at the end date.",
+        "expiryOff": "The link stays open until you pause it.",
+        "expiryKeep": "An end date can be moved, not removed. Pick a later date to keep it open longer.",
+        "expiryRequired": "Pick an end date.",
+        "passwordKeep": "Leave empty to keep the current password.",
+        "isActive": "Link is on",
+        "isActiveHint": "Turn off to pause uploads without deleting anything."
+      },
+      "deleteSomeFailed": "{count, plural, =1 {1 file could not be deleted.} other {# files could not be deleted.}}",
+      "typesPlaceholder": "pdf jpg png",
+      "sizeUnit": "Unit"
     }
   },
   "searchBar": {
@@ -1644,6 +1944,67 @@
     "redirectUri": {
       "placeholder": "https://mysite.com",
       "previewLabel": "Complete URL that will be saved:"
+    },
+    "calm": {
+      "subline": "How this server behaves.",
+      "noLimit": "No limit",
+      "smtpTestHint": "Uses the values above, also before you save.",
+      "units": {
+        "seconds": "seconds",
+        "unit": "Unit"
+      },
+      "blocks": {
+        "brand": {
+          "title": "Brand",
+          "description": "Name and logo in the menu, emails and browser tab."
+        },
+        "publicPages": {
+          "title": "Public pages",
+          "description": "How the sign in, download and receive pages look. More under Customization."
+        },
+        "behaviour": {
+          "title": "Behaviour",
+          "description": "Small choices about what visitors see."
+        },
+        "signingIn": {
+          "title": "Signing in",
+          "description": "Password rules and reset links."
+        },
+        "bruteForce": {
+          "title": "Brute force",
+          "description": "Block an account after too many wrong attempts."
+        },
+        "limits": {
+          "title": "Limits",
+          "description": "How large uploads and personal storage may get."
+        },
+        "outgoing": {
+          "title": "Outgoing mail",
+          "description": "For invites, password resets and share notifications."
+        },
+        "more": {
+          "title": "More",
+          "description": "Other settings in this group."
+        }
+      },
+      "fields": {
+        "appPublicTheme": {
+          "title": "Public page theme",
+          "description": "Stage, Workbench or Seal. Previewed under Customization."
+        },
+        "appSharePlayback": {
+          "title": "Play video and audio on download pages",
+          "description": "Off: video and audio can only be downloaded."
+        },
+        "appBrandpack": {
+          "title": "Brand pack",
+          "description": "Your white label key. Managed under Customization."
+        },
+        "authProvidersEnabled": {
+          "title": "External sign in",
+          "description": "Let people sign in with an account from another service."
+        }
+      }
     }
   },
   "share": {
@@ -1877,7 +2238,128 @@
       "placeholder": "Search shares...",
       "results": "Found {filtered} of {total} shares"
     },
-    "pageTitle": "Shares"
+    "pageTitle": "Shares",
+    "calm": {
+      "new": "New",
+      "newShare": "New share",
+      "filterLabel": "Filter shares",
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "expired": "Expired"
+      },
+      "search": "Search",
+      "fileCount": "{count, plural, =0 {No files} =1 {1 file} other {# files}}",
+      "moreActions": "More actions",
+      "selectShares": "Select shares",
+      "selectedCount": "{count} selected",
+      "downloadSelected": "Download",
+      "deleteSelected": "Delete",
+      "doneSelecting": "Done",
+      "emptyTitle": "No shares yet",
+      "emptyDescription": "Pick files, get a link, decide who can open it.",
+      "noResultsTitle": "No shares match",
+      "noResultsDescription": "Try another search or filter.",
+      "clearSearch": "Clear search",
+      "loadError": "Your shares could not be loaded.",
+      "retry": "Retry",
+      "notFoundTitle": "Share not found",
+      "notFoundDescription": "It may have been deleted. Pick another share from the list.",
+      "showAll": "Show all shares",
+      "created": "created {date}",
+      "expiresOn": "expires {date}",
+      "expiredOn": "expired {date}",
+      "qrCode": "QR code",
+      "copyLink": "Copy link",
+      "openLink": "Open link",
+      "noLink": "This share has no link yet.",
+      "createLink": "Create link",
+      "edit": "Edit",
+      "addFiles": "Add files",
+      "recipients": "Recipients",
+      "downloadAll": "Download all",
+      "views": "Views",
+      "viewsOf": "of {max}",
+      "files": "Files",
+      "expires": "Expires",
+      "never": "Never",
+      "message": "Message",
+      "noFiles": "No files in this share yet.",
+      "folder": "Folder",
+      "folderFiles": "Folder, {count, plural, =0 {empty} =1 {1 file} other {# files}}",
+      "remove": "Remove",
+      "removeLabel": "Remove {name} from this share",
+      "removeTitle": "Remove {name} from this share?",
+      "removeText": "It stays in My Files. People with the link no longer see it.",
+      "removed": "Removed from the share",
+      "removeError": "Could not remove it from the share",
+      "access": "Access",
+      "password": "Password",
+      "passwordOn": "Visitors need a password to download.",
+      "passwordOff": "Anyone with the link can download.",
+      "passwordRemoved": "Password removed",
+      "passwordError": "Could not change the password",
+      "change": "Change",
+      "changePassword": "Change password",
+      "changeExpiry": "Change expiry date",
+      "changeViewLimit": "Change view limit",
+      "changeLink": "Change link",
+      "neverExpires": "Never expires",
+      "viewLimit": "View limit",
+      "viewLimitValue": "{count, plural, =1 {1 view} other {# views}}",
+      "noLimit": "No limit",
+      "customLink": "Link",
+      "noRecipients": "Nobody added yet. Add people to send them the link by email.",
+      "manage": "Manage",
+      "notifyAll": "Send by email",
+      "smtpOff": "Email is not set up, so the link cannot be sent from here.",
+      "deleteShare": "Delete share",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteText": "The link stops working. Your files stay in My Files.",
+      "untitled": "Untitled share",
+      "viewLimitTitle": "View limit",
+      "viewLimitDescription": "Close the link after a number of views.",
+      "viewLimitLabel": "Maximum views",
+      "viewLimitHint": "Leave empty for no limit. Viewed {count, plural, =1 {1 time} other {# times}} so far.",
+      "viewLimitInvalid": "Enter a whole number of 1 or more.",
+      "viewLimitSaved": "View limit saved",
+      "viewLimitError": "Could not save the view limit",
+      "modals": {
+        "stepDetails": "Step 1 of 2. Name the share and choose who can open it.",
+        "stepFiles": "Step 2 of 2. Pick the files and folders to share.",
+        "next": "Next",
+        "nameLabel": "Name",
+        "descriptionLabel": "Message",
+        "descriptionHint": "Shown on the download page.",
+        "passwordHint": "Visitors need it before they can download.",
+        "expiresLabel": "Expires",
+        "expiresHint": "Leave empty to keep the link open.",
+        "maxViewsLabel": "View limit",
+        "maxViewsHint": "Leave empty for no limit.",
+        "selectedCount": "{count, plural, =0 {Nothing selected} =1 {1 item selected} other {# items selected}}",
+        "editDescription": "Name, message, expiry and view limit.",
+        "manageFilesDescription": "Tick the files and folders this share should hold.",
+        "recipientsDescription": "Add people by email and send them the link.",
+        "securityDescription": "Ask visitors for a password before they can download.",
+        "passwordSet": "A password is set. Enter a new one to replace it.",
+        "expirationDescription": "Choose when the link stops working.",
+        "expiresOn": "Expires on",
+        "expiresSwitch": "Set an expiry date",
+        "expiresSwitchHint": "Without a date the link stays open until you delete it.",
+        "linkDescription": "Pick the last part of the link. Short and easy to type works best.",
+        "linkLabel": "Link",
+        "linkReady": "The link is ready. Copy it or download the QR code.",
+        "qrDescription": "Scan with a phone camera to open the share.",
+        "downloadQr": "Download QR code",
+        "itemsToShare": "{count, plural, =1 {1 item} other {# items}}, {size} in total",
+        "shareItemDescription": "A link to this item. You can change everything later.",
+        "shareMultipleDescription": "One link for everything you selected.",
+        "linkStepDescription": "Choose the last part of the link.",
+        "createAndLink": "Create share",
+        "deleteList": "These will be deleted",
+        "defaultMultiName": "{count} items shared"
+      }
+    }
   },
   "sharesTable": {
     "ariaLabel": "Shares table",
@@ -2136,6 +2618,12 @@
       "signin": "Your session ended; sign in again to see how the update went.",
       "timeout": "This is taking longer than expected. Check update.log in the ota-state folder on the host.",
       "reload": "Reload"
+    },
+    "calm": {
+      "version": "Version {version}",
+      "upToDate": "You are up to date",
+      "checked": "checked {when}",
+      "install": "Install"
     }
   },
   "uploadFile": {
@@ -2262,6 +2750,64 @@
     },
     "filters": {
       "all": "All"
+    },
+    "calm": {
+      "title": "Users",
+      "subline": "{total, plural, one {# user} other {# users}} · {active} active · {admins, plural, one {# administrator} other {# administrators}}",
+      "inviteLink": "Invite link",
+      "addUser": "Add user",
+      "photo": "Photo",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "created": "Created",
+      "you": "(you)",
+      "deactivated": "Deactivated",
+      "administrator": "Administrator",
+      "user": "User",
+      "actionsFor": "Actions for {name}",
+      "makeAdmin": "Make administrator",
+      "makeUser": "Make regular user",
+      "searchLabel": "Search users",
+      "searchPlaceholder": "Search name or email",
+      "filters": {
+        "label": "Filter users",
+        "all": "All",
+        "active": "Active",
+        "deactivated": "Deactivated",
+        "admins": "Administrators"
+      },
+      "empty": {
+        "search": "No users match “{query}”.",
+        "filter": "No users in this view.",
+        "clear": "Show all users"
+      },
+      "form": {
+        "titleCreate": "Add user",
+        "titleEdit": "Edit user",
+        "descriptionCreate": "They can sign in right away with this username and password.",
+        "descriptionEdit": "Change the details of @{username}.",
+        "newPassword": "New password",
+        "passwordHint": "At least 8 characters."
+      },
+      "delete": {
+        "title": "Delete {name}?",
+        "description": "The account is removed for good. This cannot be undone.",
+        "confirm": "Delete user"
+      },
+      "status": {
+        "deactivateTitle": "Deactivate {name}?",
+        "deactivateText": "They can no longer sign in. Nothing is deleted, and you can activate them again later.",
+        "activateTitle": "Activate {name}?",
+        "activateText": "They can sign in again."
+      },
+      "invite": {
+        "title": "Invite link",
+        "description": "A one-time link to create an account as a regular user. It expires in 15 minutes.",
+        "create": "Create link",
+        "linkLabel": "Link",
+        "hint": "Works once. Expires in 15 minutes."
+      }
     }
   },
   "validation": {
@@ -2290,6 +2836,8 @@
       "inactive": "Inactive",
       "protected": "Protected",
       "public": "Public"
-    }
+    },
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   }
 }

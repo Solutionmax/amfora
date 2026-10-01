@@ -25,7 +25,7 @@ export function FormSection({
         <h2 className="font-sans text-[14.5px] font-semibold tracking-normal">{title}</h2>
         {description && <p className="mt-1 max-w-[30ch] text-[13px] text-ink-3 max-md:max-w-none">{description}</p>}
       </header>
-      <div className="grid min-w-0 content-start gap-[18px]">{children}</div>
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-[18px]">{children}</div>
     </section>
   );
 }

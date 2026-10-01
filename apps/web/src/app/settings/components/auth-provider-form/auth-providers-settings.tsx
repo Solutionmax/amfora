@@ -1,26 +1,50 @@
 "use client";
 
 import React, { useState } from "react";
-import { IconSettings } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { FormSection } from "@/components/ui/form-section";
 import { renderIconByName } from "@/components/ui/icon-picker";
-import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthProviders } from "../../hooks/use-auth-providers";
+import { LoadError } from "../load-error";
 import { AddProviderForm } from "./add-provider-form";
 import { AuthProviderDeleteModal } from "./auth-provider-delete-modal";
+import { AuthProvider, EditProviderForm } from "./edit-provider-form";
 import { ProviderList } from "./provider-list";
 
+const SKELETON_ROWS = 4;
+
+function ProvidersSkeleton() {
+  return (
+    <div aria-hidden="true" className="flex flex-col [&>*+*]:border-t [&>*+*]:border-line">
+      {Array.from({ length: SKELETON_ROWS }, (_, index) => (
+        <div key={index} className="flex min-h-[64px] items-center gap-3.5 py-3">
+          <Skeleton className="size-[17px] rounded" />
+          <div className="grid flex-1 gap-1.5">
+            <Skeleton className="h-3.5 w-24" />
+            <Skeleton className="h-3 w-32" />
+          </div>
+          <Skeleton className="h-5 w-9 rounded-full" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Sign-in tab: external providers as lines, configured in a dialog. */
 export function AuthProvidersSettings() {
   const t = useTranslations();
-
   const [showAddForm, setShowAddForm] = useState(false);
 
   const {
     providers,
     loading,
+    loadError,
     saving,
     editingProvider,
     editingFormData,
@@ -29,6 +53,7 @@ export function AuthProvidersSettings() {
     isDeleting,
     enabledCount,
     filteredProviders,
+    loadProviders,
     updateProvider,
     addProvider,
     editProvider,
@@ -42,95 +67,98 @@ export function AuthProvidersSettings() {
     setProviderToDelete,
   } = useAuthProviders();
 
-  const getProviderIcon = (provider: any) => {
-    const iconName = provider.icon || "FaCog";
-    return renderIconByName(iconName, "w-5 h-5");
-  };
-
-  const handleToggleAddForm = () => {
-    setShowAddForm(!showAddForm);
-  };
+  const getProviderIcon = (provider: AuthProvider) => renderIconByName(provider.icon || "FaCog", "w-5 h-5");
 
   const handleConfirmDelete = async () => {
-    if (providerToDelete) {
-      await deleteProvider(providerToDelete.id);
-    }
+    if (!providerToDelete) return;
+    await deleteProvider(providerToDelete.id);
+    handleCancelEdit();
+  };
+
+  const renderList = () => {
+    if (loading && providers.length === 0) return <ProvidersSkeleton />;
+    if (loadError) return <LoadError message={t("authProviders.messages.loadFailed")} onRetry={loadProviders} />;
+
+    return (
+      <>
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 text-[12.5px] text-ink-3">
+          <span>{t("authProviders.enabledOfTotal", { enabled: enabledCount, total: providers.length })}</span>
+          {providers.length > 0 && (
+            <label htmlFor="hideDisabledProviders" className="flex cursor-pointer items-center gap-2">
+              <Checkbox
+                id="hideDisabledProviders"
+                checked={hideDisabledProviders}
+                onCheckedChange={(checked) => handleHideDisabledProvidersChange(checked === true)}
+              />
+              {t("authProviders.hideDisabledProviders")}
+            </label>
+          )}
+        </div>
+        <ProviderList
+          filteredProviders={filteredProviders}
+          hideDisabledProviders={hideDisabledProviders}
+          onDragEnd={handleDragEnd}
+          onUpdateProvider={updateProvider}
+          onEditProvider={handleEditProvider}
+          saving={saving}
+          getIcon={getProviderIcon}
+        />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Button type="button" variant="outline" onClick={() => setShowAddForm(true)}>
+            <IconPlus aria-hidden="true" />
+            {t("authProviders.calm.add")}
+          </Button>
+          {!hideDisabledProviders && providers.length > 1 && (
+            <p className="text-[12.5px] text-ink-3">{t("authProviders.calm.dragHint")}</p>
+          )}
+        </div>
+      </>
+    );
   };
 
   return (
-    <section className="max-w-4xl">
-      <header className="mb-6">
-        <div className="flex items-start gap-4">
-          <div className="min-w-0 space-y-2">
-            <h2 className="text-base font-semibold">{t("authProviders.title")}</h2>
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">{t("authProviders.description")}</p>
-            <Badge variant="secondary">{t("authProviders.enabledCount", { count: enabledCount })}</Badge>
-          </div>
-        </div>
-      </header>
-      <div>
-        {loading ? (
-          <div className="flex items-center justify-center py-8">
-            <IconSettings className="h-6 w-6 animate-spin" />
-            {t("authProviders.loadingProviders")}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className={showAddForm ? "space-y-4" : "flex flex-wrap justify-between items-center gap-3"}>
-              <div className="text-sm text-muted-foreground">
-                {hideDisabledProviders
-                  ? t("authProviders.enabledOfTotal", { enabled: filteredProviders.length, total: providers.length })
-                  : t("authProviders.providersConfigured", { count: providers.length })}
-              </div>
+    <>
+      <FormSection title={t("authProviders.title")} description={t("authProviders.calm.description")}>
+        {renderList()}
+      </FormSection>
 
-              <AddProviderForm
-                showAddForm={showAddForm}
-                onToggleForm={handleToggleAddForm}
-                onAddProvider={addProvider}
-                saving={saving === "new"}
-              />
-            </div>
-
-            {providers.length > 0 && (
-              <div className="flex items-center space-x-2 py-2">
-                <Checkbox
-                  id="hideDisabledProviders"
-                  checked={hideDisabledProviders}
-                  onCheckedChange={handleHideDisabledProvidersChange}
-                />
-                <Label htmlFor="hideDisabledProviders" className="text-sm cursor-pointer">
-                  {t("authProviders.hideDisabledProviders")}
-                </Label>
-              </div>
-            )}
-
-            <ProviderList
-              providers={providers}
-              filteredProviders={filteredProviders}
-              hideDisabledProviders={hideDisabledProviders}
-              onDragEnd={handleDragEnd}
-              onUpdateProvider={updateProvider}
-              onEditProvider={handleEditProvider}
-              onDeleteProvider={handleDeleteProvider}
-              saving={saving}
-              getIcon={getProviderIcon}
-              editingProvider={editingProvider}
-              editProvider={editProvider}
-              onCancelEdit={handleCancelEdit}
+      <Dialog open={!!editingProvider} onOpenChange={(open) => !open && handleCancelEdit()}>
+        <DialogContent className="sm:max-w-[640px]">
+          <DialogHeader>
+            <DialogTitle>
+              {t("authProviders.calm.configureTitle", { name: editingProvider?.displayName ?? "" })}
+            </DialogTitle>
+            <DialogDescription>{t("authProviders.calm.configureDescription")}</DialogDescription>
+          </DialogHeader>
+          {editingProvider && (
+            <EditProviderForm
+              key={editingProvider.id}
+              provider={editingProvider}
+              onSave={editProvider}
+              onCancel={handleCancelEdit}
+              saving={saving === editingProvider.id}
               editingFormData={editingFormData}
               setEditingFormData={setEditingFormData}
+              onDelete={editingProvider.isOfficial ? undefined : () => handleDeleteProvider(editingProvider)}
             />
-          </div>
-        )}
+          )}
+        </DialogContent>
+      </Dialog>
 
-        <AuthProviderDeleteModal
-          provider={providerToDelete}
-          isOpen={!!providerToDelete}
-          onConfirm={handleConfirmDelete}
-          onClose={() => setProviderToDelete(null)}
-          isDeleting={isDeleting}
-        />
-      </div>
-    </section>
+      <AddProviderForm
+        open={showAddForm}
+        onOpenChange={setShowAddForm}
+        onAddProvider={addProvider}
+        saving={saving === "new"}
+      />
+
+      <AuthProviderDeleteModal
+        provider={providerToDelete}
+        isOpen={!!providerToDelete}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setProviderToDelete(null)}
+        isDeleting={isDeleting}
+      />
+    </>
   );
 }

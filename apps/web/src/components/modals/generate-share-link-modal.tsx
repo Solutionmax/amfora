@@ -7,7 +7,15 @@ import QRCode from "react-qr-code";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { Share } from "@/http/endpoints/shares/types";
 import { copyText } from "@/lib/clipboard";
@@ -38,6 +46,7 @@ export function GenerateShareLinkModal({
   const [isEdit, setIsEdit] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const qrContainerRef = useRef<HTMLDivElement>(null);
+  const host = typeof window === "undefined" ? "" : window.location.host;
 
   useEffect(() => {
     if (shareId && share?.alias?.alias) {
@@ -51,14 +60,12 @@ export function GenerateShareLinkModal({
   }, [shareId, share]);
 
   const handleGenerate = async () => {
-    if (!shareId) return;
+    if (!shareId || !alias) return;
 
     try {
       setIsLoading(true);
       await onGenerate(shareId, alias);
-      const link = `${window.location.origin}/s/${alias}`;
-
-      setGeneratedLink(link);
+      setGeneratedLink(`${window.location.origin}/s/${alias}`);
       onSuccess();
       toast.success(t("generateShareLink.success"));
     } catch {
@@ -90,74 +97,81 @@ export function GenerateShareLinkModal({
   };
 
   return (
-    <Dialog open={!!shareId} onOpenChange={() => onClose()}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={!!shareId} onOpenChange={(open) => !open && !isLoading && onClose()}>
+      <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? t("generateShareLink.updateTitle") : t("generateShareLink.generateTitle")}
           </DialogTitle>
+          <DialogDescription>
+            {generatedLink ? t("shares.calm.modals.linkReady") : t("shares.calm.modals.linkDescription")}
+          </DialogDescription>
         </DialogHeader>
+
         {!generatedLink ? (
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {isEdit ? t("generateShareLink.updateDescription") : t("generateShareLink.generateDescription")}
-            </p>
-            <Input
-              placeholder={t("generateShareLink.aliasPlaceholder")}
-              value={alias}
-              onChange={(e) => setAlias(e.target.value)}
-            />
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <p className="text-sm text-muted-foreground text-left">
-              {t("generateShareLink.readyDescription", {
-                defaultValue:
-                  "Your share link is ready. You can scan the QR code directly, download it for later use, or copy the link below.",
-              })}
-            </p>
-            <div className="flex flex-col items-center justify-center">
-              <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
-                <QRCode
-                  value={generatedLink}
-                  size={200}
-                  level="H"
-                  fgColor="#000000"
-                  bgColor="#FFFFFF"
-                  style={{ maxWidth: "100%", height: "auto" }}
+          <form
+            id="share-link-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleGenerate();
+            }}
+          >
+            <Field label={t("shares.calm.modals.linkLabel")} htmlFor="share-alias">
+              <div className="flex min-w-0 items-center rounded-[var(--radius)] border border-line-2 bg-surface focus-within:border-primary focus-within:ring-[3px] focus-within:ring-primary/15">
+                <span className="max-w-[45%] shrink-0 truncate pl-3 font-mono text-[13px] text-ink-3">{host}/s/</span>
+                <Input
+                  id="share-alias"
+                  autoFocus
+                  className="border-0 pl-0.5 font-mono text-[13px] focus-visible:ring-0"
+                  placeholder={t("generateShareLink.aliasPlaceholder")}
+                  value={alias}
+                  onChange={(e) => setAlias(e.target.value)}
                 />
               </div>
+            </Field>
+          </form>
+        ) : (
+          <div className="flex flex-col items-center gap-4">
+            <div ref={qrContainerRef} className="max-w-full rounded-xl border border-line bg-white p-4">
+              <QRCode
+                value={generatedLink}
+                size={176}
+                level="H"
+                fgColor="#000000"
+                bgColor="#FFFFFF"
+                style={{ maxWidth: "100%", height: "auto" }}
+              />
             </div>
-
-            <div className="space-y-2">
-              <div className="flex space-x-2">
-                <Input readOnly value={generatedLink} className="flex-1" />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleCopyLink}
-                  title={t("generateShareLink.copyButton")}
-                >
-                  <IconCopy className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button onClick={downloadQRCode} disabled={isDownloading}>
-                <IconDownload className="h-4 w-4" />
-                {t("qrCodeModal.download")}
+            <div className="flex w-full min-w-0 items-center gap-1.5 rounded-xl border border-line-2 py-1.5 pl-4 pr-1.5">
+              <code className="min-w-0 flex-1 truncate font-mono text-[13px] text-ink-3">{generatedLink}</code>
+              <Button variant="outline" onClick={handleCopyLink}>
+                <IconCopy />
+                {t("shares.calm.copyLink")}
               </Button>
-            </DialogFooter>
+            </div>
           </div>
         )}
-        {!generatedLink && (
-          <DialogFooter>
-            <Button disabled={!alias || isLoading} onClick={handleGenerate}>
-              {isEdit ? t("generateShareLink.updateButton") : t("generateShareLink.generateButton")}
-            </Button>
-          </DialogFooter>
-        )}
+
+        <DialogFooter>
+          {!generatedLink ? (
+            <>
+              <Button variant="ghost" onClick={onClose} disabled={isLoading}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" form="share-link-form" disabled={!alias || isLoading}>
+                {isEdit ? t("generateShareLink.updateButton") : t("generateShareLink.generateButton")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" onClick={downloadQRCode} disabled={isDownloading}>
+                <IconDownload />
+                {t("shares.calm.modals.downloadQr")}
+              </Button>
+              <Button onClick={onClose}>{t("common.close")}</Button>
+            </>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

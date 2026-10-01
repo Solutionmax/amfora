@@ -1,914 +1,286 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-  IconCheck,
-  IconChevronDown,
-  IconClipboardCopy,
-  IconDownload,
-  IconEdit,
-  IconEye,
-  IconFile,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { useEffect, useState } from "react";
+import { IconCheck, IconDownload, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   copyReverseShareFileToUserFiles,
   deleteReverseShareFile,
-  downloadReverseShareFile,
   updateReverseShareFile,
 } from "@/http/endpoints/reverse-shares";
 import type { ReverseShareFile } from "@/http/endpoints/reverse-shares/types";
-import { getFileIcon } from "@/utils/file-icons";
-import { truncateFileName } from "@/utils/file-utils";
-import { ReverseShare } from "../hooks/use-reverse-shares";
+import { formatFileSize } from "@/utils/format-file-size";
+import type { ReverseShare } from "../hooks/use-reverse-shares";
+import { copyErrorMessage, downloadReceivedFile } from "../lib/received-file-actions";
+import { ConfirmDialog } from "./confirm-dialog";
+import { ReceivedFileManageRow, type EditingField } from "./received-file-manage-row";
 import { ReverseShareFilePreviewModal } from "./reverse-share-file-preview-modal";
-
-interface EditingState {
-  fileId: string;
-  field: string;
-}
-
-interface HoverState {
-  fileId: string;
-  field: string;
-}
-
-const getFileNameWithoutExtension = (fileName: string) => {
-  return fileName.replace(/\.[^/.]+$/, "");
-};
-
-function useFileEdit() {
-  const [editingFile, setEditingFile] = useState<EditingState | null>(null);
-  const [editValue, setEditValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (editingFile && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [editingFile]);
-
-  const startEdit = (fileId: string, field: string, currentValue: string) => {
-    setEditingFile({ fileId, field });
-    if (field === "name") {
-      const nameWithoutExtension = getFileNameWithoutExtension(currentValue);
-      setEditValue(nameWithoutExtension);
-    } else {
-      setEditValue(currentValue);
-    }
-  };
-
-  const cancelEdit = () => {
-    setEditingFile(null);
-    setEditValue("");
-  };
-
-  return {
-    editingFile,
-    editValue,
-    setEditValue,
-    inputRef,
-    startEdit,
-    cancelEdit,
-  };
-}
-
-const formatFileSize = (sizeString: string) => {
-  const sizeInBytes = parseInt(sizeString);
-  if (sizeInBytes === 0) return "0 B";
-  const units = ["B", "KB", "MB", "GB"];
-  const k = 1024;
-  const i = Math.floor(Math.log(sizeInBytes) / Math.log(k));
-  return `${parseFloat((sizeInBytes / Math.pow(k, i)).toFixed(1))} ${units[i]}`;
-};
-
-const formatDate = (dateString: string, t: any) => {
-  try {
-    return format(new Date(dateString), "dd/MM/yyyy HH:mm", { locale: ptBR });
-  } catch {
-    return t("reverseShares.modals.receivedFiles.invalidDate");
-  }
-};
-
-const getFileExtension = (fileName: string) => {
-  const match = fileName.match(/\.[^/.]+$/);
-  return match ? match[0] : "";
-};
-
-const getSenderDisplay = (file: ReverseShareFile, t: any) => {
-  if (file.uploaderName && file.uploaderEmail) {
-    return `${file.uploaderName} (${file.uploaderEmail})`;
-  }
-  if (file.uploaderName) return file.uploaderName;
-  if (file.uploaderEmail) return file.uploaderEmail;
-  return t("reverseShares.components.fileRow.anonymous");
-};
-
-const getSenderInitials = (file: ReverseShareFile) => {
-  if (file.uploaderName) {
-    return file.uploaderName
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }
-  if (file.uploaderEmail) {
-    return file.uploaderEmail[0].toUpperCase();
-  }
-  return "?";
-};
-
-interface EditableFieldProps {
-  file: ReverseShareFile;
-  field: "name" | "description";
-  isEditing: boolean;
-  editValue: string;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  isHovered: boolean;
-  onStartEdit: (fileId: string, field: string, currentValue: string) => void;
-  onSaveEdit: () => void;
-  onCancelEdit: () => void;
-  onEditValueChange: (value: string) => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
-}
-
-function EditableField({
-  file,
-  field,
-  isEditing,
-  editValue,
-  inputRef,
-  isHovered,
-  onStartEdit,
-  onSaveEdit,
-  onCancelEdit,
-  onEditValueChange,
-  onKeyDown,
-}: EditableFieldProps) {
-  const t = useTranslations();
-
-  if (isEditing) {
-    return (
-      <div className="flex items-center gap-1 flex-1">
-        {field === "name" ? (
-          <div className="flex items-center">
-            <Input
-              ref={inputRef}
-              value={editValue}
-              onChange={(e) => onEditValueChange(e.target.value)}
-              onKeyDown={onKeyDown}
-              className="h-8 text-sm font-medium rounded-r-none border-r-0"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <div className="h-8 px-2 bg-muted border border-l-0 rounded-r text-sm font-medium flex items-center text-muted-foreground">
-              {getFileExtension(file.name)}
-            </div>
-          </div>
-        ) : (
-          <Input
-            ref={inputRef}
-            value={editValue}
-            onChange={(e) => onEditValueChange(e.target.value)}
-            onKeyDown={onKeyDown}
-            className="h-6 text-xs"
-            placeholder={t("reverseShares.components.fileRow.addDescription")}
-            onClick={(e) => e.stopPropagation()}
-          />
-        )}
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-5 w-5 text-primary hover:text-primary flex-shrink-0"
-          onClick={(e) => {
-            e.stopPropagation();
-            onSaveEdit();
-          }}
-          title={t("reverseShares.components.editField.saveChanges")}
-        >
-          <IconCheck className="h-3 w-3" />
-        </Button>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-5 w-5 text-destructive hover:text-destructive/80 flex-shrink-0"
-          onClick={(e) => {
-            e.stopPropagation();
-            onCancelEdit();
-          }}
-          title={t("reverseShares.components.editField.cancelEdit")}
-        >
-          <IconX className="h-3 w-3" />
-        </Button>
-      </div>
-    );
-  }
-
-  const currentValue = field === "name" ? file.name : file.description;
-  const displayValue = field === "name" ? getFileNameWithoutExtension(file.name) : currentValue;
-
-  return (
-    <div className="flex items-center gap-1 flex-1 min-w-0">
-      <div
-        className={`${field === "name" ? "font-medium" : "text-sm text-muted-foreground"} truncate max-w-[200px]`}
-        title={currentValue || ""}
-      >
-        {field === "name" ? (
-          <>
-            <span className="text-foreground">{displayValue}</span>
-            <span className="text-muted-foreground">{getFileExtension(file.name)}</span>
-          </>
-        ) : (
-          displayValue || ""
-        )}
-      </div>
-      <div className="w-6 flex justify-center flex-shrink-0">
-        <Button
-          size="icon"
-          variant="ghost"
-          className={`h-5 w-5 text-muted-foreground hover:text-foreground hidden sm:block transition-opacity ${
-            isHovered ? "opacity-100" : "opacity-0"
-          }`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onStartEdit(file.id, field, currentValue || "");
-          }}
-          title={t("reverseShares.components.fileActions.edit")}
-        >
-          <IconEdit className="h-3 w-3" />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-interface FileRowProps {
-  file: ReverseShareFile;
-  editingFile: EditingState | null;
-  editValue: string;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  hoveredFile: HoverState | null;
-  copyingFile: string | null;
-  isSelected: boolean;
-  onStartEdit: (fileId: string, field: string, currentValue: string) => void;
-  onSaveEdit: () => void;
-  onCancelEdit: () => void;
-  onEditValueChange: (value: string) => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
-  onSetHoveredFile: (hover: HoverState | null) => void;
-  onPreview: (file: ReverseShareFile) => void;
-  onDownload: (file: ReverseShareFile) => void;
-  onDelete: (file: ReverseShareFile) => void;
-  onCopy: (file: ReverseShareFile) => void;
-  onSelectFile: (fileId: string, checked: boolean) => void;
-}
-
-function FileRow({
-  file,
-  editingFile,
-  editValue,
-  inputRef,
-  hoveredFile,
-  copyingFile,
-  isSelected,
-  onStartEdit,
-  onSaveEdit,
-  onCancelEdit,
-  onEditValueChange,
-  onKeyDown,
-  onSetHoveredFile,
-  onPreview,
-  onDownload,
-  onDelete,
-  onCopy,
-  onSelectFile,
-}: FileRowProps) {
-  const t = useTranslations();
-  const { icon: FileIcon, color } = getFileIcon(file.name);
-
-  return (
-    <TableRow key={file.id}>
-      <TableCell>
-        <Checkbox
-          checked={isSelected}
-          onCheckedChange={(checked: boolean) => onSelectFile(file.id, checked)}
-          aria-label={t("reverseShares.modals.receivedFiles.selectFile", { fileName: file.name })}
-        />
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-3">
-          <FileIcon className={`h-8 w-8 ${color} flex-shrink-0`} />
-          <div className="min-w-0 flex-1">
-            <div
-              onMouseEnter={() => onSetHoveredFile({ fileId: file.id, field: "name" })}
-              onMouseLeave={() => onSetHoveredFile(null)}
-            >
-              <EditableField
-                file={file}
-                field="name"
-                isEditing={editingFile?.fileId === file.id && editingFile?.field === "name"}
-                editValue={editValue}
-                inputRef={inputRef}
-                isHovered={hoveredFile?.fileId === file.id && hoveredFile?.field === "name"}
-                onStartEdit={onStartEdit}
-                onSaveEdit={onSaveEdit}
-                onCancelEdit={onCancelEdit}
-                onEditValueChange={onEditValueChange}
-                onKeyDown={onKeyDown}
-              />
-            </div>
-            {file.description && (
-              <div
-                className="mt-1"
-                onMouseEnter={() => onSetHoveredFile({ fileId: file.id, field: "description" })}
-                onMouseLeave={() => onSetHoveredFile(null)}
-              >
-                <EditableField
-                  file={file}
-                  field="description"
-                  isEditing={editingFile?.fileId === file.id && editingFile?.field === "description"}
-                  editValue={editValue}
-                  inputRef={inputRef}
-                  isHovered={hoveredFile?.fileId === file.id && hoveredFile?.field === "description"}
-                  onStartEdit={onStartEdit}
-                  onSaveEdit={onSaveEdit}
-                  onCancelEdit={onCancelEdit}
-                  onEditValueChange={onEditValueChange}
-                  onKeyDown={onKeyDown}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </TableCell>
-      <TableCell className="font-mono text-sm">{formatFileSize(file.size)}</TableCell>
-      <TableCell className="max-w-[200px]">
-        <div className="flex items-center gap-2 min-w-0">
-          <Avatar className="h-6 w-6 flex-shrink-0">
-            <AvatarFallback className="text-xs">{getSenderInitials(file)}</AvatarFallback>
-          </Avatar>
-          <span className="text-sm truncate min-w-0" title={getSenderDisplay(file, t)}>
-            {getSenderDisplay(file, t)}
-          </span>
-        </div>
-      </TableCell>
-      <TableCell className="text-sm text-muted-foreground">{formatDate(file.createdAt, t)}</TableCell>
-      <TableCell className="text-right">
-        <div className="flex items-center justify-end gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onPreview(file)}
-            title={t("reverseShares.components.fileActions.preview")}
-          >
-            <IconEye className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onCopy(file)}
-            disabled={copyingFile === file.id}
-            title={
-              copyingFile === file.id
-                ? t("reverseShares.components.fileActions.copying")
-                : t("reverseShares.components.fileActions.copyToMyFiles")
-            }
-            className="text-primary hover:text-primary/80 hover:bg-primary/10 disabled:opacity-50"
-          >
-            {copyingFile === file.id ? (
-              <div className="size-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-            ) : (
-              <IconClipboardCopy className="h-4 w-4" />
-            )}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDownload(file)}
-            title={t("reverseShares.components.fileActions.download")}
-          >
-            <IconDownload className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDelete(file)}
-            title={t("reverseShares.components.fileActions.delete")}
-            className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
-          >
-            <IconTrash className="h-4 w-4" />
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-}
 
 interface ReceivedFilesModalProps {
   reverseShare: ReverseShare | null;
   isOpen: boolean;
   onClose: () => void;
   onRefresh?: () => Promise<void>;
-  refreshReverseShare?: (id: string) => Promise<void>;
 }
 
-export function ReceivedFilesModal({
-  reverseShare,
-  isOpen,
-  onClose,
-  onRefresh,
-  refreshReverseShare,
-}: ReceivedFilesModalProps) {
-  const t = useTranslations();
-  const [previewFile, setPreviewFile] = useState<ReverseShareFile | null>(null);
-  const [hoveredFile, setHoveredFile] = useState<HoverState | null>(null);
-  const [copyingFile, setCopyingFile] = useState<string | null>(null);
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [bulkCopying, setBulkCopying] = useState(false);
-  const [bulkDeleting, setBulkDeleting] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [filesToDeleteBulk, setFilesToDeleteBulk] = useState<ReverseShareFile[]>([]);
+const extensionOf = (name: string) => name.match(/\.[^/.]+$/)?.[0] ?? "";
+const baseName = (name: string) => name.replace(/\.[^/.]+$/, "");
 
-  const { editingFile, editValue, setEditValue, inputRef, startEdit, cancelEdit } = useFileEdit();
+function InlineEditor({
+  value,
+  suffix,
+  placeholder,
+  onChange,
+  onSave,
+  onCancel,
+}: {
+  value: string;
+  suffix: string;
+  placeholder?: string;
+  onChange: (value: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+}) {
+  const t = useTranslations();
+  return (
+    <form
+      className="flex items-center gap-2 py-3"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSave();
+      }}
+    >
+      <div className="flex min-w-0 flex-1 items-center">
+        <Input
+          autoFocus
+          value={value}
+          placeholder={placeholder}
+          onChange={(event) => onChange(event.target.value)}
+          onKeyDown={(event) => event.key === "Escape" && (event.stopPropagation(), onCancel())}
+          className={suffix ? "rounded-r-none" : undefined}
+        />
+        {suffix && (
+          <span className="grid h-10 place-items-center rounded-r-[var(--radius)] border border-l-0 border-line-2 bg-surface-2 px-2.5 text-[13px] text-ink-3">
+            {suffix}
+          </span>
+        )}
+      </div>
+      <Button
+        type="submit"
+        variant="ghost"
+        size="icon"
+        aria-label={t("reverseShares.components.editField.saveChanges")}
+      >
+        <IconCheck />
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={onCancel}
+        aria-label={t("reverseShares.components.editField.cancelEdit")}
+      >
+        <IconX />
+      </Button>
+    </form>
+  );
+}
+
+/** Every received file with selection, bulk actions, rename and description. */
+export function ReceivedFilesModal({ reverseShare, isOpen, onClose, onRefresh }: ReceivedFilesModalProps) {
+  const t = useTranslations();
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [previewFile, setPreviewFile] = useState<ReverseShareFile | null>(null);
+  const [filesToDelete, setFilesToDelete] = useState<ReverseShareFile[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [editing, setEditing] = useState<EditingField | null>(null);
+  const files = reverseShare?.files ?? [];
 
   useEffect(() => {
-    setSelectedFiles(new Set());
-  }, [reverseShare?.files]);
+    setSelected(new Set());
+  }, [reverseShare?.id, isOpen]);
 
-  const getTotalSize = () => {
-    if (!reverseShare?.files) return "0 B";
-    const totalBytes = reverseShare.files.reduce((acc, file) => acc + parseInt(file.size), 0);
-    return formatFileSize(totalBytes.toString());
+  const refresh = async () => {
+    await onRefresh?.();
   };
 
-  const handleDownload = async (file: ReverseShareFile) => {
+  const download = async (list: ReverseShareFile[]) => {
     try {
-      const loadingToast = toast.loading(t("reverseShares.modals.receivedFiles.downloading") || "Downloading...");
-      const response = await downloadReverseShareFile(file.id);
-
-      const link = document.createElement("a");
-      link.href = response.data.url;
-      link.download = file.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      toast.dismiss(loadingToast);
-      toast.success(t("reverseShares.modals.receivedFiles.downloadSuccess"));
+      for (const file of list) await downloadReceivedFile(file);
+      if (list.length > 1) toast.success(t("reverseShares.modals.receivedFiles.downloadSuccess"));
     } catch (error) {
       console.error("Download error:", error);
       toast.error(t("reverseShares.modals.receivedFiles.downloadError"));
     }
   };
 
-  const handlePreview = (file: ReverseShareFile) => {
-    setPreviewFile(file);
+  const copy = (list: ReverseShareFile[]) => {
+    const count = list.length;
+    toast.promise(Promise.all(list.map((file) => copyReverseShareFileToUserFiles(file.id))), {
+      loading: t("reverseShares.modals.receivedFiles.bulkCopyProgress", { count }),
+      success:
+        count === 1
+          ? t("reverseShares.modals.receivedFiles.copySuccess")
+          : t("reverseShares.modals.receivedFiles.bulkCopySuccess", { count }),
+      error: (error: unknown) => copyErrorMessage(error, t),
+    });
+  };
+
+  const confirmDelete = async () => {
+    const count = filesToDelete.length;
+    setIsDeleting(true);
+    const results = await Promise.allSettled(filesToDelete.map((file) => deleteReverseShareFile(file.id)));
+    const failed = results.filter((result) => result.status === "rejected").length;
+    const deleted = count - failed;
+    if (deleted > 0) {
+      toast.success(
+        deleted === 1
+          ? t("reverseShares.modals.receivedFiles.deleteSuccess")
+          : t("reverseShares.modals.receivedFiles.bulkDeleteSuccess", { count: deleted })
+      );
+    }
+    if (failed > 0) {
+      console.error("Error deleting files:", results);
+      toast.error(t("reverseShares.calm.deleteSomeFailed", { count: failed }));
+    }
+    setFilesToDelete([]);
+    setSelected(new Set());
+    setIsDeleting(false);
+    await refresh();
   };
 
   const saveEdit = async () => {
-    if (!editingFile) return;
-
+    if (!editing) return;
+    const file = files.find((item) => item.id === editing.fileId);
+    const value = editing.value.trim();
+    if (!file) return setEditing(null);
+    if (editing.field === "name" && !value) return;
+    const data = editing.field === "name" ? { name: value + extensionOf(file.name) } : { description: value || null };
+    if (editing.field === "name" && data.name === file.name) return setEditing(null);
     try {
-      const updateData: { name?: string; description?: string | null } = {};
-
-      if (editingFile.field === "name") {
-        updateData.name = editValue.trim();
-      } else if (editingFile.field === "description") {
-        updateData.description = editValue.trim() || null;
-      }
-
-      await updateReverseShareFile(editingFile.fileId, updateData);
-
-      if (refreshReverseShare && reverseShare) {
-        await refreshReverseShare(reverseShare.id);
-      } else if (onRefresh) {
-        await onRefresh();
-      }
-
+      await updateReverseShareFile(file.id, data);
+      setEditing(null);
       toast.success(t("reverseShares.modals.receivedFiles.editSuccess"));
+      await refresh();
     } catch (error) {
       console.error("Error updating file:", error);
       toast.error(t("reverseShares.modals.receivedFiles.editError"));
-    } finally {
-      cancelEdit();
     }
   };
 
-  const handleDeleteFile = async (file: ReverseShareFile) => {
-    try {
-      await deleteReverseShareFile(file.id);
+  const toggle = (id: string, checked: boolean) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
 
-      if (refreshReverseShare && reverseShare) {
-        await refreshReverseShare(reverseShare.id);
-      } else if (onRefresh) {
-        await onRefresh();
-      }
-
-      toast.success(t("reverseShares.modals.receivedFiles.deleteSuccess"));
-    } catch (error) {
-      console.error("Error deleting file:", error);
-      toast.error(t("reverseShares.modals.receivedFiles.deleteError"));
-    }
-  };
-
-  const handleCopyFile = async (file: ReverseShareFile) => {
-    try {
-      setCopyingFile(file.id);
-      await copyReverseShareFileToUserFiles(file.id);
-      toast.success(t("reverseShares.modals.receivedFiles.copySuccess"));
-    } catch (error: any) {
-      console.error("Error copying file:", error);
-
-      let errorMessage = t("reverseShares.modals.receivedFiles.copyError");
-
-      if (error.message?.includes("timeout") || error.code === "UND_ERR_SOCKET") {
-        errorMessage = t("reverseShares.modals.receivedFiles.copyErrors.timeout");
-      } else if (error.response?.data?.error) {
-        const serverError = error.response.data.error;
-        if (serverError.includes("File size exceeds") || serverError.includes("Insufficient storage")) {
-          errorMessage = serverError;
-        } else if (serverError.includes("Copy operation failed")) {
-          errorMessage = t("reverseShares.modals.receivedFiles.copyErrors.failed");
-        }
-      } else if (error.name === "AbortError") {
-        errorMessage = t("reverseShares.modals.receivedFiles.copyErrors.aborted");
-      }
-      toast.error(errorMessage);
-    } finally {
-      setCopyingFile(null);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      saveEdit();
-    } else if (e.key === "Escape") {
-      cancelEdit();
-    }
-  };
-
-  if (!reverseShare) return null;
-
-  const files = reverseShare.files || [];
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedFiles(new Set(files.map((file) => file.id)));
-    } else {
-      setSelectedFiles(new Set());
-    }
-  };
-
-  const handleSelectFile = (fileId: string, checked: boolean) => {
-    const newSelected = new Set(selectedFiles);
-    if (checked) {
-      newSelected.add(fileId);
-    } else {
-      newSelected.delete(fileId);
-    }
-    setSelectedFiles(newSelected);
-  };
-
-  const getSelectedFileObjects = () => {
-    return files.filter((file) => selectedFiles.has(file.id));
-  };
-
-  const isAllSelected = files.length > 0 && selectedFiles.size === files.length;
-
-  const handleBulkDownload = async () => {
-    const selectedFileObjects = getSelectedFileObjects();
-    if (selectedFileObjects.length === 0) return;
-
-    try {
-      const loadingToast = toast.loading(t("shareManager.creatingZip"));
-
-      try {
-        // Download files individually
-        for (const file of selectedFileObjects) {
-          const response = await downloadReverseShareFile(file.id);
-          const link = document.createElement("a");
-          link.href = response.data.url;
-          link.download = file.name;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-
-        toast.dismiss(loadingToast);
-        toast.success(t("shareManager.zipDownloadSuccess"));
-        setSelectedFiles(new Set());
-      } catch (error) {
-        toast.dismiss(loadingToast);
-        toast.error(t("shareManager.zipDownloadError"));
-        throw error;
-      }
-    } catch (error) {
-      console.error("Error creating ZIP:", error);
-    }
-  };
-
-  const handleBulkCopyToMyFiles = async () => {
-    const selectedFileObjects = getSelectedFileObjects();
-    if (selectedFileObjects.length === 0) return;
-
-    toast.promise(
-      (async () => {
-        setBulkCopying(true);
-        try {
-          const copyPromises = selectedFileObjects.map(async (file) => {
-            try {
-              await copyReverseShareFileToUserFiles(file.id);
-            } catch (error: any) {
-              console.error(`Error copying file ${file.name}:`, error);
-              throw new Error(`Failed to copy ${file.name}: ${error.response?.data?.error || error.message}`);
-            }
-          });
-
-          await Promise.all(copyPromises);
-
-          setSelectedFiles(new Set());
-        } finally {
-          setBulkCopying(false);
-        }
-      })(),
-      {
-        loading: t("reverseShares.modals.receivedFiles.bulkCopyProgress", { count: selectedFileObjects.length }),
-        success: t("reverseShares.modals.receivedFiles.bulkCopySuccess", { count: selectedFileObjects.length }),
-        error: (error: any) => {
-          if (error.message.includes("File size exceeds") || error.message.includes("Insufficient storage")) {
-            return error.message;
-          } else {
-            return t("reverseShares.modals.receivedFiles.copyError");
-          }
-        },
-      }
-    );
-  };
-
-  const handleBulkDelete = () => {
-    const selectedFileObjects = getSelectedFileObjects();
-    if (selectedFileObjects.length === 0) return;
-
-    setFilesToDeleteBulk(selectedFileObjects);
-    setShowDeleteConfirm(true);
-  };
-
-  const confirmBulkDelete = async () => {
-    if (filesToDeleteBulk.length === 0) return;
-
-    setShowDeleteConfirm(false);
-
-    toast.promise(
-      (async () => {
-        setBulkDeleting(true);
-        try {
-          const deletePromises = filesToDeleteBulk.map(async (file) => {
-            try {
-              await deleteReverseShareFile(file.id);
-            } catch (error) {
-              console.error(`Error deleting file ${file.name}:`, error);
-              throw new Error(`Failed to delete ${file.name}`);
-            }
-          });
-
-          await Promise.all(deletePromises);
-
-          setSelectedFiles(new Set());
-          setFilesToDeleteBulk([]);
-          if (onRefresh) {
-            await onRefresh();
-          }
-          if (refreshReverseShare) {
-            await refreshReverseShare(reverseShare.id);
-          }
-        } finally {
-          setBulkDeleting(false);
-        }
-      })(),
-      {
-        loading: t("reverseShares.modals.receivedFiles.bulkDeleteProgress", { count: filesToDeleteBulk.length }),
-        success: t("reverseShares.modals.receivedFiles.bulkDeleteSuccess", { count: filesToDeleteBulk.length }),
-        error: "Error deleting selected files",
-      }
-    );
-  };
-
-  const showBulkActions = selectedFiles.size > 0;
+  const chosen = files.filter((file) => selected.has(file.id));
+  const allSelected = files.length > 0 && chosen.length === files.length;
+  const totalSize = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+      <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <DialogContent className="grid-rows-[auto_auto_minmax(0,1fr)] overflow-hidden sm:max-w-[760px]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <IconFile size={20} />
-              {t("reverseShares.modals.receivedFiles.title")}
-            </DialogTitle>
-            <DialogDescription>{t("reverseShares.modals.receivedFiles.description")}</DialogDescription>
-          </DialogHeader>
-
-          <div className="flex flex-col gap-4 flex-1 min-h-0">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Badge variant="secondary" className="text-sm">
-                  {t("reverseShares.modals.receivedFiles.fileCount", { count: files.length })}
-                </Badge>
-                <Badge variant="outline" className="text-sm">
-                  {t("reverseShares.modals.receivedFiles.totalSize", { size: getTotalSize() })}
-                </Badge>
-              </div>
-            </div>
-
-            <Separator />
-
-            {showBulkActions && (
-              <div className="flex items-center justify-between p-4 bg-muted/30 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-foreground">
-                    {t("reverseShares.modals.receivedFiles.bulkActions.selected", { count: selectedFiles.size })}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="default" size="sm" className="gap-2">
-                        {t("reverseShares.modals.receivedFiles.bulkActions.actions")}
-                        <IconChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[200px]">
-                      <DropdownMenuItem className="cursor-pointer py-2" onClick={handleBulkDownload}>
-                        <IconDownload className="h-4 w-4" />
-                        {t("reverseShares.modals.receivedFiles.bulkActions.download")}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer py-2"
-                        onClick={handleBulkCopyToMyFiles}
-                        disabled={bulkCopying}
-                      >
-                        {bulkCopying ? (
-                          <div className="size-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                        ) : (
-                          <IconClipboardCopy className="h-4 w-4" />
-                        )}
-                        {t("reverseShares.modals.receivedFiles.bulkActions.copyToMyFiles")}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                        onClick={handleBulkDelete}
-                        disabled={bulkDeleting}
-                      >
-                        {bulkDeleting ? (
-                          <div className="size-4 animate-spin rounded-full border-2 border-destructive border-t-transparent"></div>
-                        ) : (
-                          <IconTrash className="h-4 w-4" />
-                        )}
-                        {t("reverseShares.modals.receivedFiles.bulkActions.delete")}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button variant="outline" size="sm" onClick={() => setSelectedFiles(new Set())}>
-                    {t("common.cancel")}
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {files.length === 0 ? (
-              <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                  <IconFile className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <div className="text-center space-y-2">
-                  <h3 className="text-lg font-medium">{t("reverseShares.modals.receivedFiles.noFiles")}</h3>
-                  <p className="text-muted-foreground max-w-md">
-                    {t("reverseShares.modals.receivedFiles.noFilesDescription")}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="h-[450px] w-full overflow-y-auto rounded-lg border bg-background shadow-sm [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
-                <div className="p-1">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[50px]">
-                          <Checkbox
-                            checked={isAllSelected}
-                            onCheckedChange={handleSelectAll}
-                            aria-label={t("reverseShares.modals.receivedFiles.selectAll")}
-                          />
-                        </TableHead>
-                        <TableHead>{t("reverseShares.modals.receivedFiles.columns.file")}</TableHead>
-                        <TableHead>{t("reverseShares.modals.receivedFiles.columns.size")}</TableHead>
-                        <TableHead>{t("reverseShares.modals.receivedFiles.columns.sender")}</TableHead>
-                        <TableHead>{t("reverseShares.modals.receivedFiles.columns.date")}</TableHead>
-                        <TableHead className="text-right">
-                          {t("reverseShares.modals.receivedFiles.columns.actions")}
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {files.map((file) => (
-                        <FileRow
-                          key={file.id}
-                          file={file}
-                          editingFile={editingFile}
-                          editValue={editValue}
-                          inputRef={inputRef}
-                          hoveredFile={hoveredFile}
-                          copyingFile={copyingFile}
-                          isSelected={selectedFiles.has(file.id)}
-                          onStartEdit={startEdit}
-                          onSaveEdit={saveEdit}
-                          onCancelEdit={cancelEdit}
-                          onEditValueChange={setEditValue}
-                          onKeyDown={handleKeyDown}
-                          onSetHoveredFile={setHoveredFile}
-                          onPreview={handlePreview}
-                          onDownload={handleDownload}
-                          onDelete={handleDeleteFile}
-                          onCopy={handleCopyFile}
-                          onSelectFile={handleSelectFile}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirmation Modal */}
-      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>{t("reverseShares.modals.receivedFiles.bulkDeleteConfirmTitle")}</DialogTitle>
+            <DialogTitle>{t("reverseShares.calm.receivedFiles")}</DialogTitle>
             <DialogDescription>
-              {t("reverseShares.modals.receivedFiles.bulkDeleteConfirmMessage", { count: filesToDeleteBulk.length })}
+              {reverseShare?.name || t("reverseShares.card.untitled")} ·{" "}
+              {t("reverseShares.modals.receivedFiles.fileCount", { count: files.length })} · {formatFileSize(totalSize)}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="max-h-48 overflow-y-auto border rounded-lg p-2">
-            <div className="space-y-1">
-              {filesToDeleteBulk.map((file) => {
-                const { icon: FileIcon, color } = getFileIcon(file.name);
-                const displayName = truncateFileName(file.name);
-                return (
-                  <div key={file.id} className="flex items-center gap-2 p-2 bg-muted/20 rounded text-sm min-w-0">
-                    <FileIcon className={`h-4 w-4 ${color} flex-shrink-0`} />
-                    <span className="flex-1 break-all" title={file.name}>
-                      {displayName}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+          <div className="flex min-h-9 flex-wrap items-center gap-2 border-b border-line pb-3">
+            <label className="flex items-center gap-2.5 text-[13px] text-ink-2">
+              <Checkbox
+                checked={allSelected}
+                disabled={!files.length}
+                onCheckedChange={(checked) => setSelected(checked ? new Set(files.map((file) => file.id)) : new Set())}
+                aria-label={t("reverseShares.modals.receivedFiles.selectAll")}
+              />
+              {chosen.length
+                ? t("reverseShares.modals.receivedFiles.bulkActions.selected", { count: chosen.length })
+                : t("reverseShares.modals.receivedFiles.selectAll")}
+            </label>
+            {chosen.length > 0 && (
+              <div className="ml-auto flex flex-wrap gap-1.5">
+                <Button variant="outline" size="sm" onClick={() => download(chosen)}>
+                  <IconDownload />
+                  {t("common.download")}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => copy(chosen)}>
+                  <IconFolderShare />
+                  {t("reverseShares.calm.copyToMyFiles")}
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => setFilesToDelete(chosen)}>
+                  <IconTrash />
+                  {t("common.delete")}
+                </Button>
+              </div>
+            )}
           </div>
 
-          <DialogFooter className="flex gap-2">
-            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
-              {t("common.cancel")}
-            </Button>
-            <Button variant="destructive" onClick={confirmBulkDelete} disabled={bulkDeleting}>
-              {bulkDeleting ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
-              ) : null}
-              {t("reverseShares.modals.receivedFiles.bulkDeleteConfirmButton", { count: filesToDeleteBulk.length })}
-            </Button>
-          </DialogFooter>
+          <div className="-mx-6 min-h-0 overflow-y-auto px-6">
+            {files.length === 0 ? (
+              <p className="py-10 text-center text-[13px] text-ink-3">{t("reverseShares.calm.nothingYet")}</p>
+            ) : (
+              <div className="flex flex-col [&>*+*]:border-t [&>*+*]:border-line">
+                {files.map((file) =>
+                  editing?.fileId === file.id ? (
+                    <InlineEditor
+                      key={file.id}
+                      value={editing.value}
+                      suffix={editing.field === "name" ? extensionOf(file.name) : ""}
+                      placeholder={
+                        editing.field === "description"
+                          ? t("reverseShares.components.fileRow.addDescription")
+                          : undefined
+                      }
+                      onChange={(value) => setEditing({ ...editing, value })}
+                      onSave={saveEdit}
+                      onCancel={() => setEditing(null)}
+                    />
+                  ) : (
+                    <ReceivedFileManageRow
+                      key={file.id}
+                      file={file}
+                      checked={selected.has(file.id)}
+                      onCheckedChange={(checked) => toggle(file.id, checked)}
+                      onPreview={() => setPreviewFile(file)}
+                      onDownload={() => download([file])}
+                      onCopy={() => copy([file])}
+                      onRename={() => setEditing({ fileId: file.id, field: "name", value: baseName(file.name) })}
+                      onEditDescription={() =>
+                        setEditing({ fileId: file.id, field: "description", value: file.description ?? "" })
+                      }
+                      onDelete={() => setFilesToDelete([file])}
+                    />
+                  )
+                )}
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={filesToDelete.length > 0}
+        title={t("reverseShares.modals.receivedFiles.bulkDeleteConfirmTitle")}
+        description={t("reverseShares.modals.receivedFiles.bulkDeleteConfirmMessage", { count: filesToDelete.length })}
+        confirmLabel={t("reverseShares.modals.receivedFiles.bulkDeleteConfirmButton", { count: filesToDelete.length })}
+        busyLabel={t("common.deleting")}
+        busy={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => setFilesToDelete([])}
+      />
 
       {previewFile && (
         <ReverseShareFilePreviewModal isOpen={!!previewFile} onClose={() => setPreviewFile(null)} file={previewFile} />

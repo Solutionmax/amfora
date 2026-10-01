@@ -1,11 +1,16 @@
-import { IconDeviceFloppy, IconUserPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserFormModalProps } from "../types";
 
@@ -13,111 +18,105 @@ export function UserFormModal({ isOpen, onClose, modalMode, selectedUser, formMe
   const t = useTranslations();
   const {
     register,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
-    control,
   } = formMethods;
+  const isCreate = modalMode === "create";
+  const isAdmin = watch("isAdmin");
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
-        <Form {...formMethods}>
-          <form onSubmit={formMethods.handleSubmit(onSubmit)}>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 mb-2">
-                <IconUserPlus size={24} className="mr-1" />
-                {modalMode === "create" ? t("users.form.titleCreate") : t("users.form.titleEdit")}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="py-4">
-              <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <FormField
-                    control={control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label>{t("users.form.firstName")}</Label>
-                        <Input {...field} className={errors.firstName ? "border-destructive" : ""} />
-                        {errors.firstName && <FormMessage>{errors.firstName.message}</FormMessage>}
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label>{t("users.form.lastName")}</Label>
-                        <Input {...field} className={errors.lastName ? "border-destructive" : ""} />
-                        {errors.lastName && <FormMessage>{errors.lastName.message}</FormMessage>}
-                      </FormItem>
-                    )}
-                  />
-                </div>
+        <form onSubmit={formMethods.handleSubmit(onSubmit)} className="grid gap-5" noValidate>
+          <DialogHeader>
+            <DialogTitle>{isCreate ? t("users.calm.form.titleCreate") : t("users.calm.form.titleEdit")}</DialogTitle>
+            <DialogDescription>
+              {isCreate
+                ? t("users.calm.form.descriptionCreate")
+                : t("users.calm.form.descriptionEdit", { username: selectedUser?.username ?? "" })}
+            </DialogDescription>
+          </DialogHeader>
 
-                <div className="space-y-2">
-                  <Label>{t("users.form.username")}</Label>
-                  <Input {...register("username")} className={errors.username ? "border-destructive" : ""} />
-                  {errors.username && <FormMessage>{errors.username.message}</FormMessage>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label>{t("users.form.email")}</Label>
-                  <Input {...register("email")} type="email" className={errors.email ? "border-destructive" : ""} />
-                  {errors.email && <FormMessage>{errors.email.message}</FormMessage>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label>{modalMode === "create" ? t("users.form.password") : t("users.form.newPassword")}</Label>
-                  <Input
-                    {...register("password")}
-                    type="password"
-                    className={errors.password ? "border-destructive" : ""}
-                    placeholder={modalMode === "edit" ? t("users.form.passwordPlaceholder") : undefined}
-                  />
-                  {errors.password && <FormMessage>{errors.password.message}</FormMessage>}
-                </div>
-
-                {modalMode === "edit" && (
-                  <div className="space-y-2">
-                    <Label>{t("users.form.role")}</Label>
-                    <FormField
-                      control={control}
-                      name="isAdmin"
-                      render={({ field }) => (
-                        <FormItem>
-                          <Select
-                            defaultValue={selectedUser?.isAdmin ? "true" : "false"}
-                            onValueChange={(value) => field.onChange(value === "true")}
-                            value={field.value?.toString()}
-                          >
-                            <SelectTrigger className={errors.isAdmin ? "border-destructive" : ""}>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="false">{t("users.form.roleUser")}</SelectItem>
-                              <SelectItem value="true">{t("users.form.roleAdmin")}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {errors.isAdmin && <FormMessage>{errors.isAdmin.message}</FormMessage>}
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-              </div>
+          <div className="grid gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label={t("users.form.firstName")} htmlFor="user-first-name" error={errors.firstName?.message}>
+                <Input
+                  id="user-first-name"
+                  autoComplete="given-name"
+                  aria-invalid={!!errors.firstName}
+                  {...register("firstName")}
+                />
+              </Field>
+              <Field label={t("users.form.lastName")} htmlFor="user-last-name" error={errors.lastName?.message}>
+                <Input
+                  id="user-last-name"
+                  autoComplete="family-name"
+                  aria-invalid={!!errors.lastName}
+                  {...register("lastName")}
+                />
+              </Field>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={onClose} type="button">
-                {t("common.cancel")}
-              </Button>
-              <Button disabled={isSubmitting} type="submit">
-                {modalMode === "create" ? "" : <IconDeviceFloppy className="h-4 w-4" />}
-                {modalMode === "create" ? t("users.form.create") : t("users.form.save")}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label={t("users.form.username")} htmlFor="user-username" error={errors.username?.message}>
+                <Input
+                  id="user-username"
+                  autoComplete="off"
+                  aria-invalid={!!errors.username}
+                  {...register("username")}
+                />
+              </Field>
+              <Field label={t("users.form.email")} htmlFor="user-email" error={errors.email?.message}>
+                <Input
+                  id="user-email"
+                  type="email"
+                  autoComplete="off"
+                  aria-invalid={!!errors.email}
+                  {...register("email")}
+                />
+              </Field>
+            </div>
+            <Field
+              label={isCreate ? t("users.form.password") : t("users.calm.form.newPassword")}
+              htmlFor="user-password"
+              error={errors.password?.message}
+              hint={isCreate ? t("users.calm.form.passwordHint") : t("users.form.passwordPlaceholder")}
+            >
+              <Input
+                id="user-password"
+                type="password"
+                autoComplete="new-password"
+                aria-invalid={!!errors.password}
+                {...register("password")}
+              />
+            </Field>
+            {!isCreate && (
+              <Field label={t("users.form.role")} htmlFor="user-role" error={errors.isAdmin?.message}>
+                <Select
+                  value={String(isAdmin ?? selectedUser?.isAdmin ?? false)}
+                  onValueChange={(value) => setValue("isAdmin", value === "true", { shouldDirty: true })}
+                >
+                  <SelectTrigger id="user-role" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="false">{t("users.calm.user")}</SelectItem>
+                    <SelectItem value="true">{t("users.calm.administrator")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Field>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={onClose} type="button">
+              {t("common.cancel")}
+            </Button>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting ? t("common.saving") : isCreate ? t("users.calm.addUser") : t("common.save")}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

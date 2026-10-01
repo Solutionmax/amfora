@@ -1,11 +1,13 @@
-import { IconEye, IconEyeClosed, IconLock } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
+import { PasswordField } from "@/components/auth/password-field";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FormSection } from "@/components/ui/form-section";
 import { PasswordFormProps } from "../types";
 
+const MIN_LENGTH = 8;
+
+/** New password twice; the button unlocks only when both match and are long enough. */
 export function PasswordForm({
   form,
   isNewPasswordVisible,
@@ -18,78 +20,49 @@ export function PasswordForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    watch,
+    formState: { isSubmitting },
   } = form;
 
+  const newPassword = watch("newPassword") ?? "";
+  const confirmPassword = watch("confirmPassword") ?? "";
+  const problem = !newPassword
+    ? null
+    : newPassword.length < MIN_LENGTH
+      ? t("profile.calm.passwordTooShort", { count: MIN_LENGTH })
+      : confirmPassword && newPassword !== confirmPassword
+        ? t("profile.calm.passwordMismatch")
+        : null;
+  const isValid = newPassword.length >= MIN_LENGTH && newPassword === confirmPassword;
+
   return (
-    <section className="border-b pb-6">
-      <header className="flex items-center gap-3 border-b pb-4">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
-          <IconLock className="size-4" />
-        </span>
-        <h2 className="font-display text-lg font-bold tracking-tight">{t("profile.password.title")}</h2>
-      </header>
-      <div className="pt-5">
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="relative space-y-2">
-            <Label htmlFor="profile-new-password">{t("profile.password.newPassword")}</Label>
-            <Input
-              id="profile-new-password"
-              {...register("newPassword")}
-              type={isNewPasswordVisible ? "text" : "password"}
-              className="h-11 rounded-lg bg-background pe-10"
-              placeholder={t("profile.password.newPassword")}
-              aria-invalid={!!errors.newPassword}
-            />
-            <button
-              type="button"
-              onClick={onToggleNewPassword}
-              aria-label={t("profile.password.newPassword")}
-              aria-pressed={isNewPasswordVisible}
-              className="absolute end-3 top-9 text-muted-foreground hover:text-foreground"
-            >
-              {isNewPasswordVisible ? <IconEye className="h-5 w-5" /> : <IconEyeClosed className="h-5 w-5" />}
-            </button>
-            {errors.newPassword && <p className="text-sm text-destructive mt-1">{errors.newPassword.message}</p>}
-          </div>
-
-          <div className="relative space-y-2">
-            <Label htmlFor="profile-confirm-password">{t("profile.password.confirmPassword")}</Label>
-            <Input
-              id="profile-confirm-password"
-              {...register("confirmPassword")}
-              type={isConfirmPasswordVisible ? "text" : "password"}
-              className="h-11 rounded-lg bg-background pe-10"
-              placeholder={t("profile.password.confirmPassword")}
-              aria-invalid={!!errors.confirmPassword}
-            />
-            <button
-              type="button"
-              onClick={onToggleConfirmPassword}
-              aria-label={t("profile.password.confirmPassword")}
-              aria-pressed={isConfirmPasswordVisible}
-              className="absolute end-3 top-9 text-muted-foreground hover:text-foreground"
-            >
-              {isConfirmPasswordVisible ? <IconEye className="h-5 w-5" /> : <IconEyeClosed className="h-5 w-5" />}
-            </button>
-            {errors.confirmPassword && (
-              <p className="text-sm text-destructive mt-1">{errors.confirmPassword.message}</p>
-            )}
-          </div>
-
-          <div className="flex justify-end">
-            <Button
-              className="mt-4 h-11 rounded-lg font-semibold"
-              variant="default"
-              disabled={isSubmitting}
-              type="submit"
-            >
-              {!isSubmitting && <IconLock className="h-4 w-4" />}
-              {t("profile.password.updateButton")}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </section>
+    <FormSection title={t("profile.calm.password")} description={t("profile.calm.passwordHint")}>
+      <form className="grid gap-[18px]" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Field label={t("profile.password.newPassword")} htmlFor="profile-new-password">
+          <PasswordField
+            id="profile-new-password"
+            autoComplete="new-password"
+            visible={isNewPasswordVisible}
+            onToggleVisible={onToggleNewPassword}
+            {...register("newPassword")}
+          />
+        </Field>
+        <Field label={t("profile.password.confirmPassword")} htmlFor="profile-confirm-password" error={problem}>
+          <PasswordField
+            id="profile-confirm-password"
+            autoComplete="new-password"
+            visible={isConfirmPasswordVisible}
+            onToggleVisible={onToggleConfirmPassword}
+            aria-invalid={!!problem}
+            {...register("confirmPassword")}
+          />
+        </Field>
+        <div>
+          <Button type="submit" variant="outline" disabled={!isValid || isSubmitting}>
+            {isSubmitting ? t("common.saving") : t("profile.calm.changePassword")}
+          </Button>
+        </div>
+      </form>
+    </FormSection>
   );
 }

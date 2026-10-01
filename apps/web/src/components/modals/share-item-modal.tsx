@@ -1,15 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IconCalendar, IconCopy, IconDownload, IconEye, IconLink, IconLock, IconShare } from "@tabler/icons-react";
+import { IconCopy, IconDownload } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import QRCode from "react-qr-code";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Switch } from "@/components/ui/switch";
 import { createShare, createShareAlias, listFiles, listFolders } from "@/http/endpoints";
 import { copyText } from "@/lib/clipboard";
@@ -228,180 +236,170 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
     handleClose();
   };
 
+  const host = typeof window === "undefined" ? "" : window.location.host;
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {step === "create" ? (
-              <>
-                <IconShare size={20} />
-                {itemType === "file" ? t("shareActions.fileTitle") : t("shareActions.folderTitle")}
-              </>
-            ) : (
-              <>
-                <IconLink size={20} />
-                {t("shareActions.linkTitle")}
-              </>
-            )}
+          <DialogTitle>
+            {step === "create"
+              ? itemType === "file"
+                ? t("shareActions.fileTitle")
+                : t("shareActions.folderTitle")
+              : t("shareActions.linkTitle")}
           </DialogTitle>
+          <DialogDescription>
+            {step === "create"
+              ? t("shares.calm.modals.shareItemDescription")
+              : generatedLink
+                ? t("shares.calm.modals.linkReady")
+                : t("shares.calm.modals.linkStepDescription")}
+          </DialogDescription>
         </DialogHeader>
 
         {step === "create" && (
-          <div className="flex flex-col gap-4">
-            <div className="space-y-2">
-              <Label>{t("createShare.nameLabel")}</Label>
+          <div className="grid gap-[18px]">
+            <Field label={t("shares.calm.modals.nameLabel")} htmlFor="share-item-name">
               <Input
+                id="share-item-name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder={t("createShare.namePlaceholder")}
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label>{t("createShare.descriptionLabel")}</Label>
+            </Field>
+            <Field
+              label={t("shares.calm.modals.descriptionLabel")}
+              htmlFor="share-item-description"
+              hint={t("shares.calm.modals.descriptionHint")}
+            >
               <Input
+                id="share-item-description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder={t("createShare.descriptionPlaceholder")}
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <IconCalendar size={16} />
-                {t("createShare.expirationLabel")}
-              </Label>
-              <Input
-                placeholder={t("createShare.expirationPlaceholder")}
-                type="datetime-local"
-                value={formData.expiresAt}
-                onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <IconEye size={16} />
-                {t("createShare.maxViewsLabel")}
-              </Label>
-              <Input
-                min="1"
-                placeholder={t("createShare.maxViewsPlaceholder")}
-                type="number"
-                value={formData.maxViews}
-                onChange={(e) => setFormData({ ...formData, maxViews: e.target.value })}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={formData.isPasswordProtected}
-                onCheckedChange={(checked) =>
-                  setFormData({
-                    ...formData,
-                    isPasswordProtected: checked,
-                    password: "",
-                  })
-                }
-                id="password-protection"
-              />
-              <Label htmlFor="password-protection" className="flex items-center gap-2">
-                <IconLock size={16} />
-                {t("createShare.passwordProtection")}
-              </Label>
-            </div>
-
-            {formData.isPasswordProtected && (
-              <div className="space-y-2">
-                <Label>{t("createShare.passwordLabel")}</Label>
+            </Field>
+            <div className="grid gap-[18px] sm:grid-cols-2">
+              <Field
+                label={t("shares.calm.modals.expiresLabel")}
+                htmlFor="share-item-expires"
+                hint={t("shares.calm.modals.expiresHint")}
+              >
                 <Input
-                  type="password"
+                  id="share-item-expires"
+                  type="datetime-local"
+                  value={formData.expiresAt}
+                  onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
+                />
+              </Field>
+              <Field
+                label={t("shares.calm.modals.maxViewsLabel")}
+                htmlFor="share-item-views"
+                hint={t("shares.calm.modals.maxViewsHint")}
+              >
+                <Input
+                  id="share-item-views"
+                  min="1"
+                  type="number"
+                  inputMode="numeric"
+                  value={formData.maxViews}
+                  onChange={(e) => setFormData({ ...formData, maxViews: e.target.value })}
+                />
+              </Field>
+            </div>
+            <label htmlFor="share-item-password-on" className="flex cursor-pointer items-center gap-3.5">
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold">{t("shares.calm.password")}</span>
+                <span className="block text-[12.5px] text-ink-3">{t("shares.calm.modals.passwordHint")}</span>
+              </span>
+              <Switch
+                id="share-item-password-on"
+                checked={formData.isPasswordProtected}
+                onCheckedChange={(checked) => setFormData({ ...formData, isPasswordProtected: checked, password: "" })}
+              />
+            </label>
+            {formData.isPasswordProtected && (
+              <Field label={t("createShare.passwordLabel")} htmlFor="share-item-password">
+                <PasswordInput
+                  id="share-item-password"
+                  autoComplete="new-password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder={t("createShare.passwordLabel")}
+                  placeholder={t("createShare.passwordPlaceholder")}
                 />
-              </div>
+              </Field>
             )}
           </div>
         )}
 
-        {step === "link" && (
-          <div className="space-y-4">
-            {!generatedLink ? (
-              <>
-                <p className="text-sm text-muted-foreground">
-                  {itemType === "file"
-                    ? t("shareActions.linkDescriptionFile")
-                    : t("shareActions.linkDescriptionFolder")}
-                </p>
-                <div className="space-y-2">
-                  <Label>{t("shareActions.aliasLabel")}</Label>
-                  <Input
-                    placeholder={t("shareActions.aliasPlaceholder")}
-                    value={alias}
-                    onChange={(e) => setAlias(e.target.value)}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex flex-col items-center justify-center">
-                  <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
-                    <QRCode
-                      value={generatedLink}
-                      size={250}
-                      level="H"
-                      fgColor="#000000"
-                      bgColor="#FFFFFF"
-                      style={{ maxWidth: "100%", height: "auto" }}
-                    />
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">{t("shareActions.linkReady")}</p>
-                <div className="flex gap-2">
-                  <Input readOnly value={generatedLink} className="flex-1" />
-                  <Button size="icon" variant="outline" onClick={handleCopyLink} title={t("shareActions.copyLink")}>
-                    <IconCopy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </>
-            )}
+        {step === "link" && !generatedLink && (
+          <Field label={t("shares.calm.modals.linkLabel")} htmlFor="share-item-alias">
+            <div className="flex min-w-0 items-center rounded-[var(--radius)] border border-line-2 bg-surface focus-within:border-primary focus-within:ring-[3px] focus-within:ring-primary/15">
+              <span className="max-w-[45%] shrink-0 truncate pl-3 font-mono text-[13px] text-ink-3">{host}/s/</span>
+              <Input
+                id="share-item-alias"
+                className="border-0 pl-0.5 font-mono text-[13px] focus-visible:ring-0"
+                placeholder={t("shareActions.aliasPlaceholder")}
+                value={alias}
+                onChange={(e) => setAlias(e.target.value)}
+              />
+            </div>
+          </Field>
+        )}
+
+        {step === "link" && generatedLink && (
+          <div className="flex flex-col items-center gap-4">
+            <div ref={qrContainerRef} className="max-w-full rounded-xl border border-line bg-white p-4">
+              <QRCode
+                value={generatedLink}
+                size={176}
+                level="H"
+                fgColor="#000000"
+                bgColor="#FFFFFF"
+                style={{ maxWidth: "100%", height: "auto" }}
+              />
+            </div>
+            <div className="flex w-full min-w-0 items-center gap-1.5 rounded-xl border border-line-2 py-1.5 pl-4 pr-1.5">
+              <code className="min-w-0 flex-1 truncate font-mono text-[13px] text-ink-3">{generatedLink}</code>
+              <Button variant="outline" onClick={handleCopyLink}>
+                <IconCopy />
+                {t("shares.calm.copyLink")}
+              </Button>
+            </div>
           </div>
         )}
 
         <DialogFooter>
           {step === "create" && (
             <>
-              <Button variant="outline" onClick={handleClose}>
+              <Button variant="ghost" onClick={handleClose}>
                 {t("common.cancel")}
               </Button>
               <Button disabled={isLoading || !formData.name.trim()} onClick={handleCreateShare}>
-                {isLoading ? <div className="animate-spin">⠋</div> : t("createShare.create")}
+                {isLoading ? t("common.creating") : t("createShare.create")}
               </Button>
             </>
           )}
 
           {step === "link" && !generatedLink && (
             <>
-              <Button variant="outline" onClick={() => setStep("create")}>
-                {t("common.back")}
+              <Button variant="ghost" onClick={handleSuccess}>
+                {t("common.close")}
               </Button>
               <Button disabled={!alias || isLoading} onClick={handleGenerateLink}>
-                {isLoading ? <div className="animate-spin">⠋</div> : t("shareActions.generateLink")}
+                {t("shareActions.generateLink")}
               </Button>
             </>
           )}
 
           {step === "link" && generatedLink && (
             <>
-              <Button variant="outline" onClick={handleSuccess}>
-                {t("common.close")}
+              <Button variant="ghost" onClick={downloadQRCode} disabled={isDownloading}>
+                <IconDownload />
+                {t("shares.calm.modals.downloadQr")}
               </Button>
-              <Button onClick={downloadQRCode} disabled={isDownloading}>
-                <IconDownload className="h-4 w-4" />
-                {t("qrCodeModal.download")}
-              </Button>
+              <Button onClick={handleSuccess}>{t("common.close")}</Button>
             </>
           )}
         </DialogFooter>

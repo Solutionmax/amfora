@@ -1,16 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { IconEye, IconEyeOff, IconInfoCircle } from "@tabler/icons-react";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { DialogFooter } from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { IconPicker } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { LineRow } from "@/components/ui/line-list";
 import { Switch } from "@/components/ui/switch";
 import { TagsInput } from "@/components/ui/tags-input";
 import { CallbackUrlDisplay } from "./callback-url-display";
+import { FormNote, MethodRadios } from "./configuration-method-selector";
+import { ProviderTypeSelect } from "./provider-type-select";
 
 export interface AuthProvider {
   id: string;
@@ -39,6 +43,8 @@ interface EditProviderFormProps {
   saving: boolean;
   editingFormData: Record<string, any>;
   setEditingFormData: (data: Record<string, any>) => void;
+  /** Custom providers can be deleted from the form; official ones cannot. */
+  onDelete?: () => void;
 }
 
 export function EditProviderForm({
@@ -48,6 +54,7 @@ export function EditProviderForm({
   saving,
   editingFormData,
   setEditingFormData,
+  onDelete,
 }: EditProviderFormProps) {
   const t = useTranslations();
   const savedData = editingFormData[provider.id] || {};
@@ -148,189 +155,131 @@ export function EditProviderForm({
   const isManualMode = !!(formData.authorizationEndpoint || formData.tokenEndpoint || formData.userInfoEndpoint);
 
   return (
-    <div className="space-y-4">
+    <div className="grid gap-4">
       {isOfficial && (
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-          <div className="flex items-center gap-2 text-primary">
-            <span>
-              <IconInfoCircle className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium">{t("authProviders.info.officialProvider")}</span>
-          </div>
-          <p className="mt-1 text-xs text-primary/80">{t("authProviders.info.officialProviderDescription")}</p>
-        </div>
+        <FormNote title={t("authProviders.info.officialProvider")}>
+          {t("authProviders.info.officialProviderDescription")}
+        </FormNote>
       )}
 
       <CallbackUrlDisplay providerName={formData.name || "provider"} />
 
       {!isOfficial && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.providerName")} *</Label>
-            <Input
-              placeholder={t("authProviders.form.providerNamePlaceholder")}
-              value={formData.name}
-              onChange={(e) => updateFormData({ name: e.target.value })}
-            />
-          </div>
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.displayName")} *</Label>
-            <Input
-              placeholder={t("authProviders.form.displayNamePlaceholder")}
-              value={formData.displayName}
-              onChange={(e) => updateFormData({ displayName: e.target.value })}
-            />
-          </div>
-        </div>
-      )}
-
-      {!isOfficial && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.type")}</Label>
-            <select
-              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
-              value={formData.type}
-              onChange={(e) => updateFormData({ type: e.target.value as "oidc" | "oauth2" })}
-            >
-              <option value="oidc">{t("authProviders.form.typeOidc")}</option>
-              <option value="oauth2">{t("authProviders.form.typeOauth2")}</option>
-            </select>
-          </div>
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.icon")}</Label>
-            <IconPicker
-              value={formData.icon}
-              onChange={(icon) => updateFormData({ icon })}
-              placeholder={t("authProviders.form.iconPlaceholder")}
-            />
-          </div>
-        </div>
-      )}
-
-      {!isOfficial && (
-        <div className="space-y-4">
-          <div className="rounded-lg border border-border/70 bg-secondary/30 p-4">
-            <h4 className="text-sm font-medium mb-3">{t("authProviders.form.configurationMethod")}</h4>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  id="auto-discovery"
-                  name="configMethod"
-                  checked={!isManualMode}
-                  onChange={() =>
-                    updateFormData({
-                      authorizationEndpoint: "",
-                      tokenEndpoint: "",
-                      userInfoEndpoint: "",
-                    })
-                  }
-                  className="w-4 h-4"
-                />
-                <label htmlFor="auto-discovery" className="text-sm">
-                  <span className="font-medium">{t("authProviders.form.autoDiscovery")}</span>
-                  <span className="text-muted-foreground ml-2">
-                    ({t("authProviders.form.autoDiscoveryDescription")})
-                  </span>
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  id="manual-endpoints"
-                  name="configMethod"
-                  checked={isManualMode}
-                  onChange={() => {
-                    if (!isManualMode) {
-                      updateFormData({
-                        authorizationEndpoint: "/oauth/authorize",
-                        tokenEndpoint: "/oauth/token",
-                        userInfoEndpoint: "/oauth/userinfo",
-                      });
-                    }
-                  }}
-                  className="w-4 h-4"
-                />
-                <label htmlFor="manual-endpoints" className="text-sm">
-                  <span className="font-medium">{t("authProviders.form.manualEndpoints")}</span>
-                  <span className="text-muted-foreground ml-2">
-                    ({t("authProviders.form.manualEndpointsDescription")})
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {!isManualMode && (
-            <div>
-              <Label className="mb-2 block">{t("authProviders.form.providerUrl")} *</Label>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label={`${t("authProviders.form.providerName")} *`} htmlFor="edit-provider-name">
               <Input
-                placeholder={t("authProviders.form.providerUrlAutoPlaceholder")}
-                value={formData.issuerUrl}
-                onChange={(e) => updateFormData({ issuerUrl: e.target.value })}
-                onBlur={(e) => updateProviderUrlEdit(e.target.value)}
+                id="edit-provider-name"
+                placeholder={t("authProviders.form.providerNamePlaceholder")}
+                value={formData.name}
+                onChange={(e) => updateFormData({ name: e.target.value })}
               />
-              <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.autoDiscoveryHelp")}</p>
-            </div>
-          )}
+            </Field>
+            <Field label={`${t("authProviders.form.displayName")} *`} htmlFor="edit-provider-display">
+              <Input
+                id="edit-provider-display"
+                placeholder={t("authProviders.form.displayNamePlaceholder")}
+                value={formData.displayName}
+                onChange={(e) => updateFormData({ displayName: e.target.value })}
+              />
+            </Field>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label={t("authProviders.form.type")} htmlFor="edit-provider-type">
+              <ProviderTypeSelect
+                id="edit-provider-type"
+                value={formData.type}
+                onChange={(type) => updateFormData({ type })}
+              />
+            </Field>
+            <Field label={t("authProviders.form.icon")}>
+              <IconPicker
+                value={formData.icon}
+                onChange={(icon) => updateFormData({ icon })}
+                placeholder={t("authProviders.form.iconPlaceholder")}
+              />
+            </Field>
+          </div>
+
+          <MethodRadios
+            name="editConfigMethod"
+            isManual={isManualMode}
+            onAuto={() => updateFormData({ authorizationEndpoint: "", tokenEndpoint: "", userInfoEndpoint: "" })}
+            onManual={() => {
+              if (!isManualMode) {
+                updateFormData({
+                  authorizationEndpoint: "/oauth/authorize",
+                  tokenEndpoint: "/oauth/token",
+                  userInfoEndpoint: "/oauth/userinfo",
+                });
+              }
+            }}
+          />
+
+          <Field
+            label={`${t("authProviders.form.providerUrl")} *`}
+            htmlFor="edit-provider-url"
+            hint={
+              isManualMode ? t("authProviders.form.manualConfigurationHelp") : t("authProviders.form.autoDiscoveryHelp")
+            }
+          >
+            <Input
+              id="edit-provider-url"
+              placeholder={
+                isManualMode
+                  ? t("authProviders.form.providerUrlManualPlaceholder")
+                  : t("authProviders.form.providerUrlAutoPlaceholder")
+              }
+              value={formData.issuerUrl}
+              onChange={(e) => updateFormData({ issuerUrl: e.target.value })}
+              onBlur={(e) => updateProviderUrlEdit(e.target.value)}
+            />
+          </Field>
 
           {isManualMode && (
-            <div className="space-y-4">
-              <div>
-                <Label className="mb-2 block">{t("authProviders.form.providerUrl")} *</Label>
+            <>
+              <Field label={`${t("authProviders.form.authorizationEndpoint")} *`} htmlFor="edit-auth-endpoint">
                 <Input
-                  placeholder={t("authProviders.form.providerUrlManualPlaceholder")}
-                  value={formData.issuerUrl}
-                  onChange={(e) => updateFormData({ issuerUrl: e.target.value })}
-                  onBlur={(e) => updateProviderUrlEdit(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.manualConfigurationHelp")}</p>
-              </div>
-              <div>
-                <Label className="mb-2 block">{t("authProviders.form.authorizationEndpoint")} *</Label>
-                <Input
+                  id="edit-auth-endpoint"
                   placeholder={t("authProviders.form.authorizationEndpointPlaceholder")}
                   value={formData.authorizationEndpoint}
                   onChange={(e) => updateFormData({ authorizationEndpoint: e.target.value })}
                 />
-              </div>
-              <div>
-                <Label className="mb-2 block">{t("authProviders.form.tokenEndpoint")} *</Label>
+              </Field>
+              <Field label={`${t("authProviders.form.tokenEndpoint")} *`} htmlFor="edit-token-endpoint">
                 <Input
+                  id="edit-token-endpoint"
                   placeholder={t("authProviders.form.tokenEndpointPlaceholder")}
                   value={formData.tokenEndpoint}
                   onChange={(e) => updateFormData({ tokenEndpoint: e.target.value })}
                 />
-              </div>
-              <div>
-                <Label className="mb-2 block">{t("authProviders.form.userInfoEndpoint")} *</Label>
+              </Field>
+              <Field label={`${t("authProviders.form.userInfoEndpoint")} *`} htmlFor="edit-userinfo-endpoint">
                 <Input
+                  id="edit-userinfo-endpoint"
                   placeholder={t("authProviders.form.userInfoEndpointPlaceholder")}
                   value={formData.userInfoEndpoint}
                   onChange={(e) => updateFormData({ userInfoEndpoint: e.target.value })}
                 />
-              </div>
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-                <div className="flex items-start gap-2 text-primary">
-                  <IconInfoCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <div className="text-xs">
-                    <p className="font-medium">{t("authProviders.info.manualConfigTitle")}</p>
-                    <p className="mt-1">{t("authProviders.info.manualConfigDescription")}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </Field>
+              <FormNote title={t("authProviders.info.manualConfigTitle")}>
+                {t("authProviders.info.manualConfigDescription")}
+              </FormNote>
+            </>
           )}
-        </div>
+        </>
       )}
 
       {isOfficial && (
-        <div className="space-y-4">
-          {canEditProviderUrl ? (
-            <div>
-              <Label className="mb-2 block">{t("authProviders.form.providerUrl")} *</Label>
+        <>
+          {canEditProviderUrl && (
+            <Field
+              label={`${t("authProviders.form.providerUrl")} *`}
+              htmlFor="edit-provider-url"
+              hint={t("authProviders.form.officialProviderHelp")}
+            >
               <Input
+                id="edit-provider-url"
                 placeholder={t("authProviders.form.officialProviderUrlPlaceholder", {
                   displayName: provider.displayName,
                 })}
@@ -338,95 +287,99 @@ export function EditProviderForm({
                 onChange={(e) => updateFormData({ issuerUrl: e.target.value })}
                 onBlur={(e) => updateProviderUrlEdit(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.officialProviderHelp")}</p>
-            </div>
-          ) : null}
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.icon")}</Label>
+            </Field>
+          )}
+          <Field label={t("authProviders.form.icon")} hint={t("authProviders.form.officialProviderIconHelp")}>
             <IconPicker
               value={formData.icon}
               onChange={(icon) => updateFormData({ icon })}
               placeholder={t("authProviders.form.iconPlaceholder")}
             />
-            <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.officialProviderIconHelp")}</p>
-          </div>
-        </div>
+          </Field>
+        </>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.clientId")} *</Label>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label={`${t("authProviders.form.clientId")} *`} htmlFor="edit-client-id">
           <Input
+            id="edit-client-id"
+            autoComplete="off"
             placeholder={t("authProviders.form.clientIdPlaceholder")}
             value={formData.clientId}
             onChange={(e) => updateFormData({ clientId: e.target.value })}
           />
-        </div>
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.clientSecret")}</Label>
+        </Field>
+        <Field label={t("authProviders.form.clientSecret")} htmlFor="edit-client-secret">
           <div className="relative">
             <Input
+              id="edit-client-secret"
               type={showClientSecret ? "text" : "password"}
+              autoComplete="new-password"
               placeholder={t("authProviders.form.clientSecretPlaceholder")}
               value={formData.clientSecret}
               onChange={(e) => updateFormData({ clientSecret: e.target.value })}
-              className="pr-10"
+              className="pr-11"
             />
             <Button
               type="button"
               variant="ghost"
-              size="sm"
-              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+              size="icon"
+              className="absolute right-1 top-1"
               onClick={() => setShowClientSecret(!showClientSecret)}
+              aria-label={t("authProviders.form.clientSecret")}
+              aria-pressed={showClientSecret}
             >
-              {showClientSecret ? (
-                <IconEyeOff className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <IconEye className="h-4 w-4 text-muted-foreground" />
-              )}
+              {showClientSecret ? <IconEyeOff aria-hidden="true" /> : <IconEye aria-hidden="true" />}
             </Button>
           </div>
-        </div>
+        </Field>
       </div>
 
-      <div>
-        <Label className="mb-2 block">{t("authProviders.form.oauthScopes")}</Label>
+      <Field
+        label={t("authProviders.form.oauthScopes")}
+        hint={
+          formData.type === "oidc" ? t("authProviders.form.scopesHelpOidc") : t("authProviders.form.scopesHelpOauth2")
+        }
+      >
         <TagsInput
           value={formData.scope ? formData.scope.split(/[,\s]+/).filter(Boolean) : []}
           onChange={(tags) => updateFormData({ scope: tags.join(" ") })}
           placeholder={t("authProviders.form.scopesPlaceholder")}
         />
-        <p className="text-xs text-muted-foreground mt-1">
-          {formData.type === "oidc" ? t("authProviders.form.scopesHelpOidc") : t("authProviders.form.scopesHelpOauth2")}
-        </p>
-      </div>
+      </Field>
 
-      <div>
-        <Label className="mb-2 block">{t("authProviders.form.adminEmailDomains")}</Label>
+      <Field label={t("authProviders.form.adminEmailDomains")} hint={t("authProviders.form.adminEmailDomainsHelp")}>
         <TagsInput
           value={formData.adminEmailDomains ? formData.adminEmailDomains.split(",").filter(Boolean) : []}
           onChange={(tags) => updateFormData({ adminEmailDomains: tags.join(",") })}
           placeholder={t("authProviders.form.adminEmailDomainsPlaceholder")}
         />
-        <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.adminEmailDomainsHelp")}</p>
-      </div>
+      </Field>
 
-      <div className="flex items-center gap-2">
+      <LineRow
+        className="border-t border-line"
+        title={<label htmlFor="edit-auto-register">{t("authProviders.form.autoRegister")}</label>}
+      >
         <Switch
+          id="edit-auto-register"
           checked={formData.autoRegister}
           onCheckedChange={(checked) => updateFormData({ autoRegister: checked })}
         />
-        <Label className="cursor-pointer">{t("authProviders.form.autoRegister")}</Label>
-      </div>
+      </LineRow>
 
-      <div className="flex gap-2 justify-end pt-4">
-        <Button variant="outline" onClick={onCancel} size="sm">
+      <DialogFooter className="sm:items-center">
+        {onDelete && (
+          <Button type="button" variant="destructive" onClick={onDelete} disabled={saving} className="sm:mr-auto">
+            {t("authProviders.deleteProvider")}
+          </Button>
+        )}
+        <Button type="button" variant="ghost" onClick={onCancel}>
           {t("authProviders.buttons.cancel")}
         </Button>
-        <Button onClick={handleSubmit} disabled={saving} size="sm">
+        <Button type="button" onClick={handleSubmit} disabled={saving}>
           {saving ? t("authProviders.buttons.saving") : t("authProviders.buttons.saveProvider")}
         </Button>
-      </div>
+      </DialogFooter>
     </div>
   );
 }

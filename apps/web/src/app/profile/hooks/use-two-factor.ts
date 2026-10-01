@@ -19,6 +19,9 @@ export function useTwoFactor() {
   const t = useTranslations();
   const { appName } = useAppInfo();
   const [isLoading, setIsLoading] = useState(true);
+  /** True once the status has loaded; stays false after a failed load so the page can offer a retry. */
+  const [statusLoaded, setStatusLoaded] = useState(false);
+  const [statusError, setStatusError] = useState(false);
   const [status, setStatus] = useState<TwoFactorStatus>({
     enabled: false,
     verified: false,
@@ -37,7 +40,10 @@ export function useTwoFactor() {
       setIsLoading(true);
       const response = await getTwoFactorStatus();
       setStatus(response.data);
+      setStatusLoaded(true);
+      setStatusError(false);
     } catch (error) {
+      setStatusError(true);
       console.error("Failed to load 2FA status:", error);
       toast.error(t("twoFactor.messages.statusLoadFailed"));
     } finally {
@@ -174,6 +180,8 @@ export function useTwoFactor() {
 
   return {
     isLoading,
+    statusLoaded,
+    statusError,
     status,
     setupData,
     backupCodes,

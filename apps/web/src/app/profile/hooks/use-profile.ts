@@ -41,6 +41,7 @@ export function useProfile() {
 
   const { setUser } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [userData, setUserData] = useState<any>(null);
   const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
@@ -57,6 +58,7 @@ export function useProfile() {
     try {
       const response = await getCurrentUser();
 
+      setLoadError(false);
       setUserData(response.data.user);
       setUser(response.data.user);
       profileForm.reset({
@@ -66,6 +68,7 @@ export function useProfile() {
         email: response.data.user.email,
       });
     } catch {
+      setLoadError(true);
       toast.error(t("profile.errors.loadFailed"));
     } finally {
       setIsLoading(false);
@@ -146,8 +149,15 @@ export function useProfile() {
     loadUserData();
   }, [loadUserData]);
 
+  const reload = useCallback(() => {
+    setIsLoading(true);
+    void loadUserData();
+  }, [loadUserData]);
+
   return {
     isLoading,
+    loadError,
+    reload,
     userData,
     profileForm,
     passwordForm,

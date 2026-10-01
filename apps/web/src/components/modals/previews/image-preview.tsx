@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { IconDownload, IconMaximize, IconX } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 import { createPortal } from "react-dom";
 
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 
 interface ImagePreviewProps {
@@ -15,6 +15,7 @@ interface ImagePreviewProps {
 }
 
 export function ImagePreview({ src, alt, description, onDownload }: ImagePreviewProps) {
+  const t = useTranslations();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleExpandClick = () => {
@@ -64,26 +65,23 @@ export function ImagePreview({ src, alt, description, onDownload }: ImagePreview
 
   return (
     <>
-      <AspectRatio ratio={16 / 9} className="bg-muted">
-        <div className="relative group w-full h-full">
-          <img
-            src={src}
-            alt={alt}
-            className="object-contain w-full h-full rounded-md cursor-pointer"
-            onClick={handleExpandClick}
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-md">
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-black shadow-lg h-8 w-8"
-              onClick={handleExpandClick}
-            >
-              <IconMaximize className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </AspectRatio>
+      <div className="group relative grid place-items-center overflow-hidden rounded-xl bg-surface-2">
+        <img
+          src={src}
+          alt={alt}
+          className="max-h-[60dvh] w-auto max-w-full cursor-zoom-in object-contain"
+          onClick={handleExpandClick}
+        />
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label={t("files.calm.fullScreen")}
+          className="absolute bottom-3 right-3 opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-100"
+          onClick={handleExpandClick}
+        >
+          <IconMaximize />
+        </Button>
+      </div>
 
       {isFullscreen &&
         typeof window !== "undefined" &&
@@ -98,7 +96,8 @@ export function ImagePreview({ src, alt, description, onDownload }: ImagePreview
                 <Button
                   variant="outline"
                   size="icon"
-                  className="cursor-pointer bg-white/10 hover:bg-white/20 text-white border-white/20 h-10 w-10"
+                  aria-label={t("common.download")}
+                  className="h-10 w-10 cursor-pointer border-white/20 bg-white/10 text-white hover:bg-white/20 [&_svg]:text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDownload();
@@ -109,7 +108,8 @@ export function ImagePreview({ src, alt, description, onDownload }: ImagePreview
                 <Button
                   variant="outline"
                   size="icon"
-                  className="cursor-pointer bg-white/10 hover:bg-white/20 text-white border-white/20 h-10 w-10"
+                  aria-label={t("common.close")}
+                  className="h-10 w-10 cursor-pointer border-white/20 bg-white/10 text-white hover:bg-white/20 [&_svg]:text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleCloseFullscreen();
@@ -133,9 +133,9 @@ export function ImagePreview({ src, alt, description, onDownload }: ImagePreview
 
             <div className="fixed bottom-0 left-0 right-0 z-[100000] pointer-events-none">
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="text-white/30">
-                  <span className=" font-semibold mb-2 truncate">{alt}</span>
-                  {description && <p className="text-sm text-gray-200/20 line-clamp-2">{description}</p>}
+                <div className="text-white/60">
+                  <span className="mb-2 truncate font-semibold">{alt}</span>
+                  {description && <p className="line-clamp-2 text-sm text-white/40">{description}</p>}
                 </div>
               </div>
             </div>

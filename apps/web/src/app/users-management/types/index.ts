@@ -9,6 +9,7 @@ export interface UserActionsDropdownProps {
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
   onToggleStatus: (user: User) => void;
+  onToggleAdmin: (user: User) => void;
 }
 
 export interface UserDeleteModalProps {
@@ -73,4 +74,5 @@ export interface UsersTableProps {
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
   onToggleStatus: (user: User) => void;
+  onToggleAdmin: (user: User) => void;
 }

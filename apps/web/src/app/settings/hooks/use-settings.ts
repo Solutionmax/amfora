@@ -204,5 +204,6 @@ export function useSettings() {
     onGroupSubmit,
     error: configsError,
     isUnauthorized,
+    reload: reloadConfigs,
   };
 }

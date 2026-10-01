@@ -2,32 +2,22 @@ import { UseFormReturn } from "react-hook-form";
 
 export type ValidGroup = "security" | "email" | "general" | "storage";
 
+export type GroupFormData = {
+  configs: Record<string, string | number>;
+};
+
 export interface SettingsFormProps {
   groupedConfigs: Record<string, Config[]>;
-  groupForms: Record<ValidGroup, UseFormReturn<any>>;
-  onGroupSubmit: (group: ValidGroup, data: any) => Promise<void>;
+  groupForms: Record<ValidGroup, UseFormReturn<GroupFormData>>;
+  onGroupSubmit: (group: ValidGroup, data: GroupFormData) => Promise<void>;
 }
 
 export interface SettingsGroupProps {
   group: string;
   configs: Config[];
-  form: UseFormReturn<{
-    configs: Record<string, string>;
-  }>;
-  onSubmit: (data: any) => Promise<void>;
+  form: UseFormReturn<GroupFormData>;
+  onSubmit: (data: GroupFormData) => Promise<void>;
 }
-
-export interface ConfigInputProps {
-  config: Config;
-  register: UseFormReturn<any>["register"];
-  setValue: UseFormReturn<any>["setValue"];
-  error?: any;
-  smtpEnabled?: string;
-}
-
-export type GroupFormData = {
-  configs: Record<string, string | number>;
-};
 
 export type ConfigType = "text" | "number" | "boolean" | "bigint";
 

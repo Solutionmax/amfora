@@ -16,11 +16,18 @@ export interface ProfileFormProps {
   onSubmit: (data: ProfileFormData) => Promise<void>;
 }
 
-export interface ProfilePictureProps {
+export interface ProfileHeadProps {
   userData: {
-    firstName: string;
-    image?: string;
-  };
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+    image?: string | null;
+    createdAt?: string;
+  } | null;
+  isAdmin: boolean;
+  /** Live values from the account form, so the head follows what is typed. */
+  firstName?: string;
+  lastName?: string;
   onImageChange: (file: File) => Promise<void>;
   onImageRemove: () => Promise<void>;
 }

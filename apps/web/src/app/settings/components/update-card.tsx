@@ -1,16 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IconCircleCheck, IconDownload, IconInfoCircle, IconRefresh } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+import { IconDownload, IconRefresh } from "@tabler/icons-react";
+import { useFormatter, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LineList, LineRow } from "@/components/ui/line-list";
+import { Skeleton } from "@/components/ui/skeleton";
 import { applyUpdate, getUpdateStatus, type UpdateStatus } from "@/http/endpoints/update";
+import { cn } from "@/lib/utils";
 import { UpdateProgressDialog } from "./update-progress-dialog";
 
+/** One line above the settings tabs: which version runs, whether a newer one exists, and the buttons. */
 export function UpdateCard() {
   const t = useTranslations();
+  const format = useFormatter();
   const [status, setStatus] = useState<UpdateStatus | null>(null);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,57 +71,65 @@ export function UpdateCard() {
     load();
   };
 
-  if (!status) return null;
+  if (!status && !error) {
+    return (
+      <LineList top className="mb-7">
+        <div className="flex min-h-[60px] items-center gap-3.5 py-3">
+          <Skeleton className="size-[17px] rounded-full" />
+          <div className="grid flex-1 gap-1.5">
+            <Skeleton className="h-3.5 w-28" />
+            <Skeleton className="h-3 w-48" />
+          </div>
+        </div>
+      </LineList>
+    );
+  }
 
-  const body = () => {
+  const checked = status?.checkedAt
+    ? t("updates.calm.checked", { when: format.relativeTime(new Date(status.checkedAt)) })
+    : null;
+
+  const statusText = (): string => {
+    if (!status) return "";
     if (!status.checkEnabled) return t("updates.checkDisabled");
     if (status.applying) return t("updates.applying");
     if (status.checkError) return status.checkError;
-    if (status.updateAvailable) {
-      return status.notes
-        ? `${t("updates.available", { version: status.latestVersion ?? "" })} ${status.notes}`
-        : t("updates.available", { version: status.latestVersion ?? "" });
-    }
-    return t("updates.upToDate");
+    if (status.updateAvailable) return t("updates.available", { version: status.latestVersion ?? "" });
+
+    return [t("updates.calm.upToDate"), checked].filter(Boolean).join(" · ");
   };
 
-  const Icon = status.updateAvailable ? IconDownload : status.checkError ? IconInfoCircle : IconCircleCheck;
+  const canInstall = !!status?.updateAvailable && status.canApply && !status.applying;
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <Icon className="size-5 text-primary" />
-          {t("updates.title")}
-        </CardTitle>
-        <CardDescription>
-          {t("updates.running", { version: status.currentVersion ?? "?" })} · {body()}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-wrap items-center gap-3">
-        {status.checkEnabled && (
-          <Button variant="outline" size="sm" className="cursor-pointer" disabled={isBusy} onClick={() => load(true)}>
-            <IconRefresh className="size-4" />
-            {t("updates.checkNow")}
+    <LineList top className="mb-7">
+      <LineRow
+        icon={status?.updateAvailable ? <IconDownload /> : <IconRefresh />}
+        title={status ? t("updates.calm.version", { version: status.currentVersion ?? "?" }) : t("updates.title")}
+        sub={
+          <>
+            <span className={cn(error && "text-bad", status?.checkError && !error && "text-warn")}>
+              {error ?? statusText()}
+            </span>
+            {status?.updateAvailable && !status.canApply && (
+              <span className="block">{t("updates.hostSideMissing")}</span>
+            )}
+          </>
+        }
+      >
+        {canInstall && (
+          <Button size="sm" disabled={isBusy} onClick={onApply}>
+            {t("updates.calm.install")}
           </Button>
         )}
-
-        {status.updateAvailable && status.canApply && !status.applying && (
-          <Button size="sm" className="cursor-pointer" disabled={isBusy} onClick={onApply}>
-            <IconDownload className="size-4" />
-            {t("updates.applyNow")}
+        {(status?.checkEnabled || error) && (
+          <Button variant="outline" size="sm" disabled={isBusy} onClick={() => load(!error)}>
+            {error ? t("storageUsage.retry") : t("updates.checkNow")}
           </Button>
         )}
-
-        {/* Without the host side there is nothing to press: the container cannot restart itself. */}
-        {status.updateAvailable && !status.canApply && (
-          <span className="text-xs text-muted-foreground">{t("updates.hostSideMissing")}</span>
-        )}
-
-        {error && <span className="text-xs text-destructive">{error}</span>}
-      </CardContent>
+      </LineRow>
 
       <UpdateProgressDialog open={progressOpen} targetVersion={progressTarget} onClose={onProgressClosed} />
-    </Card>
+    </LineList>
   );
 }

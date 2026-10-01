@@ -1,135 +1,92 @@
 import { QrCodeModal } from "@/components/modals/qr-code-modal";
 import type { CreateReverseShareBody, UpdateReverseShareBody } from "@/http/endpoints/reverse-shares/types";
-import { ReverseShare } from "../hooks/use-reverse-shares";
+import { reverseShareUrl, type PasswordChange, type ReverseShare } from "../hooks/use-reverse-shares";
 import { CreateReverseShareModal } from "./create-reverse-share-modal";
 import { DeleteReverseShareModal } from "./delete-reverse-share-modal";
+import { EditPasswordModal } from "./edit-password-modal";
 import { EditReverseShareModal } from "./edit-reverse-share-modal";
 import { GenerateAliasModal } from "./generate-alias-modal";
 import { ReceivedFilesModal } from "./received-files-modal";
-import { ReverseShareDetailsModal } from "./reverse-share-details-modal";
 
 interface ReverseSharesModalsProps {
   isCreateModalOpen: boolean;
   onCloseCreateModal: () => void;
-  onCreateReverseShare: (data: CreateReverseShareBody) => Promise<any>;
+  onCreateReverseShare: (data: CreateReverseShareBody) => Promise<unknown>;
   isCreating: boolean;
   reverseShareToEdit: ReverseShare | null;
   onCloseEditModal: () => void;
-  onUpdateReverseShare: (data: UpdateReverseShareBody) => Promise<any>;
+  onUpdateReverseShare: (data: UpdateReverseShareBody) => Promise<unknown>;
   isUpdating: boolean;
-  reverseShareToViewDetails: ReverseShare | null;
   reverseShareToGenerateLink: ReverseShare | null;
   reverseShareToDelete: ReverseShare | null;
   reverseShareToViewFiles: ReverseShare | null;
   reverseShareToViewQrCode: ReverseShare | null;
+  reverseShareToEditPassword: ReverseShare | null;
   isDeleting: boolean;
-  onCloseViewDetails: () => void;
   onCloseGenerateLink: () => void;
   onCloseDeleteModal: () => void;
   onCloseViewFiles: () => void;
   onCloseViewQrCode: () => void;
-  onConfirmDelete: (reverseShare: ReverseShare) => Promise<void>;
-  onCreateAlias: (reverseShareId: string, alias: string) => Promise<void>;
-  onCopyLink: (reverseShare: ReverseShare) => void;
-  onViewQrCode: (reverseShare: ReverseShare) => void;
-  onUpdateReverseShareData?: (id: string, data: any) => Promise<any>;
-  onUpdatePassword?: (id: string, data: { hasPassword: boolean; password?: string }) => Promise<any>;
-  onToggleActive?: (id: string, isActive: boolean) => Promise<any>;
-  onRefreshData?: () => Promise<void>;
-  refreshReverseShare?: (id: string) => Promise<void>;
+  onCloseEditPassword: () => void;
+  onConfirmDelete: (reverseShare: ReverseShare) => Promise<unknown>;
+  onCreateAlias: (reverseShareId: string, alias: string) => Promise<boolean>;
+  onUpdatePassword: (id: string, data: PasswordChange) => Promise<unknown>;
+  refreshReverseShare: () => Promise<void>;
 }
 
-export function ReverseSharesModals({
-  isCreateModalOpen,
-  onCloseCreateModal,
-  onCreateReverseShare,
-  isCreating,
-  reverseShareToEdit,
-  onCloseEditModal,
-  onUpdateReverseShare,
-  isUpdating,
-  reverseShareToViewDetails,
-  reverseShareToGenerateLink,
-  reverseShareToDelete,
-  reverseShareToViewFiles,
-  reverseShareToViewQrCode,
-  isDeleting,
-  onCloseViewDetails,
-  onCloseGenerateLink,
-  onCloseDeleteModal,
-  onCloseViewFiles,
-  onCloseViewQrCode,
-  onConfirmDelete,
-  onCreateAlias,
-  onCopyLink,
-  onViewQrCode,
-  onUpdateReverseShareData,
-  onUpdatePassword,
-  onToggleActive,
-  onRefreshData,
-  refreshReverseShare,
-}: ReverseSharesModalsProps) {
+export function ReverseSharesModals(props: ReverseSharesModalsProps) {
+  const qrTarget = props.reverseShareToViewQrCode;
+
   return (
     <>
       <CreateReverseShareModal
-        isOpen={isCreateModalOpen}
-        onClose={onCloseCreateModal}
-        onCreateReverseShare={onCreateReverseShare}
-        isCreating={isCreating}
+        isOpen={props.isCreateModalOpen}
+        onClose={props.onCloseCreateModal}
+        onCreateReverseShare={props.onCreateReverseShare}
+        isCreating={props.isCreating}
       />
 
       <EditReverseShareModal
-        reverseShare={reverseShareToEdit}
-        isOpen={!!reverseShareToEdit}
-        onClose={onCloseEditModal}
-        onUpdateReverseShare={onUpdateReverseShare}
-        isUpdating={isUpdating}
+        reverseShare={props.reverseShareToEdit}
+        isOpen={!!props.reverseShareToEdit}
+        onClose={props.onCloseEditModal}
+        onUpdateReverseShare={props.onUpdateReverseShare}
+        isUpdating={props.isUpdating}
       />
 
       <GenerateAliasModal
-        reverseShare={reverseShareToGenerateLink}
-        isOpen={!!reverseShareToGenerateLink}
-        onClose={onCloseGenerateLink}
-        onCreateAlias={onCreateAlias}
-        onCopyLink={onCopyLink}
+        reverseShare={props.reverseShareToGenerateLink}
+        isOpen={!!props.reverseShareToGenerateLink}
+        onClose={props.onCloseGenerateLink}
+        onCreateAlias={props.onCreateAlias}
+      />
+
+      <EditPasswordModal
+        reverseShare={props.reverseShareToEditPassword}
+        isOpen={!!props.reverseShareToEditPassword}
+        onClose={props.onCloseEditPassword}
+        onUpdatePassword={props.onUpdatePassword}
       />
 
       <DeleteReverseShareModal
-        reverseShare={reverseShareToDelete}
-        isDeleting={isDeleting}
-        onClose={onCloseDeleteModal}
-        onConfirm={onConfirmDelete}
-      />
-
-      <ReverseShareDetailsModal
-        reverseShare={reverseShareToViewDetails}
-        isOpen={!!reverseShareToViewDetails}
-        onClose={onCloseViewDetails}
-        onUpdateReverseShare={onUpdateReverseShareData}
-        onCreateAlias={onCreateAlias}
-        onCopyLink={onCopyLink}
-        onUpdatePassword={onUpdatePassword}
-        onToggleActive={onToggleActive}
-        onViewQrCode={onViewQrCode}
+        reverseShare={props.reverseShareToDelete}
+        isDeleting={props.isDeleting}
+        onClose={props.onCloseDeleteModal}
+        onConfirm={props.onConfirmDelete}
       />
 
       <ReceivedFilesModal
-        reverseShare={reverseShareToViewFiles}
-        isOpen={!!reverseShareToViewFiles}
-        onClose={onCloseViewFiles}
-        onRefresh={onRefreshData}
-        refreshReverseShare={refreshReverseShare}
+        reverseShare={props.reverseShareToViewFiles}
+        isOpen={!!props.reverseShareToViewFiles}
+        onClose={props.onCloseViewFiles}
+        onRefresh={props.refreshReverseShare}
       />
 
       <QrCodeModal
-        isOpen={!!reverseShareToViewQrCode}
-        onClose={onCloseViewQrCode}
-        shareLink={
-          reverseShareToViewQrCode?.alias?.alias
-            ? `${typeof window !== "undefined" ? window.location.origin : ""}/r/${reverseShareToViewQrCode.alias.alias}`
-            : ""
-        }
-        shareName={reverseShareToViewQrCode?.name || "Reverse Share"}
+        isOpen={!!qrTarget}
+        onClose={props.onCloseViewQrCode}
+        shareLink={qrTarget ? (reverseShareUrl(qrTarget) ?? "") : ""}
+        shareName={qrTarget?.name || "receive-link"}
       />
     </>
   );

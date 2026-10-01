@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Statement } from "@/components/brand/statement";
-import { TransferShell } from "@/components/brand/transfer-shell";
+import { BackToSignIn } from "@/components/auth/back-to-sign-in";
+import { PublicCard, PublicCardFoot } from "@/components/auth/public-card";
+import { PublicShell } from "@/components/brand/public-shell";
 import { ResetPasswordForm } from "./components/reset-password-form";
-import { ResetPasswordHeader } from "./components/reset-password-header";
 import { useResetPassword } from "./hooks/use-reset-password";
 
 export default function ResetPasswordPage() {
@@ -24,28 +24,25 @@ export default function ResetPasswordPage() {
   }, [resetPassword.token, router, t]);
 
   return (
-    <TransferShell
-      statement={
-        <Statement
-          title={t("public.reset.title")}
-          accentLine={t("public.reset.accent")}
-          quote={t("public.reset.text")}
-        />
+    <PublicShell
+      story={{ headline: `${t("public.reset.title")} ${t("public.reset.accent")}` }}
+      card={
+        <PublicCard title={t("resetPassword.header.title")} description={t("public.reset.text")}>
+          <ResetPasswordForm
+            form={resetPassword.form}
+            isConfirmPasswordVisible={resetPassword.isConfirmPasswordVisible}
+            isPasswordVisible={resetPassword.isPasswordVisible}
+            onSubmit={resetPassword.onSubmit}
+            onToggleConfirmPassword={() =>
+              resetPassword.setIsConfirmPasswordVisible(!resetPassword.isConfirmPasswordVisible)
+            }
+            onTogglePassword={() => resetPassword.setIsPasswordVisible(!resetPassword.isPasswordVisible)}
+          />
+          <PublicCardFoot>
+            <BackToSignIn />
+          </PublicCardFoot>
+        </PublicCard>
       }
-    >
-      <div className="flex flex-col gap-5 px-6 py-7 md:px-7">
-        <ResetPasswordHeader />
-        <ResetPasswordForm
-          form={resetPassword.form}
-          isConfirmPasswordVisible={resetPassword.isConfirmPasswordVisible}
-          isPasswordVisible={resetPassword.isPasswordVisible}
-          onSubmit={resetPassword.onSubmit}
-          onToggleConfirmPassword={() =>
-            resetPassword.setIsConfirmPasswordVisible(!resetPassword.isConfirmPasswordVisible)
-          }
-          onTogglePassword={() => resetPassword.setIsPasswordVisible(!resetPassword.isPasswordVisible)}
-        />
-      </div>
-    </TransferShell>
+    />
   );
 }

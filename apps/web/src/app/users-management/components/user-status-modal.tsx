@@ -1,40 +1,51 @@
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { IconUser } from "@tabler/icons-react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { UserStatusModalProps } from "../types";
 
 export function UserStatusModal({ isOpen, onClose, user, onConfirm }: UserStatusModalProps) {
   const t = useTranslations();
+  const [busy, setBusy] = useState(false);
+  const name = user ? `${user.firstName} ${user.lastName}`.trim() || user.username : "";
+  const deactivating = !!user?.isActive;
+
+  const confirm = async () => {
+    setBusy(true);
+    try {
+      await onConfirm();
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader className="flex flex-col gap-1">
-          <DialogTitle className="flex items-center gap-2 font-semibold">
-            <IconUser size={24} className="mr-1" />
-            {t("users.status.title")}
+      <DialogContent className="sm:max-w-[460px]">
+        <DialogHeader>
+          <DialogTitle>
+            {deactivating
+              ? t("users.calm.status.deactivateTitle", { name })
+              : t("users.calm.status.activateTitle", { name })}
           </DialogTitle>
+          <DialogDescription>
+            {deactivating ? t("users.calm.status.deactivateText") : t("users.calm.status.activateText")}
+          </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          {user && (
-            <p>
-              {t("users.status.confirmation", {
-                action: user.isActive ? t("users.status.deactivate") : t("users.status.activate"),
-                firstName: user.firstName,
-                lastName: user.lastName,
-              })}
-            </p>
-          )}
-        </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose} disabled={busy}>
             {t("common.cancel")}
           </Button>
-          <Button variant={user?.isActive ? "destructive" : "default"} onClick={onConfirm}>
-            {user?.isActive ? t("users.status.deactivate") : t("users.status.activate")} {t("users.status.user")}
+          <Button variant={deactivating ? "destructive" : "default"} onClick={confirm} disabled={busy}>
+            {deactivating ? t("users.actions.deactivate") : t("users.actions.activate")}
           </Button>
         </DialogFooter>
       </DialogContent>

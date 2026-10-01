@@ -36,7 +36,7 @@ export const RedirectUriInput = forwardRef<HTMLInputElement, RedirectUriInputPro
     };
 
     return (
-      <div className="space-y-2">
+      <div className="grid gap-1.5">
         <div className="relative">
           <Input
             ref={ref}
@@ -48,17 +48,17 @@ export const RedirectUriInput = forwardRef<HTMLInputElement, RedirectUriInputPro
             className="pr-32"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded border">
+            <span className="mono rounded border border-line bg-surface-2 px-2 py-1 text-xs text-ink-3">
               {CALLBACK_PATH}
             </span>
           </div>
         </div>
 
         {baseUrl && (
-          <div className="text-xs text-muted-foreground bg-muted/30 border border-muted rounded-md p-3">
-            <div className="font-medium mb-1 text-foreground">{t("settings.redirectUri.previewLabel")}</div>
-            <code className="text-foreground break-all font-mono">{buildFullUrl(baseUrl)}</code>
-          </div>
+          <p className="text-[12.5px] text-ink-3">
+            {t("settings.redirectUri.previewLabel")}{" "}
+            <code className="mono break-all text-ink-2">{buildFullUrl(baseUrl)}</code>
+          </p>
         )}
       </div>
     );

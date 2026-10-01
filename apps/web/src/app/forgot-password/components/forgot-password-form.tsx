@@ -1,43 +1,34 @@
-import { IconArrowUpRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { ForgotPasswordFormProps } from "../types";
 
 export function ForgotPasswordForm({ form, onSubmit }: ForgotPasswordFormProps) {
   const t = useTranslations();
-  const isSubmitting = form.formState.isSubmitting;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = form;
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("forgotPassword.emailLabel")}</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  placeholder={t("forgotPassword.emailPlaceholder")}
-                  disabled={isSubmitting}
-                  className="h-12 rounded-xl bg-background"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4" noValidate>
+      <Field label={t("forgotPassword.emailLabel")} htmlFor="forgot-email" error={errors.email?.message}>
+        <Input
+          id="forgot-email"
+          type="email"
+          autoComplete="email"
+          placeholder={t("forgotPassword.emailPlaceholder")}
+          disabled={isSubmitting}
+          aria-invalid={!!errors.email}
+          {...register("email")}
         />
-
-        <Button className="h-12 w-full justify-between rounded-xl px-4" disabled={isSubmitting} size="lg" type="submit">
-          <span>{isSubmitting ? t("forgotPassword.sending") : t("forgotPassword.submit")}</span>
-          <IconArrowUpRight className="size-5" />
-        </Button>
-      </form>
-    </Form>
+      </Field>
+      <Button className="mt-2 w-full" disabled={isSubmitting} size="lg" type="submit">
+        {isSubmitting ? t("forgotPassword.sending") : t("forgotPassword.submit")}
+      </Button>
+    </form>
   );
 }

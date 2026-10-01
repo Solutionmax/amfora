@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { IconDownload, IconX } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { formatFileSize } from "@/utils/format-file-size";
 
 interface BulkItem {
   id: string;
@@ -27,10 +35,15 @@ export function BulkDownloadModal({ isOpen, onClose, onDownload, items = [] }: B
   const t = useTranslations();
   const [zipName, setZipName] = useState("");
 
+  const files = items.filter((item) => item.type === "file").length;
+  const folders = items.length - files;
+  const totalSize = items.reduce((sum, item) => sum + Number(item.size || 0), 0);
+
   const handleClose = () => {
     onClose();
     setZipName("");
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (zipName.trim()) {
@@ -40,41 +53,38 @@ export function BulkDownloadModal({ isOpen, onClose, onDownload, items = [] }: B
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <IconDownload size={20} />
-            {t("bulkDownload.title")}
-          </DialogTitle>
+          <DialogTitle>{t("files.calm.zipTitle")}</DialogTitle>
+          <DialogDescription>
+            {t("files.calm.zipSummary", { files, folders })}
+            {totalSize > 0 && ` · ${formatFileSize(totalSize)}`}
+          </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="zipName">{t("bulkDownload.zipNameLabel")}</Label>
-            <Input
-              id="zipName"
-              value={zipName}
-              onChange={(e) => setZipName(e.target.value)}
-              placeholder={t("bulkDownload.zipNamePlaceholder")}
-              className="w-full"
-              autoFocus
-            />
-            <p className="text-sm text-muted-foreground">
-              {t("bulkDownload.description", { count: items.length })}(
-              {items.filter((item) => item.type === "file").length} files,{" "}
-              {items.filter((item) => item.type === "folder").length} folders)
-            </p>
-          </div>
+        <form id="bulk-download-form" onSubmit={handleSubmit}>
+          <Field label={t("bulkDownload.zipNameLabel")} htmlFor="zipName">
+            <div className="relative flex items-center">
+              <Input
+                id="zipName"
+                value={zipName}
+                onChange={(e) => setZipName(e.target.value)}
+                placeholder={t("bulkDownload.zipNamePlaceholder")}
+                className="pr-12"
+                autoFocus
+              />
+              <span className="pointer-events-none absolute right-3 text-[13px] text-ink-3">.zip</span>
+            </div>
+          </Field>
         </form>
 
-        <DialogFooter className="flex gap-2">
-          <Button variant="outline" onClick={handleClose}>
-            <IconX className="h-4 w-4" />
+        <DialogFooter>
+          <Button variant="ghost" onClick={handleClose}>
             {t("common.cancel")}
           </Button>
-          <Button onClick={handleSubmit} disabled={!zipName.trim()}>
-            <IconDownload className="h-4 w-4" />
+          <Button type="submit" form="bulk-download-form" disabled={!zipName.trim()}>
+            <IconDownload />
             {t("bulkDownload.download")}
           </Button>
         </DialogFooter>

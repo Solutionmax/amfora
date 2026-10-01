@@ -2,8 +2,8 @@
 
 import React, { KeyboardEvent, useState } from "react";
 import { IconX } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface FileTypesTagsInputProps {
@@ -12,32 +12,37 @@ interface FileTypesTagsInputProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  ariaLabel?: string;
+  id?: string;
 }
 
+const SEPARATORS = ["Enter", " ", ",", "|", "-"];
+
+/** Extensions as small tags; dots are dropped and everything is lower case. */
 export function FileTypesTagsInput({
   value = [],
   onChange,
-  placeholder = "jpg png pdf docx...",
+  placeholder = "jpg png pdf docx",
   disabled,
   className,
+  ariaLabel,
+  id,
 }: FileTypesTagsInputProps) {
+  const t = useTranslations();
   const [inputValue, setInputValue] = useState("");
 
   const addTag = () => {
     const newTag = inputValue.trim().toLowerCase();
     if (newTag && !value.includes(newTag)) {
       onChange([...value, newTag]);
-      setInputValue("");
     }
+    setInputValue("");
   };
 
-  const removeTag = (index: number) => {
-    const newTags = value.filter((_, i) => i !== index);
-    onChange(newTags);
-  };
+  const removeTag = (index: number) => onChange(value.filter((_, i) => i !== index));
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === " " || e.key === "," || e.key === "|" || e.key === "-") {
+    if (SEPARATORS.includes(e.key)) {
       e.preventDefault();
       addTag();
     } else if (e.key === "Backspace" && inputValue === "" && value.length > 0) {
@@ -49,59 +54,47 @@ export function FileTypesTagsInput({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sanitizedValue = e.target.value.replace(/\./g, "").toLowerCase();
-    setInputValue(sanitizedValue);
-  };
-
-  const handleInputBlur = () => {
-    if (inputValue.trim()) {
-      addTag();
-    }
+    setInputValue(e.target.value.replace(/\./g, "").toLowerCase());
   };
 
   return (
     <div
-      data-slot="input"
       className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        "flex-wrap gap-1 min-h-9 h-auto py-1",
-        disabled && "opacity-50 cursor-not-allowed",
+        "flex min-h-10 w-full min-w-0 flex-wrap items-center gap-1.5 rounded-[var(--radius)] border border-line-2 bg-surface px-2.5 py-1.5 text-sm transition-[color,box-shadow]",
+        "focus-within:border-primary focus-within:ring-[3px] focus-within:ring-primary/15",
+        disabled && "cursor-not-allowed opacity-50",
         className
       )}
     >
       {value.map((tag, index) => (
-        <Badge
-          key={index}
-          variant="outline"
-          className={cn(
-            "flex items-center gap-1 pl-2 pr-1 h-6 text-xs mt-[1px] rounded-[6px]",
-            "bg-secondary text-secondary-foreground border-border hover:text-foreground",
-            "hover:cursor-default"
-          )}
+        <span
+          key={tag}
+          className="inline-flex h-6 items-center gap-1 rounded-md border border-line-2 bg-surface-2 pl-2 pr-1 text-xs text-ink-2"
         >
-          <span>{tag}</span>
+          {tag}
           {!disabled && (
             <button
               type="button"
               onClick={() => removeTag(index)}
-              className="ml-1 rounded-sm hover:bg-background/50 dark:hover:bg-background/20 flex items-center justify-center transition-colors hover:cursor-pointer"
+              className="grid size-4 place-items-center rounded-sm text-ink-icon hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+              aria-label={t("reverseShares.calm.removeType", { type: tag })}
             >
-              <IconX className="h-2.5 w-2.5" />
+              <IconX className="size-3" />
             </button>
           )}
-        </Badge>
+        </span>
       ))}
       <input
+        id={id}
         type="text"
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        onBlur={handleInputBlur}
+        onBlur={() => inputValue.trim() && addTag()}
         placeholder={value.length === 0 ? placeholder : ""}
         disabled={disabled}
-        className="flex-1 min-w-[80px] border-0 bg-transparent p-0 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed"
+        aria-label={ariaLabel}
+        className="min-w-[80px] flex-1 border-0 bg-transparent p-0 text-sm outline-none placeholder:text-ink-3 disabled:cursor-not-allowed"
       />
     </div>
   );

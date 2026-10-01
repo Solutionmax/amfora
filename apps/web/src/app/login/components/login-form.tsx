@@ -4,13 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 
+import { PasswordField } from "@/components/auth/password-field";
+import { FormError, PublicCardFoot, PublicFormSkeleton } from "@/components/auth/public-card";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { getEnabledProviders } from "@/http/endpoints";
 import { createLoginSchema, type LoginFormValues } from "../schemas/schema";
 import { MultiProviderButtons } from "./multi-provider-buttons";
-import { PasswordVisibilityToggle } from "./password-visibility-toggle";
 
 interface LoginFormProps {
   error?: string;
@@ -41,8 +42,11 @@ export function LoginForm({
       password: passwordAuthEnabled ? "" : undefined,
     },
   });
-
-  const isSubmitting = form.formState.isSubmitting;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = form;
 
   useEffect(() => {
     const checkProviders = async () => {
@@ -61,72 +65,16 @@ export function LoginForm({
     checkProviders();
   }, []);
 
-  const renderErrorMessage = () =>
-    error && (
-      <p className="rounded-[var(--radius)] bg-bad-soft p-3 text-center text-sm text-bad">
-        {error.replace("errors.", "")}
-      </p>
-    );
-
-  const renderEmailOrUsernameField = () => (
-    <FormField
-      control={form.control}
-      name="emailOrUsername"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{t("login.emailOrUsernameLabel")}</FormLabel>
-          <FormControl className="-mb-1">
-            <Input
-              {...field}
-              type="text"
-              placeholder={t("login.emailOrUsernamePlaceholder")}
-              disabled={isSubmitting}
-              className="bg-surface"
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-
-  const renderPasswordField = () => (
-    <FormField
-      control={form.control}
-      name="password"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{t("login.passwordLabel")}</FormLabel>
-          <FormControl>
-            <div className="relative">
-              <Input
-                {...field}
-                type={isVisible ? "text" : "password"}
-                placeholder={t("login.passwordPlaceholder")}
-                disabled={isSubmitting}
-                className="bg-surface pr-10"
-              />
-              <PasswordVisibilityToggle isVisible={isVisible} onToggle={onToggleVisibility} />
-            </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
+  const message = error ? error.replace("errors.", "") : null;
 
   if (authConfigLoading || providersLoading) {
-    return (
-      <div className="flex justify-center items-center py-8">
-        <div className="size-7 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
-      </div>
-    );
+    return <PublicFormSkeleton />;
   }
 
   if (!passwordAuthEnabled && hasEnabledProviders) {
     return (
       <>
-        {renderErrorMessage()}
+        <FormError>{message}</FormError>
         <MultiProviderButtons showSeparator={false} />
       </>
     );
@@ -135,38 +83,60 @@ export function LoginForm({
   if (!passwordAuthEnabled && !hasEnabledProviders) {
     return (
       <>
-        {renderErrorMessage()}
-        <div className="text-center py-8">
-          <p className="text-destructive text-sm">{t("login.noAuthMethodsAvailable")}</p>
-        </div>
+        <FormError>{message}</FormError>
+        <p className="text-[13px] text-ink-3">{t("login.noAuthMethodsAvailable")}</p>
       </>
     );
   }
 
   return (
     <>
-      {renderErrorMessage()}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          {renderEmailOrUsernameField()}
-          {passwordAuthEnabled && renderPasswordField()}
-          <Button className="mt-2 w-full" variant="default" size="lg" type="submit">
-            {isSubmitting ? t("login.signingIn") : t("login.signIn")}
-          </Button>
-        </form>
-      </Form>
-
       <MultiProviderButtons />
+      <FormError>{message}</FormError>
+      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4" noValidate>
+        <Field
+          label={t("login.emailOrUsernameLabel")}
+          htmlFor="login-email-or-username"
+          error={errors.emailOrUsername?.message}
+        >
+          <Input
+            id="login-email-or-username"
+            type="text"
+            autoComplete="username"
+            placeholder={t("login.emailOrUsernamePlaceholder")}
+            disabled={isSubmitting}
+            aria-invalid={!!errors.emailOrUsername}
+            {...register("emailOrUsername")}
+          />
+        </Field>
+        {passwordAuthEnabled && (
+          <Field label={t("login.passwordLabel")} htmlFor="login-password" error={errors.password?.message}>
+            <PasswordField
+              id="login-password"
+              autoComplete="current-password"
+              placeholder={t("login.passwordPlaceholder")}
+              disabled={isSubmitting}
+              visible={isVisible}
+              onToggleVisible={onToggleVisibility}
+              aria-invalid={!!errors.password}
+              {...register("password")}
+            />
+          </Field>
+        )}
+        <Button className="mt-2 w-full" size="lg" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? t("login.signingIn") : t("login.signIn")}
+        </Button>
+      </form>
 
       {passwordAuthEnabled && (
-        <div className="flex w-full items-center justify-center px-1 mt-2">
+        <PublicCardFoot>
           <Link
-            className="text-[13px] font-medium text-primary underline-offset-4 hover:underline"
+            className="rounded-[5px] font-semibold text-primary outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-primary/35"
             href="/forgot-password"
           >
             {t("login.forgotPassword")}
           </Link>
-        </div>
+        </PublicCardFoot>
       )}
     </>
   );

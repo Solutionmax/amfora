@@ -1,31 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { IconCheck, IconLock } from "@tabler/icons-react";
+import { useState } from "react";
+import { IconCircleCheck, IconLock, IconPhoto } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Field } from "@/components/ui/form-section";
+import { LineList, LineRow } from "@/components/ui/line-list";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppInfo } from "@/contexts/app-info-context";
-import { activateBrandpack, removeBackground, removeBrandpack, updateConfig, uploadBackground } from "@/http/endpoints";
+import { activateBrandpack, removeBackground, removeBrandpack, uploadBackground } from "@/http/endpoints";
 import { DEFAULT_BRAND } from "@/lib/brand";
+import { cn } from "@/lib/utils";
+import type { CustomizationDraft } from "../hooks/use-customization-draft";
+import { FormBlock } from "./form-block";
 import { ImageUploadField } from "./image-upload-field";
-import { Section } from "./section";
 
 const BRANDPACK_URL = `${DEFAULT_BRAND.url}brandpack`;
 
-export function BrandpackSection() {
+/** White label: activate or remove the pack (at once), background image (at once), custom CSS (SaveBar). */
+export function BrandpackSection({
+  draft,
+  update,
+  hasBrandpack,
+}: Pick<CustomizationDraft, "draft" | "update" | "hasBrandpack">) {
   const t = useTranslations();
-  const { brandpack, appHideCredit, appBackground, appCustomCss, refreshAppInfo } = useAppInfo();
+  const { brandpack, appBackground, refreshAppInfo } = useAppInfo();
   const [token, setToken] = useState("");
-  const [css, setCss] = useState(appCustomCss);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => setCss(appCustomCss), [appCustomCss]);
 
   const run = async (action: () => Promise<unknown>, done: string) => {
     setBusy(true);
@@ -33,116 +36,103 @@ export function BrandpackSection() {
       await action();
       await refreshAppInfo();
       toast.success(done);
+      return true;
     } catch (error: any) {
       toast.error(error?.response?.data?.error || t("customization.v2.saveFailed"));
+      return false;
     } finally {
       setBusy(false);
     }
   };
 
-  const activate = () => run(() => activateBrandpack(token.trim()), t("customization.v2.pack.activated"));
+  const activate = async () => {
+    const ok = await run(() => activateBrandpack(token.trim()), t("customization.v2.pack.activated"));
+    if (ok) setToken("");
+  };
   const deactivate = () => run(() => removeBrandpack(), t("customization.v2.pack.removed"));
 
   return (
-    <Section
-      icon={IconLock}
-      title={t("customization.v2.pack.title")}
-      aside={
-        <Badge variant="info">
-          <IconLock className="size-3" />
-          {t("customization.v2.pack.paid")}
-        </Badge>
-      }
-    >
+    <FormBlock title={t("customization.calm.packTitle")} description={t("customization.calm.packDescription")}>
       {brandpack ? (
-        <div className="flex items-center gap-2.5 rounded-[var(--radius)] bg-ok-soft px-4 py-3 text-[13px] font-semibold text-ok">
-          <IconCheck className="size-4" />
-          {t("customization.v2.pack.active", { organisation: brandpack.organisation, date: brandpack.issuedAt })}
-          <Button variant="ghost" size="sm" className="ml-auto text-ok" onClick={deactivate} disabled={busy}>
-            {t("customization.v2.pack.remove")}
-          </Button>
-        </div>
+        <LineList className="-my-3 min-w-0">
+          <LineRow
+            icon={<IconCircleCheck className="text-ok" />}
+            title={t("customization.calm.packActive", { organisation: brandpack.organisation })}
+            sub={t("customization.calm.packIssued", { date: brandpack.issuedAt })}
+          >
+            <Button type="button" variant="ghost" size="sm" onClick={deactivate} disabled={busy}>
+              {t("customization.v2.pack.remove")}
+            </Button>
+          </LineRow>
+        </LineList>
       ) : (
-        <div className="flex flex-col gap-3 rounded-[var(--radius)] border border-line bg-surface-2 p-4">
-          <div className="flex items-start gap-3">
-            <IconLock className="mt-0.5 size-[18px] shrink-0 text-ink-3" />
-            <div className="flex-1">
-              <div className="font-semibold">{t("customization.v2.pack.unlockTitle")}</div>
-              <div className="text-xs text-ink-3">{t("customization.v2.pack.unlockText")}</div>
+        <>
+          <LineList className="-my-3 min-w-0">
+            <LineRow
+              icon={<IconLock />}
+              title={t("customization.v2.pack.unlockTitle")}
+              sub={t("customization.v2.pack.unlockText")}
+            >
+              <Button variant="link" className="h-auto px-0" asChild>
+                <a href={BRANDPACK_URL} target="_blank" rel="noopener noreferrer">
+                  {t("customization.v2.pack.buy")}
+                </a>
+              </Button>
+            </LineRow>
+          </LineList>
+          <Field
+            label={t("customization.calm.packKey")}
+            htmlFor="brandpack-key"
+            hint={t("customization.calm.packKeyHint")}
+          >
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
+              <Textarea
+                id="brandpack-key"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                placeholder={t("customization.v2.pack.paste")}
+                rows={2}
+                spellCheck={false}
+                className="mono min-h-0 flex-1 text-[12.5px]"
+              />
+              <Button type="button" variant="outline" onClick={activate} disabled={busy || !token.trim()}>
+                {t("customization.v2.pack.activate")}
+              </Button>
             </div>
-            <Button size="sm" asChild>
-              <a href={BRANDPACK_URL} target="_blank" rel="noopener noreferrer">
-                {t("customization.v2.pack.buy")}
-              </a>
-            </Button>
-          </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Textarea
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder={t("customization.v2.pack.paste")}
-              rows={2}
-              className="mono min-h-0 flex-1 text-xs"
-            />
-            <Button variant="outline" onClick={activate} disabled={busy || !token.trim()}>
-              {t("customization.v2.pack.activate")}
-            </Button>
-          </div>
-        </div>
+          </Field>
+        </>
       )}
 
-      <div className={brandpack ? "flex flex-col gap-5" : "pointer-events-none flex flex-col gap-5 opacity-45"}>
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="font-medium">{t("customization.v2.pack.credit")}</div>
-            <div className="text-xs text-ink-3">{t("customization.v2.pack.creditHint")}</div>
-          </div>
-          <Switch
-            checked={!appHideCredit}
-            disabled={busy || !brandpack}
-            onCheckedChange={(show) =>
-              run(() => updateConfig("appHideCredit", { value: show ? "false" : "true" }), t("customization.v2.saved"))
-            }
+      <div className={cn("grid min-w-0 gap-[18px]", !hasBrandpack && "opacity-55")} aria-disabled={!hasBrandpack}>
+        <LineList className="-my-3 min-w-0">
+          <ImageUploadField
+            icon={<IconPhoto />}
+            label={t("customization.v2.pack.background")}
+            hint={t("customization.v2.pack.backgroundHint")}
+            src={appBackground ? "/api/app/background" : null}
+            disabled={busy || !hasBrandpack}
+            onUpload={(file) => run(() => uploadBackground(file), t("customization.v2.saved"))}
+            onRemove={() => run(() => removeBackground(), t("customization.v2.saved"))}
+            labels={{
+              upload: t("customization.calm.upload"),
+              replace: t("customization.v2.pack.backgroundReplace"),
+              remove: t("customization.v2.pack.backgroundRemove"),
+            }}
           />
-        </div>
-
-        <ImageUploadField
-          label={t("customization.v2.pack.background")}
-          hint={t("customization.v2.pack.backgroundHint")}
-          src={appBackground ? "/api/app/background" : null}
-          disabled={busy || !brandpack}
-          onUpload={(file) => run(() => uploadBackground(file), t("customization.v2.saved"))}
-          onRemove={() => run(() => removeBackground(), t("customization.v2.saved"))}
-          labels={{
-            upload: t("customization.v2.pack.backgroundUpload"),
-            replace: t("customization.v2.pack.backgroundReplace"),
-            remove: t("customization.v2.pack.backgroundRemove"),
-          }}
-        />
-
-        <div className="space-y-1.5">
-          <Label htmlFor="custom-css">{t("customization.v2.pack.css")}</Label>
-          <p className="text-xs text-ink-3">{t("customization.v2.pack.cssHint")}</p>
+        </LineList>
+        <Field label={t("customization.v2.pack.css")} htmlFor="custom-css" hint={t("customization.v2.pack.cssHint")}>
           <Textarea
             id="custom-css"
-            value={css}
-            onChange={(e) => setCss(e.target.value)}
-            rows={6}
+            value={draft.css}
+            onChange={(e) => update("css", e.target.value)}
+            rows={5}
             spellCheck={false}
-            className="mono text-xs"
-            disabled={!brandpack}
+            placeholder=".btn-primary { … }"
+            className="mono text-[12.5px]"
+            disabled={!hasBrandpack}
           />
-          {css !== appCustomCss && (
-            <Button
-              size="sm"
-              onClick={() => run(() => updateConfig("appCustomCss", { value: css }), t("customization.v2.saved"))}
-              disabled={busy}
-            >
-              {t("customization.v2.pack.cssSave")}
-            </Button>
-          )}
-        </div>
+        </Field>
       </div>
-    </Section>
+    </FormBlock>
   );
 }

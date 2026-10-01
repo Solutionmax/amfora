@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IconCloudUpload, IconTrash } from "@tabler/icons-react";
+import { IconUpload } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { BrandMark } from "@/components/brand/brand-mark";
 import { Button } from "@/components/ui/button";
+import { LineRow } from "@/components/ui/line-list";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { removeLogo, uploadLogo } from "@/http/endpoints";
 
@@ -15,6 +17,7 @@ interface LogoInputProps {
   isDisabled?: boolean;
 }
 
+/** Logo as one line: the current mark, a short hint, upload or replace, remove. Saves at once. */
 export function LogoInput({ value, onChange, isDisabled }: LogoInputProps) {
   const t = useTranslations();
   const [isUploading, setIsUploading] = useState(false);
@@ -66,7 +69,7 @@ export function LogoInput({ value, onChange, isDisabled }: LogoInputProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="min-w-0">
       <input
         ref={fileInputRef}
         accept="image/*"
@@ -74,41 +77,44 @@ export function LogoInput({ value, onChange, isDisabled }: LogoInputProps) {
         disabled={isDisabled}
         type="file"
         onChange={handleFileSelect}
+        aria-label={t("customization.v2.brand.logo")}
       />
-
-      {currentLogo ? (
-        <div className="flex flex-wrap items-center gap-5 rounded-xl border bg-background/60 p-4">
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-lg border bg-card p-2">
-            <img
-              alt={t("logo.labels.appLogo")}
-              className="max-h-full max-w-full object-contain"
-              src={currentLogo}
-              sizes="64px"
-            />
-          </div>
+      <LineRow
+        className="min-h-0 py-0"
+        icon={
+          <span className="grid size-[34px] place-items-center overflow-hidden rounded-full bg-primary-soft text-primary">
+            {currentLogo ? (
+              <img alt={t("logo.labels.appLogo")} className="size-full object-contain p-1" src={currentLogo} />
+            ) : (
+              <BrandMark className="!size-[18px]" />
+            )}
+          </span>
+        }
+        title={t("customization.v2.brand.logo")}
+        sub={t("customization.calm.logoHint")}
+      >
+        {currentLogo && (
           <Button
             type="button"
-            variant="outline"
-            className="text-destructive hover:text-destructive"
+            variant="ghost"
+            size="sm"
             disabled={isDisabled || isUploading}
             onClick={handleRemoveLogo}
           >
-            {!isUploading && <IconTrash className="h-4 w-4" />}
-            {t("logo.buttons.remove")}
+            {t("customization.v2.downloadPage.remove")}
           </Button>
-        </div>
-      ) : (
+        )}
         <Button
           type="button"
-          className="w-full border-dashed py-8"
           variant="outline"
+          size="sm"
           disabled={isDisabled || isUploading}
           onClick={() => fileInputRef.current?.click()}
         >
-          {!isUploading && <IconCloudUpload className="h-5 w-5" />}
-          {t("logo.buttons.upload")}
+          <IconUpload aria-hidden="true" />
+          {currentLogo ? t("customization.v2.downloadPage.replace") : t("customization.calm.upload")}
         </Button>
-      )}
+      </LineRow>
     </div>
   );
 }

@@ -32,8 +32,9 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
     return <LoadingScreen />;
   }
 
+  // On the way to /login or /dashboard: keep the quiet wait instead of a blank page.
   if (!isAuthenticated || (requireAdmin && !isAdmin)) {
-    return null;
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;

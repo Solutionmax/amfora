@@ -8,7 +8,15 @@
       "auth_failed": "Authenticatie mislukt. Probeer het opnieuw."
     },
     "authenticationFailed": "Authenticatie mislukt",
-    "successfullyAuthenticated": "Succesvol geauthenticeerd!"
+    "successfullyAuthenticated": "Succesvol geauthenticeerd!",
+    "calm": {
+      "showPassword": "Wachtwoord tonen",
+      "hidePassword": "Wachtwoord verbergen",
+      "backToSignIn": "Terug naar aanmelden",
+      "passwordRule": "Minimaal 8 tekens.",
+      "continueWith": "Doorgaan met {provider}",
+      "providerNotConfigured": "{provider} is niet goed ingesteld. Vraag het aan je beheerder."
+    }
   },
   "authProviders": {
     "title": "Extern aanmelden",
@@ -120,6 +128,22 @@
       "cancel": "Annuleren",
       "delete": "Provider Verwijderen",
       "deleting": "Verwijderen..."
+    },
+    "calm": {
+      "description": "Laat mensen een account gebruiken dat ze al hebben. Aanmelden met wachtwoord blijft werken.",
+      "typeOidc": "OpenID Connect",
+      "typeOauth2": "OAuth 2.0",
+      "notConfigured": "Niet ingesteld",
+      "configure": "Instellen",
+      "configureName": "{name} instellen",
+      "configureTitle": "{name} instellen",
+      "configureDescription": "Clientgegevens van de provider, en wie mag aanmelden.",
+      "add": "Provider toevoegen",
+      "addTitle": "Provider toevoegen",
+      "addDescription": "Een eigen OpenID Connect- of OAuth 2.0-dienst.",
+      "dragHint": "Sleep om de volgorde op de aanmeldpagina te wijzigen.",
+      "deleteTitle": "{name} verwijderen?",
+      "deleteDescription": "Mensen kunnen er niet meer mee aanmelden. Dit kan niet ongedaan worden gemaakt."
     }
   },
   "bulkDownload": {
@@ -156,7 +180,14 @@
     "copied": "Gekopieerd",
     "copy": "Kopiëren",
     "invalidDate": "Ongeldige datum",
-    "notAvailable": "Niet beschikbaar"
+    "notAvailable": "Niet beschikbaar",
+    "calm": {
+      "retry": "Opnieuw proberen",
+      "notFoundTitle": "Pagina niet gevonden",
+      "notFoundText": "Dit adres leidt nergens heen. Mogelijk is de pagina verplaatst, of staat er een typfout in de link.",
+      "errorTitle": "Er is iets misgegaan",
+      "errorText": "Deze pagina is op een probleem gestuit. Probeer het opnieuw of ga terug naar het begin."
+    }
   },
   "contextMenu": {
     "newFolder": "Nieuwe map",
@@ -304,6 +335,36 @@
         "title": "Voorbeeld",
         "page": "Downloadpagina"
       }
+    },
+    "calm": {
+      "subline": "Wat elke bezoeker ziet, ook via de openbare links.",
+      "loadFailed": "De merkinstellingen konden niet worden geladen.",
+      "nameRequired": "Geef de server eerst een naam.",
+      "colorInvalid": "Gebruik een kleur zoals #0079d2.",
+      "upload": "Uploaden",
+      "logoHint": "PNG, SVG of WebP. Wordt ook als favicon gebruikt.",
+      "brandDescription": "Naam en logo in het menu, e-mails en het browsertabblad.",
+      "tagline": "Slogan",
+      "colorDescription": "Knoppen, links en het actieve menu-item volgen de accentkleur.",
+      "accent": "Accent",
+      "accentSwatch": "Accent {color}",
+      "radiusLabel": "{px} px, {feel, select, sharp {scherp} soft {zacht} other {vriendelijk}}",
+      "themeDescription": "Hoe de aanmeld-, download- en ontvangstpagina's eruitzien.",
+      "downloadDescription": "Ook het linkvoorbeeld in WhatsApp en Slack.",
+      "cover": "Omslagafbeelding",
+      "coverHint": "Bovenaan elke downloadpagina. Minstens 1200 px breed, tot 3 MB.",
+      "linkPreview": "Afbeelding voor linkvoorbeeld",
+      "linkPreviewHint": "Wordt gebruikt als er geen omslag is. 1200 × 630 px, tot 3 MB.",
+      "playback": "Video in de browser afspelen",
+      "playbackHint": "Bezoekers kunnen kijken of luisteren voordat ze downloaden.",
+      "creditHint": "Kleine regel onder elke openbare pagina.",
+      "creditLocked": "Kleine regel onder elke openbare pagina. Verbergen vereist een merkpakket.",
+      "packTitle": "Merkpakket",
+      "packDescription": "White label: je eigen achtergrond, aangepaste CSS en geen vermelding.",
+      "packActive": "Actief voor {organisation}",
+      "packIssued": "Uitgegeven {date}",
+      "packKey": "Sleutel van het merkpakket",
+      "packKeyHint": "Plak de sleutel uit je aankoopmail."
     }
   },
   "dashboard": {
@@ -339,6 +400,33 @@
       "downloads": "Downloads",
       "downloadsDetail": "over alle bestanden",
       "files": "Bestanden"
+    },
+    "calm": {
+      "subline": "{shares, plural, =0 {Geen actieve delen} =1 {# actief deel} other {# actieve delen}} en {links, plural, =0 {geen open ontvangstlinks} =1 {# open ontvangstlink} other {# open ontvangstlinks}}.",
+      "newShare": "Nieuw deel",
+      "inFolders": "{count, plural, =0 {nog geen mappen} =1 {in # map} other {in # mappen}}",
+      "received": "Ontvangen",
+      "viaLinks": "{count, plural, =0 {nog geen ontvangstlinks} =1 {via # ontvangstlink} other {via # ontvangstlinks}}",
+      "recentFiles": "Recente bestanden",
+      "allFiles": "Alle bestanden",
+      "noFilesHint": "Upload een bestand en het verschijnt hier.",
+      "activeShares": "Actieve delen",
+      "allShares": "Alle delen",
+      "noActiveShares": "Geen actieve delen",
+      "noActiveSharesHint": "Maak een deel om bestanden met één link te versturen.",
+      "untitledShare": "Deel zonder titel",
+      "shareMeta": "{items, plural, =1 {# item} other {# items}} · {views, plural, =1 {# weergave} other {# weergaven}}",
+      "copyLink": "Link kopiëren",
+      "copyLinkFor": "Link kopiëren voor {name}",
+      "createLink": "Link maken",
+      "createLinkFor": "Link maken voor {name}",
+      "openShare": "{name} openen in Delen",
+      "justReceived": "Zojuist ontvangen",
+      "allReceiveLinks": "Alle ontvangstlinks",
+      "untitledLink": "Ontvangstlink",
+      "nothingReceived": "Nog niets ontvangen",
+      "nothingReceivedHint": "Bestanden die mensen via je ontvangstlinks sturen, verschijnen hier.",
+      "receivedMeta": "{sender} via {link} · {when}"
     }
   },
   "deleteConfirmation": {
@@ -443,7 +531,9 @@
     "pdfPreviewNotAvailable": "PDF-voorbeeld is niet beschikbaar. Probeer de alternatieve weergave of download.",
     "tryAlternativeView": "Alternatieve Weergave Proberen",
     "loadingAlternative": "Alternatieve weergave laden...",
-    "loadingAudio": "Audio laden..."
+    "loadingAudio": "Audio laden...",
+    "downloading": "Downloaden...",
+    "downloadSuccess": "Download gestart"
   },
   "fileSelector": {
     "availableFiles": "Beschikbare Bestanden ({count})",
@@ -512,7 +602,70 @@
       "cannotMoveHere": "Kan items niet naar deze locatie verplaatsen"
     },
     "openFolder": "Map openen",
-    "subline": "{count, plural, =0 {Nog geen bestanden} =1 {# bestand} other {# bestanden}} · {size}"
+    "subline": "{count, plural, =0 {Nog geen bestanden} =1 {# bestand} other {# bestanden}} · {size}",
+    "calm": {
+      "subline": "{files, plural, =0 {Geen bestanden} =1 {# bestand} other {# bestanden}} en {folders, plural, =0 {geen mappen} =1 {# map} other {# mappen}} · {size}",
+      "columns": {
+        "name": "Naam",
+        "size": "Grootte",
+        "added": "Toegevoegd",
+        "downloads": "Downloads"
+      },
+      "today": "Vandaag, {time}",
+      "yesterday": "Gisteren",
+      "downloadsCount": "{count, plural, =1 {# download} other {# downloads}}",
+      "folderItems": "{count, plural, =0 {Leeg} =1 {# item} other {# items}}",
+      "moreActions": "Meer acties voor {name}",
+      "downloadItem": "{name} downloaden",
+      "shareItem": "{name} delen",
+      "selectItem": "{name} selecteren",
+      "editDetails": "Naam en beschrijving bewerken",
+      "moveToFolder": "Naar map verplaatsen",
+      "selected": "{count} geselecteerd",
+      "selectionActions": "Acties voor geselecteerde items",
+      "clearSelection": "Selectie wissen",
+      "downloadZip": "Downloaden als zip",
+      "location": "Maplocatie",
+      "upOneLevel": "Een niveau omhoog",
+      "searchPlaceholder": "Zoek bestanden en mappen",
+      "listView": "Lijst",
+      "noResultsHint": "Probeer een korter of ander woord.",
+      "clearSearch": "Zoekopdracht wissen",
+      "emptyFolder": "Deze map is leeg",
+      "emptyFolderHint": "Upload hier bestanden of sleep ze erin vanuit Mijn bestanden.",
+      "retry": "Opnieuw proberen",
+      "optional": "Optioneel",
+      "editFileHint": "Het bestandstype blijft hetzelfde.",
+      "newFolderTitle": "Nieuwe map",
+      "newFolderHint": "Houd bij elkaar horende bestanden bij elkaar.",
+      "editFolderHint": "Wijzig de naam of de beschrijving.",
+      "deleteTitle": "{name} verwijderen?",
+      "deleteFolderTitle": "De map {name} verwijderen?",
+      "deleteFolderHint": "Alles erin wordt ook verwijderd. Dit kan niet ongedaan worden gemaakt.",
+      "bulkDeleteTitle": "{count, plural, =1 {1 item} other {# items}} verwijderen?",
+      "zipTitle": "Downloaden als zip",
+      "zipSummary": "{files, plural, =0 {Geen bestanden} =1 {# bestand} other {# bestanden}}{folders, plural, =0 {} =1 { en # map} other { en # mappen}} in één zipbestand",
+      "moveOne": "Kies waar {name} naartoe gaat.",
+      "moveMany": "Kies waar de {count} items naartoe gaan.",
+      "moveTo": "Wordt verplaatst naar {name}",
+      "alreadyHere": "De items staan al in deze map.",
+      "moveHere": "Hierheen verplaatsen",
+      "moving": "Verplaatsen...",
+      "foldersLoadError": "Kon je mappen niet laden.",
+      "uploadTo": "Naar <b>{folder}</b>",
+      "dropTitle": "Kies bestanden of sleep ze hierheen",
+      "dropHint": "Voeg er zoveel toe als je wilt en start dan de upload.",
+      "uploadCount": "{count, plural, =0 {Uploaden} =1 {1 bestand uploaden} other {# bestanden uploaden}}",
+      "uploading": "Uploaden...",
+      "uploaded": "Geüpload",
+      "uploadFailed": "Mislukt",
+      "uploadCancelled": "Geannuleerd",
+      "removeFromList": "{name} uit de lijst verwijderen",
+      "done": "Klaar",
+      "fullScreen": "Volledig scherm bekijken",
+      "zoomIn": "Inzoomen",
+      "zoomOut": "Uitzoomen"
+    }
   },
   "filesTable": {
     "ariaLabel": "Bestanden tabel",
@@ -757,7 +910,45 @@
       "imageSuccess": "Profielafbeelding succesvol bijgewerkt",
       "imageRemoved": "Profielafbeelding succesvol verwijderd"
     },
-    "pageTitle": "Profiel"
+    "pageTitle": "Profiel",
+    "calm": {
+      "memberSince": "lid sinds {date}",
+      "changePhoto": "Foto wijzigen",
+      "removePhoto": "Verwijderen",
+      "account": "Account",
+      "accountHint": "Zo zien mensen met wie je deelt je.",
+      "usernameHint": "Wordt gebruikt om aan te melden, naast je e-mailadres.",
+      "password": "Wachtwoord",
+      "passwordHint": "Minimaal 8 tekens. Andere sessies blijven aangemeld.",
+      "passwordTooShort": "Gebruik minimaal {count} tekens.",
+      "passwordMismatch": "Wachtwoorden komen niet overeen.",
+      "changePassword": "Wachtwoord wijzigen",
+      "twoFactorHint": "Vraag om een code uit je authenticator-app wanneer je aanmeldt.",
+      "off": "Uit",
+      "on": "Aan",
+      "offHint": "Alleen je wachtwoord beveiligt dit account.",
+      "onHint": "Je voert een code uit je authenticator-app in wanneer je aanmeldt.",
+      "turnOn": "Inschakelen",
+      "turnOff": "Uitschakelen",
+      "turnOffTitle": "Twee-factor authenticatie uitschakelen",
+      "scanHint": "Scan met je authenticator-app, of voer deze sleutel in",
+      "copyKey": "Sleutel kopiëren",
+      "codeFromApp": "Code uit de app",
+      "verifyAndTurnOn": "Verifiëren en inschakelen",
+      "backupCodes": "Back-upcodes",
+      "codesLeft": "{count, plural, =0 {Geen codes meer} =1 {1 code over} other {# codes over}}",
+      "backupHint": "Voor als je je telefoon kwijtraakt. Elke code werkt maar één keer.",
+      "download": "Downloaden",
+      "newCodes": "Nieuwe codes",
+      "trustedDevices": "Vertrouwde apparaten",
+      "noDevices": "Geen vertrouwde apparaten. Als je bij het aanmelden “Onthoud dit apparaat” aanvinkt, verschijnt het hier.",
+      "usedWhen": "gebruikt {when}",
+      "neverUsed": "nooit gebruikt",
+      "trustedUntil": "vertrouwd tot {date}",
+      "expiredOn": "verlopen {date}",
+      "remove": "Verwijderen",
+      "removeAll": "Alles verwijderen"
+    }
   },
   "public": {
     "login": {
@@ -989,7 +1180,10 @@
       "emailExists": "E-mailadres bestaat al",
       "createFailed": "Aanmaken van account mislukt. Probeer het opnieuw."
     },
-    "pageTitle": "Account Aanmaken"
+    "pageTitle": "Account Aanmaken",
+    "calm": {
+      "unusableTitle": "Deze uitnodiging kan niet worden gebruikt"
+    }
   },
   "resetPassword": {
     "pageTitle": "Wachtwoord Resetten",
@@ -1472,6 +1666,112 @@
       "noFiles": "Er is nog niets binnengekomen. Deel de link en bestanden verschijnen hier.",
       "receivedBy": "{sender} · {date}",
       "showAll": "Toon alle {count} bestanden"
+    },
+    "calm": {
+      "new": "Nieuw",
+      "filterLabel": "Ontvangstlinks filteren",
+      "filters": {
+        "all": "Alle",
+        "active": "Actief",
+        "inactive": "Inactief"
+      },
+      "inCount": "{count} binnen",
+      "noMatches": "Geen ontvangstlinks gevonden.",
+      "emptyTitle": "Nog geen ontvangstlinks",
+      "emptyText": "Maak een link en iedereen die hem heeft, kan je bestanden sturen.",
+      "retry": "Opnieuw proberen",
+      "notFoundTitle": "Deze ontvangstlink bestaat niet",
+      "notFoundText": "Hij is mogelijk verwijderd, of het adres klopt niet.",
+      "backToList": "Terug naar Bestanden ontvangen",
+      "receivedCount": "{count} ontvangen",
+      "openUntil": "open tot {date}",
+      "noLinkHint": "Nog geen link. Maak er een zodat afzenders je kunnen bereiken.",
+      "noLinkYet": "Nog geen link",
+      "copyLink": "Link kopiëren",
+      "pause": "Pauzeren",
+      "turnOn": "Inschakelen",
+      "copyAll": "Alles kopiëren naar Mijn bestanden",
+      "copyToMyFiles": "Kopiëren naar Mijn bestanden",
+      "facts": {
+        "received": "Ontvangen",
+        "maxPerFile": "Max. grootte per bestand",
+        "expires": "Verloopt"
+      },
+      "ofMax": "van {max}",
+      "never": "Nooit",
+      "unlimited": "Onbeperkt",
+      "receivedFiles": "Ontvangen bestanden",
+      "manageFiles": "Bestanden beheren",
+      "nothingYet": "Er is nog niets binnengekomen. Stuur de link om te beginnen.",
+      "moreActionsFor": "Meer acties voor {name}",
+      "editDescription": "Beschrijving bewerken",
+      "deleteFileTitle": "{name} verwijderen?",
+      "deleteFileText": "Het bestand wordt definitief uit deze ontvangstlink verwijderd.",
+      "deleteLink": "Ontvangstlink verwijderen",
+      "deleteTitle": "“{name}” verwijderen?",
+      "deleteText": "De link werkt niet meer voor iedereen die hem heeft.",
+      "deleteTextFiles": "De link werkt niet meer. {count, plural, =1 {Het bestand dat je hebt ontvangen wordt ook verwijderd.} other {De # bestanden die je hebt ontvangen worden ook verwijderd.}}",
+      "change": "Wijzigen",
+      "removeType": "{type} verwijderen",
+      "rules": {
+        "title": "Regels voor afzenders",
+        "name": "Naam afzender",
+        "email": "E-mail afzender",
+        "fieldRequired": "Verplicht voor het uploaden.",
+        "fieldOptional": "Wordt gevraagd, maar mag leeg blijven.",
+        "fieldHidden": "Wordt niet gevraagd.",
+        "password": "Wachtwoord",
+        "passwordOn": "Afzenders hebben een wachtwoord nodig.",
+        "passwordOff": "Iedereen met de link kan uploaden.",
+        "changePassword": "Wachtwoord wijzigen",
+        "types": "Toegestane bestandstypes",
+        "anyType": "Elk type",
+        "typesHint": "Extensies zonder punt, zoals pdf of jpg. Laat leeg om elk type toe te staan.",
+        "maxFiles": "Max. bestanden",
+        "maxFilesValue": "{count, plural, =1 {# bestand} other {# bestanden}} in totaal",
+        "maxSize": "Max. bestandsgrootte",
+        "maxSizeValue": "{size} per bestand",
+        "emptyNoLimit": "Laat leeg voor geen limiet.",
+        "layout": "Paginalayout",
+        "layoutHint": "Hoe de uploadpagina eruitziet voor afzenders.",
+        "alias": "Eigen link"
+      },
+      "alias": {
+        "createTitle": "De link maken",
+        "editTitle": "De link wijzigen",
+        "description": "Afzenders gebruiken dit adres om te uploaden. Letters, cijfers, - en _.",
+        "oldStops": "Het oude adres werkt niet meer.",
+        "create": "Link maken"
+      },
+      "password": {
+        "setTitle": "Wachtwoord instellen",
+        "changeTitle": "Wachtwoord wijzigen",
+        "description": "Afzenders vullen het in voordat ze kunnen uploaden.",
+        "newPassword": "Nieuw wachtwoord"
+      },
+      "form": {
+        "createTitle": "Nieuwe ontvangstlink",
+        "createDescription": "Iedereen met de link kan je bestanden sturen.",
+        "createButton": "Link maken",
+        "editTitle": "Ontvangstlink bewerken",
+        "name": "Naam",
+        "namePlaceholder": "Bijvoorbeeld: Foto's van de shoot",
+        "message": "Bericht",
+        "messageHint": "Optioneel. Wordt getoond op de uploadpagina.",
+        "senders": "Afzenders",
+        "fieldsHint": "Verplicht moet ingevuld worden, optioneel mag leeg blijven, verborgen wordt niet gevraagd.",
+        "access": "Toegang",
+        "expiryOn": "De link sluit op de einddatum.",
+        "expiryOff": "De link blijft open tot je hem pauzeert.",
+        "expiryKeep": "Een einddatum kan worden verplaatst, maar niet verwijderd. Kies een latere datum om de link langer open te houden.",
+        "expiryRequired": "Kies een einddatum.",
+        "passwordKeep": "Laat leeg om het huidige wachtwoord te behouden.",
+        "isActive": "Link staat aan",
+        "isActiveHint": "Zet uit om uploads te pauzeren zonder iets te verwijderen."
+      },
+      "deleteSomeFailed": "{count, plural, =1 {1 bestand kon niet worden verwijderd.} other {# bestanden konden niet worden verwijderd.}}",
+      "typesPlaceholder": "pdf jpg png",
+      "sizeUnit": "Eenheid"
     }
   },
   "searchBar": {
@@ -1644,6 +1944,67 @@
     "redirectUri": {
       "placeholder": "https://mijnsite.com",
       "previewLabel": "Volledige URL die wordt opgeslagen:"
+    },
+    "calm": {
+      "subline": "Hoe deze server zich gedraagt.",
+      "noLimit": "Geen limiet",
+      "smtpTestHint": "Gebruikt de waarden hierboven, ook voordat je opslaat.",
+      "units": {
+        "seconds": "seconden",
+        "unit": "Eenheid"
+      },
+      "blocks": {
+        "brand": {
+          "title": "Merk",
+          "description": "Naam en logo in het menu, e-mails en het browsertabblad."
+        },
+        "publicPages": {
+          "title": "Openbare pagina's",
+          "description": "Hoe de aanmeld-, download- en ontvangstpagina's eruitzien. Meer onder Aanpassing."
+        },
+        "behaviour": {
+          "title": "Gedrag",
+          "description": "Kleine keuzes over wat bezoekers zien."
+        },
+        "signingIn": {
+          "title": "Aanmelden",
+          "description": "Wachtwoordregels en resetlinks."
+        },
+        "bruteForce": {
+          "title": "Brute force",
+          "description": "Blokkeer een account na te veel foute pogingen."
+        },
+        "limits": {
+          "title": "Limieten",
+          "description": "Hoe groot uploads en persoonlijke opslag mogen worden."
+        },
+        "outgoing": {
+          "title": "Uitgaande e-mail",
+          "description": "Voor uitnodigingen, wachtwoordresets en meldingen over delen."
+        },
+        "more": {
+          "title": "Meer",
+          "description": "Overige instellingen in deze groep."
+        }
+      },
+      "fields": {
+        "appPublicTheme": {
+          "title": "Thema van openbare pagina's",
+          "description": "Stage, Workbench of Seal. Voorbeeld onder Aanpassing."
+        },
+        "appSharePlayback": {
+          "title": "Video en audio afspelen op downloadpagina's",
+          "description": "Uit: video en audio kunnen alleen worden gedownload."
+        },
+        "appBrandpack": {
+          "title": "Merkpakket",
+          "description": "Je white-labelsleutel. Te beheren onder Aanpassing."
+        },
+        "authProvidersEnabled": {
+          "title": "Extern aanmelden",
+          "description": "Laat mensen aanmelden met een account van een andere dienst."
+        }
+      }
     }
   },
   "share": {
@@ -1877,7 +2238,128 @@
       "placeholder": "Delingen zoeken...",
       "results": "{filtered} van {total} delingen gevonden"
     },
-    "pageTitle": "Delingen"
+    "pageTitle": "Delingen",
+    "calm": {
+      "new": "Nieuw",
+      "newShare": "Nieuw deel",
+      "filterLabel": "Delen filteren",
+      "filters": {
+        "all": "Alle",
+        "active": "Actief",
+        "expired": "Verlopen"
+      },
+      "search": "Zoeken",
+      "fileCount": "{count, plural, =0 {Geen bestanden} =1 {1 bestand} other {# bestanden}}",
+      "moreActions": "Meer acties",
+      "selectShares": "Delen selecteren",
+      "selectedCount": "{count} geselecteerd",
+      "downloadSelected": "Downloaden",
+      "deleteSelected": "Verwijderen",
+      "doneSelecting": "Klaar",
+      "emptyTitle": "Nog geen delen",
+      "emptyDescription": "Kies bestanden, krijg een link en bepaal wie hem mag openen.",
+      "noResultsTitle": "Geen delen gevonden",
+      "noResultsDescription": "Probeer een andere zoekopdracht of filter.",
+      "clearSearch": "Zoekopdracht wissen",
+      "loadError": "Je delen konden niet worden geladen.",
+      "retry": "Opnieuw proberen",
+      "notFoundTitle": "Deel niet gevonden",
+      "notFoundDescription": "Het is mogelijk verwijderd. Kies een ander deel uit de lijst.",
+      "showAll": "Alle delen tonen",
+      "created": "aangemaakt op {date}",
+      "expiresOn": "verloopt op {date}",
+      "expiredOn": "verlopen op {date}",
+      "qrCode": "QR-code",
+      "copyLink": "Link kopiëren",
+      "openLink": "Link openen",
+      "noLink": "Dit deel heeft nog geen link.",
+      "createLink": "Link maken",
+      "edit": "Bewerken",
+      "addFiles": "Bestanden toevoegen",
+      "recipients": "Ontvangers",
+      "downloadAll": "Alles downloaden",
+      "views": "Weergaven",
+      "viewsOf": "van {max}",
+      "files": "Bestanden",
+      "expires": "Verloopt",
+      "never": "Nooit",
+      "message": "Bericht",
+      "noFiles": "Nog geen bestanden in dit deel.",
+      "folder": "Map",
+      "folderFiles": "Map, {count, plural, =0 {leeg} =1 {1 bestand} other {# bestanden}}",
+      "remove": "Verwijderen",
+      "removeLabel": "{name} uit dit deel verwijderen",
+      "removeTitle": "{name} uit dit deel verwijderen?",
+      "removeText": "Het blijft staan in Mijn bestanden. Mensen met de link zien het niet meer.",
+      "removed": "Uit het deel verwijderd",
+      "removeError": "Kon niet uit het deel worden verwijderd",
+      "access": "Toegang",
+      "password": "Wachtwoord",
+      "passwordOn": "Bezoekers hebben een wachtwoord nodig om te downloaden.",
+      "passwordOff": "Iedereen met de link kan downloaden.",
+      "passwordRemoved": "Wachtwoord verwijderd",
+      "passwordError": "Kon het wachtwoord niet wijzigen",
+      "change": "Wijzigen",
+      "changePassword": "Wachtwoord wijzigen",
+      "changeExpiry": "Vervaldatum wijzigen",
+      "changeViewLimit": "Weergavelimiet wijzigen",
+      "changeLink": "Link wijzigen",
+      "neverExpires": "Verloopt nooit",
+      "viewLimit": "Weergavelimiet",
+      "viewLimitValue": "{count, plural, =1 {1 weergave} other {# weergaven}}",
+      "noLimit": "Geen limiet",
+      "customLink": "Link",
+      "noRecipients": "Nog niemand toegevoegd. Voeg mensen toe om ze de link per e-mail te sturen.",
+      "manage": "Beheren",
+      "notifyAll": "Per e-mail versturen",
+      "smtpOff": "E-mail is niet ingesteld, dus de link kan hier niet worden verstuurd.",
+      "deleteShare": "Deel verwijderen",
+      "deleteTitle": "“{name}” verwijderen?",
+      "deleteText": "De link werkt niet meer. Je bestanden blijven staan in Mijn bestanden.",
+      "untitled": "Deel zonder titel",
+      "viewLimitTitle": "Weergavelimiet",
+      "viewLimitDescription": "Sluit de link na een aantal weergaven.",
+      "viewLimitLabel": "Maximaal aantal weergaven",
+      "viewLimitHint": "Laat leeg voor geen limiet. Tot nu toe {count, plural, =1 {1 keer} other {# keer}} bekeken.",
+      "viewLimitInvalid": "Vul een geheel getal van 1 of hoger in.",
+      "viewLimitSaved": "Weergavelimiet opgeslagen",
+      "viewLimitError": "Kon de weergavelimiet niet opslaan",
+      "modals": {
+        "stepDetails": "Stap 1 van 2. Geef het deel een naam en kies wie het mag openen.",
+        "stepFiles": "Stap 2 van 2. Kies de bestanden en mappen om te delen.",
+        "next": "Volgende",
+        "nameLabel": "Naam",
+        "descriptionLabel": "Bericht",
+        "descriptionHint": "Wordt getoond op de downloadpagina.",
+        "passwordHint": "Bezoekers hebben het nodig voordat ze kunnen downloaden.",
+        "expiresLabel": "Verloopt",
+        "expiresHint": "Laat leeg om de link open te houden.",
+        "maxViewsLabel": "Weergavelimiet",
+        "maxViewsHint": "Laat leeg voor geen limiet.",
+        "selectedCount": "{count, plural, =0 {Niets geselecteerd} =1 {1 item geselecteerd} other {# items geselecteerd}}",
+        "editDescription": "Naam, bericht, vervaldatum en weergavelimiet.",
+        "manageFilesDescription": "Vink de bestanden en mappen aan die dit deel moet bevatten.",
+        "recipientsDescription": "Voeg mensen toe via e-mail en stuur ze de link.",
+        "securityDescription": "Vraag bezoekers om een wachtwoord voordat ze kunnen downloaden.",
+        "passwordSet": "Er is een wachtwoord ingesteld. Vul een nieuw in om het te vervangen.",
+        "expirationDescription": "Kies wanneer de link niet meer werkt.",
+        "expiresOn": "Verloopt op",
+        "expiresSwitch": "Vervaldatum instellen",
+        "expiresSwitchHint": "Zonder datum blijft de link open tot je hem verwijdert.",
+        "linkDescription": "Kies het laatste deel van de link. Kort en makkelijk te typen werkt het best.",
+        "linkLabel": "Link",
+        "linkReady": "De link is klaar. Kopieer hem of download de QR-code.",
+        "qrDescription": "Scan met de camera van je telefoon om het deel te openen.",
+        "downloadQr": "QR-code downloaden",
+        "itemsToShare": "{count, plural, =1 {1 item} other {# items}}, {size} in totaal",
+        "shareItemDescription": "Een link naar dit item. Je kunt later alles aanpassen.",
+        "shareMultipleDescription": "Eén link voor alles wat je hebt geselecteerd.",
+        "linkStepDescription": "Kies het laatste deel van de link.",
+        "createAndLink": "Deel maken",
+        "deleteList": "Deze worden verwijderd",
+        "defaultMultiName": "{count} items gedeeld"
+      }
+    }
   },
   "sharesTable": {
     "ariaLabel": "Delen tabel",
@@ -2136,6 +2618,12 @@
       "signin": "Je sessie is verlopen; log opnieuw in om te zien hoe de update is gegaan.",
       "timeout": "Dit duurt langer dan verwacht. Bekijk update.log in de map ota-state op de host.",
       "reload": "Herladen"
+    },
+    "calm": {
+      "version": "Versie {version}",
+      "upToDate": "Je bent bij",
+      "checked": "gecontroleerd {when}",
+      "install": "Installeren"
     }
   },
   "uploadFile": {
@@ -2262,6 +2750,64 @@
     },
     "filters": {
       "all": "Alle"
+    },
+    "calm": {
+      "title": "Gebruikers",
+      "subline": "{total, plural, one {# gebruiker} other {# gebruikers}} · {active} actief · {admins, plural, one {# beheerder} other {# beheerders}}",
+      "inviteLink": "Uitnodigingslink",
+      "addUser": "Gebruiker toevoegen",
+      "photo": "Foto",
+      "name": "Naam",
+      "email": "E-mail",
+      "role": "Rol",
+      "created": "Aangemaakt",
+      "you": "(jij)",
+      "deactivated": "Gedeactiveerd",
+      "administrator": "Beheerder",
+      "user": "Gebruiker",
+      "actionsFor": "Acties voor {name}",
+      "makeAdmin": "Beheerder maken",
+      "makeUser": "Gewone gebruiker maken",
+      "searchLabel": "Gebruikers zoeken",
+      "searchPlaceholder": "Zoek op naam of e-mail",
+      "filters": {
+        "label": "Gebruikers filteren",
+        "all": "Alle",
+        "active": "Actief",
+        "deactivated": "Gedeactiveerd",
+        "admins": "Beheerders"
+      },
+      "empty": {
+        "search": "Geen gebruikers gevonden voor “{query}”.",
+        "filter": "Geen gebruikers in deze weergave.",
+        "clear": "Alle gebruikers tonen"
+      },
+      "form": {
+        "titleCreate": "Gebruiker toevoegen",
+        "titleEdit": "Gebruiker bewerken",
+        "descriptionCreate": "Deze persoon kan meteen aanmelden met deze gebruikersnaam en dit wachtwoord.",
+        "descriptionEdit": "Wijzig de gegevens van @{username}.",
+        "newPassword": "Nieuw wachtwoord",
+        "passwordHint": "Minimaal 8 tekens."
+      },
+      "delete": {
+        "title": "{name} verwijderen?",
+        "description": "Het account wordt definitief verwijderd. Dit kan niet ongedaan worden gemaakt.",
+        "confirm": "Gebruiker verwijderen"
+      },
+      "status": {
+        "deactivateTitle": "{name} deactiveren?",
+        "deactivateText": "Deze persoon kan niet meer aanmelden. Er wordt niets verwijderd en je kunt het account later weer activeren.",
+        "activateTitle": "{name} activeren?",
+        "activateText": "Deze persoon kan weer aanmelden."
+      },
+      "invite": {
+        "title": "Uitnodigingslink",
+        "description": "Een link voor eenmalig gebruik om een account als gewone gebruiker aan te maken. Hij verloopt na 15 minuten.",
+        "create": "Link maken",
+        "linkLabel": "Link",
+        "hint": "Werkt één keer. Verloopt na 15 minuten."
+      }
     }
   },
   "validation": {
@@ -2290,6 +2836,8 @@
       "inactive": "Inactief",
       "protected": "Beveiligd",
       "public": "Openbaar"
-    }
+    },
+    "showPassword": "Wachtwoord tonen",
+    "hidePassword": "Wachtwoord verbergen"
   }
 }

@@ -1,27 +1,37 @@
 "use client";
 
 import React, { useState } from "react";
-import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { IconPicker } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { TagsInput } from "@/components/ui/tags-input";
 import type { NewProvider } from "@/http/endpoints/auth/types";
 import { CallbackUrlDisplay } from "./callback-url-display";
-import { ConfigurationMethodSelector } from "./configuration-method-selector";
+import { ConfigurationMethodSelector, FormNote } from "./configuration-method-selector";
+import { ProviderTypeSelect } from "./provider-type-select";
 
 interface AddProviderFormProps {
-  showAddForm: boolean;
-  onToggleForm: () => void;
-  onAddProvider: (provider: NewProvider) => Promise<void>;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Resolves to true once the provider exists. */
+  onAddProvider: (provider: NewProvider) => Promise<boolean>;
   saving: boolean;
 }
 
-export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, saving }: AddProviderFormProps) {
+/** A custom OpenID Connect or OAuth 2.0 provider, added in a dialog. */
+export function AddProviderForm({ open, onOpenChange, onAddProvider, saving }: AddProviderFormProps) {
   const t = useTranslations();
   const [newProvider, setNewProvider] = useState<NewProvider>({
     name: "",
@@ -138,8 +148,10 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
       return;
     }
 
-    await onAddProvider(newProvider);
+    const added = await onAddProvider(newProvider);
+    if (!added) return;
 
+    onOpenChange(false);
     setNewProvider({
       name: "",
       displayName: "",
@@ -159,127 +171,119 @@ export function AddProviderForm({ showAddForm, onToggleForm, onAddProvider, savi
     setNewProvider((prev) => ({ ...prev, ...updates }));
   };
 
-  if (!showAddForm) {
-    return (
-      <Button onClick={onToggleForm} variant="outline" size="sm">
-        <IconPlus className="h-4 w-4" />
-        {t("authProviders.addProvider")}
-      </Button>
-    );
-  }
-
   return (
-    <div className="border border-dashed rounded-lg p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-medium text-foreground dark:text-foreground">{t("authProviders.addProviderTitle")}</h3>
-      </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[640px]">
+        <DialogHeader>
+          <DialogTitle>{t("authProviders.calm.addTitle")}</DialogTitle>
+          <DialogDescription>{t("authProviders.calm.addDescription")}</DialogDescription>
+        </DialogHeader>
 
-      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-        <div className="flex items-center gap-2 text-primary">
-          <span>
-            <IconInfoCircle className="h-4 w-4" />
-          </span>
-          <span className="text-sm font-medium">{t("authProviders.info.title")}</span>
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          {t("authProviders.info.officialProvidersRecommended")}{" "}
-          <a href="https://solutionmax.net" target="_blank" rel="noopener noreferrer" className="font-semibold">
-            {t("authProviders.info.github")}.
-          </a>
-        </p>
-      </div>
+        <div className="grid gap-4">
+          <FormNote>
+            {t("authProviders.info.officialProvidersRecommended")}{" "}
+            <a
+              href="https://solutionmax.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:underline"
+            >
+              {t("authProviders.info.github")}
+            </a>
+            .
+          </FormNote>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.providerName")} *</Label>
-          <Input
-            placeholder={t("authProviders.form.providerNamePlaceholder")}
-            value={newProvider.name}
-            onChange={(e) => updateProvider({ name: e.target.value })}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label={`${t("authProviders.form.providerName")} *`} htmlFor="add-provider-name">
+              <Input
+                id="add-provider-name"
+                placeholder={t("authProviders.form.providerNamePlaceholder")}
+                value={newProvider.name}
+                onChange={(e) => updateProvider({ name: e.target.value })}
+              />
+            </Field>
+            <Field label={`${t("authProviders.form.displayName")} *`} htmlFor="add-provider-display">
+              <Input
+                id="add-provider-display"
+                placeholder={t("authProviders.form.displayNamePlaceholder")}
+                value={newProvider.displayName}
+                onChange={(e) => updateProvider({ displayName: e.target.value })}
+              />
+            </Field>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label={t("authProviders.form.type")} htmlFor="add-provider-type">
+              <ProviderTypeSelect
+                id="add-provider-type"
+                value={newProvider.type}
+                onChange={(type) => updateProvider({ type })}
+              />
+            </Field>
+            <Field label={t("authProviders.form.icon")}>
+              <IconPicker
+                value={newProvider.icon}
+                onChange={(icon) => updateProvider({ icon })}
+                placeholder={t("authProviders.form.iconPlaceholder")}
+              />
+            </Field>
+          </div>
+
+          <ConfigurationMethodSelector
+            provider={newProvider}
+            onUpdate={updateProvider}
+            onUrlUpdate={updateProviderUrl}
           />
-        </div>
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.displayName")} *</Label>
-          <Input
-            placeholder={t("authProviders.form.displayNamePlaceholder")}
-            value={newProvider.displayName}
-            onChange={(e) => updateProvider({ displayName: e.target.value })}
-          />
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.type")}</Label>
-          <select
-            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
-            value={newProvider.type}
-            onChange={(e) => updateProvider({ type: e.target.value as "oidc" | "oauth2" })}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label={`${t("authProviders.form.clientId")} *`} htmlFor="add-client-id">
+              <Input
+                id="add-client-id"
+                autoComplete="off"
+                placeholder={t("authProviders.form.clientIdPlaceholder")}
+                value={newProvider.clientId}
+                onChange={(e) => updateProvider({ clientId: e.target.value })}
+              />
+            </Field>
+            <Field label={`${t("authProviders.form.clientSecret")} *`} htmlFor="add-client-secret">
+              <Input
+                id="add-client-secret"
+                type="password"
+                autoComplete="new-password"
+                placeholder={t("authProviders.form.clientSecretPlaceholder")}
+                value={newProvider.clientSecret}
+                onChange={(e) => updateProvider({ clientSecret: e.target.value })}
+              />
+            </Field>
+          </div>
+
+          <Field
+            label={t("authProviders.form.oauthScopes")}
+            hint={
+              newProvider.type === "oidc"
+                ? t("authProviders.form.scopesHelpOidc")
+                : t("authProviders.form.scopesHelpOauth2")
+            }
           >
-            <option value="oidc">{t("authProviders.form.typeOidc")}</option>
-            <option value="oauth2">{t("authProviders.form.typeOauth2")}</option>
-          </select>
-        </div>
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.icon")}</Label>
-          <IconPicker
-            value={newProvider.icon}
-            onChange={(icon) => updateProvider({ icon })}
-            placeholder={t("authProviders.form.iconPlaceholder")}
-          />
-        </div>
-      </div>
+            <TagsInput
+              value={newProvider.scope ? newProvider.scope.split(/[,\s]+/).filter(Boolean) : []}
+              onChange={(tags) => updateProvider({ scope: tags.join(" ") })}
+              placeholder={t("authProviders.form.scopesPlaceholder")}
+            />
+          </Field>
 
-      <ConfigurationMethodSelector provider={newProvider} onUpdate={updateProvider} onUrlUpdate={updateProviderUrl} />
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.clientId")} *</Label>
-          <Input
-            placeholder={t("authProviders.form.clientIdPlaceholder")}
-            value={newProvider.clientId}
-            onChange={(e) => updateProvider({ clientId: e.target.value })}
-          />
+          {newProvider.name && <CallbackUrlDisplay providerName={newProvider.name} />}
         </div>
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.clientSecret")} *</Label>
-          <Input
-            type="password"
-            placeholder={t("authProviders.form.clientSecretPlaceholder")}
-            value={newProvider.clientSecret}
-            onChange={(e) => updateProvider({ clientSecret: e.target.value })}
-          />
-        </div>
-      </div>
 
-      <div>
-        <Label className="mb-2 block">{t("authProviders.form.oauthScopes")}</Label>
-        <TagsInput
-          value={newProvider.scope ? newProvider.scope.split(/[,\s]+/).filter(Boolean) : []}
-          onChange={(tags) => updateProvider({ scope: tags.join(" ") })}
-          placeholder={t("authProviders.form.scopesPlaceholder")}
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          {newProvider.type === "oidc"
-            ? t("authProviders.form.scopesHelpOidc")
-            : t("authProviders.form.scopesHelpOauth2")}
-        </p>
-      </div>
-
-      {newProvider.name && (
-        <div className="pt-2">
-          <CallbackUrlDisplay providerName={newProvider.name} />
-        </div>
-      )}
-
-      <div className="flex gap-2 justify-end">
-        <Button variant="outline" onClick={onToggleForm} size="sm">
-          {t("authProviders.buttons.cancel")}
-        </Button>
-        <Button onClick={handleSubmit} disabled={saving} size="sm">
-          {saving ? t("authProviders.buttons.adding") : t("authProviders.addProvider")}
-        </Button>
-      </div>
-    </div>
+        <DialogFooter>
+          <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+            {t("authProviders.buttons.cancel")}
+          </Button>
+          <Button type="button" onClick={handleSubmit} disabled={saving}>
+            {saving ? t("authProviders.buttons.adding") : t("authProviders.calm.add")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

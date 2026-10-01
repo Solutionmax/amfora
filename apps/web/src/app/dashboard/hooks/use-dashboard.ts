@@ -5,79 +5,67 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useEnhancedFileManager } from "@/hooks/use-enhanced-file-manager";
-import { useSecureConfigValue } from "@/hooks/use-secure-configs";
 import { useShareManager } from "@/hooks/use-share-manager";
 import { getDiskSpace, listFiles, listUserShares } from "@/http/endpoints";
+import { listFolders } from "@/http/endpoints/folders";
+import { listUserReverseShares } from "@/http/endpoints/reverse-shares";
+import type { ReverseShareWithAlias } from "@/http/endpoints/reverse-shares/types";
 import { Share } from "@/http/endpoints/shares/types";
 import { copyText } from "@/lib/clipboard";
+import type { DiskSpace } from "../types";
+
+const byNewest = (a: { createdAt: string }, b: { createdAt: string }) =>
+  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
 export function useDashboard() {
   const t = useTranslations();
-  const [diskSpace, setDiskSpace] = useState<{
-    diskSizeGB: number;
-    diskUsedGB: number;
-    diskAvailableGB: number;
-    uploadAllowed: boolean;
-  } | null>(null);
-  const [diskSpaceError, setDiskSpaceError] = useState<string | null>(null);
+  const [diskSpace, setDiskSpace] = useState<DiskSpace | null>(null);
   const [recentFiles, setRecentFiles] = useState<any[]>([]);
-  const [recentShares, setRecentShares] = useState<any[]>([]);
+  const [folderCount, setFolderCount] = useState(0);
+  const [recentShares, setRecentShares] = useState<Share[]>([]);
+  const [receiveLinks, setReceiveLinks] = useState<ReverseShareWithAlias[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const { value: smtpEnabled } = useSecureConfigValue("smtpEnabled");
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const onOpenUploadModal = () => setIsUploadModalOpen(true);
-  const onCloseUploadModal = () => setIsUploadModalOpen(false);
-  const onOpenCreateModal = () => setIsCreateModalOpen(true);
-  const onCloseCreateModal = () => setIsCreateModalOpen(false);
-
   const loadDashboardData = useCallback(async () => {
-    try {
-      const loadDiskSpace = async () => {
-        try {
-          const diskSpaceRes = await getDiskSpace();
-          setDiskSpace(diskSpaceRes.data);
-          setDiskSpaceError(null);
-        } catch (error: any) {
-          console.warn("Failed to load disk space:", error);
-          setDiskSpace(null);
+    const loadDiskSpace = async () => {
+      try {
+        const res = await getDiskSpace();
+        setDiskSpace(res.data);
+      } catch (error) {
+        console.warn("Failed to load disk space:", error);
+        setDiskSpace(null);
+      }
+    };
 
-          if (error.response?.status === 503 && error.response?.data?.code === "DISK_SPACE_DETECTION_FAILED") {
-            setDiskSpaceError("disk_detection_failed");
-          } else if (error.response?.status >= 500) {
-            setDiskSpaceError("server_error");
-          } else {
-            setDiskSpaceError("unknown_error");
-          }
-        }
-      };
+    const loadFilesAndShares = async () => {
+      try {
+        const [filesRes, foldersRes, sharesRes] = await Promise.all([listFiles(), listFolders(), listUserShares()]);
+        setRecentFiles([...(filesRes.data.files || [])].sort(byNewest));
+        setFolderCount((foldersRes.data.folders || []).length);
+        setRecentShares([...(sharesRes.data.shares || [])].sort(byNewest));
+        setLoadError(null);
+      } catch (error) {
+        console.error("Dashboard load failed:", error);
+        setLoadError(t("dashboard.loadError"));
+      }
+    };
 
-      const loadFilesAndShares = async () => {
-        const [filesRes, sharesRes] = await Promise.all([listFiles(), listUserShares()]);
+    const loadReceiveLinks = async () => {
+      try {
+        const res = await listUserReverseShares();
+        setReceiveLinks(res.data.reverseShares || []);
+      } catch (error) {
+        console.warn("Failed to load receive links:", error);
+        setReceiveLinks(null);
+      }
+    };
 
-        const allFiles = filesRes.data.files || [];
-        const sortedFiles = [...allFiles].sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setRecentFiles(sortedFiles);
-
-        const allShares = sharesRes.data.shares || [];
-        const sortedShares = [...allShares].sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setRecentShares(sortedShares);
-      };
-
-      await Promise.allSettled([loadDiskSpace(), loadFilesAndShares()]);
-    } catch (error) {
-      console.error("Critical dashboard error:", error);
-      toast.error(t("dashboard.loadError"));
-    } finally {
-      setIsLoading(false);
-    }
+    await Promise.all([loadDiskSpace(), loadFilesAndShares(), loadReceiveLinks()]);
+    setIsLoading(false);
   }, [t]);
 
   const fileManager = useEnhancedFileManager(loadDashboardData);
@@ -101,22 +89,23 @@ export function useDashboard() {
 
   return {
     isLoading,
+    loadError,
     diskSpace,
-    diskSpaceError,
     recentFiles,
+    folderCount,
     recentShares,
+    receiveLinks,
     modals: {
       isUploadModalOpen,
       isCreateModalOpen,
-      onOpenUploadModal,
-      onCloseUploadModal,
-      onOpenCreateModal,
-      onCloseCreateModal,
+      onOpenUploadModal: () => setIsUploadModalOpen(true),
+      onCloseUploadModal: () => setIsUploadModalOpen(false),
+      onOpenCreateModal: () => setIsCreateModalOpen(true),
+      onCloseCreateModal: () => setIsCreateModalOpen(false),
     },
     fileManager,
     shareManager,
     handleCopyLink,
     loadDashboardData,
-    smtpEnabled: smtpEnabled || "false",
   };
 }

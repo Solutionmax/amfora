@@ -1,17 +1,21 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 
+import { PUBLIC_THEMES } from "@/components/brand/public-theme";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { LineRow } from "@/components/ui/line-list";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { fieldDescription, fieldTitle, SECONDS_FIELDS } from "../constants";
 import { Config } from "../types";
 import { FileSizeInput } from "./file-size-input";
 import { LogoInput } from "./logo-input";
 
+// Managed on the customization page, or set by the server itself.
 const HIDDEN_FIELDS = [
   "serverUrl",
   "firstUserAccess",
@@ -24,145 +28,145 @@ const HIDDEN_FIELDS = [
   "appHideCredit",
 ];
 
+const SECRET_PATTERN = /password|secret|pass$/i;
+
 export function isFieldHidden(fieldKey: string): boolean {
   return HIDDEN_FIELDS.includes(fieldKey);
 }
 
-export interface ConfigInputProps {
+// Every group form has the same shape: `{ configs: Record<string, string> }`.
+export type SettingsFormApi = UseFormReturn<any>;
+
+interface SettingProps {
   config: Config;
-  description?: string;
-  register: UseFormRegister<any>;
-  setValue: UseFormSetValue<any>;
-  watch: UseFormWatch<any>;
-  error?: any;
-  smtpEnabled?: string;
-  authProvidersEnabled?: string;
+  form: SettingsFormApi;
+  disabled?: boolean;
 }
 
-export function SettingsInput({
-  config,
-  description,
-  register,
-  setValue,
-  watch,
-  error,
-  smtpEnabled,
-  authProvidersEnabled,
-}: ConfigInputProps) {
+const fieldName = (key: string) => `configs.${key}`;
+
+function SettingControl({ config, form, disabled }: SettingProps) {
   const t = useTranslations();
+  const name = fieldName(config.key);
+  const value = form.watch(name);
+  const set = (next: string) => form.setValue(name, next, { shouldDirty: true });
 
-  const isSmtpField = config.group === "email" && config.key !== "smtpEnabled";
-  const isAuthProvidersField = config.group === "auth-providers" && config.key !== "authProvidersEnabled";
-  const isDisabled =
-    (isSmtpField && smtpEnabled === "false") || (isAuthProvidersField && authProvidersEnabled === "false");
+  if (config.key === "appLogo") {
+    return <LogoInput value={value} onChange={set} isDisabled={disabled} />;
+  }
 
-  const renderInput = () => {
-    if (config.key === "appLogo") {
-      return (
-        <LogoInput
-          value={watch(`configs.${config.key}`)}
-          onChange={(value) => setValue(`configs.${config.key}`, value)}
-          isDisabled={isDisabled}
-        />
-      );
-    }
+  if (config.key === "appDescription") {
+    return <Textarea id={config.key} rows={3} className="min-h-[76px]" disabled={disabled} {...form.register(name)} />;
+  }
 
-    if (config.type === "boolean") {
-      return (
-        <Switch
-          id={config.key}
-          checked={watch(`configs.${config.key}`) === "true"}
-          onCheckedChange={(checked) => setValue(`configs.${config.key}`, checked ? "true" : "false")}
-          disabled={isDisabled}
-        />
-      );
-    }
+  if (config.key === "maxFileSize" || config.key === "maxTotalStoragePerUser") {
+    return (
+      <FileSizeInput
+        id={config.key}
+        unitLabel={t("settings.calm.units.unit")}
+        value={value || "0"}
+        onChange={set}
+        disabled={disabled}
+        placeholder={t("settings.calm.noLimit")}
+      />
+    );
+  }
 
-    if (config.key === "appDescription") {
-      return (
-        <Textarea
-          id={config.key}
-          {...register(`configs.${config.key}`)}
-          disabled={isDisabled}
-          className="min-h-[80px]"
-        />
-      );
-    }
+  if (config.key === "smtpSecure" || config.key === "appPublicTheme") {
+    const options =
+      config.key === "smtpSecure"
+        ? ["auto", "ssl", "tls", "none"].map((option) => ({
+            value: option,
+            label: t(`settings.fields.smtpSecure.options.${option}`),
+          }))
+        : PUBLIC_THEMES.map((theme) => ({ value: theme, label: t(`customization.v2.theme.${theme}`) }));
 
-    if (config.key === "maxFileSize" || config.key === "maxTotalStoragePerUser") {
-      const currentValue = watch(`configs.${config.key}`) || "0";
-      return (
-        <FileSizeInput
-          value={currentValue}
-          onChange={(value) => setValue(`configs.${config.key}`, value)}
-          disabled={isDisabled}
-          placeholder="0"
-        />
-      );
-    }
+    return (
+      <Select value={value || options[0].value} onValueChange={set} disabled={disabled}>
+        <SelectTrigger id={config.key} className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    );
+  }
 
-    if (config.key === "smtpSecure") {
-      const currentValue = watch(`configs.${config.key}`) || "auto";
-      return (
-        <Select
-          value={currentValue}
-          onValueChange={(value) => setValue(`configs.${config.key}`, value)}
-          disabled={isDisabled}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="auto">{t("settings.fields.smtpSecure.options.auto")}</SelectItem>
-            <SelectItem value="ssl">{t("settings.fields.smtpSecure.options.ssl")}</SelectItem>
-            <SelectItem value="tls">{t("settings.fields.smtpSecure.options.tls")}</SelectItem>
-            <SelectItem value="none">{t("settings.fields.smtpSecure.options.none")}</SelectItem>
-          </SelectContent>
-        </Select>
-      );
-    }
+  if (config.type === "number" || config.type === "bigint") {
+    const unit = SECONDS_FIELDS.includes(config.key) ? t("settings.calm.units.seconds") : null;
 
-    if (config.type === "number" || config.type === "bigint") {
-      return (
+    return (
+      <div className="relative flex items-center">
         <Input
           id={config.key}
           type="number"
-          {...register(`configs.${config.key}`, {
-            setValueAs: (value: string) => (value === "" ? "" : String(Number(value))),
+          inputMode="numeric"
+          min={0}
+          disabled={disabled}
+          className={unit ? "pr-20" : undefined}
+          {...form.register(name, {
+            setValueAs: (raw: string) => (raw === "" ? "" : String(Number(raw))),
           })}
-          disabled={isDisabled}
         />
-      );
-    }
-
-    return (
-      <Input
-        id={config.key}
-        type={
-          config.key === "smtpPass" ||
-          config.key.toLowerCase().includes("password") ||
-          config.key.toLowerCase().includes("secret")
-            ? "password"
-            : "text"
-        }
-        {...register(`configs.${config.key}`)}
-        disabled={isDisabled}
-      />
+        {unit && <span className="pointer-events-none absolute right-3 text-[13px] text-ink-3">{unit}</span>}
+      </div>
     );
-  };
+  }
 
   return (
-    <div className="grid min-w-0 items-start gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] sm:gap-8">
-      <div className="space-y-1.5">
-        <Label htmlFor={config.key} className={isDisabled ? "text-muted-foreground" : ""}>
-          {t(`settings.fields.${config.key}.title`)}
-        </Label>
-        {description && <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{description}</p>}
-      </div>
-      <div className="min-w-0 space-y-2">
-        {renderInput()}
-        {error && <p className="text-sm text-destructive">{error.message}</p>}
-      </div>
-    </div>
+    <Input
+      id={config.key}
+      type={SECRET_PATTERN.test(config.key) ? "password" : "text"}
+      autoComplete={SECRET_PATTERN.test(config.key) ? "new-password" : "off"}
+      disabled={disabled}
+      {...form.register(name)}
+    />
+  );
+}
+
+/** A text, number or select setting: label and hint above the control. */
+export function SettingField({ config, form, disabled }: SettingProps) {
+  const t = useTranslations();
+  const error = form.formState.errors.configs as Record<string, { message?: string }> | undefined;
+  // The logo control carries its own title row.
+  const isLogo = config.key === "appLogo";
+
+  if (isLogo) return <SettingControl config={config} form={form} disabled={disabled} />;
+
+  return (
+    <Field
+      label={fieldTitle(t, config.key)}
+      htmlFor={config.key}
+      hint={fieldDescription(t, config.key, config.description)}
+      error={error?.[config.key]?.message}
+    >
+      <SettingControl config={config} form={form} disabled={disabled} />
+    </Field>
+  );
+}
+
+/** An on/off setting: a line with title and explanation, the switch on the right. */
+export function SettingSwitchRow({ config, form, disabled }: SettingProps) {
+  const t = useTranslations();
+  const name = fieldName(config.key);
+  const title = fieldTitle(t, config.key);
+
+  return (
+    <LineRow
+      title={<label htmlFor={config.key}>{title}</label>}
+      sub={fieldDescription(t, config.key, config.description)}
+    >
+      <Switch
+        id={config.key}
+        checked={form.watch(name) === "true"}
+        onCheckedChange={(checked) => form.setValue(name, checked ? "true" : "false", { shouldDirty: true })}
+        disabled={disabled}
+      />
+    </LineRow>
   );
 }

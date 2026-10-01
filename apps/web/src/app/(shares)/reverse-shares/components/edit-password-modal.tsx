@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { IconEye, IconEyeOff, IconLock, IconLockOpen } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -15,186 +13,124 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Field } from "@/components/ui/form-section";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Switch } from "@/components/ui/switch";
-import { ReverseShare } from "../hooks/use-reverse-shares";
+import type { PasswordChange, ReverseShare } from "../hooks/use-reverse-shares";
 
-interface EditPasswordFormData {
-  hasPassword: boolean;
-  password: string;
-}
+const MIN_LENGTH = 4;
 
 interface EditPasswordModalProps {
   reverseShare: ReverseShare | null;
   isOpen: boolean;
   onClose: () => void;
-  onUpdatePassword: (id: string, data: { hasPassword: boolean; password?: string }) => Promise<void>;
-  isUpdating?: boolean;
+  /** Should throw when saving fails. */
+  onUpdatePassword: (id: string, data: PasswordChange) => Promise<unknown>;
 }
 
-export function EditPasswordModal({
-  reverseShare,
-  isOpen,
-  onClose,
-  onUpdatePassword,
-  isUpdating = false,
-}: EditPasswordModalProps) {
+/** Set, change or remove the password senders need. Opens with protection switched on. */
+export function EditPasswordModal({ reverseShare, isOpen, onClose, onUpdatePassword }: EditPasswordModalProps) {
   const t = useTranslations();
-  const [showPassword, setShowPassword] = useState(false);
+  const [enabled, setEnabled] = useState(true);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const form = useForm<EditPasswordFormData>({
-    defaultValues: {
-      hasPassword: reverseShare?.hasPassword || false,
-      password: "",
-    },
-  });
+  useEffect(() => {
+    if (!isOpen) return;
+    setEnabled(true);
+    setPassword("");
+    setError(null);
+  }, [isOpen]);
 
-  const hasPassword = form.watch("hasPassword");
-
-  const onSubmit = async (data: EditPasswordFormData) => {
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!reverseShare) return;
+    if (enabled && !password.trim()) return setError(t("validation.passwordRequired"));
+    if (enabled && password.trim().length < MIN_LENGTH) return setError(t("validation.passwordMinLength"));
 
-    if (data.hasPassword) {
-      if (!data.password) {
-        form.setError("password", { message: t("validation.passwordRequired") });
-        return;
-      }
-      if (data.password.length < 4) {
-        form.setError("password", { message: t("validation.passwordMinLength") });
-        return;
-      }
-    }
-
+    setSaving(true);
     try {
-      await onUpdatePassword(reverseShare.id, {
-        hasPassword: data.hasPassword,
-        password: data.hasPassword ? data.password : undefined,
-      });
-
+      await onUpdatePassword(reverseShare.id, { hasPassword: enabled, password: enabled ? password : undefined });
       toast.success(
-        data.hasPassword
+        enabled
           ? t("reverseShares.messages.passwordProtectionEnabled")
           : t("reverseShares.messages.passwordProtectionDisabled")
       );
-
       onClose();
-      form.reset();
-    } catch (error) {
-      console.error("Failed to update password:", error);
+    } catch (err) {
+      console.error("Failed to update password:", err);
       toast.error(t("reverseShares.errors.passwordUpdateFailed"));
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleClose = () => {
-    onClose();
-    form.reset({
-      hasPassword: reverseShare?.hasPassword || false,
-      password: "",
-    });
-  };
+  const isChange = !!reverseShare?.hasPassword;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[450px]">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && !saving && onClose()}>
+      <DialogContent className="sm:max-w-[460px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <IconLock size={20} />
-            {t("reverseShares.modals.password.title")}
+          <DialogTitle>
+            {isChange ? t("reverseShares.calm.password.changeTitle") : t("reverseShares.calm.password.setTitle")}
           </DialogTitle>
-          <DialogDescription>{t("reverseShares.modals.password.description")}</DialogDescription>
+          <DialogDescription>{t("reverseShares.calm.password.description")}</DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Toggle Proteção */}
-            <FormField
-              control={form.control}
-              name="hasPassword"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="flex items-center gap-2">
-                      {field.value ? (
-                        <IconLock className="h-4 w-4 text-yellow-600" />
-                      ) : (
-                        <IconLockOpen className="h-4 w-4 text-primary" />
-                      )}
-                      {t("reverseShares.modals.password.hasPassword")}
-                    </FormLabel>
-                    <FormDescription>
-                      {field.value
-                        ? t("reverseShares.labels.thisLinkProtected")
-                        : t("reverseShares.labels.thisLinkPublic")}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={(checked) => {
-                        field.onChange(checked);
-                        if (!checked) {
-                          form.setValue("password", "");
-                        }
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
+        <form id="receive-password-form" onSubmit={submit} className="grid gap-4">
+          <div className="flex items-center gap-3.5 border-y border-line py-3">
+            <div className="min-w-0 flex-1">
+              <label htmlFor="receive-password-switch" className="block font-semibold">
+                {t("reverseShares.modals.password.hasPassword")}
+              </label>
+              <p className="text-[12.5px] text-ink-3">
+                {enabled ? t("reverseShares.calm.rules.passwordOn") : t("reverseShares.calm.rules.passwordOff")}
+              </p>
+            </div>
+            <Switch
+              id="receive-password-switch"
+              checked={enabled}
+              onCheckedChange={(checked) => {
+                setEnabled(checked);
+                setError(null);
+              }}
             />
+          </div>
 
-            {/* Campos de Senha */}
-            {hasPassword && (
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("reverseShares.modals.password.password")}</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder={t("reverseShares.labels.enterPassword")}
-                            {...field}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? <IconEyeOff className="h-4 w-4" /> : <IconEye className="h-4 w-4" />}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormDescription>{t("reverseShares.form.password.passwordHelp")}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            )}
+          {enabled && (
+            <Field
+              label={
+                isChange ? t("reverseShares.calm.password.newPassword") : t("reverseShares.modals.password.password")
+              }
+              htmlFor="receive-password"
+              hint={t("reverseShares.form.password.passwordHelp")}
+              error={error}
+            >
+              <PasswordInput
+                id="receive-password"
+                value={password}
+                autoComplete="new-password"
+                autoFocus
+                aria-invalid={!!error}
+                placeholder={t("reverseShares.labels.enterPassword")}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError(null);
+                }}
+              />
+            </Field>
+          )}
+        </form>
 
-            <DialogFooter className="gap-2">
-              <Button type="button" variant="outline" onClick={handleClose} disabled={isUpdating}>
-                {t("reverseShares.modals.password.cancel")}
-              </Button>
-              <Button type="submit" disabled={isUpdating}>
-                {isUpdating ? (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin">⠋</div>
-                    {t("reverseShares.modals.password.saving")}
-                  </div>
-                ) : (
-                  t("reverseShares.modals.password.save")
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        <DialogFooter>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={saving}>
+            {t("reverseShares.modals.password.cancel")}
+          </Button>
+          <Button type="submit" form="receive-password-form" disabled={saving}>
+            {saving ? t("reverseShares.modals.password.saving") : t("reverseShares.modals.password.save")}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

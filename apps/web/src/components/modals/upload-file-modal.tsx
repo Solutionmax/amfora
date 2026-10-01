@@ -1,16 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IconAlertTriangle, IconCheck, IconCloudUpload, IconLoader, IconTrash, IconX } from "@tabler/icons-react";
+import { IconRefresh, IconUpload, IconX } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { FileTypeIcon } from "@/components/files/file-type-icon";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useUppyUpload } from "@/hooks/useUppyUpload";
 import { checkFile, getFilePresignedUrl, registerFile } from "@/http/endpoints";
-import { getFileIcon } from "@/utils/file-icons";
+import { cn } from "@/lib/utils";
 import { generateSafeFileName } from "@/utils/file-utils";
 import { formatFileSize } from "@/utils/format-file-size";
 import getErrorData from "@/utils/getErrorData";
@@ -20,6 +27,8 @@ interface UploadFileModalProps {
   onClose: () => void;
   onSuccess?: () => void;
   currentFolderId?: string;
+  /** Name of the folder the files go to; My Files when left out. */
+  destinationName?: string;
 }
 
 interface ConfirmationModalProps {
@@ -33,24 +42,19 @@ function ConfirmationModal({ isOpen, onConfirm, onCancel, uploadsInProgress }: C
   const t = useTranslations();
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <IconAlertTriangle size={20} className="text-amber-500" />
-            {t("uploadFile.confirmCancel.title")}
-          </DialogTitle>
-        </DialogHeader>
-        <div className="py-4">
-          <p className="text-sm text-muted-foreground mb-2">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
+      <DialogContent className="sm:max-w-[440px]" showCloseButton={false}>
+        <DialogHeader className="pr-0">
+          <DialogTitle>{t("uploadFile.confirmCancel.title")}</DialogTitle>
+          <DialogDescription>
             {uploadsInProgress > 1
               ? t("uploadFile.confirmCancel.messageMultiple", { count: uploadsInProgress })
-              : t("uploadFile.confirmCancel.messageSingle")}
-          </p>
-          <p className="text-sm text-amber-600 dark:text-amber-400">{t("uploadFile.confirmCancel.warning")}</p>
-        </div>
+              : t("uploadFile.confirmCancel.messageSingle")}{" "}
+            {t("uploadFile.confirmCancel.warning")}
+          </DialogDescription>
+        </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             {t("uploadFile.confirmCancel.continue")}
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
@@ -62,7 +66,13 @@ function ConfirmationModal({ isOpen, onConfirm, onCancel, uploadsInProgress }: C
   );
 }
 
-export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }: UploadFileModalProps) {
+export function UploadFileModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  currentFolderId,
+  destinationName,
+}: UploadFileModalProps) {
   const t = useTranslations();
   const [isDragOver, setIsDragOver] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -205,26 +215,6 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
     }
   };
 
-  const renderFileIcon = (fileName: string) => {
-    const { icon: FileIcon, color } = getFileIcon(fileName);
-    return <FileIcon size={24} className={color} />;
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "uploading":
-        return <IconLoader size={16} className="animate-spin text-primary" />;
-      case "success":
-        return <IconCheck size={16} className="text-green-500" />;
-      case "error":
-        return <IconX size={16} className="text-red-500" />;
-      case "cancelled":
-        return <IconX size={16} className="text-muted-foreground" />;
-      default:
-        return null;
-    }
-  };
-
   const handleConfirmClose = () => {
     // Cancel all uploads
     fileUploads.forEach((upload) => {
@@ -260,145 +250,151 @@ export function UploadFileModal({ isOpen, onClose, onSuccess, currentFolderId }:
 
   const hasPendingUploads = fileUploads.some((u) => u.status === "pending");
 
+  const statusText = (upload: (typeof fileUploads)[number]) => {
+    if (upload.status === "uploading") return `${upload.progress}%`;
+    if (upload.status === "success") return t("files.calm.uploaded");
+    if (upload.status === "error") return t("files.calm.uploadFailed");
+    if (upload.status === "cancelled") return t("files.calm.uploadCancelled");
+    return formatFileSize(upload.file.size);
+  };
+
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={handleClose}>
+      <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
         <DialogContent
-          className="sm:max-w-2xl max-h-[calc(100dvh-2rem)] overflow-hidden flex flex-col"
+          className="flex max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-w-[560px]"
           onPointerDownOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => {
+            if (isUploading) {
+              e.preventDefault();
+              setShowConfirmation(true);
+            }
+          }}
         >
           <DialogHeader>
             <DialogTitle>{t("uploadFile.multipleTitle")}</DialogTitle>
+            <DialogDescription>
+              {t.rich("files.calm.uploadTo", {
+                folder: destinationName || t("files.pageTitle"),
+                b: (chunks) => <b className="font-semibold text-ink">{chunks}</b>,
+              })}
+            </DialogDescription>
           </DialogHeader>
 
-          <div className="min-h-0 flex-1 overflow-y-auto flex flex-col gap-5">
+          <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
             <input ref={fileInputRef} className="hidden" type="file" multiple onChange={handleFileInputChange} />
 
             <button
               type="button"
-              className={`w-full shrink-0 border border-dashed rounded-xl px-6 py-10 cursor-pointer transition-colors ${
-                isDragOver
-                  ? "border-primary bg-primary/10"
-                  : "border-primary/25 bg-primary/[0.025] hover:bg-primary/5 hover:border-primary/50"
-              }`}
+              className={cn(
+                "grid w-full shrink-0 cursor-pointer justify-items-center gap-1.5 rounded-xl border-[1.5px] border-dashed border-line-2 px-4 py-8 text-center text-ink-3 outline-none transition-colors hover:border-primary hover:bg-primary-soft focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/20",
+                isDragOver && "border-primary bg-primary-soft"
+              )}
               onClick={() => fileInputRef.current?.click()}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
-              <div className="flex flex-col items-center gap-2">
-                <span className="mb-2 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <IconCloudUpload size={24} />
-                </span>
-                <p className="text-foreground text-center">{t("uploadFile.selectMultipleFiles")}</p>
-                <p className="text-sm text-muted-foreground">{t("uploadFile.dragAndDrop")}</p>
-              </div>
+              <IconUpload size={26} stroke={1.8} aria-hidden className="mb-1 text-ink-icon" />
+              <b className="font-semibold text-ink">{t("files.calm.dropTitle")}</b>
+              <span className="text-[12.5px]">{t("files.calm.dropHint")}</span>
             </button>
 
             {fileUploads.length > 0 && (
-              <div className="flex-1 overflow-y-auto space-y-2 max-h-96">
+              <ul className="flex flex-col [&>li+li]:border-t [&>li+li]:border-line">
                 {fileUploads.map((upload) => (
-                  <div key={upload.id} className="flex items-center gap-3 p-4 border rounded-xl bg-background/60">
-                    <div className="flex-shrink-0">
-                      {upload.previewUrl ? (
-                        <img
-                          src={upload.previewUrl}
-                          alt={upload.file.name}
-                          className="w-10 h-10 rounded object-cover"
-                        />
-                      ) : (
-                        renderFileIcon(upload.file.name)
-                      )}
-                    </div>
+                  <li key={upload.id} className="flex items-center gap-3.5 py-3">
+                    {upload.previewUrl ? (
+                      <img src={upload.previewUrl} alt="" className="size-[17px] shrink-0 rounded-[3px] object-cover" />
+                    ) : (
+                      <FileTypeIcon name={upload.file.name} />
+                    )}
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium truncate text-foreground">{upload.file.name}</p>
-                        {getStatusIcon(upload.status)}
-                      </div>
-                      <p className="text-xs text-muted-foreground">{formatFileSize(upload.file.size)}</p>
-
-                      {upload.status === "uploading" && (
-                        <div className="mt-1">
-                          <Progress value={upload.progress} className="h-1" />
-                          <p className="text-xs text-muted-foreground mt-1">{upload.progress}%</p>
-                        </div>
-                      )}
-
-                      {upload.status === "error" && upload.error && (
-                        <p className="text-xs text-destructive mt-1">{upload.error}</p>
-                      )}
-                    </div>
-
-                    <div className="flex-shrink-0">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[13.5px] font-semibold">{upload.file.name}</p>
                       {upload.status === "uploading" ? (
+                        <div
+                          className="mt-2 h-[3px] overflow-hidden rounded-full bg-line"
+                          role="progressbar"
+                          aria-valuenow={upload.progress}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-label={upload.file.name}
+                        >
+                          <div
+                            className="h-full rounded-full bg-primary transition-[width] duration-300"
+                            style={{ width: `${upload.progress}%` }}
+                          />
+                        </div>
+                      ) : upload.status === "error" && upload.error ? (
+                        <p className="truncate text-[12.5px] text-bad">{upload.error}</p>
+                      ) : (
+                        <p className="text-[12.5px] text-ink-3">{formatFileSize(upload.file.size)}</p>
+                      )}
+                    </div>
+
+                    <span
+                      className={cn(
+                        "shrink-0 text-[12.5px] tabular-nums",
+                        upload.status === "success" ? "text-ok" : upload.status === "error" ? "text-bad" : "text-ink-3"
+                      )}
+                    >
+                      {upload.status === "pending" ? "" : statusText(upload)}
+                    </span>
+
+                    <div className="flex shrink-0 items-center">
+                      {upload.status === "uploading" && (
                         <Button
                           variant="ghost"
-                          size="sm"
+                          size="icon"
                           aria-label={t("common.cancel")}
                           onClick={() => cancelUpload(upload.id)}
-                          className="h-8 w-8 p-0"
                         >
-                          <IconX size={14} />
+                          <IconX />
                         </Button>
-                      ) : upload.status === "success" ? null : upload.status === "error" ? (
-                        <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => retryUpload(upload.id)}
-                            className="h-8 w-8 p-0"
-                            aria-label={t("uploadFile.retry")}
-                            title={t("uploadFile.retry")}
-                          >
-                            <IconLoader size={14} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            aria-label={t("common.delete")}
-                            onClick={() => removeFile(upload.id)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <IconTrash size={14} />
-                          </Button>
-                        </div>
-                      ) : (
+                      )}
+                      {upload.status === "error" && (
                         <Button
                           variant="ghost"
-                          size="sm"
-                          aria-label={t("common.delete")}
-                          onClick={() => removeFile(upload.id)}
-                          className="h-8 w-8 p-0"
+                          size="icon"
+                          aria-label={t("uploadFile.retry")}
+                          title={t("uploadFile.retry")}
+                          onClick={() => retryUpload(upload.id)}
                         >
-                          <IconTrash size={14} />
+                          <IconRefresh />
+                        </Button>
+                      )}
+                      {(upload.status === "pending" || upload.status === "error" || upload.status === "cancelled") && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("files.calm.removeFromList", { name: upload.file.name })}
+                          onClick={() => removeFile(upload.id)}
+                        >
+                          <IconX />
                         </Button>
                       )}
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={handleClose}>
-              {allUploadsComplete ? t("common.close") : t("common.cancel")}
-            </Button>
             {!allUploadsComplete && (
-              <Button variant="default" disabled={fileUploads.length === 0 || isUploading} onClick={startUpload}>
-                {isUploading ? (
-                  <IconLoader className="h-4 w-4 animate-spin" />
-                ) : (
-                  <IconCloudUpload className="h-4 w-4" />
-                )}
-                {hasPendingUploads ? t("uploadFile.startUploads") : t("uploadFile.upload")}
+              <Button variant="ghost" onClick={handleClose}>
+                {t("common.cancel")}
               </Button>
             )}
-            {allUploadsComplete && (
-              <Button variant="default" onClick={handleConfirmClose}>
-                {t("uploadFile.finish")}
+            {allUploadsComplete ? (
+              <Button onClick={handleConfirmClose}>{t("files.calm.done")}</Button>
+            ) : (
+              <Button disabled={fileUploads.length === 0 || isUploading || !hasPendingUploads} onClick={startUpload}>
+                <IconUpload />
+                {isUploading
+                  ? t("files.calm.uploading")
+                  : t("files.calm.uploadCount", { count: fileUploads.filter((u) => u.status === "pending").length })}
               </Button>
             )}
           </DialogFooter>

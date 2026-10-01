@@ -1,31 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  IconCalendar,
-  IconCopy,
-  IconDownload,
-  IconEye,
-  IconFolder,
-  IconLink,
-  IconLock,
-  IconShare,
-} from "@tabler/icons-react";
+import { IconCopy, IconDownload, IconFolder } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import QRCode from "react-qr-code";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Switch } from "@/components/ui/switch";
 import { createShare, createShareAlias, listFiles, listFolders } from "@/http/endpoints";
 import { copyText } from "@/lib/clipboard";
 import { downloadQrCodeAsPng } from "@/lib/qr-code";
 import { customNanoid } from "@/lib/utils";
 import { getFileIcon } from "@/utils/file-icons";
+import { formatFileSize } from "@/utils/format-file-size";
 
 interface BulkFile {
   id: string;
@@ -105,10 +104,7 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
           defaultName = folders[0].name;
         }
       } else {
-        const items = [];
-        if (fileCount > 0) items.push(`${fileCount} files`);
-        if (folderCount > 0) items.push(`${folderCount} folders`);
-        defaultName = `${items.join(" and ")} shared`;
+        defaultName = t("shares.calm.modals.defaultMultiName", { count: totalCount });
       }
 
       setFormData({
@@ -124,7 +120,7 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
       setShareId(null);
       setGeneratedLink("");
     }
-  }, [isOpen, files, folders]);
+  }, [isOpen, files, folders, t]);
 
   const getAllFolderContents = async (folderId: string): Promise<{ files: string[]; folders: string[] }> => {
     try {
@@ -289,187 +285,159 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
   const totalSize =
     filesList.reduce((sum, file) => sum + file.size, 0) +
     foldersList.reduce((sum, folder) => sum + (folder.totalSize ? parseInt(folder.totalSize) : 0), 0);
-  const formatFileSize = (bytes: number) => {
-    const sizes = ["B", "KB", "MB", "GB"];
-    if (bytes === 0) return "0 B";
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${Math.round((bytes / Math.pow(1024, i)) * 100) / 100} ${sizes[i]}`;
-  };
+  const host = typeof window === "undefined" ? "" : window.location.host;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {step === "create" ? (
-              <>
-                <IconShare size={20} />
-                {t("shareMultipleFiles.title")}
-              </>
-            ) : (
-              <>
-                <IconLink size={20} />
-                {t("shareActions.linkTitle")}
-              </>
-            )}
-          </DialogTitle>
+          <DialogTitle>{step === "create" ? t("shareMultipleFiles.title") : t("shareActions.linkTitle")}</DialogTitle>
+          <DialogDescription>
+            {step === "create"
+              ? t("shares.calm.modals.shareMultipleDescription")
+              : generatedLink
+                ? t("shares.calm.modals.linkReady")
+                : t("shares.calm.modals.linkStepDescription")}
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto">
-          {step === "create" && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>{t("shareMultipleFiles.shareNameLabel")} *</Label>
+        {step === "create" && (
+          <div className="grid gap-[18px]">
+            <Field label={t("shares.calm.modals.nameLabel")} htmlFor="share-multi-name">
+              <Input
+                id="share-multi-name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder={t("shareMultipleFiles.shareNamePlaceholder")}
+                required
+              />
+            </Field>
+            <Field
+              label={t("shares.calm.modals.descriptionLabel")}
+              htmlFor="share-multi-description"
+              hint={t("shares.calm.modals.descriptionHint")}
+            >
+              <Input
+                id="share-multi-description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder={t("shareMultipleFiles.descriptionPlaceholder")}
+              />
+            </Field>
+            <div className="grid gap-[18px] sm:grid-cols-2">
+              <Field
+                label={t("shares.calm.modals.expiresLabel")}
+                htmlFor="share-multi-expires"
+                hint={t("shares.calm.modals.expiresHint")}
+              >
                 <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder={t("shareMultipleFiles.shareNamePlaceholder")}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>{t("shareMultipleFiles.descriptionLabel")}</Label>
-                <Input
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder={t("shareMultipleFiles.descriptionPlaceholder")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <IconCalendar size={16} />
-                  {t("createShare.expirationLabel")}
-                </Label>
-                <Input
-                  placeholder={t("createShare.expirationPlaceholder")}
+                  id="share-multi-expires"
                   type="datetime-local"
                   value={formData.expiresAt}
                   onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <IconEye size={16} />
-                  {t("createShare.maxViewsLabel")}
-                </Label>
+              </Field>
+              <Field
+                label={t("shares.calm.modals.maxViewsLabel")}
+                htmlFor="share-multi-views"
+                hint={t("shares.calm.modals.maxViewsHint")}
+              >
                 <Input
+                  id="share-multi-views"
                   min="1"
-                  placeholder={t("createShare.maxViewsPlaceholder")}
                   type="number"
+                  inputMode="numeric"
                   value={formData.maxViews}
                   onChange={(e) => setFormData({ ...formData, maxViews: e.target.value })}
                 />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={formData.isPasswordProtected}
-                  onCheckedChange={(checked) =>
-                    setFormData({
-                      ...formData,
-                      isPasswordProtected: checked,
-                      password: "",
-                    })
-                  }
-                  id="password-protection"
+              </Field>
+            </div>
+            <label htmlFor="share-multi-password-on" className="flex cursor-pointer items-center gap-3.5">
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold">{t("shares.calm.password")}</span>
+                <span className="block text-[12.5px] text-ink-3">{t("shares.calm.modals.passwordHint")}</span>
+              </span>
+              <Switch
+                id="share-multi-password-on"
+                checked={formData.isPasswordProtected}
+                onCheckedChange={(checked) => setFormData({ ...formData, isPasswordProtected: checked, password: "" })}
+              />
+            </label>
+            {formData.isPasswordProtected && (
+              <Field label={t("createShare.passwordLabel")} htmlFor="share-multi-password">
+                <PasswordInput
+                  id="share-multi-password"
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder={t("createShare.passwordPlaceholder")}
                 />
-                <Label htmlFor="password-protection" className="flex items-center gap-2">
-                  <IconLock size={16} />
-                  {t("createShare.passwordProtection")}
-                </Label>
-              </div>
+              </Field>
+            )}
 
-              {formData.isPasswordProtected && (
-                <div className="space-y-2">
-                  <Label>{t("createShare.passwordLabel")}</Label>
-                  <Input
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    placeholder={t("createShare.passwordLabel")}
-                  />
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label>{t("shareMultipleFiles.itemsToShare", { count: allItems.length })}</Label>
-                <ScrollArea className="h-32 w-full rounded-md border p-2 bg-muted/30">
-                  <div className="space-y-1">
-                    {allItems.map((item) => {
-                      const isFolder = item.type === "folder";
-                      const { icon: FileIcon, color } = isFolder
-                        ? { icon: IconFolder, color: "text-primary" }
-                        : getFileIcon(item.name);
-
-                      return (
-                        <div key={item.id} className="flex justify-between items-center text-sm">
-                          <div className="flex items-center gap-2 truncate flex-1">
-                            <FileIcon className={`h-4 w-4 ${color} flex-shrink-0`} />
-                            <span className="truncate">{item.name}</span>
-                          </div>
-                          <span className="text-muted-foreground ml-2">
-                            {item.size ? formatFileSize(item.size) : "—"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </ScrollArea>
-                <p className="text-xs text-muted-foreground">
-                  Total size: {formatFileSize(totalSize)} ({filesList.length} files, {foldersList.length} folders)
-                </p>
-              </div>
+            <div className="min-w-0">
+              <p className="text-[12.5px] font-semibold text-ink-3">
+                {t("shares.calm.modals.itemsToShare", { count: allItems.length, size: formatFileSize(totalSize) })}
+              </p>
+              <ul className="mt-1 max-h-40 overflow-y-auto border-y border-line [&>li+li]:border-t [&>li+li]:border-line">
+                {allItems.map((item) => {
+                  const ItemIcon = item.type === "folder" ? IconFolder : getFileIcon(item.name).icon;
+                  return (
+                    <li key={item.id} className="flex min-w-0 items-center gap-3 py-2 text-[13.5px]">
+                      <ItemIcon stroke={1.8} className="size-[17px] shrink-0 text-ink-icon" />
+                      <span className="min-w-0 flex-1 truncate">{item.name}</span>
+                      <span className="shrink-0 text-[12.5px] text-ink-3">
+                        {item.size ? formatFileSize(item.size) : ""}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === "link" && (
-            <div className="space-y-4">
-              {!generatedLink ? (
-                <>
-                  <p className="text-sm text-muted-foreground">{t("shareActions.linkDescriptionFile")}</p>
-                  <div className="space-y-2">
-                    <Label>{t("shareActions.aliasLabel")}</Label>
-                    <Input
-                      placeholder={t("shareActions.aliasPlaceholder")}
-                      value={alias}
-                      onChange={(e) => setAlias(e.target.value)}
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-col items-center justify-center">
-                    <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
-                      <QRCode
-                        value={generatedLink}
-                        size={250}
-                        level="H"
-                        fgColor="#000000"
-                        bgColor="#FFFFFF"
-                        style={{ maxWidth: "100%", height: "auto" }}
-                      />
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{t("shareActions.linkReady")}</p>
-                  <div className="flex gap-2">
-                    <Input readOnly value={generatedLink} className="flex-1" />
-                    <Button variant="outline" size="icon" onClick={handleCopyLink} title={t("shareActions.copyLink")}>
-                      <IconCopy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </>
-              )}
+        {step === "link" && !generatedLink && (
+          <Field label={t("shares.calm.modals.linkLabel")} htmlFor="share-multi-alias">
+            <div className="flex min-w-0 items-center rounded-[var(--radius)] border border-line-2 bg-surface focus-within:border-primary focus-within:ring-[3px] focus-within:ring-primary/15">
+              <span className="max-w-[45%] shrink-0 truncate pl-3 font-mono text-[13px] text-ink-3">{host}/s/</span>
+              <Input
+                id="share-multi-alias"
+                className="border-0 pl-0.5 font-mono text-[13px] focus-visible:ring-0"
+                placeholder={t("shareActions.aliasPlaceholder")}
+                value={alias}
+                onChange={(e) => setAlias(e.target.value)}
+              />
             </div>
-          )}
-        </div>
+          </Field>
+        )}
+
+        {step === "link" && generatedLink && (
+          <div className="flex flex-col items-center gap-4">
+            <div ref={qrContainerRef} className="max-w-full rounded-xl border border-line bg-white p-4">
+              <QRCode
+                value={generatedLink}
+                size={176}
+                level="H"
+                fgColor="#000000"
+                bgColor="#FFFFFF"
+                style={{ maxWidth: "100%", height: "auto" }}
+              />
+            </div>
+            <div className="flex w-full min-w-0 items-center gap-1.5 rounded-xl border border-line-2 py-1.5 pl-4 pr-1.5">
+              <code className="min-w-0 flex-1 truncate font-mono text-[13px] text-ink-3">{generatedLink}</code>
+              <Button variant="outline" onClick={handleCopyLink}>
+                <IconCopy />
+                {t("shares.calm.copyLink")}
+              </Button>
+            </div>
+          </div>
+        )}
 
         <DialogFooter>
           {step === "create" && (
             <>
-              <Button variant="outline" onClick={handleClose}>
+              <Button variant="ghost" onClick={handleClose}>
                 {t("common.cancel")}
               </Button>
               <Button
@@ -478,31 +446,29 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
                 }
                 onClick={handleCreateShare}
               >
-                {isLoading ? <div className="animate-spin">⠋</div> : t("shareMultipleFiles.create")}
+                {isLoading ? t("common.creating") : t("shareMultipleFiles.create")}
               </Button>
             </>
           )}
 
           {step === "link" && !generatedLink && (
             <>
-              <Button variant="outline" onClick={() => setStep("create")}>
-                {t("common.back")}
+              <Button variant="ghost" onClick={handleSuccess}>
+                {t("common.close")}
               </Button>
               <Button disabled={!alias || isLoading} onClick={handleGenerateLink}>
-                {isLoading ? <div className="animate-spin">⠋</div> : t("shareActions.generateLink")}
+                {t("shareActions.generateLink")}
               </Button>
             </>
           )}
 
           {step === "link" && generatedLink && (
             <>
-              <Button variant="outline" onClick={handleSuccess}>
-                {t("common.close")}
+              <Button variant="ghost" onClick={downloadQRCode} disabled={isDownloading}>
+                <IconDownload />
+                {t("shares.calm.modals.downloadQr")}
               </Button>
-              <Button onClick={downloadQRCode} disabled={isDownloading}>
-                <IconDownload className="h-4 w-4" />
-                {t("qrCodeModal.download")}
-              </Button>
+              <Button onClick={handleSuccess}>{t("common.close")}</Button>
             </>
           )}
         </DialogFooter>

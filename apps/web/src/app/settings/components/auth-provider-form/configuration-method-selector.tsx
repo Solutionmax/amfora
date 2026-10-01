@@ -4,9 +4,85 @@ import React from "react";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import type { NewProvider } from "@/http/endpoints/auth/types";
+import { cn } from "@/lib/utils";
+
+/** Two plain radio lines: discover the endpoints, or type them in. */
+export function MethodRadios({
+  name,
+  isManual,
+  onAuto,
+  onManual,
+}: {
+  name: string;
+  isManual: boolean;
+  onAuto: () => void;
+  onManual: () => void;
+}) {
+  const t = useTranslations();
+  const options = [
+    {
+      id: `${name}-auto`,
+      checked: !isManual,
+      onChange: onAuto,
+      title: t("authProviders.form.autoDiscovery"),
+      hint: t("authProviders.form.autoDiscoveryDescription"),
+    },
+    {
+      id: `${name}-manual`,
+      checked: isManual,
+      onChange: onManual,
+      title: t("authProviders.form.manualEndpoints"),
+      hint: t("authProviders.form.manualEndpointsDescription"),
+    },
+  ];
+
+  return (
+    <fieldset className="grid gap-1.5">
+      <legend className="mb-1.5 text-[13px] font-medium text-ink-2">
+        {t("authProviders.form.configurationMethod")}
+      </legend>
+      {options.map((option) => (
+        <label
+          key={option.id}
+          htmlFor={option.id}
+          className={cn(
+            "flex cursor-pointer items-start gap-2.5 rounded-[var(--radius)] border px-3 py-2.5 transition-colors",
+            option.checked ? "border-primary bg-primary-soft/40" : "border-line-2 hover:bg-surface-2"
+          )}
+        >
+          <input
+            type="radio"
+            id={option.id}
+            name={name}
+            checked={option.checked}
+            onChange={option.onChange}
+            className="mt-0.5 size-4 accent-[var(--primary)]"
+          />
+          <span className="text-[13px]">
+            <span className="block font-medium">{option.title}</span>
+            <span className="block text-[12.5px] text-ink-3">{option.hint}</span>
+          </span>
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
+/** A quiet note with an info icon, used where the old forms had tinted boxes. */
+export function FormNote({ title, children }: { title?: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-start gap-2.5 text-[12.5px] text-ink-3">
+      <IconInfoCircle className="mt-px size-4 shrink-0 text-ink-icon" aria-hidden="true" />
+      <p>
+        {title && <span className="font-medium text-ink-2">{title}. </span>}
+        {children}
+      </p>
+    </div>
+  );
+}
 
 interface ConfigurationMethodSelectorProps {
   provider: NewProvider;
@@ -19,115 +95,73 @@ export function ConfigurationMethodSelector({ provider, onUpdate, onUrlUpdate }:
   const isManualMode = !!(provider.authorizationEndpoint || provider.tokenEndpoint || provider.userInfoEndpoint);
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-lg border border-border/70 bg-secondary/30 p-4">
-        <h4 className="text-sm font-medium mb-3">{t("authProviders.form.configurationMethod")}</h4>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2">
-            <input
-              type="radio"
-              id="add-auto-discovery"
-              name="addConfigMethod"
-              checked={!isManualMode}
-              onChange={() =>
-                onUpdate({
-                  authorizationEndpoint: "",
-                  tokenEndpoint: "",
-                  userInfoEndpoint: "",
-                })
-              }
-              className="w-4 h-4"
-            />
-            <label htmlFor="add-auto-discovery" className="text-sm">
-              <span className="font-medium">{t("authProviders.form.autoDiscovery")}</span>
-              <span className="text-muted-foreground ml-2">({t("authProviders.form.autoDiscoveryDescription")})</span>
-            </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <input
-              type="radio"
-              id="add-manual-endpoints"
-              name="addConfigMethod"
-              checked={isManualMode}
-              onChange={() => {
-                if (!isManualMode) {
-                  onUpdate({
-                    authorizationEndpoint: "/oauth/authorize",
-                    tokenEndpoint: "/oauth/token",
-                    userInfoEndpoint: "/oauth/userinfo",
-                    issuerUrl: "",
-                  });
-                }
-              }}
-              className="w-4 h-4"
-            />
-            <label htmlFor="add-manual-endpoints" className="text-sm">
-              <span className="font-medium">{t("authProviders.form.manualEndpoints")}</span>
-              <span className="text-muted-foreground ml-2">({t("authProviders.form.manualEndpointsDescription")})</span>
-            </label>
-          </div>
-        </div>
-      </div>
+    <div className="grid gap-4">
+      <MethodRadios
+        name="addConfigMethod"
+        isManual={isManualMode}
+        onAuto={() => onUpdate({ authorizationEndpoint: "", tokenEndpoint: "", userInfoEndpoint: "" })}
+        onManual={() => {
+          if (!isManualMode) {
+            onUpdate({
+              authorizationEndpoint: "/oauth/authorize",
+              tokenEndpoint: "/oauth/token",
+              userInfoEndpoint: "/oauth/userinfo",
+              issuerUrl: "",
+            });
+          }
+        }}
+      />
 
-      {!isManualMode && (
-        <div>
-          <Label className="mb-2 block">{t("authProviders.form.providerUrl")} *</Label>
-          <Input
-            placeholder={t("authProviders.form.providerUrlAutoPlaceholder")}
-            value={provider.issuerUrl}
-            onChange={(e) => onUpdate({ issuerUrl: e.target.value })}
-            onBlur={(e) => onUrlUpdate(e.target.value)}
-          />
-          <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.autoDiscoveryHelp")}</p>
-        </div>
-      )}
+      <Field
+        label={`${t("authProviders.form.providerUrl")} *`}
+        htmlFor="add-provider-url"
+        hint={
+          isManualMode ? t("authProviders.form.manualConfigurationHelp") : t("authProviders.form.autoDiscoveryHelp")
+        }
+      >
+        <Input
+          id="add-provider-url"
+          placeholder={
+            isManualMode
+              ? t("authProviders.form.providerUrlManualPlaceholder")
+              : t("authProviders.form.providerUrlAutoPlaceholder")
+          }
+          value={provider.issuerUrl}
+          onChange={(e) => onUpdate({ issuerUrl: e.target.value })}
+          onBlur={(e) => onUrlUpdate(e.target.value)}
+        />
+      </Field>
 
       {isManualMode && (
-        <div className="space-y-4">
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.providerUrl")} *</Label>
+        <>
+          <Field label={`${t("authProviders.form.authorizationEndpoint")} *`} htmlFor="add-auth-endpoint">
             <Input
-              placeholder={t("authProviders.form.providerUrlManualPlaceholder")}
-              value={provider.issuerUrl}
-              onChange={(e) => onUpdate({ issuerUrl: e.target.value })}
-              onBlur={(e) => onUrlUpdate(e.target.value)}
-            />
-            <p className="text-xs text-muted-foreground mt-1">{t("authProviders.form.manualConfigurationHelp")}</p>
-          </div>
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.authorizationEndpoint")} *</Label>
-            <Input
+              id="add-auth-endpoint"
               placeholder={t("authProviders.form.authorizationEndpointPlaceholder")}
               value={provider.authorizationEndpoint}
               onChange={(e) => onUpdate({ authorizationEndpoint: e.target.value })}
             />
-          </div>
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.tokenEndpoint")} *</Label>
+          </Field>
+          <Field label={`${t("authProviders.form.tokenEndpoint")} *`} htmlFor="add-token-endpoint">
             <Input
+              id="add-token-endpoint"
               placeholder={t("authProviders.form.tokenEndpointPlaceholder")}
               value={provider.tokenEndpoint}
               onChange={(e) => onUpdate({ tokenEndpoint: e.target.value })}
             />
-          </div>
-          <div>
-            <Label className="mb-2 block">{t("authProviders.form.userInfoEndpoint")} *</Label>
+          </Field>
+          <Field label={`${t("authProviders.form.userInfoEndpoint")} *`} htmlFor="add-userinfo-endpoint">
             <Input
+              id="add-userinfo-endpoint"
               placeholder={t("authProviders.form.userInfoEndpointPlaceholder")}
               value={provider.userInfoEndpoint}
               onChange={(e) => onUpdate({ userInfoEndpoint: e.target.value })}
             />
-          </div>
-          <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-            <div className="flex items-start gap-2 text-primary">
-              <IconInfoCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <div className="text-xs">
-                <p className="font-medium">{t("authProviders.info.manualConfigTitle")}</p>
-                <p className="mt-1">{t("authProviders.info.manualConfigDescription")}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+          </Field>
+          <FormNote title={t("authProviders.info.manualConfigTitle")}>
+            {t("authProviders.info.manualConfigDescription")}
+          </FormNote>
+        </>
       )}
     </div>
   );

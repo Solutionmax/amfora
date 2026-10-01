@@ -1,8 +1,8 @@
 import { useTranslations } from "next-intl";
 
+import { ConfirmDeleteDialog } from "@/components/files/confirm-delete-dialog";
 import { FolderActionsModals } from "@/components/modals";
 import { BulkDownloadModal } from "@/components/modals/bulk-download-modal";
-import { DeleteConfirmationModal } from "@/components/modals/delete-confirmation-modal";
 import { FileActionsModals } from "@/components/modals/file-actions-modals";
 import { FilePreviewModal } from "@/components/modals/file-preview-modal";
 import { ShareItemModal } from "@/components/modals/share-item-modal";
@@ -15,8 +15,13 @@ export function FilesModals({
   modals,
   onSuccess,
   currentFolderId,
-}: FilesModalsProps & { currentFolderId?: string | null }) {
+  currentFolderName,
+}: FilesModalsProps & { currentFolderId?: string | null; currentFolderName?: string }) {
   const t = useTranslations();
+  const bulkNames = [
+    ...(fileManager.foldersToDelete?.map((f) => f.name) || []),
+    ...(fileManager.filesToDelete?.map((f) => f.name) || []),
+  ];
 
   return (
     <>
@@ -25,6 +30,7 @@ export function FilesModals({
         onClose={modals.onCloseUploadModal}
         onSuccess={onSuccess}
         currentFolderId={currentFolderId || undefined}
+        destinationName={currentFolderName}
       />
 
       {/* Folder Modals */}
@@ -65,7 +71,10 @@ export function FilesModals({
         onCloseDelete={() => fileManager.setFileToDelete(null)}
         onCloseRename={() => fileManager.setFileToRename(null)}
         onDelete={fileManager.handleDelete}
-        onRename={fileManager.handleRename}
+        onRename={async (fileId, name, description) => {
+          await fileManager.handleRename(fileId, name, description);
+          await onSuccess();
+        }}
       />
 
       {/* Bulk Actions Modals */}
@@ -93,26 +102,16 @@ export function FilesModals({
         ]}
       />
 
-      <DeleteConfirmationModal
-        isOpen={!!(fileManager.filesToDelete || fileManager.foldersToDelete)}
+      <ConfirmDeleteDialog
+        open={!!(fileManager.filesToDelete || fileManager.foldersToDelete)}
         onClose={() => {
           fileManager.setFilesToDelete(null);
           fileManager.setFoldersToDelete(null);
         }}
         onConfirm={fileManager.handleDeleteBulk}
-        title={t("files.bulkDeleteTitle")}
-        description={t("files.bulkDeleteConfirmation", {
-          count: (fileManager.filesToDelete?.length || 0) + (fileManager.foldersToDelete?.length || 0),
-        })}
-        files={fileManager.filesToDelete?.map((f) => f.name) || []}
-        folders={fileManager.foldersToDelete?.map((f) => f.name) || []}
-        itemType={
-          (fileManager.filesToDelete?.length || 0) > 0 && (fileManager.foldersToDelete?.length || 0) > 0
-            ? "mixed"
-            : (fileManager.foldersToDelete?.length || 0) > 0
-              ? "files"
-              : "files"
-        }
+        title={t("files.calm.bulkDeleteTitle", { count: bulkNames.length })}
+        description={t("fileActions.deleteWarning")}
+        names={bulkNames}
       />
 
       <ShareMultipleItemsModal

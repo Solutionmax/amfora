@@ -10,6 +10,7 @@ import type { TrustedDevice } from "@/http/endpoints/auth/trusted-devices/types"
 export function useTrustedDevices() {
   const t = useTranslations();
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [devices, setDevices] = useState<TrustedDevice[]>([]);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [isRemoveAllModalOpen, setIsRemoveAllModalOpen] = useState(false);
@@ -21,7 +22,9 @@ export function useTrustedDevices() {
       setIsLoading(true);
       const response = await getTrustedDevices();
       setDevices(response.devices);
+      setLoadError(false);
     } catch (error) {
+      setLoadError(true);
       toast.error(t("twoFactor.trustedDevices.loadFailed"));
       console.error("Failed to load trusted devices:", error);
     } finally {
@@ -124,6 +127,7 @@ export function useTrustedDevices() {
 
   return {
     isLoading,
+    loadError,
     devices,
     isRemoveModalOpen,
     isRemoveAllModalOpen,

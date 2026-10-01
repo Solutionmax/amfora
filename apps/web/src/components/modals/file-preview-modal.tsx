@@ -15,7 +15,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useFilePreview } from "@/hooks/use-file-preview";
-import { getFileIcon } from "@/utils/file-icons";
 import { getFileType } from "@/utils/file-types";
 import { FilePreviewRenderer } from "./previews";
 
@@ -48,19 +47,17 @@ export function FilePreviewModal({
   const isAudio = fileType === "audio";
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="flex max-h-[90dvh] flex-col overflow-hidden sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {(() => {
-              const FileIcon = getFileIcon(file.name).icon;
-              return <FileIcon size={24} />;
-            })()}
-            <span className="truncate">{file.name}</span>
+          <DialogTitle className="truncate" title={file.name}>
+            {file.name}
           </DialogTitle>
-          <DialogDescription className="sr-only">{t("filePreview.description")}</DialogDescription>
+          <DialogDescription className={file.description ? "line-clamp-2" : "sr-only"}>
+            {file.description || t("filePreview.description")}
+          </DialogDescription>
         </DialogHeader>
-        <div className="flex-1 overflow-auto">
+        <div className="-mx-6 min-h-0 flex-1 overflow-auto px-6">
           <FilePreviewRenderer
             fileType={previewState.fileType}
             fileName={file.name}
@@ -75,22 +72,18 @@ export function FilePreviewModal({
             onDownload={previewState.handleDownload}
           />
           {!isReverseShare && isImage && previewState.previewUrl && !previewState.isLoading && file.id && (
-            <div className="mt-4 mb-2">
-              <EmbedCodeDisplay imageUrl={previewState.previewUrl} fileName={file.name} fileId={file.id} />
-            </div>
+            <EmbedCodeDisplay imageUrl={previewState.previewUrl} fileName={file.name} fileId={file.id} />
           )}
           {!isReverseShare && (isVideo || isAudio) && !previewState.isLoading && file.id && (
-            <div className="mt-4 mb-2">
-              <MediaEmbedLink fileId={file.id} />
-            </div>
+            <MediaEmbedLink fileId={file.id} />
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose}>
             {t("common.close")}
           </Button>
           <Button onClick={previewState.handleDownload}>
-            <IconDownload className="h-4 w-4" />
+            <IconDownload />
             {t("common.download")}
           </Button>
         </DialogFooter>

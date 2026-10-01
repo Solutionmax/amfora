@@ -1,35 +1,26 @@
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  IconArrowsMove,
-  IconChevronDown,
-  IconCloudUpload,
-  IconDotsVertical,
-  IconDownload,
-  IconEdit,
-  IconEye,
-  IconFolder,
-  IconFolderPlus,
-  IconShare,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconCloudUpload, IconFolderPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
+import { FileTypeIcon, FolderIcon } from "@/components/files/file-type-icon";
+import {
+  fileMenuEntries,
+  folderMenuEntries,
+  ItemContextMenuContent,
+  ItemMenu,
+  type MenuEntry,
+} from "@/components/files/item-menu";
+import { SelectionBar } from "@/components/files/selection-bar";
+import { useAddedLabel } from "@/components/files/use-added-label";
+import { useItemSelection } from "@/components/files/use-item-selection";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useDragDrop } from "@/hooks/use-drag-drop";
 import { getCachedDownloadUrl } from "@/lib/download-url-cache";
-import { getFileIcon } from "@/utils/file-icons";
+import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/utils/format-file-size";
-
-const urlCache: Record<string, { url: string; timestamp: number }> = {};
-const CACHE_DURATION = 1000 * 60;
 
 interface File {
   id: string;
@@ -89,6 +80,42 @@ interface FilesGridProps {
   isShareMode?: boolean;
 }
 
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+const isImageFile = (fileName: string) => IMAGE_EXTENSIONS.some((ext) => fileName.toLowerCase().endsWith(ext));
+
+/** Loads thumbnail URLs for image files, once per file. */
+function useImageThumbnails(files: File[]) {
+  const [urls, setUrls] = useState<Record<string, string>>({});
+  const requested = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    let isMounted = true;
+    const pending = files.filter((file) => isImageFile(file.name) && !requested.current.has(file.id));
+
+    pending.forEach((file) => {
+      requested.current.add(file.id);
+      getCachedDownloadUrl(file.objectName)
+        .then((url) => {
+          if (isMounted) setUrls((prev) => ({ ...prev, [file.id]: url }));
+        })
+        .catch((error) => {
+          requested.current.delete(file.id);
+          console.error(`Failed to load preview for ${file.name}:`, error);
+        });
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [files]);
+
+  return urls;
+}
+
+const CARD =
+  "group relative flex cursor-pointer flex-col gap-3 rounded-xl border border-line bg-surface p-3 outline-none transition-colors hover:border-line-2 hover:bg-surface-2 focus-visible:ring-[3px] focus-visible:ring-primary/35";
+
+/** Quiet grid: thin borders, grey icons, image thumbnails on a neutral ground. */
 export function FilesGrid({
   files,
   folders = [],
@@ -117,807 +144,217 @@ export function FilesGrid({
   isShareMode = false,
 }: FilesGridProps) {
   const t = useTranslations();
+  const added = useAddedLabel();
+  const selection = useItemSelection(files, folders, setClearSelectionCallback);
+  const thumbnails = useImageThumbnails(files);
 
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [selectedFolders, setSelectedFolders] = useState<Set<string>>(new Set());
-
-  // Drag and drop functionality
-  const {
-    draggedItem,
-    draggedItems,
-    dragOverTarget,
-    isDragging,
-    handleDragStart,
-    handleDragEnd,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
-  } = useDragDrop({
+  const dnd = useDragDrop({
     onRefresh,
     onImmediateUpdate,
-    selectedFiles,
-    selectedFolders,
+    selectedFiles: selection.selectedFiles,
+    selectedFolders: selection.selectedFolders,
     files,
     folders,
   });
+  const draggedIds = useMemo(() => new Set(dnd.draggedItems.map((item) => item.id)), [dnd.draggedItems]);
+  const canDrag = !isShareMode;
 
-  const [filePreviewUrls, setFilePreviewUrls] = useState<Record<string, string>>({});
+  const fileHandlers = isShareMode
+    ? { onDownload }
+    : { onPreview, onRename, onMoveFile, onDownload, onShare, onDelete };
+  const folderHandlers = isShareMode
+    ? { onNavigateToFolder, onDownloadFolder }
+    : { onNavigateToFolder, onRenameFolder, onMoveFolder, onDownloadFolder, onShareFolder, onDeleteFolder };
 
-  const loadingUrls = useRef<Set<string>>(new Set());
-  const componentMounted = useRef(true);
+  const bulk = (action?: (files: File[], folders: Folder[]) => void) =>
+    action ? () => action(selection.selected.files, selection.selected.folders) : undefined;
 
-  useEffect(() => {
-    componentMounted.current = true;
-    return () => {
-      componentMounted.current = false;
-      Object.keys(urlCache).forEach((key) => delete urlCache[key]);
-    };
-  }, []);
-
-  useEffect(() => {
-    const clearSelection = () => {
-      setSelectedFiles(new Set());
-      setSelectedFolders(new Set());
-    };
-    setClearSelectionCallback?.(clearSelection);
-  }, [setClearSelectionCallback]);
-
-  const folderIds = folders?.map((f) => f.id).join(",");
-
-  useEffect(() => {
-    setSelectedFolders(new Set());
-  }, [folderIds]);
-
-  const isImageFile = (fileName: string) => {
-    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
-    return imageExtensions.some((ext) => fileName.toLowerCase().endsWith(ext));
-  };
-
-  useEffect(() => {
-    const loadPreviewUrls = async () => {
-      const imageFiles = files.filter((file) => isImageFile(file.name));
-      const now = Date.now();
-
-      for (const file of imageFiles) {
-        if (!componentMounted.current) break;
-        if (loadingUrls.current.has(file.objectName)) {
-          continue;
-        }
-        if (filePreviewUrls[file.id]) {
-          continue;
-        }
-
-        const cached = urlCache[file.objectName];
-        if (cached && now - cached.timestamp < CACHE_DURATION) {
-          setFilePreviewUrls((prev) => ({ ...prev, [file.id]: cached.url }));
-          continue;
-        }
-
-        try {
-          loadingUrls.current.add(file.objectName);
-          const url = await getCachedDownloadUrl(file.objectName);
-
-          if (!componentMounted.current) break;
-
-          urlCache[file.objectName] = { url, timestamp: now };
-          setFilePreviewUrls((prev) => ({ ...prev, [file.id]: url }));
-        } catch (error) {
-          console.error(`Failed to load preview for ${file.name}:`, error);
-        } finally {
-          loadingUrls.current.delete(file.objectName);
-        }
-      }
-    };
-
-    if (componentMounted.current) {
-      loadPreviewUrls();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [files]);
-
-  const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedFiles(new Set(files.map((file) => file.id)));
-      setSelectedFolders(new Set(folders.map((folder) => folder.id)));
-    } else {
-      setSelectedFiles(new Set());
-      setSelectedFolders(new Set());
+  const onKeyOpen = (action: () => void) => (e: React.KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      action();
     }
   };
 
-  const handleSelectFile = (e: React.MouseEvent, fileId: string, checked: boolean) => {
-    e.stopPropagation();
-    const newSelected = new Set(selectedFiles);
-    if (checked) {
-      newSelected.add(fileId);
-    } else {
-      newSelected.delete(fileId);
-    }
-    setSelectedFiles(newSelected);
-  };
-
-  const getSelectedFiles = () => {
-    return files.filter((file) => selectedFiles.has(file.id));
-  };
-
-  const getSelectedFolders = () => {
-    return folders.filter((folder) => selectedFolders.has(folder.id));
-  };
-
-  const totalItems = files.length + folders.length;
-  const selectedItems = selectedFiles.size + selectedFolders.size;
-  const isAllSelected = totalItems > 0 && selectedItems === totalItems;
-
-  // Memoize dragged item IDs for performance
-  const draggedItemIds = useMemo(() => {
-    return new Set(draggedItems.map((item) => item.id));
-  }, [draggedItems]);
-
-  const handleBulkAction = (action: "delete" | "share" | "download" | "move") => {
-    const selectedFileObjects = getSelectedFiles();
-    const selectedFolderObjects = getSelectedFolders();
-
-    if (selectedFileObjects.length === 0 && selectedFolderObjects.length === 0) return;
-
-    switch (action) {
-      case "delete":
-        if (onBulkDelete) {
-          onBulkDelete(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-      case "share":
-        if (onBulkShare) {
-          onBulkShare(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-      case "download":
-        if (onBulkDownload) {
-          onBulkDownload(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-      case "move":
-        if (onBulkMove) {
-          onBulkMove(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-    }
-  };
-
-  const shouldShowBulkActions =
-    showBulkActions &&
-    (selectedFiles.size > 0 || selectedFolders.size > 0) &&
-    (isShareMode ? onBulkDownload : onBulkDelete || onBulkShare || onBulkDownload || onBulkMove);
+  const renderCard = ({
+    key,
+    entries,
+    label,
+    isSelected,
+    onSelectChange,
+    children,
+    ...rest
+  }: {
+    key: string;
+    entries: MenuEntry[];
+    label: string;
+    isSelected: boolean;
+    onSelectChange: (checked: boolean) => void;
+    children: React.ReactNode;
+  } & React.HTMLAttributes<HTMLDivElement>) => (
+    <ContextMenu key={key} modal={false}>
+      <ContextMenuTrigger asChild>
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={label}
+          {...rest}
+          className={cn(CARD, isSelected && "border-primary/40 bg-primary-soft hover:bg-primary-soft", rest.className)}
+          onContextMenu={(e) => e.stopPropagation()}
+        >
+          {showBulkActions && (
+            <div
+              className={cn(
+                "absolute left-2.5 top-2.5 z-10 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100",
+                isSelected && "sm:opacity-100"
+              )}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Checkbox
+                checked={isSelected}
+                onCheckedChange={(checked) => onSelectChange(checked === true)}
+                aria-label={t("files.calm.selectItem", { name: label })}
+              />
+            </div>
+          )}
+          <div className="absolute right-1.5 top-1.5 z-10 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 sm:has-[[aria-expanded=true]]:opacity-100">
+            <ItemMenu entries={entries} label={t("files.calm.moreActions", { name: label })} />
+          </div>
+          {children}
+        </div>
+      </ContextMenuTrigger>
+      <ItemContextMenuContent entries={entries} />
+    </ContextMenu>
+  );
 
   return (
-    <div className="space-y-4">
-      {shouldShowBulkActions && (
-        <div className="flex flex-col gap-3 rounded-[var(--radius)] bg-primary-soft p-3 text-primary sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-foreground">
-              {t("filesTable.bulkActions.selected", { count: selectedItems })}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {isShareMode ? (
-              onBulkDownload && (
-                <Button variant="default" size="sm" className="gap-2" onClick={() => handleBulkAction("download")}>
-                  <IconDownload className="h-4 w-4" />
-                  {t("filesTable.bulkActions.download")}
-                </Button>
-              )
-            ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="default" size="sm" className="gap-2">
-                    {t("filesTable.bulkActions.actions")}
-                    <IconChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[200px]">
-                  {onBulkMove && (
-                    <DropdownMenuItem className="cursor-pointer py-2" onClick={() => handleBulkAction("move")}>
-                      <IconArrowsMove className="h-4 w-4" />
-                      {t("common.move")}
-                    </DropdownMenuItem>
-                  )}
-                  {onBulkDownload && (
-                    <DropdownMenuItem className="cursor-pointer py-2" onClick={() => handleBulkAction("download")}>
-                      <IconDownload className="h-4 w-4" />
-                      {t("filesTable.bulkActions.download")}
-                    </DropdownMenuItem>
-                  )}
-                  {onBulkShare && (
-                    <DropdownMenuItem className="cursor-pointer py-2" onClick={() => handleBulkAction("share")}>
-                      <IconShare className="h-4 w-4" />
-                      {t("filesTable.bulkActions.share")}
-                    </DropdownMenuItem>
-                  )}
-                  {onBulkDelete && (
-                    <DropdownMenuItem
-                      onClick={() => handleBulkAction("delete")}
-                      className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                    >
-                      <IconTrash className="h-4 w-4" />
-                      {t("filesTable.bulkActions.delete")}
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSelectedFiles(new Set());
-                setSelectedFolders(new Set());
-              }}
-            >
-              {t("common.cancel")}
-            </Button>
-          </div>
-        </div>
+    <>
+      {showBulkActions && (
+        <label className="mb-3 flex w-fit cursor-pointer items-center gap-2.5 px-0.5 text-[13px] text-ink-3">
+          <Checkbox
+            checked={selection.isAllSelected}
+            onCheckedChange={(checked) => selection.selectAll(checked === true)}
+          />
+          {t("filesTable.selectAll")}
+        </label>
       )}
-
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox checked={isAllSelected} onCheckedChange={handleSelectAll} aria-label={t("filesTable.selectAll")} />
-        <span className="text-sm text-muted-foreground">{t("filesTable.selectAll")}</span>
-      </div>
 
       <ContextMenu modal={false}>
         <ContextMenuTrigger asChild>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
-            {/* Render folders first */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {folders.map((folder) => {
-              const isSelected = selectedFolders.has(folder.id);
-              const isDragOver = dragOverTarget?.id === folder.id;
-              const isDraggedOver = draggedItem?.id === folder.id;
+              const target = { id: folder.id, type: "folder" as const, name: folder.name };
+              const isDropTarget = dnd.dragOverTarget?.id === folder.id && !draggedIds.has(folder.id);
+              const count = (folder._count?.files ?? 0) + (folder._count?.children ?? 0);
+              const open = () => onNavigateToFolder?.(folder.id);
 
-              // Check if this folder is part of the dragged items (optimized with memoized Set)
-              const isBeingDragged = draggedItemIds.has(folder.id);
-              const isAnySelectedItemDragged = isDragging && isSelected && draggedItems.length > 1;
-
-              const folderContextMenu = !isShareMode && (
-                <ContextMenuContent className="w-[200px]">
-                  {onRenameFolder && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRenameFolder(folder);
-                      }}
-                    >
-                      <IconEdit className="h-4 w-4" />
-                      {t("filesTable.actions.edit")}
-                    </ContextMenuItem>
-                  )}
-                  {onMoveFolder && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onMoveFolder(folder);
-                      }}
-                    >
-                      <IconArrowsMove className="h-4 w-4" />
-                      {t("common.move")}
-                    </ContextMenuItem>
-                  )}
-                  {onShareFolder && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onShareFolder(folder);
-                      }}
-                    >
-                      <IconShare className="h-4 w-4" />
-                      {t("filesTable.actions.share")}
-                    </ContextMenuItem>
-                  )}
-                  {onDownloadFolder && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDownloadFolder(folder.id, folder.name);
-                      }}
-                    >
-                      <IconDownload className="h-4 w-4" />
-                      {t("filesTable.actions.download")}
-                    </ContextMenuItem>
-                  )}
-                  {onDeleteFolder && (
-                    <ContextMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteFolder(folder);
-                      }}
-                      className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                      variant="destructive"
-                    >
-                      <IconTrash className="h-4 w-4" />
-                      {t("filesTable.actions.delete")}
-                    </ContextMenuItem>
-                  )}
-                </ContextMenuContent>
-              );
-
-              return (
-                <ContextMenu key={`folder-${folder.id}`} modal={false}>
-                  <ContextMenuTrigger asChild>
-                    <div
-                      data-card="true"
-                      className={`group relative cursor-pointer rounded-xl border border-border/70 bg-card p-3 transition-colors hover:border-primary/40 hover:bg-secondary/30 ${
-                        isSelected ? "bg-primary/5 ring-2 ring-primary" : ""
-                      } ${isDragOver && !isBeingDragged ? "ring-2 ring-primary bg-primary/10 scale-105" : ""} ${
-                        isDraggedOver ? "opacity-50" : ""
-                      } ${
-                        isBeingDragged || isAnySelectedItemDragged
-                          ? "opacity-40 scale-95 transform rotate-2 border-2 border-primary/50 shadow-lg"
-                          : ""
-                      }`}
-                      style={{
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        willChange: isDragging ? "transform, opacity" : "auto",
-                      }}
-                      onClick={() => onNavigateToFolder?.(folder.id)}
-                      draggable
-                      onDragStart={(e) => {
-                        e.stopPropagation();
-                        handleDragStart(e, { id: folder.id, type: "folder", name: folder.name });
-                      }}
-                      onDragEnd={handleDragEnd}
-                      onDragOver={(e) => {
-                        e.stopPropagation();
-                        handleDragOver(e, { id: folder.id, type: "folder", name: folder.name });
-                      }}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => {
-                        e.stopPropagation();
-                        handleDrop(e, { id: folder.id, type: "folder", name: folder.name });
-                      }}
-                      onContextMenu={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <div className="absolute top-2 left-2 z-10 checkbox-wrapper">
-                        <Checkbox
-                          checked={isSelected}
-                          onCheckedChange={(checked: boolean) => {
-                            const newSelected = new Set(selectedFolders);
-                            if (checked) {
-                              newSelected.add(folder.id);
-                            } else {
-                              newSelected.delete(folder.id);
-                            }
-                            setSelectedFolders(newSelected);
-                          }}
-                          aria-label={`Select folder ${folder.name}`}
-                          className="bg-background border-2"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </div>
-
-                      <div className="absolute top-2 right-2 z-10">
-                        {isShareMode ? (
-                          onDownloadFolder && (
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-8 w-8 hover:bg-background/80"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onDownloadFolder(folder.id, folder.name);
-                              }}
-                            >
-                              <IconDownload className="h-4 w-4" />
-                              <span className="sr-only">{t("filesTable.actions.download")}</span>
-                            </Button>
-                          )
-                        ) : (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <IconDotsVertical className="h-4 w-4" />
-                                <span className="sr-only">{t("filesTable.actions.menu")}</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[200px]">
-                              {onRenameFolder && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRenameFolder(folder);
-                                  }}
-                                >
-                                  <IconEdit className="h-4 w-4" />
-                                  {t("filesTable.actions.edit")}
-                                </DropdownMenuItem>
-                              )}
-                              {onMoveFolder && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onMoveFolder(folder);
-                                  }}
-                                >
-                                  <IconArrowsMove className="h-4 w-4" />
-                                  {t("common.move")}
-                                </DropdownMenuItem>
-                              )}
-                              {onShareFolder && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onShareFolder(folder);
-                                  }}
-                                >
-                                  <IconShare className="h-4 w-4" />
-                                  {t("filesTable.actions.share")}
-                                </DropdownMenuItem>
-                              )}
-                              {onDownloadFolder && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDownloadFolder(folder.id, folder.name);
-                                  }}
-                                >
-                                  <IconDownload className="h-4 w-4" />
-                                  {t("filesTable.actions.download")}
-                                </DropdownMenuItem>
-                              )}
-                              {onDeleteFolder && (
-                                <DropdownMenuItem
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDeleteFolder(folder);
-                                  }}
-                                  className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                                >
-                                  <IconTrash className="h-4 w-4" />
-                                  {t("filesTable.actions.delete")}
-                                </DropdownMenuItem>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col items-center space-y-3">
-                        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-secondary/60">
-                          <IconFolder className="h-10 w-10 text-primary" />
-                        </div>
-                        <div className="w-full space-y-1">
-                          <p className="text-sm font-medium truncate text-left" title={folder.name}>
-                            {folder.name}
-                          </p>
-                          {folder.description && (
-                            <p className="text-xs text-muted-foreground truncate text-left" title={folder.description}>
-                              {folder.description}
-                            </p>
-                          )}
-                          <div className="text-xs text-muted-foreground space-y-1 text-left">
-                            <p>{folder.totalSize ? formatFileSize(Number(folder.totalSize)) : "—"}</p>
-                            <p>{formatDateTime(folder.createdAt)}</p>
-                          </div>
-                        </div>
-                      </div>
+              return renderCard({
+                key: `folder-${folder.id}`,
+                entries: folderMenuEntries(folder, folderHandlers, t),
+                label: folder.name,
+                isSelected: selection.selectedFolders.has(folder.id),
+                onSelectChange: (checked) => selection.toggleFolder(folder.id, checked),
+                className: cn(
+                  isDropTarget && "border-primary bg-primary-soft",
+                  draggedIds.has(folder.id) && "opacity-50"
+                ),
+                onClick: open,
+                onKeyDown: onKeyOpen(open),
+                draggable: canDrag,
+                onDragStart: canDrag ? (e) => dnd.handleDragStart(e, target) : undefined,
+                onDragEnd: canDrag ? dnd.handleDragEnd : undefined,
+                onDragOver: canDrag ? (e) => dnd.handleDragOver(e, target) : undefined,
+                onDragLeave: canDrag ? dnd.handleDragLeave : undefined,
+                onDrop: canDrag ? (e) => dnd.handleDrop(e, target) : undefined,
+                children: (
+                  <>
+                    <div className="grid aspect-[4/3] place-items-center rounded-lg bg-surface-2">
+                      <FolderIcon size={30} />
                     </div>
-                  </ContextMenuTrigger>
-                  {folderContextMenu}
-                </ContextMenu>
-              );
+                    <div className="min-w-0 px-0.5">
+                      <p className="truncate text-[13.5px] font-semibold" title={folder.name}>
+                        {folder.name}
+                      </p>
+                      <p className="truncate text-[12.5px] text-ink-3">
+                        {t("files.calm.folderItems", { count })}
+                        {folder.totalSize ? ` · ${formatFileSize(Number(folder.totalSize))}` : ""}
+                      </p>
+                    </div>
+                  </>
+                ),
+              });
             })}
 
-            {/* Render files */}
             {files.map((file) => {
-              const { icon: FileIcon, color } = getFileIcon(file.name);
-              const isSelected = selectedFiles.has(file.id);
-              const isImage = isImageFile(file.name);
-              const previewUrl = filePreviewUrls[file.id];
-              const isDraggedOver = draggedItem?.id === file.id;
+              const thumbnail = thumbnails[file.id];
+              const open = () => onPreview?.(file);
 
-              // Check if this file is part of the dragged items (optimized with memoized Set)
-              const isBeingDragged = draggedItemIds.has(file.id);
-              const isAnySelectedItemDragged = isDragging && isSelected && draggedItems.length > 1;
-
-              const fileContextMenu = !isShareMode && (
-                <ContextMenuContent className="w-[200px]">
-                  <ContextMenuItem
-                    className="cursor-pointer py-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPreview?.(file);
-                    }}
-                  >
-                    <IconEye className="h-4 w-4" />
-                    {t("filesTable.actions.preview")}
-                  </ContextMenuItem>
-                  {onRename && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRename?.(file);
-                      }}
-                    >
-                      <IconEdit className="h-4 w-4" />
-                      {t("filesTable.actions.edit")}
-                    </ContextMenuItem>
-                  )}
-                  <ContextMenuItem
-                    className="cursor-pointer py-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDownload(file.objectName, file.name);
-                    }}
-                  >
-                    <IconDownload className="h-4 w-4" />
-                    {t("filesTable.actions.download")}
-                  </ContextMenuItem>
-                  {onShare && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onShare?.(file);
-                      }}
-                    >
-                      <IconShare className="h-4 w-4" />
-                      {t("filesTable.actions.share")}
-                    </ContextMenuItem>
-                  )}
-                  {onMoveFile && (
-                    <ContextMenuItem
-                      className="cursor-pointer py-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onMoveFile?.(file);
-                      }}
-                    >
-                      <IconArrowsMove className="h-4 w-4" />
-                      {t("common.move")}
-                    </ContextMenuItem>
-                  )}
-                  {onDelete && (
-                    <ContextMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete?.(file);
-                      }}
-                      className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                      variant="destructive"
-                    >
-                      <IconTrash className="h-4 w-4" />
-                      {t("filesTable.actions.delete")}
-                    </ContextMenuItem>
-                  )}
-                </ContextMenuContent>
-              );
-
-              return (
-                <ContextMenu key={file.id} modal={false}>
-                  <ContextMenuTrigger asChild>
-                    <div
-                      data-card="true"
-                      className={`group relative cursor-pointer rounded-xl border border-border/70 bg-card p-3 transition-colors hover:border-primary/40 hover:bg-secondary/30 ${
-                        isSelected ? "bg-primary/5 ring-2 ring-primary" : ""
-                      } ${isDraggedOver ? "opacity-50 scale-95" : ""} ${
-                        isBeingDragged || isAnySelectedItemDragged
-                          ? "opacity-40 scale-95 transform rotate-2 border-2 border-primary/50 shadow-lg"
-                          : ""
-                      }`}
-                      style={{
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        willChange: isDragging ? "transform, opacity" : "auto",
-                      }}
-                      onClick={(e) => {
-                        if (
-                          (e.target as HTMLElement).closest(".checkbox-wrapper") ||
-                          (e.target as HTMLElement).closest("button") ||
-                          (e.target as HTMLElement).closest('[role="menuitem"]')
-                        ) {
-                          return;
-                        }
-                        if (onPreview) {
-                          onPreview(file);
-                        }
-                      }}
-                      draggable
-                      onDragStart={(e) => {
-                        e.stopPropagation();
-                        handleDragStart(e, { id: file.id, type: "file", name: file.name });
-                      }}
-                      onDragEnd={handleDragEnd}
-                      onContextMenu={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <div className="absolute top-2 left-2 z-10 checkbox-wrapper">
-                        <Checkbox
-                          checked={isSelected}
-                          onCheckedChange={(checked: boolean) => {
-                            handleSelectFile({ stopPropagation: () => {} } as React.MouseEvent, file.id, checked);
-                          }}
-                          aria-label={t("filesTable.selectFile", { fileName: file.name })}
-                          className="bg-background border-2"
-                        />
-                      </div>
-
-                      <div className="absolute top-2 right-2 z-10">
-                        {isShareMode ? (
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 hover:bg-background/80"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onDownload(file.objectName, file.name);
-                            }}
-                          >
-                            <IconDownload className="h-4 w-4" />
-                            <span className="sr-only">{t("filesTable.actions.download")}</span>
-                          </Button>
-                        ) : (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <IconDotsVertical className="h-4 w-4" />
-                                <span className="sr-only">{t("filesTable.actions.menu")}</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[200px]">
-                              <DropdownMenuItem
-                                className="cursor-pointer py-2"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onPreview?.(file);
-                                }}
-                              >
-                                <IconEye className="h-4 w-4" />
-                                {t("filesTable.actions.preview")}
-                              </DropdownMenuItem>
-                              {onRename && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRename?.(file);
-                                  }}
-                                >
-                                  <IconEdit className="h-4 w-4" />
-                                  {t("filesTable.actions.edit")}
-                                </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem
-                                className="cursor-pointer py-2"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onDownload(file.objectName, file.name);
-                                }}
-                              >
-                                <IconDownload className="h-4 w-4" />
-                                {t("filesTable.actions.download")}
-                              </DropdownMenuItem>
-                              {onShare && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onShare?.(file);
-                                  }}
-                                >
-                                  <IconShare className="h-4 w-4" />
-                                  {t("filesTable.actions.share")}
-                                </DropdownMenuItem>
-                              )}
-                              {onMoveFile && (
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onMoveFile?.(file);
-                                  }}
-                                >
-                                  <IconArrowsMove className="h-4 w-4" />
-                                  {t("common.move")}
-                                </DropdownMenuItem>
-                              )}
-                              {onDelete && (
-                                <DropdownMenuItem
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete?.(file);
-                                  }}
-                                  className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                                >
-                                  <IconTrash className="h-4 w-4" />
-                                  {t("filesTable.actions.delete")}
-                                </DropdownMenuItem>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col items-center space-y-3">
-                        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-secondary/60">
-                          {isImage && previewUrl ? (
-                            <img src={previewUrl} alt={file.name} className="object-cover w-full h-full" />
-                          ) : (
-                            <FileIcon className={`h-10 w-10 ${color}`} />
-                          )}
-                        </div>
-
-                        <div className="w-full space-y-1">
-                          <p className="text-sm font-medium truncate text-left" title={file.name}>
-                            {file.name}
-                          </p>
-                          {file.description && (
-                            <p className="text-xs text-muted-foreground truncate text-left" title={file.description}>
-                              {file.description}
-                            </p>
-                          )}
-                          <div className="text-xs text-muted-foreground space-y-1 text-left">
-                            <p>{formatFileSize(file.size)}</p>
-                            <p>{formatDateTime(file.createdAt)}</p>
-                            {!!file.downloads && (
-                              <p>
-                                {t("filesTable.columns.downloads")}: {file.downloads}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
+              return renderCard({
+                key: file.id,
+                entries: fileMenuEntries(file, fileHandlers, t),
+                label: file.name,
+                isSelected: selection.selectedFiles.has(file.id),
+                onSelectChange: (checked) => selection.toggleFile(file.id, checked),
+                className: cn(draggedIds.has(file.id) && "opacity-50"),
+                onClick: open,
+                onKeyDown: onKeyOpen(open),
+                draggable: canDrag,
+                onDragStart: canDrag
+                  ? (e) => dnd.handleDragStart(e, { id: file.id, type: "file", name: file.name })
+                  : undefined,
+                onDragEnd: canDrag ? dnd.handleDragEnd : undefined,
+                children: (
+                  <>
+                    <div className="grid aspect-[4/3] place-items-center overflow-hidden rounded-lg bg-surface-2">
+                      {thumbnail ? (
+                        <img src={thumbnail} alt="" className="size-full object-cover" draggable={false} />
+                      ) : (
+                        <FileTypeIcon name={file.name} size={30} />
+                      )}
                     </div>
-                  </ContextMenuTrigger>
-                  {fileContextMenu}
-                </ContextMenu>
-              );
+                    <div className="min-w-0 px-0.5">
+                      <p className="truncate text-[13.5px] font-semibold" title={file.name}>
+                        {file.name}
+                      </p>
+                      <p className="truncate text-[12.5px] text-ink-3">
+                        {formatFileSize(Number(file.size))} · {added(file.createdAt)}
+                      </p>
+                    </div>
+                  </>
+                ),
+              });
             })}
           </div>
         </ContextMenuTrigger>
         {!isShareMode && (onCreateFolder || onUpload) && (
           <ContextMenuContent className="w-[200px]">
             {onCreateFolder && (
-              <ContextMenuItem onClick={onCreateFolder} className="cursor-pointer py-2">
-                <IconFolderPlus className="h-4 w-4" />
+              <ContextMenuItem onClick={onCreateFolder}>
+                <IconFolderPlus />
                 {t("contextMenu.newFolder")}
               </ContextMenuItem>
             )}
             {onUpload && (
-              <ContextMenuItem onClick={onUpload} className="cursor-pointer py-2">
-                <IconCloudUpload className="h-4 w-4" />
+              <ContextMenuItem onClick={onUpload}>
+                <IconCloudUpload />
                 {t("contextMenu.uploadFile")}
               </ContextMenuItem>
             )}
           </ContextMenuContent>
         )}
       </ContextMenu>
-    </div>
+
+      {showBulkActions && (
+        <SelectionBar
+          count={selection.count}
+          onShare={isShareMode ? undefined : bulk(onBulkShare)}
+          onDownload={bulk(onBulkDownload)}
+          onMove={isShareMode ? undefined : bulk(onBulkMove)}
+          onDelete={isShareMode ? undefined : bulk(onBulkDelete)}
+          onClear={selection.clear}
+        />
+      )}
+    </>
   );
 }

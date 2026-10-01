@@ -5,7 +5,14 @@ import { IconCheck } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { getUpdateProgress } from "@/http/endpoints/update";
 import {
   classifyResponse,
@@ -43,7 +50,7 @@ function StepMark({ state }: { state: StepState }) {
     <span
       aria-hidden
       className={cn(
-        "grid size-4 shrink-0 place-items-center rounded-full border-[1.5px] text-white",
+        "grid size-4 shrink-0 place-items-center rounded-full border-[1.5px] text-surface",
         state === "pending" && "border-line-2",
         state === "now" &&
           "animate-spin border-primary border-t-transparent motion-reduce:animate-none motion-reduce:border-t-primary",
@@ -160,7 +167,7 @@ export function UpdateProgressDialog({ open, targetVersion, onClose }: UpdatePro
     >
       <DialogContent
         showCloseButton={false}
-        className="gap-5 sm:max-w-md"
+        className="gap-6 sm:max-w-[460px]"
         onEscapeKeyDown={(event) => running && event.preventDefault()}
         onInteractOutside={(event) => running && event.preventDefault()}
       >
@@ -179,13 +186,13 @@ export function UpdateProgressDialog({ open, targetVersion, onClose }: UpdatePro
               )}
             />
           </span>
-          <DialogTitle className="flex-1 text-lg">
+          <DialogTitle className="flex-1">
             {version ? t("updates.progress.title", { version }) : t("updates.progress.titleNoVersion")}
           </DialogTitle>
           <span className="font-mono text-xs text-ink-3 tabular-nums">{formatElapsed(elapsed)}</span>
         </DialogHeader>
 
-        <ol className="grid gap-2 text-sm">
+        <ol className="grid gap-2.5 text-[13px]">
           {UPDATE_STEPS.map((step) => {
             const state = stepState(step, view);
             return (
@@ -203,28 +210,23 @@ export function UpdateProgressDialog({ open, targetVersion, onClose }: UpdatePro
 
         <div className="grid gap-2">
           {running && (
-            <div aria-hidden className="h-1.5 overflow-hidden rounded-full bg-line">
+            <div aria-hidden className="h-1 overflow-hidden rounded-full bg-line">
               <div className="h-full w-1/3 animate-indeterminate rounded-full bg-primary motion-reduce:w-full motion-reduce:animate-none motion-reduce:bg-primary-soft" />
             </div>
           )}
           <DialogDescription
             aria-live="polite"
-            className={cn("min-h-5 font-mono text-xs [overflow-wrap:anywhere]", failed ? "text-bad" : "text-ink-3")}
+            className={cn("min-h-5 [overflow-wrap:anywhere]", failed ? "text-bad" : "text-ink-3")}
           >
             {statusLine()}
           </DialogDescription>
         </div>
 
-        <div className="flex justify-end">
-          <Button
-            ref={buttonRef}
-            variant={endsWithReload ? "default" : "outline"}
-            disabled={running}
-            onClick={onButton}
-          >
+        <DialogFooter>
+          <Button ref={buttonRef} variant={endsWithReload ? "default" : "ghost"} disabled={running} onClick={onButton}>
             {endsWithReload ? t("updates.progress.reload") : t("common.close")}
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

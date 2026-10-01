@@ -5,8 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { BrandMark } from "@/components/brand/brand-mark";
-import { TransferShell } from "@/components/brand/transfer-shell";
+import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAuth } from "@/contexts/auth-context";
 import { getCurrentUser } from "@/http/endpoints";
 
@@ -82,15 +81,5 @@ export default function AuthCallbackPage() {
     router.push("/login");
   }, [router, searchParams, setUser, setIsAuthenticated, setIsAdmin, t]);
 
-  return (
-    <TransferShell centered>
-      <div className="flex flex-col items-center px-8 py-12 text-center">
-        <span className="tile">
-          <BrandMark className="size-6" />
-        </span>
-        <div className="mt-6 size-7 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
-        <p className="mt-4 text-sm text-ink-3">{t("login.processing")}</p>
-      </div>
-    </TransferShell>
-  );
+  return <LoadingScreen label={t("login.processing")} />;
 }

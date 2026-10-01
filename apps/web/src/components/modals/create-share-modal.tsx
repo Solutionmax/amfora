@@ -1,17 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { IconCalendar, IconEye, IconLock, IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { FileTree, TreeFile, TreeFolder } from "@/components/tables/files-tree";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { createShare } from "@/http/endpoints";
 
@@ -22,24 +29,26 @@ interface CreateShareModalProps {
   getAllFilesAndFolders: () => Promise<{ files: any[]; folders: any[] }>;
 }
 
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  password: "",
+  expiresAt: "",
+  isPasswordProtected: false,
+  maxViews: "",
+};
+
+type Step = "details" | "files";
+
+/** Two steps: name and access first, then pick what to share. */
 export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFolders }: CreateShareModalProps) {
   const t = useTranslations();
-  const [currentTab, setCurrentTab] = useState("details");
-
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    password: "",
-    expiresAt: "",
-    isPasswordProtected: false,
-    maxViews: "",
-  });
-
+  const [step, setStep] = useState<Step>("details");
+  const [formData, setFormData] = useState(EMPTY_FORM);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [files, setFiles] = useState<TreeFile[]>([]);
   const [folders, setFolders] = useState<TreeFolder[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
@@ -47,54 +56,49 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
     try {
       setIsLoadingData(true);
       const data = await getAllFilesAndFolders();
-
-      const treeFiles: TreeFile[] = data.files.map((file) => ({
-        id: file.id,
-        name: file.name,
-        type: "file" as const,
-        size: file.size,
-        parentId: file.folderId || null,
-      }));
-
-      const treeFolders: TreeFolder[] = data.folders.map((folder) => ({
-        id: folder.id,
-        name: folder.name,
-        type: "folder" as const,
-        parentId: folder.parentId || null,
-        totalSize: folder.totalSize,
-      }));
-
-      setFiles(treeFiles);
-      setFolders(treeFolders);
+      setFiles(
+        data.files.map((file) => ({
+          id: file.id,
+          name: file.name,
+          type: "file" as const,
+          size: file.size,
+          parentId: file.folderId || null,
+        }))
+      );
+      setFolders(
+        data.folders.map((folder) => ({
+          id: folder.id,
+          name: folder.name,
+          type: "folder" as const,
+          parentId: folder.parentId || null,
+          totalSize: folder.totalSize,
+        }))
+      );
     } catch (error) {
       console.error("Error loading files and folders:", error);
+      toast.error(t("common.unexpectedError"));
     } finally {
       setIsLoadingData(false);
     }
-  }, [getAllFilesAndFolders]);
+  }, [getAllFilesAndFolders, t]);
 
   useEffect(() => {
     if (isOpen) {
-      loadData();
-      setFormData({
-        name: "",
-        description: "",
-        password: "",
-        expiresAt: "",
-        isPasswordProtected: false,
-        maxViews: "",
-      });
+      void loadData();
+      setFormData(EMPTY_FORM);
       setSelectedItems([]);
-      setCurrentTab("details");
+      setSearchQuery("");
+      setStep("details");
     }
   }, [isOpen, loadData]);
+
+  const update = (patch: Partial<typeof EMPTY_FORM>) => setFormData((prev) => ({ ...prev, ...patch }));
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) {
       toast.error(t("createShare.errors.nameRequired"));
       return;
     }
-
     if (selectedItems.length === 0) {
       toast.error(t("createShare.errors.selectItems"));
       return;
@@ -102,22 +106,16 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
 
     try {
       setIsLoading(true);
-
       const selectedFiles = selectedItems.filter((id) => files.some((file) => file.id === id));
       const selectedFolders = selectedItems.filter((id) => folders.some((folder) => folder.id === id));
+      const dateValue = formData.expiresAt;
 
       await createShare({
         name: formData.name,
         description: formData.description || undefined,
         password: formData.isPasswordProtected ? formData.password : undefined,
-        expiration: formData.expiresAt
-          ? (() => {
-              const dateValue = formData.expiresAt;
-              if (dateValue.length === 10) {
-                return new Date(dateValue + "T23:59:59").toISOString();
-              }
-              return new Date(dateValue).toISOString();
-            })()
+        expiration: dateValue
+          ? new Date(dateValue.length === 10 ? `${dateValue}T23:59:59` : dateValue).toISOString()
           : undefined,
         maxViews: formData.maxViews ? parseInt(formData.maxViews) : undefined,
         files: selectedFiles,
@@ -136,202 +134,182 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
   };
 
   const handleClose = () => {
-    if (!isLoading) {
-      onClose();
-    }
+    if (!isLoading) onClose();
   };
 
-  const updateFormData = (field: keyof typeof formData, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const selectedCount = selectedItems.length;
   const canProceedToFiles = formData.name.trim().length > 0;
-  const canSubmit = formData.name.trim().length > 0 && selectedCount > 0;
+  const canSubmit = canProceedToFiles && selectedItems.length > 0;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-3xl max-h-[calc(100dvh-2rem)] w-full">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className={step === "files" ? "sm:max-w-[640px]" : "sm:max-w-[520px]"}>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <IconShare className="h-5 w-5" />
-            {t("createShare.title")}
-          </DialogTitle>
+          <DialogTitle>{t("shares.calm.newShare")}</DialogTitle>
+          <DialogDescription>
+            {step === "details" ? t("shares.calm.modals.stepDetails") : t("shares.calm.modals.stepFiles")}
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-6 flex-1 min-h-0 w-full overflow-hidden">
-          <Tabs value={currentTab} onValueChange={setCurrentTab} className="flex-1">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="details">{t("createShare.tabs.shareDetails")}</TabsTrigger>
-              <TabsTrigger value="files" disabled={!canProceedToFiles}>
-                {t("createShare.tabs.selectFiles")}
-                {selectedCount > 0 && (
-                  <span className="ml-1 text-xs bg-primary text-primary-foreground rounded-full px-2 py-0.5">
-                    {selectedCount}
-                  </span>
-                )}
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="details" className="space-y-5 mt-6">
-              <div className="space-y-2">
-                <Label htmlFor="share-name">{t("createShare.nameLabel")} *</Label>
-                <Input
-                  id="share-name"
-                  value={formData.name}
-                  onChange={(e) => updateFormData("name", e.target.value)}
-                  placeholder={t("createShare.namePlaceholder")}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="share-description">{t("createShare.descriptionLabel")}</Label>
-                <Textarea
-                  id="share-description"
-                  value={formData.description}
-                  onChange={(e) => updateFormData("description", e.target.value)}
-                  placeholder={t("createShare.descriptionPlaceholder")}
-                  rows={3}
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="password-protection"
-                  checked={formData.isPasswordProtected}
-                  onCheckedChange={(checked) => updateFormData("isPasswordProtected", checked)}
-                />
-                <Label htmlFor="password-protection" className="flex items-center gap-2">
-                  <IconLock className="h-4 w-4" />
-                  {t("createShare.passwordProtection")}
-                </Label>
-              </div>
-
-              {formData.isPasswordProtected && (
-                <div className="space-y-2">
-                  <Label htmlFor="share-password">{t("createShare.passwordLabel")}</Label>
-                  <Input
-                    id="share-password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => updateFormData("password", e.target.value)}
-                    placeholder={t("createShare.passwordPlaceholder")}
-                  />
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="expiration" className="flex items-center gap-2">
-                  <IconCalendar className="h-4 w-4" />
-                  {t("createShare.expirationLabel")}
-                </Label>
+        {step === "details" ? (
+          <form
+            id="create-share-details"
+            className="grid gap-[18px]"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (canProceedToFiles) setStep("files");
+            }}
+          >
+            <Field label={t("shares.calm.modals.nameLabel")} htmlFor="share-name">
+              <Input
+                id="share-name"
+                autoFocus
+                value={formData.name}
+                onChange={(e) => update({ name: e.target.value })}
+                placeholder={t("createShare.namePlaceholder")}
+                required
+              />
+            </Field>
+            <Field
+              label={t("shares.calm.modals.descriptionLabel")}
+              htmlFor="share-description"
+              hint={t("shares.calm.modals.descriptionHint")}
+            >
+              <Textarea
+                id="share-description"
+                value={formData.description}
+                onChange={(e) => update({ description: e.target.value })}
+                placeholder={t("createShare.descriptionPlaceholder")}
+                rows={3}
+              />
+            </Field>
+            <div className="grid gap-[18px] sm:grid-cols-2">
+              <Field
+                label={t("shares.calm.modals.expiresLabel")}
+                htmlFor="expiration"
+                hint={t("shares.calm.modals.expiresHint")}
+              >
                 <Input
                   id="expiration"
                   type="datetime-local"
                   value={formData.expiresAt}
-                  onChange={(e) => updateFormData("expiresAt", e.target.value)}
+                  onChange={(e) => update({ expiresAt: e.target.value })}
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="max-views" className="flex items-center gap-2">
-                  <IconEye className="h-4 w-4" />
-                  {t("createShare.maxViewsLabel")}
-                </Label>
+              </Field>
+              <Field
+                label={t("shares.calm.modals.maxViewsLabel")}
+                htmlFor="max-views"
+                hint={t("shares.calm.modals.maxViewsHint")}
+              >
                 <Input
                   id="max-views"
                   type="number"
                   min="1"
+                  inputMode="numeric"
                   value={formData.maxViews}
-                  onChange={(e) => updateFormData("maxViews", e.target.value)}
-                  placeholder={t("createShare.maxViewsPlaceholder")}
+                  onChange={(e) => update({ maxViews: e.target.value })}
                 />
-              </div>
-
-              <div className="flex justify-end">
-                <Button onClick={() => setCurrentTab("files")} disabled={!canProceedToFiles}>
-                  {t("createShare.nextSelectFiles")}
-                </Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="files" className="space-y-5 mt-6 flex-1 min-h-0">
-              <div className="space-y-2">
-                <Label htmlFor="file-search">{t("common.search")}</Label>
-                <Input
-                  id="file-search"
-                  type="search"
-                  placeholder={t("searchBar.placeholder")}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  disabled={isLoadingData}
+              </Field>
+            </div>
+            <label htmlFor="password-protection" className="flex cursor-pointer items-center gap-3.5">
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold">{t("shares.calm.password")}</span>
+                <span className="block text-[12.5px] text-ink-3">{t("shares.calm.modals.passwordHint")}</span>
+              </span>
+              <Switch
+                id="password-protection"
+                checked={formData.isPasswordProtected}
+                onCheckedChange={(checked) => update({ isPasswordProtected: checked, password: "" })}
+              />
+            </label>
+            {formData.isPasswordProtected && (
+              <Field label={t("createShare.passwordLabel")} htmlFor="share-password">
+                <PasswordInput
+                  id="share-password"
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={(e) => update({ password: e.target.value })}
+                  placeholder={t("createShare.passwordPlaceholder")}
                 />
-              </div>
-
-              <div className="text-sm text-muted-foreground">
-                {selectedCount > 0 ? (
-                  <span>{t("createShare.itemsSelected", { count: selectedCount })}</span>
-                ) : (
-                  <span>{t("createShare.selectItemsPrompt")}</span>
-                )}
-              </div>
-
-              <div className="flex-1 min-h-0 w-full overflow-hidden">
-                {isLoadingData ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="text-sm text-muted-foreground">{t("common.loadingSimple")}</div>
-                  </div>
-                ) : (
-                  <FileTree
-                    files={files.map((file) => ({
-                      id: file.id,
-                      name: file.name,
-                      description: "",
-                      extension: "",
-                      size: file.size?.toString() || "0",
-                      objectName: "",
-                      userId: "",
-                      folderId: file.parentId,
-                      createdAt: "",
-                      updatedAt: "",
-                    }))}
-                    folders={folders.map((folder) => ({
-                      id: folder.id,
-                      name: folder.name,
-                      description: "",
-                      parentId: folder.parentId,
-                      userId: "",
-                      createdAt: "",
-                      updatedAt: "",
-                      totalSize: folder.totalSize,
-                    }))}
-                    selectedItems={selectedItems}
-                    onSelectionChange={setSelectedItems}
-                    showFiles={true}
-                    showFolders={true}
-                    maxHeight="400px"
-                    searchQuery={searchQuery}
-                  />
-                )}
-              </div>
-
-              <div className="flex flex-wrap justify-between gap-3 border-t pt-5">
-                <Button variant="outline" onClick={() => setCurrentTab("details")}>
-                  {t("common.back")}
-                </Button>
-                <div className="space-x-2">
-                  <Button variant="outline" onClick={handleClose}>
-                    {t("common.cancel")}
-                  </Button>
-                  <Button onClick={handleSubmit} disabled={!canSubmit || isLoading}>
-                    {isLoading ? t("common.creating") : t("createShare.create")}
-                  </Button>
+              </Field>
+            )}
+          </form>
+        ) : (
+          <div className="flex min-w-0 flex-col gap-3">
+            <Input
+              type="search"
+              aria-label={t("common.search")}
+              placeholder={t("searchBar.placeholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              disabled={isLoadingData}
+            />
+            <p className="text-[12.5px] text-ink-3">
+              {t("shares.calm.modals.selectedCount", { count: selectedItems.length })}
+            </p>
+            <div className="min-h-0 min-w-0">
+              {isLoadingData ? (
+                <div aria-hidden className="space-y-3 py-2">
+                  {[0, 1, 2, 3].map((row) => (
+                    <Skeleton key={row} className="h-4 w-3/5" />
+                  ))}
                 </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+              ) : (
+                <FileTree
+                  files={files.map((file) => ({
+                    id: file.id,
+                    name: file.name,
+                    description: "",
+                    extension: "",
+                    size: file.size?.toString() || "0",
+                    objectName: "",
+                    userId: "",
+                    folderId: file.parentId,
+                    createdAt: "",
+                    updatedAt: "",
+                  }))}
+                  folders={folders.map((folder) => ({
+                    id: folder.id,
+                    name: folder.name,
+                    description: "",
+                    parentId: folder.parentId,
+                    userId: "",
+                    createdAt: "",
+                    updatedAt: "",
+                    totalSize: folder.totalSize,
+                  }))}
+                  selectedItems={selectedItems}
+                  onSelectionChange={setSelectedItems}
+                  showFiles={true}
+                  showFolders={true}
+                  maxHeight="360px"
+                  searchQuery={searchQuery}
+                />
+              )}
+            </div>
+          </div>
+        )}
+
+        <DialogFooter>
+          {step === "details" ? (
+            <>
+              <Button variant="ghost" onClick={handleClose}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" form="create-share-details" disabled={!canProceedToFiles}>
+                {t("shares.calm.modals.next")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" onClick={() => setStep("details")} disabled={isLoading}>
+                {t("common.back")}
+              </Button>
+              <Button onClick={handleSubmit} disabled={!canSubmit || isLoading}>
+                {isLoading ? t("common.creating") : t("createShare.create")}
+              </Button>
+            </>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

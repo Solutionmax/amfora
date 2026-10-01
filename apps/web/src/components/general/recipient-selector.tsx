@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IconBell, IconCheck, IconMail, IconPlus, IconTrash, IconUsers, IconX } from "@tabler/icons-react";
+import { IconBell, IconMail, IconPlus, IconTrash, IconUsers, IconX } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { useShareContext } from "@/contexts/share-context";
 import { addRecipients, notifyRecipients, removeRecipients } from "@/http/endpoints";
 
@@ -155,179 +154,144 @@ export function RecipientSelector({ shareId, selectedRecipients, shareAlias, onS
   const isAllSelected = recipients.length > 0 && selectedForAction.size === recipients.length;
   const hasSelection = selectedForAction.size > 0;
 
+  const notifyOne = async (email: string) => {
+    const link = `${window.location.origin}/s/${shareAlias}`;
+    const loadingToast = toast.loading(t("recipientSelector.sendingNotifications"));
+    try {
+      await notifyRecipients(shareId, { shareLink: link });
+      toast.dismiss(loadingToast);
+      toast.success(t("recipientSelector.singleNotifySuccess", { email }));
+    } catch {
+      toast.dismiss(loadingToast);
+      toast.error(t("recipientSelector.singleNotifyError"));
+    }
+  };
+
+  const canNotify = smtpEnabled === "true" && !!shareAlias;
+
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <IconPlus className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-medium">{t("recipientSelector.addRecipient")}</h3>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <IconMail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              className="pl-9 h-10"
-              placeholder={t("recipientSelector.emailPlaceholder")}
-              value={newRecipient}
-              onChange={(e) => setNewRecipient(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && !isAddingRecipient && handleAddRecipient()}
-              disabled={isAddingRecipient}
-            />
-          </div>
-          <Button
-            onClick={handleAddRecipient}
-            disabled={!newRecipient.trim() || isAddingRecipient}
-            className="h-10 px-6 sm:w-auto w-full"
-          >
-            {isAddingRecipient ? (
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-                {t("common.loading")}
-              </div>
-            ) : (
-              <>
-                <IconPlus className="h-4 w-4" />
-                {t("recipientSelector.add")}
-              </>
-            )}
+    <div className="grid gap-6">
+      <div className="grid gap-1.5">
+        <label htmlFor="recipient-email" className="text-[13px] font-medium text-ink-2">
+          {t("recipientSelector.addRecipient")}
+        </label>
+        <div className="flex gap-2">
+          <Input
+            id="recipient-email"
+            type="email"
+            className="flex-1"
+            placeholder={t("recipientSelector.emailPlaceholder")}
+            value={newRecipient}
+            onChange={(e) => setNewRecipient(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !isAddingRecipient && handleAddRecipient()}
+            disabled={isAddingRecipient}
+          />
+          <Button variant="outline" onClick={handleAddRecipient} disabled={!newRecipient.trim() || isAddingRecipient}>
+            <IconPlus />
+            {isAddingRecipient ? t("common.loadingSimple") : t("recipientSelector.add")}
           </Button>
         </div>
       </div>
 
-      <Separator />
-
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <IconUsers className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-medium">{t("recipientSelector.recipients", { count: recipients.length })}</h3>
-          </div>
-
-          {recipients.length > 0 && shareAlias && smtpEnabled === "true" && (
-            <Button variant="outline" size="sm" onClick={handleNotifyAll} className="sm:w-auto w-full">
-              <IconBell className="h-4 w-4" />
-              {t("recipientSelector.notifyAll")}
-            </Button>
-          )}
-        </div>
-
-        {hasSelection && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-primary-soft rounded-lg">
-            <div className="flex items-center gap-2">
-              <IconCheck className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-ink">
+      <div className="grid gap-2">
+        <div className="flex min-h-8 items-center justify-between gap-3">
+          {hasSelection ? (
+            <>
+              <span className="text-[13px] font-medium">
                 {t("recipientSelector.selectedCount", { count: selectedForAction.size })}
               </span>
-            </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              {smtpEnabled === "true" && shareAlias && (
-                <Button variant="outline" size="sm" onClick={handleNotifySelected} className="sm:w-auto w-full">
-                  <IconBell className="h-4 w-4" />
-                  {t("recipientSelector.notifySelected")}
+              <div className="flex items-center gap-1.5">
+                {canNotify && (
+                  <Button variant="outline" size="sm" onClick={handleNotifySelected}>
+                    <IconBell />
+                    {t("recipientSelector.notifySelected")}
+                  </Button>
+                )}
+                <Button variant="destructive" size="sm" onClick={handleRemoveSelected}>
+                  <IconTrash />
+                  {t("recipientSelector.removeSelected")}
                 </Button>
-              )}
-              <Button variant="destructive" size="sm" onClick={handleRemoveSelected} className="sm:w-auto w-full">
-                <IconTrash className="h-4 w-4" />
-                {t("recipientSelector.removeSelected")}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedForAction(new Set())}
-                className="h-8 w-8 p-0 self-center"
-                title={t("common.cancel")}
-              >
-                <IconX className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-
-        <div className="border rounded-lg overflow-hidden">
-          {recipients.length === 0 ? (
-            <div className="text-center py-12 px-6">
-              <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-                <IconUsers className="h-8 w-8 text-muted-foreground" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedForAction(new Set())}
+                  aria-label={t("common.cancel")}
+                >
+                  <IconX />
+                </Button>
               </div>
-              <h4 className="text-lg font-medium mb-2">{t("recipientSelector.noRecipients")}</h4>
-              <p className="text-sm text-muted-foreground mb-4">{t("recipientSelector.noRecipientsDescription")}</p>
-            </div>
+            </>
           ) : (
             <>
-              <div className="flex items-center gap-3 p-4 border-b bg-muted/30">
-                <Checkbox
-                  checked={isAllSelected}
-                  onCheckedChange={handleSelectAll}
-                  aria-label={t("recipientSelector.selectAll")}
-                />
-                <span className="text-sm font-medium text-muted-foreground">{t("recipientSelector.selectAll")}</span>
-              </div>
-
-              <div className="divide-y max-h-80 overflow-y-auto">
-                {recipients.map((email, index) => {
-                  const isSelected = selectedForAction.has(email);
-                  return (
-                    <div
-                      key={index}
-                      className={`flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors ${
-                        isSelected ? "bg-primary-soft" : ""
-                      }`}
-                    >
-                      <Checkbox
-                        checked={isSelected}
-                        onCheckedChange={(checked) => handleSelectRecipient(email, checked as boolean)}
-                        aria-label={t("recipientSelector.selectRecipient", { email })}
-                      />
-
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center">
-                          <IconMail className="h-[17px] w-[17px] text-ink-icon" />
-                        </div>
-                        <span className="truncate font-medium">{email}</span>
-                      </div>
-
-                      <div className="flex items-center gap-1">
-                        {smtpEnabled === "true" && shareAlias && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-primary hover:bg-primary-soft hover:text-primary"
-                            onClick={async () => {
-                              const link = `${window.location.origin}/s/${shareAlias}`;
-                              const loadingToast = toast.loading(t("recipientSelector.sendingNotifications"));
-
-                              try {
-                                await notifyRecipients(shareId, { shareLink: link });
-                                toast.dismiss(loadingToast);
-                                toast.success(t("recipientSelector.singleNotifySuccess", { email }));
-                              } catch {
-                                toast.dismiss(loadingToast);
-                                toast.error(t("recipientSelector.singleNotifyError"));
-                              }
-                            }}
-                            title={t("recipientSelector.notifySingle")}
-                          >
-                            <IconBell className="h-4 w-4" />
-                          </Button>
-                        )}
-
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => handleRemoveRecipient(email)}
-                          title={t("recipientSelector.removeSingle")}
-                        >
-                          <IconTrash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <h3 className="font-sans text-[12.5px] font-semibold tracking-normal text-ink-3">
+                {t("recipientSelector.recipients", { count: recipients.length })}
+              </h3>
+              {recipients.length > 0 && canNotify && (
+                <Button variant="ghost" size="sm" onClick={handleNotifyAll}>
+                  <IconBell />
+                  {t("recipientSelector.notifyAll")}
+                </Button>
+              )}
             </>
           )}
         </div>
+
+        {recipients.length === 0 ? (
+          <div className="flex flex-col items-center gap-1.5 border-t border-line px-4 py-10 text-center">
+            <IconUsers className="mb-1 size-6 text-ink-icon" />
+            <p className="font-semibold">{t("recipientSelector.noRecipients")}</p>
+            <p className="text-[13px] text-ink-3">{t("recipientSelector.noRecipientsDescription")}</p>
+          </div>
+        ) : (
+          <div className="border-t border-line">
+            <label className="flex items-center gap-3 border-b border-line px-1 py-2.5 text-[13px] text-ink-3">
+              <Checkbox checked={isAllSelected} onCheckedChange={handleSelectAll} />
+              {t("recipientSelector.selectAll")}
+            </label>
+            <div className="max-h-80 overflow-y-auto">
+              {recipients.map((email) => {
+                const isSelected = selectedForAction.has(email);
+                return (
+                  <div
+                    key={email}
+                    className={`group flex items-center gap-3 border-b border-line px-1 py-2.5 transition-colors ${
+                      isSelected ? "bg-primary-soft" : "hover:bg-surface-2"
+                    }`}
+                  >
+                    <Checkbox
+                      checked={isSelected}
+                      onCheckedChange={(checked) => handleSelectRecipient(email, checked as boolean)}
+                      aria-label={t("recipientSelector.selectRecipient", { email })}
+                    />
+                    <IconMail className="size-[17px] shrink-0 text-ink-icon" />
+                    <span className="min-w-0 flex-1 truncate font-medium">{email}</span>
+                    {canNotify && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => notifyOne(email)}
+                        aria-label={t("recipientSelector.notifySingle")}
+                        title={t("recipientSelector.notifySingle")}
+                      >
+                        <IconBell />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:text-bad hover:[&_svg]:text-bad"
+                      onClick={() => handleRemoveRecipient(email)}
+                      aria-label={t("recipientSelector.removeSingle")}
+                      title={t("recipientSelector.removeSingle")}
+                    >
+                      <IconTrash />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

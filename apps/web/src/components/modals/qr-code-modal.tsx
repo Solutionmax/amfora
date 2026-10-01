@@ -22,6 +22,7 @@ interface QrCodeModalProps {
   shareName: string;
 }
 
+/** The QR code sits on a white tile on purpose: scanners need dark on light, also in dark mode. */
 export function QrCodeModal({ isOpen, onClose, shareLink, shareName }: QrCodeModalProps) {
   const t = useTranslations();
   const [isDownloading, setIsDownloading] = useState(false);
@@ -41,35 +42,33 @@ export function QrCodeModal({ isOpen, onClose, shareLink, shareName }: QrCodeMod
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-[420px]">
         <DialogHeader>
-          <DialogTitle>{t("qrCodeModal.title", { defaultValue: "Share QR Code" })}</DialogTitle>
-          <DialogDescription>
-            {t("qrCodeModal.description", { defaultValue: "Scan this QR code to access the shared files." })}
-          </DialogDescription>
+          <DialogTitle>{t("qrCodeModal.title")}</DialogTitle>
+          <DialogDescription>{t("shares.calm.modals.qrDescription")}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col items-center justify-center">
-          <div ref={qrContainerRef} className="max-w-full rounded-lg bg-white p-4">
+        <div className="flex flex-col items-center gap-4">
+          <div ref={qrContainerRef} className="max-w-full rounded-xl border border-line bg-white p-4">
             <QRCode
               value={shareLink}
-              size={256}
+              size={224}
               level="H"
               fgColor="#000000"
               bgColor="#FFFFFF"
               style={{ maxWidth: "100%", height: "auto" }}
             />
           </div>
-          <p className="mt-4 text-sm text-muted-foreground text-center max-w-full break-all">{shareLink}</p>
+          <p className="max-w-full break-all text-center font-mono text-[12.5px] text-ink-3">{shareLink}</p>
         </div>
 
-        <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-between">
-          <Button variant="outline" onClick={onClose} className="mt-2 sm:mt-0">
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>
             {t("common.close")}
           </Button>
-          <Button onClick={downloadQRCode} className="mt-2 sm:mt-0" disabled={isDownloading}>
-            <IconDownload className="h-4 w-4" />
-            {t("qrCodeModal.download", { defaultValue: "Download QR Code" })}
+          <Button onClick={downloadQRCode} disabled={isDownloading}>
+            <IconDownload />
+            {t("shares.calm.modals.downloadQr")}
           </Button>
         </DialogFooter>
       </DialogContent>

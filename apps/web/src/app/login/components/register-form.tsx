@@ -2,25 +2,25 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconArrowUpRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { PasswordField } from "@/components/auth/password-field";
+import { FormError } from "@/components/auth/public-card";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { registerUser } from "@/http/endpoints";
-import { MultiProviderButtons } from "./multi-provider-buttons";
-import { PasswordVisibilityToggle } from "./password-visibility-toggle";
 
 interface RegisterFormProps {
   isVisible: boolean;
   onToggleVisibility: () => void;
 }
 
+/** First run: create the administrator account. */
 export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProps) {
   const t = useTranslations();
   const { refreshAppInfo } = useAppInfo();
@@ -34,7 +34,11 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
     password: z.string().min(8, t("register.validation.passwordMinLength")),
   });
 
-  const form = useForm<z.infer<typeof registerSchema>>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       firstName: "",
@@ -60,128 +64,69 @@ export function RegisterForm({ isVisible, onToggleVisibility }: RegisterFormProp
     }
   };
 
-  const renderErrorMessage = () => (
-    <p className="rounded-[var(--radius)] bg-bad-soft p-3 text-center text-sm text-bad">{error}</p>
-  );
-
-  const renderForm = () => (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("register.labels.firstName")}</FormLabel>
-              <FormControl className="-mb-1">
-                <Input
-                  {...field}
-                  placeholder={t("register.labels.firstName")}
-                  disabled={form.formState.isSubmitting}
-                  className="bg-surface"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("register.labels.lastName")}</FormLabel>
-              <FormControl className="-mb-1">
-                <Input
-                  {...field}
-                  placeholder={t("register.labels.lastName")}
-                  disabled={form.formState.isSubmitting}
-                  className="bg-surface"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("register.labels.username")}</FormLabel>
-              <FormControl className="-mb-1">
-                <Input
-                  {...field}
-                  placeholder={t("register.labels.username")}
-                  disabled={form.formState.isSubmitting}
-                  className="bg-surface"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("register.labels.email")}</FormLabel>
-              <FormControl className="-mb-1">
-                <Input
-                  {...field}
-                  type="email"
-                  placeholder={t("register.labels.email")}
-                  disabled={form.formState.isSubmitting}
-                  className="bg-surface"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("register.labels.password")}</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    {...field}
-                    type={isVisible ? "text" : "password"}
-                    placeholder={t("register.labels.password")}
-                    disabled={form.formState.isSubmitting}
-                    className="bg-surface pr-10"
-                  />
-                  <PasswordVisibilityToggle isVisible={isVisible} onToggle={onToggleVisibility} />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button className="mt-2 w-full" variant="default" size="lg" type="submit">
-          <span>
-            {form.formState.isSubmitting ? t("register.buttons.creating") : t("register.buttons.createAdmin")}
-          </span>
-          <IconArrowUpRight className="size-5" />
-        </Button>
-      </form>
-    </Form>
-  );
-
   return (
     <>
-      {error && renderErrorMessage()}
-      {renderForm()}
-      <MultiProviderButtons />
+      <FormError>{error}</FormError>
+      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4" noValidate>
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-3">
+          <Field label={t("register.labels.firstName")} htmlFor="register-first-name" error={errors.firstName?.message}>
+            <Input
+              id="register-first-name"
+              autoComplete="given-name"
+              disabled={isSubmitting}
+              aria-invalid={!!errors.firstName}
+              {...register("firstName")}
+            />
+          </Field>
+          <Field label={t("register.labels.lastName")} htmlFor="register-last-name" error={errors.lastName?.message}>
+            <Input
+              id="register-last-name"
+              autoComplete="family-name"
+              disabled={isSubmitting}
+              aria-invalid={!!errors.lastName}
+              {...register("lastName")}
+            />
+          </Field>
+        </div>
+        <Field label={t("register.labels.username")} htmlFor="register-username" error={errors.username?.message}>
+          <Input
+            id="register-username"
+            autoComplete="username"
+            disabled={isSubmitting}
+            aria-invalid={!!errors.username}
+            {...register("username")}
+          />
+        </Field>
+        <Field label={t("register.labels.email")} htmlFor="register-email" error={errors.email?.message}>
+          <Input
+            id="register-email"
+            type="email"
+            autoComplete="email"
+            disabled={isSubmitting}
+            aria-invalid={!!errors.email}
+            {...register("email")}
+          />
+        </Field>
+        <Field
+          label={t("register.labels.password")}
+          htmlFor="register-password"
+          hint={t("auth.calm.passwordRule")}
+          error={errors.password?.message}
+        >
+          <PasswordField
+            id="register-password"
+            autoComplete="new-password"
+            disabled={isSubmitting}
+            visible={isVisible}
+            onToggleVisible={onToggleVisibility}
+            aria-invalid={!!errors.password}
+            {...register("password")}
+          />
+        </Field>
+        <Button className="mt-2 w-full" size="lg" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? t("register.buttons.creating") : t("register.buttons.createAdmin")}
+        </Button>
+      </form>
     </>
   );
 }

@@ -1,31 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  IconArrowsMove,
-  IconCheck,
-  IconChevronDown,
-  IconDotsVertical,
-  IconDownload,
-  IconEdit,
-  IconEye,
-  IconFolder,
-  IconShare,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
+"use client";
+
+import { useMemo } from "react";
+import { IconDownload, IconShare } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { kindFromName, TILE_CLASS } from "@/components/brand/file-kind";
+import { FileTypeIcon, FolderIcon } from "@/components/files/file-type-icon";
+import { fileMenuEntries, folderMenuEntries, ItemMenu } from "@/components/files/item-menu";
+import { SelectionBar } from "@/components/files/selection-bar";
+import { useAddedLabel } from "@/components/files/use-added-label";
+import { useItemSelection } from "@/components/files/use-item-selection";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getFileIcon } from "@/utils/file-icons";
+import { useDragDrop } from "@/hooks/use-drag-drop";
+import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/utils/format-file-size";
 
 interface File {
@@ -63,6 +51,7 @@ interface FilesTableProps {
   folders?: Folder[];
   onPreview?: (file: File) => void;
   onRename?: (file: File) => void;
+  /** Kept for callers; names and descriptions are edited in the edit dialog. */
   onUpdateName?: (fileId: string, newName: string) => void;
   onUpdateDescription?: (fileId: string, newDescription: string) => void;
   onDownload: (objectName: string, fileName: string) => void;
@@ -82,17 +71,30 @@ interface FilesTableProps {
   onMoveFile?: (file: File) => void;
   onUpdateFolderName?: (folderId: string, newName: string) => void;
   onUpdateFolderDescription?: (folderId: string, newDescription: string) => void;
+  /** Enables dragging rows onto folder rows. */
+  onImmediateUpdate?: (itemId: string, itemType: "file" | "folder", newParentId: string | null) => void;
+  onRefresh?: () => Promise<void>;
   showBulkActions?: boolean;
   isShareMode?: boolean;
 }
 
+/** Row actions: hidden until hover or focus on desktop, always there on touch. */
+const ROW_ACTIONS =
+  "flex items-center justify-end gap-0.5 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 sm:has-[[aria-expanded=true]]:opacity-100";
+
+const NAME_BUTTON =
+  "block max-w-full cursor-pointer truncate text-left font-semibold outline-none hover:text-primary focus-visible:text-primary";
+
+function isFromControl(target: EventTarget) {
+  return !!(target as HTMLElement).closest("button, a, input, [role='checkbox'], [role='menuitem']");
+}
+
+/** Hairline file table: checkbox, grey type icon, name with muted meta, size, added, downloads, row actions. */
 export function FilesTable({
   files,
   folders = [],
   onPreview,
   onRename,
-  onUpdateName,
-  onUpdateDescription,
   onDownload,
   onShare,
   onDelete,
@@ -108,866 +110,228 @@ export function FilesTable({
   onDownloadFolder,
   onMoveFolder,
   onMoveFile,
-  onUpdateFolderName,
-  onUpdateFolderDescription,
+  onImmediateUpdate,
+  onRefresh,
   showBulkActions = true,
   isShareMode = false,
 }: FilesTableProps) {
   const t = useTranslations();
-  const [editingField, setEditingField] = useState<{ fileId: string; field: "name" | "description" } | null>(null);
-  const [editingFolderField, setEditingFolderField] = useState<{
-    folderId: string;
-    field: "name" | "description";
-  } | null>(null);
-  const [editValue, setEditValue] = useState("");
-  const [hoveredField, setHoveredField] = useState<{ fileId: string; field: "name" | "description" } | null>(null);
-  const [hoveredFolderField, setHoveredFolderField] = useState<{
-    folderId: string;
-    field: "name" | "description";
-  } | null>(null);
-  const [pendingChanges, setPendingChanges] = useState<{ [fileId: string]: { name?: string; description?: string } }>(
-    {}
-  );
-  const [pendingFolderChanges, setPendingFolderChanges] = useState<{
-    [folderId: string]: { name?: string; description?: string };
-  }>({});
+  const added = useAddedLabel();
+  const selection = useItemSelection(files, folders, setClearSelectionCallback);
+  const canDrag = !isShareMode && !!onImmediateUpdate;
 
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [selectedFolders, setSelectedFolders] = useState<Set<string>>(new Set());
-  const inputRef = useRef<HTMLInputElement>(null);
+  const dnd = useDragDrop({
+    onRefresh,
+    onImmediateUpdate,
+    selectedFiles: selection.selectedFiles,
+    selectedFolders: selection.selectedFolders,
+    files,
+    folders,
+  });
+  const draggedIds = useMemo(() => new Set(dnd.draggedItems.map((item) => item.id)), [dnd.draggedItems]);
 
-  useEffect(() => {
-    if (editingField && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [editingField]);
+  const fileHandlers = isShareMode
+    ? { onDownload }
+    : { onPreview, onRename, onMoveFile, onDownload, onShare, onDelete };
+  const folderHandlers = isShareMode
+    ? { onNavigateToFolder, onDownloadFolder }
+    : { onNavigateToFolder, onRenameFolder, onMoveFolder, onDownloadFolder, onShareFolder, onDeleteFolder };
 
-  useEffect(() => {
-    setPendingChanges({});
-  }, [files]);
+  const bulk = (action?: (files: File[], folders: Folder[]) => void) =>
+    action ? () => action(selection.selected.files, selection.selected.folders) : undefined;
 
-  useEffect(() => {
-    setPendingFolderChanges({});
-  }, [folders]);
-
-  const fileIds = files?.map((f) => f.id).join(",");
-  useEffect(() => {
-    setSelectedFiles(new Set());
-  }, [fileIds]);
-
-  const folderIds = folders?.map((f) => f.id).join(",");
-  useEffect(() => {
-    setSelectedFolders(new Set());
-  }, [folderIds]);
-
-  useEffect(() => {
-    const clearSelection = () => {
-      setSelectedFiles(new Set());
-      setSelectedFolders(new Set());
-    };
-    setClearSelectionCallback?.(clearSelection);
-  }, [setClearSelectionCallback]);
-
-  const splitFileName = (fullName: string) => {
-    const lastDotIndex = fullName.lastIndexOf(".");
-    return lastDotIndex === -1
-      ? { name: fullName, extension: "" }
-      : {
-          name: fullName.substring(0, lastDotIndex),
-          extension: fullName.substring(lastDotIndex),
-        };
-  };
-
-  const startEditFolder = (folderId: string, field: "name" | "description", currentValue: string) => {
-    setEditingFolderField({ folderId, field });
-    setEditValue(currentValue || "");
-  };
-
-  const saveEditFolder = () => {
-    if (!editingFolderField) return;
-
-    const { folderId, field } = editingFolderField;
-
-    setPendingFolderChanges((prev) => ({
-      ...prev,
-      [folderId]: { ...prev[folderId], [field]: editValue },
-    }));
-
-    if (field === "name") {
-      onUpdateFolderName?.(folderId, editValue);
-    } else {
-      onUpdateFolderDescription?.(folderId, editValue);
-    }
-
-    setEditingFolderField(null);
-    setEditValue("");
-    setHoveredFolderField(null);
-  };
-
-  const cancelEditFolder = () => {
-    setEditingFolderField(null);
-    setEditValue("");
-    setHoveredFolderField(null);
-  };
-
-  const startEdit = (fileId: string, field: "name" | "description", currentValue: string) => {
-    setEditingField({ fileId, field });
-    if (field === "name") {
-      const { name } = splitFileName(currentValue);
-      setEditValue(name);
-    } else {
-      setEditValue(currentValue || "");
-    }
-  };
-
-  const saveEdit = () => {
-    if (!editingField) return;
-
-    const { fileId, field } = editingField;
-    if (field === "name") {
-      const file = files.find((f) => f.id === fileId);
-      if (file) {
-        const { extension } = splitFileName(file.name);
-        const newFullName = editValue + extension;
-
-        setPendingChanges((prev) => ({
-          ...prev,
-          [fileId]: { ...prev[fileId], name: newFullName },
-        }));
-
-        onUpdateName?.(fileId, newFullName);
-      }
-    } else {
-      setPendingChanges((prev) => ({
-        ...prev,
-        [fileId]: { ...prev[fileId], description: editValue },
-      }));
-
-      onUpdateDescription?.(fileId, editValue);
-    }
-
-    setEditingField(null);
-    setEditValue("");
-    setHoveredField(null);
-  };
-
-  const cancelEdit = () => {
-    setEditingField(null);
-    setEditValue("");
-    setHoveredField(null);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      if (editingFolderField) {
-        saveEditFolder();
-      } else {
-        saveEdit();
-      }
-    } else if (e.key === "Escape") {
-      if (editingFolderField) {
-        cancelEditFolder();
-      } else {
-        cancelEdit();
-      }
-    }
-  };
-
-  const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).format(date);
-  };
-
-  const getDisplayValue = (file: File, field: "name" | "description") => {
-    const pendingChange = pendingChanges[file.id];
-    if (pendingChange && pendingChange[field] !== undefined) {
-      return pendingChange[field];
-    }
-    return field === "name" ? file.name : file.description;
-  };
-
-  const getDisplayFolderValue = (folder: Folder, field: "name" | "description") => {
-    const pendingChange = pendingFolderChanges[folder.id];
-    if (pendingChange && pendingChange[field] !== undefined) {
-      return pendingChange[field];
-    }
-    return field === "name" ? folder.name : folder.description;
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedFiles(new Set(files.map((file) => file.id)));
-      setSelectedFolders(new Set(folders.map((folder) => folder.id)));
-    } else {
-      setSelectedFiles(new Set());
-      setSelectedFolders(new Set());
-    }
-  };
-
-  const handleSelectFile = (fileId: string, checked: boolean) => {
-    const newSelected = new Set(selectedFiles);
-    if (checked) {
-      newSelected.add(fileId);
-    } else {
-      newSelected.delete(fileId);
-    }
-    setSelectedFiles(newSelected);
-  };
-
-  const handleSelectFolder = (folderId: string, checked: boolean) => {
-    const newSelected = new Set(selectedFolders);
-    if (checked) {
-      newSelected.add(folderId);
-    } else {
-      newSelected.delete(folderId);
-    }
-    setSelectedFolders(newSelected);
-  };
-
-  const getSelectedFiles = () => {
-    return files.filter((file) => selectedFiles.has(file.id));
-  };
-
-  const getSelectedFolders = () => {
-    return folders.filter((folder) => selectedFolders.has(folder.id));
-  };
-
-  const totalItems = files.length + folders.length;
-  const selectedItems = selectedFiles.size + selectedFolders.size;
-  const isAllSelected = totalItems > 0 && selectedItems === totalItems;
-
-  const handleBulkAction = (action: "delete" | "share" | "download" | "move") => {
-    const selectedFileObjects = getSelectedFiles();
-    const selectedFolderObjects = getSelectedFolders();
-
-    if (selectedFileObjects.length === 0 && selectedFolderObjects.length === 0) return;
-
-    switch (action) {
-      case "delete":
-        if (onBulkDelete) {
-          onBulkDelete(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-      case "share":
-        if (onBulkShare) {
-          onBulkShare(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-      case "download":
-        if (onBulkDownload) {
-          onBulkDownload(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-      case "move":
-        if (onBulkMove) {
-          onBulkMove(selectedFileObjects, selectedFolderObjects);
-        }
-        break;
-    }
-  };
-
-  const shouldShowBulkActions =
-    showBulkActions &&
-    (selectedFiles.size > 0 || selectedFolders.size > 0) &&
-    (isShareMode ? onBulkDownload : onBulkDelete || onBulkShare || onBulkDownload || onBulkMove);
+  const itemsMeta = (folder: Folder) =>
+    t("files.calm.folderItems", { count: (folder._count?.files ?? 0) + (folder._count?.children ?? 0) });
 
   return (
-    <div className="space-y-4">
-      {shouldShowBulkActions && (
-        <div className="flex flex-col gap-3 rounded-[var(--radius)] bg-primary-soft p-3 text-primary sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-foreground">
-              {t("filesTable.bulkActions.selected", { count: selectedFiles.size + selectedFolders.size })}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {isShareMode ? (
-              onBulkDownload && (
-                <Button variant="default" size="sm" className="gap-2" onClick={() => handleBulkAction("download")}>
-                  <IconDownload className="h-4 w-4" />
-                  {t("filesTable.bulkActions.download")}
-                </Button>
-              )
-            ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="default" size="sm" className="gap-2">
-                    {t("filesTable.bulkActions.actions")}
-                    <IconChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[200px]">
-                  {onBulkMove && (
-                    <DropdownMenuItem className="cursor-pointer py-2" onClick={() => handleBulkAction("move")}>
-                      <IconArrowsMove className="h-4 w-4" />
-                      {t("common.move")}
-                    </DropdownMenuItem>
-                  )}
-                  {onBulkDownload && (
-                    <DropdownMenuItem className="cursor-pointer py-2" onClick={() => handleBulkAction("download")}>
-                      <IconDownload className="h-4 w-4" />
-                      {t("filesTable.bulkActions.download")}
-                    </DropdownMenuItem>
-                  )}
-                  {onBulkShare && (
-                    <DropdownMenuItem className="cursor-pointer py-2" onClick={() => handleBulkAction("share")}>
-                      <IconShare className="h-4 w-4" />
-                      {t("filesTable.bulkActions.share")}
-                    </DropdownMenuItem>
-                  )}
-                  {onBulkDelete && (
-                    <DropdownMenuItem
-                      onClick={() => handleBulkAction("delete")}
-                      className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                    >
-                      <IconTrash className="h-4 w-4" />
-                      {t("filesTable.bulkActions.delete")}
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+    <>
+      <Table aria-label={t("filesTable.ariaLabel")} className="table-fixed">
+        <TableHeader className="max-sm:hidden">
+          <TableRow className="hover:bg-transparent">
+            {showBulkActions && (
+              <TableHead className="w-10 pl-3 pr-0">
+                <Checkbox
+                  checked={selection.isAllSelected}
+                  onCheckedChange={(checked) => selection.selectAll(checked === true)}
+                  aria-label={t("filesTable.selectAll")}
+                />
+              </TableHead>
             )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSelectedFiles(new Set());
-                setSelectedFolders(new Set());
-              }}
-            >
-              {t("common.cancel")}
-            </Button>
-          </div>
-        </div>
-      )}
+            <TableHead>{t("files.calm.columns.name")}</TableHead>
+            <TableHead className="w-[100px]">{t("files.calm.columns.size")}</TableHead>
+            <TableHead className="hidden w-[130px] md:table-cell">{t("files.calm.columns.added")}</TableHead>
+            <TableHead className="hidden w-[120px] lg:table-cell">{t("files.calm.columns.downloads")}</TableHead>
+            <TableHead className="w-[112px]">
+              <span className="sr-only">{t("filesTable.columns.actions")}</span>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {folders.map((folder) => {
+            const isSelected = selection.selectedFolders.has(folder.id);
+            const target = { id: folder.id, type: "folder" as const, name: folder.name };
+            const isDropTarget = dnd.dragOverTarget?.id === folder.id && !draggedIds.has(folder.id);
+            const size = folder.totalSize ? formatFileSize(Number(folder.totalSize)) : "—";
 
-      <div className="card-soft overflow-x-auto rounded-[calc(var(--radius)+4px)] border border-line bg-surface">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-b-0">
-              {showBulkActions && (
-                <TableHead className="w-12">
-                  <Checkbox
-                    checked={isAllSelected}
-                    onCheckedChange={handleSelectAll}
-                    aria-label={t("filesTable.selectAll")}
-                  />
-                </TableHead>
-              )}
-              <TableHead className="">{t("filesTable.columns.name")}</TableHead>
-              <TableHead className="hidden xl:table-cell">{t("filesTable.columns.description")}</TableHead>
-              <TableHead className="">{t("filesTable.columns.size")}</TableHead>
-              <TableHead className="hidden xl:table-cell">{t("filesTable.columns.createdAt")}</TableHead>
-              <TableHead className="hidden 2xl:table-cell">{t("filesTable.columns.updatedAt")}</TableHead>
-              <TableHead className="hidden sm:table-cell">{t("filesTable.columns.downloads")}</TableHead>
-              <TableHead className="sticky right-0 w-[70px] bg-surface">{t("filesTable.columns.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {folders.map((folder) => {
-              const isSelected = selectedFolders.has(folder.id);
-              const isEditingName = editingFolderField?.folderId === folder.id && editingFolderField?.field === "name";
-              const isEditingDescription =
-                editingFolderField?.folderId === folder.id && editingFolderField?.field === "description";
-              const isHoveringName = hoveredFolderField?.folderId === folder.id && hoveredFolderField?.field === "name";
-              const isHoveringDescriptionField =
-                hoveredFolderField?.folderId === folder.id && hoveredFolderField?.field === "description";
-
-              const displayName = getDisplayFolderValue(folder, "name") || folder.name;
-              const displayDescription = getDisplayFolderValue(folder, "description");
-
-              return (
-                <TableRow key={folder.id} className="group border-border/60 transition-colors hover:bg-secondary/35">
-                  {showBulkActions && (
-                    <TableCell className="border-0">
-                      <Checkbox
-                        checked={isSelected}
-                        onCheckedChange={(checked: boolean) => handleSelectFolder(folder.id, checked)}
-                        aria-label={`Select folder ${folder.name}`}
-                      />
-                    </TableCell>
-                  )}
-                  <TableCell className="border-0">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onNavigateToFolder?.(folder.id);
-                        }}
-                        onMouseEnter={() => setHoveredFolderField({ folderId: folder.id, field: "name" })}
-                        onMouseLeave={() => setHoveredFolderField(null)}
-                      >
-                        <span className="tile tile-sm">
-                          <IconFolder className="size-4" />
-                        </span>
-                        <div className="flex items-center gap-1 min-w-0 flex-1">
-                          {isEditingName ? (
-                            <div className="flex items-center gap-1 flex-1">
-                              <Input
-                                ref={inputRef}
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                className="h-8 text-sm font-medium"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-green-600 hover:text-green-700 flex-shrink-0"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  saveEditFolder();
-                                }}
-                              >
-                                <IconCheck className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-red-600 hover:text-red-700 flex-shrink-0"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  cancelEditFolder();
-                                }}
-                              >
-                                <IconX className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-1 flex-1">
-                              <span
-                                className="font-medium text-sm text-foreground/90 truncate max-w-[150px]"
-                                title={displayName}
-                              >
-                                {displayName}
-                              </span>
-                              <div className="w-6 flex justify-center flex-shrink-0">
-                                {isHoveringName && !isShareMode && (
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="h-6 w-6 text-muted-foreground hover:text-foreground hidden sm:block"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      startEditFolder(folder.id, "name", folder.name);
-                                    }}
-                                  >
-                                    <IconEdit className="h-3 w-3" />
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+            return (
+              <TableRow
+                key={folder.id}
+                data-state={isSelected ? "selected" : undefined}
+                className={cn(
+                  "group cursor-pointer",
+                  isDropTarget && "bg-primary-soft",
+                  draggedIds.has(folder.id) && "opacity-50"
+                )}
+                onClick={(e) => !isFromControl(e.target) && onNavigateToFolder?.(folder.id)}
+                draggable={canDrag}
+                onDragStart={canDrag ? (e) => dnd.handleDragStart(e, target) : undefined}
+                onDragEnd={canDrag ? dnd.handleDragEnd : undefined}
+                onDragOver={canDrag ? (e) => dnd.handleDragOver(e, target) : undefined}
+                onDragLeave={canDrag ? dnd.handleDragLeave : undefined}
+                onDrop={canDrag ? (e) => dnd.handleDrop(e, target) : undefined}
+              >
+                {showBulkActions && (
+                  <TableCell className="pl-3 pr-0 max-sm:hidden">
+                    <Checkbox
+                      checked={isSelected}
+                      onCheckedChange={(checked) => selection.toggleFolder(folder.id, checked === true)}
+                      aria-label={t("files.calm.selectItem", { name: folder.name })}
+                    />
                   </TableCell>
-                  <TableCell
-                    className=""
-                    onMouseEnter={() => setHoveredFolderField({ folderId: folder.id, field: "description" })}
-                    onMouseLeave={() => setHoveredFolderField(null)}
-                  >
-                    <div className="flex items-center gap-1">
-                      {isEditingDescription ? (
-                        <div className="flex items-center gap-1 flex-1">
-                          <Input
-                            ref={inputRef}
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            className="h-8 text-sm"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 text-green-600 hover:text-green-700 flex-shrink-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              saveEditFolder();
-                            }}
-                          >
-                            <IconCheck className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 text-red-600 hover:text-red-700 flex-shrink-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              cancelEditFolder();
-                            }}
-                          >
-                            <IconX className="h-3 w-3" />
-                          </Button>
-                        </div>
+                )}
+                <TableCell className="max-sm:pl-1">
+                  <div className="flex min-w-0 items-center gap-3.5">
+                    <FolderIcon />
+                    <div className="min-w-0">
+                      <button
+                        type="button"
+                        className={NAME_BUTTON}
+                        onClick={() => onNavigateToFolder?.(folder.id)}
+                        title={folder.name}
+                      >
+                        {folder.name}
+                      </button>
+                      <p className="truncate text-[12.5px] text-ink-3 max-sm:hidden">
+                        {folder.description || itemsMeta(folder)}
+                      </p>
+                      <p className="truncate text-[12.5px] text-ink-3 sm:hidden">
+                        {itemsMeta(folder)} · {size}
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-[13px] text-ink-2 max-sm:hidden">{size}</TableCell>
+                <TableCell className="hidden text-[13px] text-ink-3 md:table-cell">{added(folder.createdAt)}</TableCell>
+                <TableCell className="hidden text-[13px] text-ink-3 lg:table-cell">—</TableCell>
+                <TableCell className="w-[112px] pr-2 max-sm:w-12 max-sm:px-0">
+                  <div className={ROW_ACTIONS}>
+                    <ItemMenu
+                      entries={folderMenuEntries(folder, folderHandlers, t)}
+                      label={t("files.calm.moreActions", { name: folder.name })}
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+
+          {files.map((file) => {
+            const isSelected = selection.selectedFiles.has(file.id);
+            const item = { id: file.id, type: "file" as const, name: file.name };
+            const size = formatFileSize(Number(file.size));
+
+            return (
+              <TableRow
+                key={file.id}
+                data-state={isSelected ? "selected" : undefined}
+                className={cn("group", onPreview && "cursor-pointer", draggedIds.has(file.id) && "opacity-50")}
+                onClick={(e) => !isFromControl(e.target) && onPreview?.(file)}
+                draggable={canDrag}
+                onDragStart={canDrag ? (e) => dnd.handleDragStart(e, item) : undefined}
+                onDragEnd={canDrag ? dnd.handleDragEnd : undefined}
+              >
+                {showBulkActions && (
+                  <TableCell className="pl-3 pr-0 max-sm:hidden">
+                    <Checkbox
+                      checked={isSelected}
+                      onCheckedChange={(checked) => selection.toggleFile(file.id, checked === true)}
+                      aria-label={t("filesTable.selectFile", { fileName: file.name })}
+                    />
+                  </TableCell>
+                )}
+                <TableCell className="max-sm:pl-1">
+                  <div className="flex min-w-0 items-center gap-3.5">
+                    <FileTypeIcon name={file.name} />
+                    <div className="min-w-0">
+                      {onPreview ? (
+                        <button type="button" className={NAME_BUTTON} onClick={() => onPreview(file)} title={file.name}>
+                          {file.name}
+                        </button>
                       ) : (
-                        <div className="flex items-center gap-1 flex-1 min-w-0">
-                          <span
-                            className="text-muted-foreground truncate max-w-[150px]"
-                            title={displayDescription || "-"}
-                          >
-                            {displayDescription || "-"}
-                          </span>
-                          <div className="w-6 flex justify-center flex-shrink-0">
-                            {isHoveringDescriptionField && !isShareMode && (
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-muted-foreground hover:text-foreground hidden sm:block"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  startEditFolder(folder.id, "description", folder.description || "");
-                                }}
-                              >
-                                <IconEdit className="h-3 w-3" />
-                              </Button>
-                            )}
-                          </div>
-                        </div>
+                        <p className="truncate font-semibold" title={file.name}>
+                          {file.name}
+                        </p>
                       )}
+                      {file.description && (
+                        <p className="truncate text-[12.5px] text-ink-3 max-sm:hidden" title={file.description}>
+                          {file.description}
+                        </p>
+                      )}
+                      <p className="truncate text-[12.5px] text-ink-3 sm:hidden">
+                        {size} · {added(file.createdAt)}
+                      </p>
                     </div>
-                  </TableCell>
-                  <TableCell className="hidden xl:table-cell">
-                    {folder.totalSize ? formatFileSize(Number(folder.totalSize)) : "—"}
-                  </TableCell>
-                  <TableCell className="hidden xl:table-cell">{formatDateTime(folder.createdAt)}</TableCell>
-                  <TableCell className="hidden 2xl:table-cell">{formatDateTime(folder.updatedAt)}</TableCell>
-                  <TableCell className="hidden text-muted-foreground sm:table-cell">—</TableCell>
-                  <TableCell className="sticky right-0 bg-inherit text-right">
-                    {isShareMode ? (
-                      onDownloadFolder && (
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8 hover:bg-muted"
-                          onClick={() => onDownloadFolder(folder.id, folder.name)}
-                        >
-                          <IconDownload className="h-4 w-4" />
-                          <span className="sr-only">{t("filesTable.actions.download")}</span>
-                        </Button>
-                      )
-                    ) : (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted cursor-pointer">
-                            <IconDotsVertical className="h-4 w-4" />
-                            <span className="sr-only">Folder actions menu</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-[200px]">
-                          {onRenameFolder && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onRenameFolder(folder)}>
-                              <IconEdit className="h-4 w-4" />
-                              {t("filesTable.actions.edit")}
-                            </DropdownMenuItem>
-                          )}
-                          {onMoveFolder && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onMoveFolder(folder)}>
-                              <IconArrowsMove className="h-4 w-4" />
-                              Move
-                            </DropdownMenuItem>
-                          )}
-                          {onDownloadFolder && (
-                            <DropdownMenuItem
-                              className="cursor-pointer py-2"
-                              onClick={() => onDownloadFolder(folder.id, folder.name)}
-                            >
-                              <IconDownload className="h-4 w-4" />
-                              {t("filesTable.actions.download")}
-                            </DropdownMenuItem>
-                          )}
-                          {onShareFolder && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onShareFolder(folder)}>
-                              <IconShare className="h-4 w-4" />
-                              {t("filesTable.actions.share")}
-                            </DropdownMenuItem>
-                          )}
-                          {onDeleteFolder && (
-                            <DropdownMenuItem
-                              onClick={() => onDeleteFolder(folder)}
-                              className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                            >
-                              <IconTrash className="h-4 w-4" />
-                              {t("filesTable.actions.delete")}
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-            {files.map((file) => {
-              const { icon: FileIcon } = getFileIcon(file.name);
-              const isEditingName = editingField?.fileId === file.id && editingField?.field === "name";
-              const isEditingDescription = editingField?.fileId === file.id && editingField?.field === "description";
-              const isHoveringName = hoveredField?.fileId === file.id && hoveredField?.field === "name";
-              const isHoveringDescription = hoveredField?.fileId === file.id && hoveredField?.field === "description";
-              const isSelected = selectedFiles.has(file.id);
-
-              const displayName = getDisplayValue(file, "name") || file.name;
-              const displayDescription = getDisplayValue(file, "description");
-
-              return (
-                <TableRow
-                  key={file.id}
-                  className="group cursor-pointer border-border/60 transition-colors hover:bg-secondary/35"
-                  onClick={(e) => {
-                    if (
-                      (e.target as HTMLElement).closest(".checkbox-wrapper") ||
-                      (e.target as HTMLElement).closest("button") ||
-                      (e.target as HTMLElement).closest('[role="menuitem"]')
-                    ) {
-                      return;
-                    }
-                    if (onPreview) {
-                      onPreview(file);
-                    }
-                  }}
-                >
-                  {showBulkActions && (
-                    <TableCell className="border-0">
-                      <div className="checkbox-wrapper">
-                        <Checkbox
-                          checked={isSelected}
-                          onCheckedChange={(checked: boolean) => handleSelectFile(file.id, checked)}
-                          aria-label={t("filesTable.selectFile", { fileName: file.name })}
-                        />
-                      </div>
-                    </TableCell>
-                  )}
-                  <TableCell className="border-0">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onPreview?.(file);
-                        }}
-                        onMouseEnter={() => setHoveredField({ fileId: file.id, field: "name" })}
-                        onMouseLeave={() => setHoveredField(null)}
-                      >
-                        <span className={`tile tile-sm ${TILE_CLASS[kindFromName(file.name)]}`}>
-                          <FileIcon className="size-4" />
-                        </span>
-                        <div className="flex items-center gap-1 min-w-0 flex-1">
-                          {isEditingName ? (
-                            <div className="flex items-center gap-1 flex-1">
-                              <Input
-                                ref={inputRef}
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                className="h-8 text-sm font-medium"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-green-600 hover:text-green-700 flex-shrink-0"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  saveEdit();
-                                }}
-                              >
-                                <IconCheck className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-red-600 hover:text-red-700 flex-shrink-0"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  cancelEdit();
-                                }}
-                              >
-                                <IconX className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-1 flex-1 min-w-0">
-                              <span className="truncate max-w-[200px] font-medium" title={displayName}>
-                                {displayName}
-                              </span>
-                              <div className="w-6 flex justify-center flex-shrink-0">
-                                {isHoveringName && !isShareMode && (
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="h-6 w-6 text-muted-foreground hover:text-foreground hidden sm:block"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      startEdit(file.id, "name", displayName);
-                                    }}
-                                  >
-                                    <IconEdit className="h-3 w-3" />
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden xl:table-cell">
-                    <div
-                      className="flex items-center gap-1"
-                      onMouseEnter={() => setHoveredField({ fileId: file.id, field: "description" })}
-                      onMouseLeave={() => setHoveredField(null)}
+                  </div>
+                </TableCell>
+                <TableCell className="text-[13px] text-ink-2 max-sm:hidden">{size}</TableCell>
+                <TableCell className="hidden text-[13px] text-ink-3 md:table-cell">{added(file.createdAt)}</TableCell>
+                <TableCell className="hidden text-[13px] text-ink-3 lg:table-cell">
+                  {file.downloads ? t("files.calm.downloadsCount", { count: file.downloads }) : "—"}
+                </TableCell>
+                <TableCell className="w-[112px] pr-2 max-sm:w-12 max-sm:px-0">
+                  <div className={ROW_ACTIONS}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="max-sm:hidden"
+                      aria-label={t("files.calm.downloadItem", { name: file.name })}
+                      onClick={() => onDownload(file.objectName, file.name)}
                     >
-                      {isEditingDescription ? (
-                        <div className="flex items-center gap-1 flex-1">
-                          <Input
-                            ref={inputRef}
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder={t("fileActions.addDescriptionPlaceholder")}
-                            className="h-8 text-sm"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 text-green-600 hover:text-green-700 flex-shrink-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              saveEdit();
-                            }}
-                          >
-                            <IconCheck className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 text-red-600 hover:text-red-700 flex-shrink-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              cancelEdit();
-                            }}
-                          >
-                            <IconX className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1 flex-1 min-w-0">
-                          <span
-                            className="text-muted-foreground truncate max-w-[150px]"
-                            title={displayDescription || "-"}
-                          >
-                            {displayDescription || "-"}
-                          </span>
-                          <div className="w-6 flex justify-center flex-shrink-0">
-                            {isHoveringDescription && !isShareMode && (
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-muted-foreground hover:text-foreground hidden sm:block"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  startEdit(file.id, "description", displayDescription || "");
-                                }}
-                              >
-                                <IconEdit className="h-3 w-3" />
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="">{formatFileSize(file.size)}</TableCell>
-                  <TableCell className="hidden xl:table-cell">{formatDateTime(file.createdAt)}</TableCell>
-                  <TableCell className="hidden 2xl:table-cell">
-                    {formatDateTime(file.updatedAt || file.createdAt)}
-                  </TableCell>
-                  <TableCell className="hidden tabular-nums sm:table-cell">
-                    {file.downloads ? file.downloads : <span className="text-muted-foreground">—</span>}
-                  </TableCell>
-                  <TableCell className="sticky right-0 bg-inherit text-right">
-                    {isShareMode ? (
+                      <IconDownload />
+                    </Button>
+                    {!isShareMode && onShare && (
                       <Button
-                        size="icon"
                         variant="ghost"
-                        className="h-8 w-8 hover:bg-muted"
-                        onClick={() => onDownload(file.objectName, file.name)}
+                        size="icon"
+                        className="max-sm:hidden"
+                        aria-label={t("files.calm.shareItem", { name: file.name })}
+                        onClick={() => onShare(file)}
                       >
-                        <IconDownload className="h-4 w-4" />
-                        <span className="sr-only">{t("filesTable.actions.download")}</span>
+                        <IconShare />
                       </Button>
-                    ) : (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted cursor-pointer">
-                            <IconDotsVertical className="h-4 w-4" />
-                            <span className="sr-only">{t("filesTable.actions.menu")}</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-[200px]">
-                          {onPreview && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onPreview(file)}>
-                              <IconEye className="h-4 w-4" />
-                              {t("filesTable.actions.preview")}
-                            </DropdownMenuItem>
-                          )}
-                          {onRename && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onRename(file)}>
-                              <IconEdit className="h-4 w-4" />
-                              {t("filesTable.actions.edit")}
-                            </DropdownMenuItem>
-                          )}
-                          {onMoveFile && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onMoveFile(file)}>
-                              <IconArrowsMove className="h-4 w-4" />
-                              {t("common.move")}
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem
-                            className="cursor-pointer py-2"
-                            onClick={() => onDownload(file.objectName, file.name)}
-                          >
-                            <IconDownload className="h-4 w-4" />
-                            {t("filesTable.actions.download")}
-                          </DropdownMenuItem>
-                          {onShare && (
-                            <DropdownMenuItem className="cursor-pointer py-2" onClick={() => onShare(file)}>
-                              <IconShare className="h-4 w-4" />
-                              {t("filesTable.actions.share")}
-                            </DropdownMenuItem>
-                          )}
-                          {onDelete && (
-                            <DropdownMenuItem
-                              onClick={() => onDelete(file)}
-                              className="cursor-pointer py-2 text-destructive focus:text-destructive"
-                            >
-                              <IconTrash className="h-4 w-4" />
-                              {t("filesTable.actions.delete")}
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
                     )}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+                    <ItemMenu
+                      entries={fileMenuEntries(file, fileHandlers, t)}
+                      label={t("files.calm.moreActions", { name: file.name })}
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+
+      {showBulkActions && (
+        <SelectionBar
+          count={selection.count}
+          onShare={isShareMode ? undefined : bulk(onBulkShare)}
+          onDownload={bulk(onBulkDownload)}
+          onMove={isShareMode ? undefined : bulk(onBulkMove)}
+          onDelete={isShareMode ? undefined : bulk(onBulkDelete)}
+          onClear={selection.clear}
+        />
+      )}
+    </>
   );
 }

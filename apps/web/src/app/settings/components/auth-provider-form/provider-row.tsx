@@ -1,126 +1,88 @@
 "use client";
 
 import React from "react";
-import { IconEdit, IconGripVertical, IconTrash } from "@tabler/icons-react";
+import type { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
+import { IconGripVertical } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { AuthProvider, EditProviderForm } from "./edit-provider-form";
+import { cn } from "@/lib/utils";
+import { AuthProvider } from "./edit-provider-form";
 
 interface ProviderRowProps {
   provider: AuthProvider;
   onUpdate: (updates: Partial<AuthProvider>) => void;
   onEdit: () => void;
-  onDelete: () => void;
   saving: boolean;
   getIcon: (provider: AuthProvider) => React.ReactNode;
-  editingProvider: AuthProvider | null;
-  editProvider: (data: Partial<AuthProvider>) => void;
-  onCancelEdit: () => void;
-  editingFormData: Record<string, any>;
-  setEditingFormData: (data: Record<string, any>) => void;
-  dragHandleProps: any;
+  dragHandleProps: DraggableProvidedDragHandleProps | null;
   isDragging: boolean;
-  isDragDisabled: boolean;
 }
 
+function hostOf(url?: string): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
+}
+
+/** One provider: grey icon, name, status line, Configure, and the on/off switch. */
 export function ProviderRow({
   provider,
   onUpdate,
   onEdit,
-  onDelete,
   saving,
   getIcon,
-  editingProvider,
-  editProvider,
-  onCancelEdit,
-  editingFormData,
-  setEditingFormData,
   dragHandleProps,
   isDragging,
-  isDragDisabled,
 }: ProviderRowProps) {
   const t = useTranslations();
-  const isEditing = editingProvider?.id === provider.id;
+  const configured = !!provider.clientId;
+  const typeLabel = provider.type === "oidc" ? t("authProviders.calm.typeOidc") : t("authProviders.calm.typeOauth2");
+  const status = configured
+    ? [typeLabel, hostOf(provider.issuerUrl)].filter(Boolean).join(" · ")
+    : t("authProviders.calm.notConfigured");
 
   return (
-    <div className={`rounded-lg border border-border/70 ${isDragging ? "border-primary/40 bg-primary/5" : ""}`}>
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4">
-        <div className="flex min-w-0 items-center gap-3">
-          {!isDragDisabled ? (
-            <div
-              {...dragHandleProps}
-              className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors"
-              title={t("authProviders.dragToReorder")}
-            >
-              <IconGripVertical className="h-4 w-4" />
-            </div>
-          ) : null}
-
-          <span className="text-lg">{getIcon(provider)}</span>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-2 h-2 rounded-full ${provider.enabled ? "bg-green-500" : "bg-gray-400"}`}
-                title={provider.enabled ? t("authProviders.enabled") : t("authProviders.disabled")}
-              />
-              <span className="break-words font-medium text-sm">{provider.displayName}</span>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {provider.type.toUpperCase()} · {provider.name}
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-1">
-          <Switch
-            aria-label={`${provider.displayName}: ${t("authProviders.enabled")}`}
-            checked={provider.enabled}
-            onCheckedChange={(enabled) => onUpdate({ enabled })}
-            disabled={saving}
-          />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onEdit}
-            disabled={saving}
-            title={t("authProviders.editProvider")}
-            aria-label={`${t("authProviders.editProvider")}: ${provider.displayName}`}
-          >
-            <IconEdit className="h-3 w-3" />
-          </Button>
-          {!provider.isOfficial && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onDelete}
-              disabled={saving}
-              className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
-              title={t("authProviders.deleteProvider")}
-              aria-label={`${t("authProviders.deleteProvider")}: ${provider.displayName}`}
-            >
-              <IconTrash className="h-3 w-3" />
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {isEditing && (
-        <div className="space-y-4 border-t border-border/70 bg-secondary/25 p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-medium text-foreground dark:text-foreground">{provider.displayName}</h3>
-          </div>
-          <EditProviderForm
-            key={provider.id}
-            provider={provider}
-            onSave={editProvider}
-            onCancel={onCancelEdit}
-            saving={saving}
-            editingFormData={editingFormData}
-            setEditingFormData={setEditingFormData}
-          />
-        </div>
+    <div className={cn("group flex min-h-[64px] items-center gap-3 bg-background py-3", isDragging && "bg-surface-2")}>
+      {dragHandleProps && (
+        <span
+          {...dragHandleProps}
+          aria-label={t("authProviders.dragToReorder")}
+          className="-ml-1 grid cursor-grab place-items-center rounded text-ink-icon opacity-60 transition-opacity focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 active:cursor-grabbing md:opacity-0 md:group-hover:opacity-100"
+        >
+          <IconGripVertical className="size-4" aria-hidden="true" />
+        </span>
       )}
+      <span
+        aria-hidden="true"
+        className="grid size-[18px] shrink-0 place-items-center text-ink-icon grayscale [&_svg]:size-[17px]"
+      >
+        {getIcon(provider)}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="truncate font-semibold">{provider.displayName}</div>
+        <div className="truncate text-[12.5px] text-ink-3">{status}</div>
+      </div>
+      <Button
+        type="button"
+        variant="link"
+        className="h-auto px-1"
+        onClick={onEdit}
+        disabled={saving}
+        aria-label={t("authProviders.calm.configureName", { name: provider.displayName })}
+      >
+        {t("authProviders.calm.configure")}
+      </Button>
+      <Switch
+        aria-label={provider.displayName}
+        checked={provider.enabled}
+        onCheckedChange={(enabled) => onUpdate({ enabled })}
+        disabled={saving}
+      />
     </div>
   );
 }

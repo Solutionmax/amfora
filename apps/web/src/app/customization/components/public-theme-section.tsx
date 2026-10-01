@@ -1,15 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { IconLayoutDashboard } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 import { PUBLIC_THEMES, type PublicTheme } from "@/components/brand/public-theme";
-import { useAppInfo } from "@/contexts/app-info-context";
-import { updateConfig } from "@/http/endpoints";
 import { cn } from "@/lib/utils";
-import { Section } from "./section";
+import type { CustomizationDraft } from "../hooks/use-customization-draft";
+import { FormBlock } from "./form-block";
 
 /** A tiny drawing of each theme, so the choice reads without words. */
 function Thumb({ theme }: { theme: PublicTheme }) {
@@ -51,57 +47,40 @@ function Thumb({ theme }: { theme: PublicTheme }) {
   );
 }
 
-/** Free: how the sign-in, download and receive pages look for every visitor. */
-export function PublicThemeSection() {
+/** How the sign-in, download and receive pages look for every visitor. Saved with the SaveBar. */
+export function PublicThemeSection({ draft, update }: Pick<CustomizationDraft, "draft" | "update">) {
   const t = useTranslations();
-  const { appPublicTheme, refreshAppInfo } = useAppInfo();
-  const [saving, setSaving] = useState<PublicTheme | null>(null);
-
-  const choose = async (theme: PublicTheme) => {
-    if (theme === appPublicTheme || saving) return;
-    setSaving(theme);
-    try {
-      await updateConfig("appPublicTheme", { value: theme });
-      await refreshAppInfo();
-      toast.success(t("customization.v2.saved"));
-    } catch (error: any) {
-      toast.error(error?.response?.data?.error || t("customization.v2.saveFailed"));
-    } finally {
-      setSaving(null);
-    }
-  };
 
   return (
-    <Section icon={IconLayoutDashboard} title={t("customization.v2.theme.title")}>
-      <p className="-mt-2 text-xs text-ink-3">{t("customization.v2.theme.hint")}</p>
+    <FormBlock title={t("customization.v2.theme.title")} description={t("customization.calm.themeDescription")}>
       <div role="radiogroup" aria-label={t("customization.v2.theme.title")} className="grid gap-3 sm:grid-cols-3">
         {PUBLIC_THEMES.map((theme) => {
-          const active = theme === appPublicTheme;
+          const active = theme === draft.theme;
           return (
             <button
               key={theme}
               type="button"
               role="radio"
               aria-checked={active}
-              disabled={saving !== null}
-              onClick={() => choose(theme)}
+              onClick={() => update("theme", theme)}
               className={cn(
-                "overflow-hidden rounded-[calc(var(--radius)+2px)] border bg-surface text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                active ? "border-primary ring-2 ring-primary/25" : "border-line hover:border-line-2",
-                saving === theme && "opacity-60"
+                "overflow-hidden rounded-xl border bg-surface text-left outline-none transition-[border-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-primary/35",
+                active
+                  ? "border-primary shadow-[0_0_0_3px_color-mix(in_oklab,var(--primary)_16%,transparent)]"
+                  : "border-line-2 hover:border-[color-mix(in_oklab,var(--line-2)_50%,var(--ink-3))]"
               )}
             >
-              <div className="h-[74px] overflow-hidden border-b border-line">
+              <div className="h-[70px] overflow-hidden">
                 <Thumb theme={theme} />
               </div>
-              <div className="px-3 py-2.5">
-                <div className="text-sm font-semibold">{t(`customization.v2.theme.${theme}`)}</div>
-                <div className="text-xs text-ink-3">{t(`customization.v2.theme.${theme}Hint`)}</div>
+              <div className="px-3 pb-3 pt-2.5 text-[12.5px] leading-snug text-ink-3">
+                <div className="text-[13px] font-semibold text-ink">{t(`customization.v2.theme.${theme}`)}</div>
+                {t(`customization.v2.theme.${theme}Hint`)}
               </div>
             </button>
           );
         })}
       </div>
-    </Section>
+    </FormBlock>
   );
 }
