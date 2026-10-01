@@ -2838,6 +2838,7 @@
       "public": "Public"
     },
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "menu": "Menu"
   }
 }

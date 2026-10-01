@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import { IconMenu2 } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
 import { BrandMark } from "@/components/brand/brand-mark";
 import { AppSidebar } from "@/components/layout/app-sidebar";
@@ -30,6 +31,7 @@ const WIDTH = { default: "max-w-[1060px]", narrow: "max-w-[820px]", wide: "max-w
 
 /** The signed-in frame: quiet sidebar, white canvas, page header with title, subline and actions. */
 export function FileManagerLayout({ children, title, subline, actions, variant = "default" }: FileManagerLayoutProps) {
+  const t = useTranslations();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { appName } = useAppInfo();
 
@@ -49,7 +51,7 @@ export function FileManagerLayout({ children, title, subline, actions, variant =
           </span>
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Menu">
+              <Button variant="ghost" size="icon" aria-label={t("ui.menu")}>
                 <IconMenu2 className="size-5" />
               </Button>
             </SheetTrigger>

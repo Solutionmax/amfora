@@ -30,7 +30,8 @@ export interface ShareManagerHook {
   setShareToGenerateLink: (share: Share | null) => void;
   setShareToViewQrCode: (share: Share | null) => void;
   setSharesToDelete: (shares: Share[] | null) => void;
-  handleDelete: (shareId: string) => Promise<void>;
+  /** Resolves true when the share was deleted. */
+  handleDelete: (shareId: string) => Promise<boolean>;
   handleBulkDelete: (shares: Share[]) => void;
   handleBulkDownload: (shares: Share[]) => void;
   handleDownloadShareFiles: (share: Share) => Promise<void>;
@@ -71,8 +72,10 @@ export function useShareManager(onSuccess: () => void) {
       toast.success(t("shareManager.deleteSuccess"));
       onSuccess();
       setShareToDelete(null);
+      return true;
     } catch {
       toast.error(t("shareManager.deleteError"));
+      return false;
     }
   };
 

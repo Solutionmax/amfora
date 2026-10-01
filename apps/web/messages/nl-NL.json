@@ -2838,6 +2838,7 @@
       "public": "Openbaar"
     },
     "showPassword": "Wachtwoord tonen",
-    "hidePassword": "Wachtwoord verbergen"
+    "hidePassword": "Wachtwoord verbergen",
+    "menu": "Menu"
   }
 }

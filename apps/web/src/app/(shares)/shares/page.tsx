@@ -55,8 +55,8 @@ function SharesView() {
   const showAll = useCallback(() => router.push("/shares"), [router]);
 
   const deleteShare = async (shareId: string) => {
-    await shareManager.handleDelete(shareId);
-    if (shareId === selectedId) router.replace("/shares");
+    const deleted = await shareManager.handleDelete(shareId);
+    if (deleted && shareId === selectedId) router.replace("/shares");
   };
 
   const actions: ShareDetailActions = {

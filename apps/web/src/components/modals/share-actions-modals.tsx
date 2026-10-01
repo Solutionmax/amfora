@@ -139,7 +139,7 @@ function EditShareDialog({
       });
 
       if (!editForm.isPasswordProtected && share.security?.hasPassword) {
-        await updateSharePassword(share.id, { password: "" });
+        await updateSharePassword(share.id, { password: null });
       } else if (editForm.isPasswordProtected && editForm.password) {
         await updateSharePassword(share.id, { password: editForm.password });
       }
