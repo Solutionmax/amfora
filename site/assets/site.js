@@ -21,6 +21,9 @@
   // homepage motion (every block is optional)
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);const c=e.target.querySelector('[data-count]');if(c){const t=+c.dataset.count;let n=0;const st=Date.now();const tick=()=>{const p=Math.min(1,(Date.now()-st)/1400);n=Math.round(t*(1-Math.pow(1-p,3)));c.textContent=n.toLocaleString('en');if(p<1)requestAnimationFrame(tick)};tick()}}}),{threshold:.15});
+  // inner pages: the header draws its line once the page has moved, and blocks rise in as they are reached
+  const hdr=$('.hdr');if(hdr)addEventListener('scroll',()=>hdr.classList.toggle('stuck',scrollY>8),{passive:true});
+  if(!reduce)$$('.section-head,.plan,.steps li,.release-entry,.compare,.compare-shots figure,.latest-release,.brandpack-shot,.release-option-grid article,.closing-grid,.docs-quicklinks a').forEach((el,i)=>{if(el.getBoundingClientRect().top<innerHeight)return;el.classList.add('rv');const k=[...el.parentElement.children].indexOf(el);el.style.setProperty('--d',Math.min(k,3)*80+'ms')});
   document.querySelectorAll('.rv').forEach(el=>io.observe(el));document.querySelectorAll('.bento .b').forEach((b,i)=>b.style.setProperty('--d',(i*70)+'ms'));
   document.querySelectorAll('.run .stack, .faq > div:last-child, .tile-hero').forEach(el=>io.observe(el));
   // carousel
