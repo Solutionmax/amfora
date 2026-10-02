@@ -4,7 +4,7 @@
 # mc RELEASE.2025-08-13T08-35-41Z). Pinned by the multi-arch index digest.
 FROM ghcr.io/solutionmax/amfora:2.2.0@sha256:f0dc8a02b3a32234ca9f764c3959f3c66cc2f46d34349116338c3ff7a80be0f9 AS storage-binaries
 
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 
 # Install system dependencies
 RUN apk add --no-cache \
