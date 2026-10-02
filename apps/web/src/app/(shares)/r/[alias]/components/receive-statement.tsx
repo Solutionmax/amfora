@@ -12,7 +12,6 @@ import type { ReverseShareInfo } from "../types";
 export function useReceiveStory(reverseShare: ReverseShareInfo | null): PublicStory {
   const t = useTranslations();
   const { appName } = useAppInfo();
-  const owner = reverseShare?.name || appName;
 
   const facts: StageFact[] = reverseShare
     ? [
@@ -24,9 +23,10 @@ export function useReceiveStory(reverseShare: ReverseShareInfo | null): PublicSt
       ]
     : [];
 
-  const headline = `${t("public.receive.title")} ${t("public.receive.accent", { name: owner })}`;
+  const headline = `${t("public.receive.title")} ${t("public.receive.accent", { name: appName })}`;
   return {
-    eyebrow: t("public.receive.eyebrow"),
+    // The link's own name is a title; the files go to the organisation.
+    eyebrow: reverseShare?.name || t("public.receive.eyebrow"),
     headline,
     title: headline,
     text: reverseShare?.description,

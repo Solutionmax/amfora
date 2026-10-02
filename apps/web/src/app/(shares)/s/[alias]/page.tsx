@@ -46,7 +46,6 @@ export default function PublicSharePage() {
 
   const itemCount = files.length + folders.length;
   const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
-  const senderName = share?.name || appName;
 
   const sharedAt = new Date(share?.createdAt ?? "");
   const sharedAtFormat = new Intl.DateTimeFormat(locale, {
@@ -68,8 +67,10 @@ export default function PublicSharePage() {
   const readyTitle = `${t("public.download.title", { count: itemCount })} ${t("public.download.accent")}`;
   const story: PublicStory = share
     ? {
+        // The share's own name is a title, not a person: the organisation is the one sharing.
+        eyebrow: share.name || undefined,
         sender: {
-          name: senderName,
+          name: appName,
           action: t("public.stage.shared"),
           line: Number.isNaN(sharedAt.getTime()) ? undefined : sharedAtFormat.format(sharedAt),
         },
