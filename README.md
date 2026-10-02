@@ -30,7 +30,7 @@ to storage you control, turn them into a guarded share, or give someone a
 browser link where they can send files back without creating an account.
 
 <p align="center">
-  <img src="site/assets/screenshots/dashboard.webp?v=2.0.0" alt="Amfora workspace dashboard" width="100%" />
+  <img src="site/assets/screenshots/2.3/dashboard.webp" alt="Amfora workspace dashboard" width="100%" />
 </p>
 
 ## The workflow
@@ -67,22 +67,22 @@ workspace.
 
 The screenshots show the English interface with demonstration data.
 
-![Amfora dashboard](site/assets/screenshots/dashboard.webp?v=2.0.0)
+![Amfora shares](site/assets/screenshots/2.3/share-detail.webp)
 
-The dashboard greets you, opens with Send files and Receive files, and shows
-storage, shares, downloads and files in one strip above the recent activity.
+Shares are a list on the left and the one you picked on the right: its link,
+its files, and the password, end date and view limit you can change at any time.
 
-![Amfora send view](site/assets/screenshots/download.webp?v=2.0.0)
+![Amfora download page](site/assets/screenshots/2.3/download-stage.webp)
 
-A share page is a statement column and a floating panel: who sent it, what is
-in it, and one button to download it all.
+A download page says who shared it and what is in it, with one button to
+download it all. This is the Stage theme; Workbench and Seal are the other two.
 
-![Amfora receive view](site/assets/screenshots/upload.webp?v=2.0.0)
+![Amfora receive page](site/assets/screenshots/2.3/upload-stage.webp)
 
 A receive link gives outside collaborators a simple upload form with the limits
 set by its owner.
 
-![Amfora sign in](site/assets/screenshots/login.webp?v=2.0.0)
+![Amfora sign in](site/assets/screenshots/2.3/login-workbench.webp)
 
 The sign in screen supports password authentication, password recovery, and
 two factor authentication when it is enabled for the account.
