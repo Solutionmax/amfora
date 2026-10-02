@@ -1,24 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { ProviderIcon } from "@/components/ui/icon-picker-lazy";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { getEnabledProviders } from "@/http/endpoints";
 import type { EnabledAuthProvider } from "@/http/endpoints/auth/types";
-
-// The icon picker bundles every react-icons pack (~11 MB gz); load it only when a provider button renders.
-const ProviderIcon = dynamic(
-  () =>
-    import("@/components/ui/icon-picker").then(({ renderIconByName }) => ({
-      default: ({ name }: { name: string }) => <>{renderIconByName(name)}</>,
-    })),
-  { ssr: false }
-);
 
 interface MultiProviderButtonsProps {
   /** A hairline with "or with email" under the buttons, when a password form follows. */

@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/form-section";
-import { IconPicker } from "@/components/ui/icon-picker";
+import { IconPicker } from "@/components/ui/icon-picker-lazy";
 import { Input } from "@/components/ui/input";
 import { LineRow } from "@/components/ui/line-list";
 import { Switch } from "@/components/ui/switch";

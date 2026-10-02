@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/form-section";
-import { IconPicker } from "@/components/ui/icon-picker";
+import { IconPicker } from "@/components/ui/icon-picker-lazy";
 import { Input } from "@/components/ui/input";
 import { TagsInput } from "@/components/ui/tags-input";
 import type { NewProvider } from "@/http/endpoints/auth/types";

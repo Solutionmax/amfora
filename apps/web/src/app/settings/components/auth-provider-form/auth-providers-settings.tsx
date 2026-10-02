@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FormSection } from "@/components/ui/form-section";
-import { renderIconByName } from "@/components/ui/icon-picker";
+import { ProviderIcon } from "@/components/ui/icon-picker-lazy";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthProviders } from "../../hooks/use-auth-providers";
 import { LoadError } from "../load-error";
@@ -67,7 +67,7 @@ export function AuthProvidersSettings() {
     setProviderToDelete,
   } = useAuthProviders();
 
-  const getProviderIcon = (provider: AuthProvider) => renderIconByName(provider.icon || "FaCog", "w-5 h-5");
+  const getProviderIcon = (provider: AuthProvider) => <ProviderIcon name={provider.icon || "FaCog"} />;
 
   const handleConfirmDelete = async () => {
     if (!providerToDelete) return;
