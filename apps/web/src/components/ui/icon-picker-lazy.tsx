@@ -1,7 +1,9 @@
 "use client";
 
-import { ComponentType, useEffect, useState } from "react";
+import { ComponentType, createElement, ReactElement, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+
+import { BUILTIN_ICONS, IconNode } from "./builtin-icons";
 
 type IconComponent = ComponentType<{ className?: string }>;
 type IconPack = Record<string, unknown>;
@@ -52,26 +54,58 @@ export async function loadIcon(name: string): Promise<IconComponent | null> {
   return null;
 }
 
-/** A sign-in provider's icon. Renders nothing until its pack has loaded; an unknown name shows a cog. */
+const drawNode = (node: IconNode, key: number): ReactElement =>
+  createElement(node.tag, { key, ...node.attr }, node.child?.map(drawNode));
+
+/** An icon that ships with the app, drawn the way react-icons draws it. */
+function BuiltinIcon({ icon, className }: { icon: IconNode; className: string }) {
+  return (
+    <svg
+      {...icon.attr}
+      className={className}
+      fill="currentColor"
+      stroke="currentColor"
+      strokeWidth="0"
+      height="1em"
+      width="1em"
+      aria-hidden="true"
+    >
+      {icon.child?.map(drawNode)}
+    </svg>
+  );
+}
+
+/**
+ * A sign-in provider's icon. The default providers' icons ship with the app; any other name loads its
+ * pack and renders nothing until that is in. An unknown name shows a cog.
+ */
 export function ProviderIcon({ name, className = "w-5 h-5" }: { name: string; className?: string }) {
+  const builtin = BUILTIN_ICONS[name];
   const [loaded, setLoaded] = useState<{ name: string; Icon: IconComponent | null } | null>(null);
 
   useEffect(() => {
+    if (builtin) return;
     let cancelled = false;
 
     loadIcon(name)
-      .then((Icon) => Icon ?? loadIcon(FALLBACK_ICON))
       .then((Icon) => !cancelled && setLoaded({ name, Icon }))
       .catch(() => !cancelled && setLoaded({ name, Icon: null }));
 
     return () => {
       cancelled = true;
     };
-  }, [name]);
+  }, [name, builtin]);
 
-  const Icon = loaded?.name === name ? loaded.Icon : null;
+  if (builtin) return <BuiltinIcon icon={builtin} className={className} />;
+  if (loaded?.name !== name) return null;
 
-  return Icon ? <Icon className={className} /> : null;
+  const Icon = loaded.Icon;
+
+  return Icon ? (
+    <Icon className={className} />
+  ) : (
+    <BuiltinIcon icon={BUILTIN_ICONS[FALLBACK_ICON]} className={className} />
+  );
 }
 
 // The picker lists every react-icons pack (~11 MB), so it loads only when a provider form opens.
