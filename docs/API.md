@@ -38,20 +38,23 @@ curl https://files.example.com/api/v1/auth/me \
 
 Read only keys:
 
-| Method | Path                                         | Purpose                                               |
-| ------ | -------------------------------------------- | ----------------------------------------------------- |
-| GET    | `/api/v1/auth/me`                            | The user behind the key. Use it to test a connection. |
-| GET    | `/api/v1/files`                              | Files                                                 |
-| GET    | `/api/v1/files/download-url?objectName=...`  | A download URL for one file                           |
-| GET    | `/api/v1/folders`                            | Folders                                               |
-| GET    | `/api/v1/shares/me`                          | Shares                                                |
-| GET    | `/api/v1/shares/{id}`                        | One share                                             |
-| GET    | `/api/v1/reverse-shares`                     | Receive links, with the files received                |
-| GET    | `/api/v1/reverse-shares/{id}`                | One receive link                                      |
-| GET    | `/api/v1/reverse-shares/files/{id}/download` | A download URL for a received file                    |
+| Method | Path                                         | Purpose                                                    |
+| ------ | -------------------------------------------- | ---------------------------------------------------------- |
+| GET    | `/api/v1/auth/me`                            | The user behind the key. Use it to test a connection.      |
+| GET    | `/api/v1/files`                              | Files                                                      |
+| GET    | `/api/v1/files/download-url?objectName=...`  | A download URL for one file                                |
+| GET    | `/api/v1/folders`                            | Folders                                                    |
+| GET    | `/api/v1/shares/me`                          | Shares                                                     |
+| GET    | `/api/v1/shares/{id}`                        | One share                                                  |
+| GET    | `/api/v1/reverse-shares`                     | Receive links, with the files received                     |
+| GET    | `/api/v1/reverse-shares/{id}`                | One receive link                                           |
+| GET    | `/api/v1/reverse-shares/files/{id}/download` | A download URL for a received file                         |
+| GET    | `/api/v1/secrets`                            | Secrets you made: status and opening count, never the text |
+| GET    | `/api/v1/secrets/limits`                     | What a new secret may ask for                              |
 
 Full access keys can also call every other endpoint under `/api/v1/files`, `/api/v1/folders`,
-`/api/v1/shares` and `/api/v1/reverse-shares`. A request body may be at most 1 MB; uploads go to the
+`/api/v1/shares`, `/api/v1/reverse-shares` and `/api/v1/secrets`. A secret is sealed by the
+caller before it is sent; [SECRETS.md](SECRETS.md) has the recipe and test vectors. A request body may be at most 1 MB; uploads go to the
 upload URL the API hands out, not through the API itself.
 
 ## Example: ask someone for files

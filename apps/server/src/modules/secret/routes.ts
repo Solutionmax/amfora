@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { sharePasswordRateLimit } from "../../config/rate-limit.config";
+import { createAdminGuard } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
 import {
   hashVerifier,
@@ -131,6 +132,25 @@ export async function secretRoutes(app: FastifyInstance) {
         anonymous: publicLimits(settings.anonymous),
         signedIn: publicLimits(settings.signedIn),
       });
+    }
+  );
+
+  app.get(
+    "/secrets/stats",
+    {
+      preValidation: createAdminGuard(),
+      schema: {
+        tags: ["Secrets"],
+        operationId: "getSecretStats",
+        summary: "How many secrets without an owner are waiting",
+        description: "For administrators. A number only: these secrets cannot be read or listed by anyone.",
+        response: { 200: z.object({ anonymousWaiting: z.number() }), 401: ErrorSchema, 403: ErrorSchema },
+      },
+    },
+    async (_request, reply) => {
+      await sweep(new Date());
+      const anonymousWaiting = await prisma.secret.count({ where: { creatorId: null, ciphertext: { not: null } } });
+      return reply.send({ anonymousWaiting });
     }
   );
 

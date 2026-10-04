@@ -47,13 +47,18 @@ export const READ_ROUTES: ReadonlySet<string> = new Set([
   "GET /reverse-shares",
   "GET /reverse-shares/:id",
   "GET /reverse-shares/files/:fileId/download",
+  "GET /secrets",
+  "GET /secrets/limits",
 ]);
 
 /**
  * A full key may also call everything under these. Accounts, settings and keys stay out of
  * reach, and so does /storage: it answers an administrator with figures about the whole host.
  */
-const FULL_PREFIXES = ["/files", "/folders", "/shares", "/reverse-shares"];
+const FULL_PREFIXES = ["/files", "/folders", "/shares", "/reverse-shares", "/secrets"];
+
+/** Under a prefix above, yet for administrators in a browser only. */
+const NEVER_ROUTES: ReadonlySet<string> = new Set(["GET /secrets/stats"]);
 
 /**
  * Whether a key with this scope may call the matched route. `route` is the route pattern
@@ -63,6 +68,7 @@ const FULL_PREFIXES = ["/files", "/folders", "/shares", "/reverse-shares"];
 export function isRouteAllowed(scope: string, method: string, route: string | undefined): boolean {
   if (!route) return false;
   const verb = method === "HEAD" ? "GET" : method;
+  if (NEVER_ROUTES.has(`${verb} ${route}`)) return false;
   if (READ_ROUTES.has(`${verb} ${route}`)) return true;
   if (scope !== "full") return false;
   return FULL_PREFIXES.some((prefix) => route === prefix || route.startsWith(`${prefix}/`));

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { sealSecret, secretOpener } from "./secret-crypto";
+import { sealSecret, sealSecretWith, secretOpener } from "./secret-crypto";
 
 test("a sealed text opens with its link key, and only with it", async () => {
   const text = "host: db01\npass: Vq7!mR2x ünïcødé 🔑";
@@ -45,4 +45,26 @@ test("a damaged link or a changed ciphertext is refused", async () => {
   // The first character: the last one of unpadded base64 carries bits that decode to nothing.
   const flipped = (sealed.ciphertext.startsWith("A") ? "B" : "A") + sealed.ciphertext.slice(1);
   assert.throws(() => opener.open(flipped));
+});
+
+// The same numbers stand in docs/SECRETS.md, checked against a second implementation
+// (Python, cryptography). A change here breaks every other client and every stored secret.
+test("fixed vectors: the format other implementations must match", async () => {
+  const key = Uint8Array.from({ length: 32 }, (_, i) => i);
+  const nonce = Uint8Array.from({ length: 12 }, (_, i) => 0xa0 + i);
+  const text = "correct horse battery staple";
+
+  assert.deepEqual(await sealSecretWith(key, nonce, text), {
+    linkKey: "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+    ciphertext: "oKGio6SlpqeoqaqrrTsMkL0otDO9_ALWzXJqEUf-4FiIWrxOSQj4inqkxK786onBNqeHPggRtT0",
+    proof: "85rt_VP8VFLKanVz6SPmQBNSD4RI9MKaQYN6RA2BhXE",
+    verifier: "UCKs6tYJgWyoxcqQZV5bwmNX6LaFnehl92JAcoqvs8o",
+  });
+  assert.deepEqual(await sealSecretWith(key, nonce, text, "tr0ub4dor&3"), {
+    linkKey: "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+    ciphertext: "oKGio6SlpqeoqaqrgPSx4UlJ-ZW29TL68Tl9ONWXl1cIsL72UY4RHo2wCZhXFjXghagWmw7x-Q8",
+    proof: "85rt_VP8VFLKanVz6SPmQBNSD4RI9MKaQYN6RA2BhXE",
+    verifier: "DzZtEhjlHA7MBvRBtFSDGeNxMX0SrJCfWRBBulFllRI",
+  });
+  await assert.rejects(sealSecretWith(key.slice(1), nonce, text), /length/);
 });

@@ -70,9 +70,17 @@ export interface SealedSecret {
   verifier: string;
 }
 
-export async function sealSecret(text: string, passphrase = ""): Promise<SealedSecret> {
-  const linkKey = crypto.getRandomValues(new Uint8Array(KEY_BYTES));
-  const nonce = crypto.getRandomValues(new Uint8Array(NONCE_BYTES));
+/**
+ * Sealing with a given key and nonce. Only for tests and for checking another implementation
+ * against the vectors in docs/SECRETS.md: a real secret must get fresh random ones.
+ */
+export async function sealSecretWith(
+  linkKey: Uint8Array,
+  nonce: Uint8Array,
+  text: string,
+  passphrase = ""
+): Promise<SealedSecret> {
+  if (linkKey.length !== KEY_BYTES || nonce.length !== NONCE_BYTES) throw new Error("Wrong key or nonce length");
   const { sealKey, proof, verifier } = await derive(linkKey, passphrase);
   const sealed = gcm(sealKey, nonce).encrypt(utf8.encode(text));
   return {
@@ -81,6 +89,12 @@ export async function sealSecret(text: string, passphrase = ""): Promise<SealedS
     proof,
     verifier,
   };
+}
+
+export async function sealSecret(text: string, passphrase = ""): Promise<SealedSecret> {
+  const linkKey = crypto.getRandomValues(new Uint8Array(KEY_BYTES));
+  const nonce = crypto.getRandomValues(new Uint8Array(NONCE_BYTES));
+  return sealSecretWith(linkKey, nonce, text, passphrase);
 }
 
 export interface SecretOpener {

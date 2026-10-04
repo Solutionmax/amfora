@@ -29,9 +29,9 @@ before(async () => {
   registerRoutes(app);
   await app.ready();
 
-  for (const id of ["alice", "bob"]) {
+  for (const id of ["alice", "bob", "root"]) {
     await prisma.user.create({
-      data: { id, firstName: id, lastName: "Test", username: id, email: `${id}@example.test` },
+      data: { id, firstName: id, lastName: "Test", username: id, email: `${id}@example.test`, isAdmin: id === "root" },
     });
   }
 });
@@ -285,4 +285,51 @@ test("anonymous secrets: off by default, tighter limits, rate limited, no record
 
   // Four requests were counted (one refused while off, two over the limits, one made).
   assert.equal((await anonymous()).statusCode, 429);
+});
+
+test("the count of ownerless secrets is for administrators, and is only a number", async () => {
+  const stats = (userId?: string) =>
+    app.inject({ method: "GET", url: "/secrets/stats", cookies: userId ? session(userId) : undefined });
+  assert.equal((await stats()).statusCode, 401);
+  assert.equal((await stats("alice")).statusCode, 403);
+
+  const before = (await stats("root")).json().anonymousWaiting as number;
+  await prisma.secret.create({
+    data: {
+      id: "stats-test",
+      ciphertext: "AAAA",
+      proofHash: "x",
+      verifierHash: "y",
+      expiresAt: new Date(Date.now() + 60_000),
+    },
+  });
+  assert.deepEqual((await stats("root")).json(), { anonymousWaiting: before + 1 });
+});
+
+test("an API key lists and makes secrets with full access, reads with read access, never the count", async () => {
+  const key = async (userId: string, scope: string) => {
+    const made = await app.inject({
+      method: "POST",
+      url: "/api-keys",
+      cookies: session(userId),
+      payload: { name: scope, scope },
+    });
+    return { authorization: `Bearer ${made.json().token}` };
+  };
+  const read = await key("alice", "read");
+  const full = await key("alice", "full");
+  const adminFull = await key("root", "full");
+
+  assert.equal((await app.inject({ method: "GET", url: "/secrets", headers: read })).statusCode, 200);
+  assert.equal((await app.inject({ method: "GET", url: "/secrets/limits", headers: read })).statusCode, 200);
+  assert.equal((await app.inject({ method: "POST", url: "/secrets", headers: read, payload: body() })).statusCode, 403);
+
+  const made = await app.inject({ method: "POST", url: "/secrets", headers: full, payload: body({ label: "by key" }) });
+  assert.equal(made.statusCode, 201, made.body);
+  const id = made.json().id as string;
+  assert.equal((await prisma.secret.findUnique({ where: { id } }))?.creatorId, "alice");
+  assert.equal((await app.inject({ method: "DELETE", url: `/secrets/${id}`, headers: read })).statusCode, 403);
+  assert.equal((await app.inject({ method: "DELETE", url: `/secrets/${id}`, headers: full })).statusCode, 200);
+
+  assert.equal((await app.inject({ method: "GET", url: "/secrets/stats", headers: adminFull })).statusCode, 403);
 });

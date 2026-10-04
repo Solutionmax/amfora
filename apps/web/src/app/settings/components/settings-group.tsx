@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
-import { CopyField } from "@/components/files/copy-field";
 import { FormSection } from "@/components/ui/form-section";
 import { LineList } from "@/components/ui/line-list";
 import { ANONYMOUS_SECRET_FIELDS, blocksFor, SettingsRow, SMTP_FIELDS } from "../constants";
 import { Config, SettingsGroupProps } from "../types";
+import { AnonymousSecretsNote } from "./anonymous-secrets-note";
 import { isFieldHidden, SettingField, SettingsFormApi, SettingSwitchRow } from "./settings-input";
 import { SmtpTestButton } from "./smtp-test-button";
 
@@ -95,7 +95,7 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
           {renderRows(block.rows, byKey, form as SettingsFormApi)}
           {/* The saved value: until it is saved the page still sends visitors to sign in. */}
           {block.id === "anonymousSecrets" && byKey.get("secretsAnonymousEnabled")?.value === "true" && (
-            <CopyField value={`${window.location.origin}/secret`} label={t("secrets.public.address")} />
+            <AnonymousSecretsNote />
           )}
           {group === "email" && block.id === "outgoing" && smtpOn && (
             <SmtpTestButton

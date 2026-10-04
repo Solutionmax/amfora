@@ -59,3 +59,7 @@ export const openSecret = async (
   keys: { proof: string; verifier: string }
 ): Promise<{ ciphertext: string; opensLeft: number }> =>
   (await apiInstance.post(`/api/secrets/${encodeURIComponent(id)}/open`, keys)).data;
+
+/** Administrators only. A number, because nobody can read or list these secrets. */
+export const getSecretStats = async (): Promise<{ anonymousWaiting: number }> =>
+  (await apiInstance.get("/api/secrets/stats")).data;

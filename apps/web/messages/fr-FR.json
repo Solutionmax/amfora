@@ -3044,7 +3044,8 @@
       "address": "Adresse de la page publique",
       "shareEyebrow": "Aucun compte requis",
       "shareTitle": "Partager un secret",
-      "shareLine": "Se détruit après lecture"
+      "shareLine": "Se détruit après lecture",
+      "waitingNow": "{count, plural, =0 {Aucun secret créé sans compte n'est en attente.} one {# secret créé sans compte est en attente.} other {# secrets créés sans compte sont en attente.}}"
     }
   }
 }

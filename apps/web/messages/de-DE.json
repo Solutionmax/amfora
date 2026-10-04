@@ -3044,7 +3044,8 @@
       "address": "Adresse der öffentlichen Seite",
       "shareEyebrow": "Kein Konto nötig",
       "shareTitle": "Ein Geheimnis teilen",
-      "shareLine": "Vernichtet sich nach dem Lesen"
+      "shareLine": "Vernichtet sich nach dem Lesen",
+      "waitingNow": "{count, plural, =0 {Derzeit warten keine ohne Konto erstellten Geheimnisse.} one {Derzeit wartet # ohne Konto erstelltes Geheimnis.} other {Derzeit warten # ohne Konto erstellte Geheimnisse.}}"
     }
   }
 }

@@ -3044,7 +3044,8 @@
       "address": "Address of the public page",
       "shareEyebrow": "No account needed",
       "shareTitle": "Share a secret",
-      "shareLine": "Destroys itself after reading"
+      "shareLine": "Destroys itself after reading",
+      "waitingNow": "{count, plural, =0 {No secrets made without an account are waiting right now.} one {# secret made without an account is waiting right now.} other {# secrets made without an account are waiting right now.}}"
     }
   }
 }

@@ -3044,7 +3044,8 @@
       "address": "Adres van de publieke pagina",
       "shareEyebrow": "Geen account nodig",
       "shareTitle": "Deel een geheim",
-      "shareLine": "Vernietigt zichzelf na het lezen"
+      "shareLine": "Vernietigt zichzelf na het lezen",
+      "waitingNow": "{count, plural, =0 {Er wachten nu geen geheimen die zonder account zijn gemaakt.} one {Er wacht nu # geheim dat zonder account is gemaakt.} other {Er wachten nu # geheimen die zonder account zijn gemaakt.}}"
     }
   }
 }
