@@ -12,6 +12,7 @@ import {
   updateReverseShare,
   updateReverseSharePassword,
 } from "@/http/endpoints";
+import { updateReverseShareNotifications } from "@/http/endpoints/activity";
 import { copyReverseShareFileToUserFiles } from "@/http/endpoints/reverse-shares";
 import type {
   CreateReverseShareBody,
@@ -167,6 +168,20 @@ export function useReverseShares() {
     }
   };
 
+  /** Shown at once; put back when the server refuses. */
+  const handleRemindBeforeExpiry = async (id: string, remindBeforeExpiry: boolean) => {
+    mergeOne(id, { remindBeforeExpiry });
+    try {
+      await updateReverseShareNotifications(id, { remindBeforeExpiry });
+      return true;
+    } catch (error) {
+      console.error("Failed to save the reminder:", error);
+      mergeOne(id, { remindBeforeExpiry: !remindBeforeExpiry });
+      toast.error(t("reverseShares.calm.notify.error"));
+      return false;
+    }
+  };
+
   const handleToggleActive = async (id: string, isActive: boolean) => {
     try {
       const response = await updateReverseShare({ id, isActive });
@@ -241,6 +256,7 @@ export function useReverseShares() {
     handleUpdatePassword,
     handleUpdateReverseShareData,
     handleToggleActive,
+    handleRemindBeforeExpiry,
     retryLoad,
     refreshReverseShare,
   };

@@ -114,6 +114,9 @@ export class AppService {
       "smtpNoAuth",
       "smtpTrustSelfSigned",
       "jwtSecret",
+      // Where webhooks go and how they are signed is for administrators only.
+      "webhookUrl",
+      "webhookSecret",
     ];
 
     return prisma.appConfig.findMany({

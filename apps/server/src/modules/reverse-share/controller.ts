@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { getSharePassword } from "../../shared/share-password";
+import { placeOfRequest } from "../activity/activity";
 import {
   CreateReverseShareSchema,
   ReverseSharePasswordSchema,
@@ -246,7 +247,12 @@ export class ReverseShareController {
       const password = getSharePassword(request);
       const fileData = UploadToReverseShareSchema.parse(request.body);
 
-      const file = await this.reverseShareService.registerFileUpload(id, fileData, password);
+      const file = await this.reverseShareService.registerFileUpload(
+        id,
+        fileData,
+        password,
+        await placeOfRequest(request).catch(() => null)
+      );
       return reply.status(201).send({ file });
     } catch (error: any) {
       console.error("Register File Upload Error:", error);
@@ -281,7 +287,12 @@ export class ReverseShareController {
       const password = getSharePassword(request);
       const fileData = UploadToReverseShareSchema.parse(request.body);
 
-      const file = await this.reverseShareService.registerFileUploadByAlias(alias, fileData, password);
+      const file = await this.reverseShareService.registerFileUploadByAlias(
+        alias,
+        fileData,
+        password,
+        await placeOfRequest(request).catch(() => null)
+      );
       return reply.status(201).send({ file });
     } catch (error: any) {
       console.error("Register File Upload by Alias Error:", error);

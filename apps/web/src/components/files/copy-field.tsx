@@ -33,7 +33,7 @@ export function CopyField({ value, label }: { value: string; label: string }) {
         onFocus={(e) => e.currentTarget.select()}
         className="min-w-0 flex-1 truncate bg-transparent font-mono text-[12.5px] text-ink-2 outline-none"
       />
-      <Button variant="outline" size="sm" onClick={copy}>
+      <Button type="button" variant="outline" size="sm" onClick={copy}>
         {copied ? <IconCheck /> : <IconCopy />}
         {copied ? t("common.copied") : t("common.copy")}
       </Button>

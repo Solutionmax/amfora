@@ -4,6 +4,7 @@ import fastifyMultipart from "@fastify/multipart";
 
 import { buildApp } from "./app";
 import { directoriesConfig } from "./config/directories.config";
+import { startActivityJobs } from "./modules/activity/jobs";
 import { registerRoutes } from "./routes";
 
 if (typeof globalThis.crypto === "undefined") {
@@ -68,6 +69,7 @@ async function startServer() {
   });
 
   console.log(`Amfora server running on port 3333`);
+  startActivityJobs();
 
   // Cleanup on shutdown
   process.on("SIGINT", () => process.exit(0));

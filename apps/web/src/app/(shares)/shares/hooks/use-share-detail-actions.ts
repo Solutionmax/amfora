@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { removeFiles, removeFolders, updateShare, updateSharePassword } from "@/http/endpoints";
+import { updateShareNotifications, type ShareNotifications } from "@/http/endpoints/activity";
 import type { Share } from "@/http/endpoints/shares/types";
 import type { ShareItemRef } from "../components/share-detail-types";
 import { folderWithContents } from "../lib/share-list";
@@ -40,6 +41,19 @@ export function useShareDetailActions(reload: () => Promise<void>) {
     }
   };
 
+  /** The emails the maker asked for on this share. */
+  const saveNotifications = async (share: Share, changes: Partial<ShareNotifications>) => {
+    try {
+      await updateShareNotifications(share.id, changes);
+      await reload();
+      return true;
+    } catch (error) {
+      console.error("Failed to save share notifications:", error);
+      toast.error(t("shares.calm.notify.error"));
+      return false;
+    }
+  };
+
   const confirmRemoveItem = async () => {
     if (!itemToRemove) return;
     const { share, item } = itemToRemove;
@@ -67,6 +81,7 @@ export function useShareDetailActions(reload: () => Promise<void>) {
     setItemToRemove,
     removePassword,
     saveViewLimit,
+    saveNotifications,
     confirmRemoveItem,
   };
 }

@@ -1,3 +1,4 @@
+import type { ShareNotifications } from "@/http/endpoints/activity";
 import type { Share } from "@/http/endpoints/shares/types";
 
 export interface ShareItemRef {
@@ -22,4 +23,6 @@ export interface ShareDetailActions {
   onViewLimit: (share: Share) => void;
   onLink: (share: Share) => void;
   onRemoveItem: (share: Share, item: ShareItemRef) => void;
+  /** Resolves to false when the change could not be saved. */
+  onNotifications: (share: Share, changes: Partial<ShareNotifications>) => Promise<boolean>;
 }

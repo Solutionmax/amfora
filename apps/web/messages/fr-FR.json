@@ -1,4 +1,70 @@
 {
+  "activity": {
+    "pageTitle": "Activité",
+    "subline": "Ce qui est arrivé à vos liens, et qui s'est connecté.",
+    "kept": "Conservée pendant {days, plural, one {# jour} other {# jours}}.",
+    "exportCsv": "Exporter en CSV",
+    "facts": {
+      "downloads": "Téléchargements cette semaine",
+      "opened": "Liens ouverts",
+      "filesReceived": "Fichiers reçus",
+      "failedSignIns": "Connexions échouées",
+      "same": "pareil",
+      "versusLastWeek": "Par rapport à la semaine dernière"
+    },
+    "filterLabel": "Afficher",
+    "filters": {
+      "all": "Tout",
+      "share": "Partages",
+      "receive": "Réception",
+      "secret": "Secrets",
+      "account": "Connexion"
+    },
+    "search": "Rechercher dans l'activité",
+    "days": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier"
+    },
+    "eventCount": "{count, plural, one {# événement} other {# événements}}",
+    "actions": {
+      "shareCreated": "Partage créé",
+      "shareDeleted": "Partage supprimé",
+      "shareOpened": "Partage ouvert",
+      "shareDownloaded": "Téléchargé",
+      "sharePasswordFailed": "Mot de passe erroné",
+      "receiveFilesReceived": "{count, plural, one {# fichier envoyé} other {# fichiers envoyés}}",
+      "secretCreated": "Secret créé",
+      "secretDeleted": "Secret supprimé",
+      "secretOpened": "Secret ouvert",
+      "secretDestroyed": "Secret détruit",
+      "accountSignedIn": "Connexion",
+      "accountSignInFailed": "Connexion échouée",
+      "other": "Autre chose s'est produit"
+    },
+    "details": {
+      "opening": "{opening} sur {max}",
+      "destroyed": "après trois phrases secrètes erronées",
+      "signInFailed": "nom ou mot de passe refusé"
+    },
+    "untitled": {
+      "share": "Partage sans titre",
+      "receive": "Lien de réception sans titre",
+      "secret": "Secret sans nom",
+      "account": "Compte",
+      "other": "Sans titre"
+    },
+    "visitor": "Visiteur",
+    "unknownPlace": "Inconnu",
+    "localNetwork": "Réseau local",
+    "loadMore": "Charger plus",
+    "loadingMore": "Chargement",
+    "emptyTitle": "Rien ici pour le moment.",
+    "emptyText": "Dès que quelqu'un ouvre ou télécharge l'un de vos liens, vous le voyez ici.",
+    "noResults": "Aucun résultat.",
+    "loadError": "Impossible de charger l'activité.",
+    "hint": "Un administrateur voit tout le monde. Un utilisateur ne voit que ses propres liens. Le lieu est le pays et la ville de l'adresse, jamais l'adresse elle-même.",
+    "credit": "IP geolocation by DB-IP"
+  },
   "auth": {
     "errors": {
       "account_inactive": "Compte inactif. Veuillez contacter l'administrateur.",
@@ -426,7 +492,18 @@
       "untitledLink": "Lien de réception",
       "nothingReceived": "Rien reçu pour l'instant",
       "nothingReceivedHint": "Les fichiers que des personnes vous envoient via vos liens de réception apparaissent ici.",
-      "receivedMeta": "{sender} via {link} · {when}"
+      "receivedMeta": "{sender} via {link} · {when}",
+      "storage": {
+        "title": "Votre stockage",
+        "ofLimit": "sur {limit}",
+        "noLimit": "sans limite",
+        "freeAndUsed": "{free} libres · {percent} % utilisés",
+        "barLabel": "{percent} % de votre stockage est utilisé",
+        "myFiles": "Mes fichiers",
+        "inShares": "Dans des partages",
+        "received": "Reçus",
+        "receivedNote": "Ne compte pas dans votre limite."
+      }
     }
   },
   "deleteConfirmation": {
@@ -842,7 +919,10 @@
     "account": "Compte",
     "roleAdmin": "Administrateur",
     "roleUser": "Membre",
-    "storage": "Stockage"
+    "storage": "Stockage",
+    "yourStorage": "Votre stockage",
+    "storageAlmostFull": "Presque plein",
+    "storageFull": "Plein"
   },
   "navigation": {
     "dashboard": "Tableau de bord"
@@ -1804,7 +1884,14 @@
       },
       "deleteSomeFailed": "{count, plural, =1 {1 fichier n'a pas pu être supprimé.} other {# fichiers n'ont pas pu être supprimés.}}",
       "typesPlaceholder": "pdf jpg png",
-      "sizeUnit": "Unité"
+      "sizeUnit": "Unité",
+      "notify": {
+        "title": "E-mails pour vous",
+        "expiry": "Me le rappeler avant l'expiration",
+        "expiryHint": "Un e-mail 3 jours avant la date de fin.",
+        "noEndDate": "Ce lien n'a pas de date de fin.",
+        "error": "Enregistrement impossible. Réessayez."
+      }
     }
   },
   "searchBar": {
@@ -1813,6 +1900,144 @@
     "placeholderFolders": "Rechercher des dossiers...",
     "noResults": "Aucun résultat trouvé pour \"{query}\"",
     "placeholderFiles": "Rechercher des fichiers..."
+  },
+  "secrets": {
+    "pageTitle": "Secrets",
+    "new": "Nouveau",
+    "newSecret": "Nouveau secret",
+    "filterLabel": "Filtrer les secrets",
+    "filters": {
+      "all": "Tous",
+      "waiting": "En attente",
+      "done": "Ouverts ou expirés"
+    },
+    "status": {
+      "waiting": "En attente",
+      "used": "Épuisé",
+      "expired": "Expiré",
+      "burned": "Détruit"
+    },
+    "passphraseTag": "Phrase secrète",
+    "linkOnlyTag": "Lien seul",
+    "untitled": "Secret sans nom",
+    "opensOf": "{opens} sur {max}",
+    "emptyTitle": "Aucun secret pour l'instant",
+    "emptyDescription": "Envoyez un mot de passe ou une clé avec un lien qui se détruit après lecture.",
+    "noResults": "Aucun secret ici.",
+    "loadError": "Impossible de charger les secrets.",
+    "retry": "Réessayer",
+    "notFoundTitle": "Ce secret n'existe pas",
+    "notFoundText": "Il a peut-être été supprimé.",
+    "showAll": "Afficher tous les secrets",
+    "created": "créé le {date}",
+    "copyNowTitle": "Copiez ce lien maintenant.",
+    "copyNowText": "La clé fait partie du lien et n'atteint jamais le serveur, le lien ne peut donc pas être affiché à nouveau.",
+    "copyLink": "Copier le lien",
+    "openPage": "Ouvrir la page que voit le destinataire",
+    "linkCopied": "Lien copié",
+    "copyFailed": "Copie impossible. Sélectionnez le texte et copiez-le vous-même.",
+    "createFailed": "Le secret n'a pas pu être créé. Réessayez.",
+    "deleted": "Supprimé",
+    "deleteFailed": "Suppression impossible. Réessayez.",
+    "linkGoneTitle": "Le lien a été affiché à la création de ce secret.",
+    "linkGoneText": "Il n'est conservé nulle part. Perdu ? Supprimez ce secret et créez-en un nouveau.",
+    "textGoneTitle": "Le texte est supprimé.",
+    "textGoneText": "Seule cette ligne reste, pour que vous puissiez voir ce qui s'est passé.",
+    "facts": {
+      "status": "Statut",
+      "expires": "Expire",
+      "expired": "Expiré",
+      "opened": "Ouvert"
+    },
+    "access": "Accès",
+    "passphraseOn": "Le destinataire doit saisir une phrase secrète.",
+    "passphraseOff": "Toute personne ayant le lien peut l'ouvrir.",
+    "on": "Oui",
+    "off": "Non",
+    "burnedText": "Détruit après trois phrases secrètes erronées.",
+    "notOpened": "Pas encore ouvert.",
+    "neverOpened": "Jamais ouvert. Détruit à l'expiration.",
+    "lastOpened": "Dernière fois {when}.",
+    "leftThenDestroyed": "Encore {count, plural, one {# fois} other {# fois}}, puis il est détruit.",
+    "destroyedAfterLast": "Détruit après la dernière fois.",
+    "encryption": "Chiffrement",
+    "encryptionText": "AES 256, effectué dans le navigateur. Le serveur ne conserve que le texte scellé.",
+    "endToEnd": "De bout en bout",
+    "delete": "Supprimer le secret",
+    "deleteRecord": "Supprimer la ligne",
+    "deleteTitle": "Supprimer ce secret ?",
+    "deleteText": "Le lien cesse de fonctionner immédiatement. Cette action est irréversible.",
+    "deleteConfirm": "Supprimer",
+    "days": "{count, plural, one {# jour} other {# jours}}",
+    "hours": "{count, plural, one {# heure} other {# heures}}",
+    "times": "{count} fois",
+    "form": {
+      "title": "Nouveau secret",
+      "description": "Un mot de passe ou une clé qui se détruit après lecture.",
+      "secret": "Secret",
+      "secretHint": "Chiffré dans votre navigateur. Le serveur ne voit jamais ce texte.",
+      "secretPlaceholder": "Collez ici le mot de passe, la clé ou la note",
+      "label": "Libellé",
+      "labelHint": "Facultatif, vous seul le voyez.",
+      "labelPlaceholder": "Par exemple : mot de passe de base de données d'un client",
+      "expires": "Expire après",
+      "canBeOpened": "Peut être ouvert",
+      "passphrase": "Phrase secrète",
+      "passphraseHint": "Le destinataire en a besoin pour ouvrir le secret. Envoyez-la par un autre moyen.",
+      "create": "Créer le lien",
+      "sealing": "Scellement…"
+    },
+    "public": {
+      "headline": "Un secret, pour vos yeux seulement.",
+      "metaTitle": "Un secret vous attend",
+      "trust": {
+        "opens": {
+          "title": "Ouvertures limitées",
+          "text": "Après la dernière, le texte est détruit."
+        },
+        "sealed": {
+          "title": "Chiffré dans le navigateur",
+          "text": "Le serveur ne peut pas le lire."
+        },
+        "expires": {
+          "title": "Expire tout seul",
+          "text": "Les secrets non ouverts sont aussi supprimés."
+        }
+      },
+      "waitingTitle": "Un secret vous attend",
+      "goneTitle": "Ce secret n'est plus disponible",
+      "goneText": "Il a déjà été ouvert, a expiré ou a été supprimé par l'expéditeur. Demandez un nouveau lien à l'expéditeur.",
+      "shownTitle": "Voici votre secret",
+      "shownTextMore": "Copiez-le maintenant. Chaque ouverture de ce lien compte.",
+      "shownTextLast": "Copiez-le maintenant. Il disparaît dès que vous quittez cette page.",
+      "copy": "Copier",
+      "copied": "Secret copié",
+      "worksMore": "Ce lien fonctionne encore {count} fois, puis le secret est détruit.",
+      "destroyed": "Détruit sur le serveur. Ce lien ne fonctionne plus.",
+      "opensMore": "Il peut encore être ouvert {count} fois.",
+      "opensOnce": "Il peut être affiché une seule fois.",
+      "thenDestroyed": "Ensuite il est détruit et ce lien cesse de fonctionner.",
+      "hasPassphrase": "L'expéditeur l'a protégé par une phrase secrète.",
+      "passphraseHint": "Trois essais erronés détruisent le secret.",
+      "show": "Afficher le secret",
+      "opening": "Ouverture…",
+      "previewSafe": "Ouvrir cette page n'a pas consommé le lien. Seul le bouton le fait.",
+      "wrongPassphrase": "Phrase secrète erronée. Encore {count, plural, one {# essai} other {# essais}}.",
+      "tooManyTries": "Trop d'essais. Attendez une minute et réessayez.",
+      "createTitle": "Partager un secret",
+      "createText": "Collez un mot de passe ou une clé. Vous obtenez un lien qui se détruit après lecture.",
+      "noAccount": "Aucun compte requis.",
+      "tooManySecrets": "Vous avez créé beaucoup de secrets en peu de temps. Réessayez dans une heure.",
+      "readyTitle": "Votre lien est prêt",
+      "readyText": "Copiez-le maintenant. La clé fait partie du lien, il ne peut donc pas être affiché à nouveau.",
+      "another": "En créer un autre",
+      "shareLink": "Partager un secret sans compte",
+      "address": "Adresse de la page publique",
+      "shareEyebrow": "Aucun compte requis",
+      "shareTitle": "Partager un secret",
+      "shareLine": "Se détruit après lecture",
+      "waitingNow": "{count, plural, =0 {Aucun secret créé sans compte n'est en attente.} one {# secret créé sans compte est en attente.} other {# secrets créés sans compte sont en attente.}}"
+    }
   },
   "settings": {
     "title": "Paramètres",
@@ -1984,7 +2209,8 @@
       "smtpTestHint": "Utilise les valeurs ci-dessus, même avant l'enregistrement.",
       "units": {
         "seconds": "secondes",
-        "unit": "Unité"
+        "unit": "Unité",
+        "days": "jours"
       },
       "blocks": {
         "brand": {
@@ -2026,6 +2252,19 @@
         "secrets": {
           "title": "Secrets",
           "description": "Limites pour les secrets des utilisateurs connectés."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "E-mails au sujet des liens. Les e-mails sortants doivent être configurés."
+        },
+        "activity": {
+          "title": "Activité",
+          "description": "Le journal de ce qui est arrivé aux liens et aux comptes.",
+          "note": "L'adresse d'un visiteur n'est jamais conservée, seulement le lieu qu'elle indique."
+        },
+        "webhooks": {
+          "title": "Webhooks",
+          "description": "Prévenir un autre outil quand quelque chose se produit."
         }
       },
       "fields": {
@@ -2072,6 +2311,46 @@
         "secretsMaxOpens": {
           "title": "Ouvertures au plus",
           "description": "Par secret."
+        },
+        "notifyDownloadEnabled": {
+          "title": "E-mails de téléchargement",
+          "description": "Les créateurs peuvent demander un e-mail quand leur partage est téléchargé."
+        },
+        "notifyExpiryEnabled": {
+          "title": "Rappels d'expiration",
+          "description": "Les créateurs peuvent demander un e-mail avant l'expiration d'un partage ou d'un lien de réception."
+        },
+        "notifySecretOpenedEnabled": {
+          "title": "Secret ouvert",
+          "description": "Le créateur reçoit un e-mail quand un secret est ouvert."
+        },
+        "activityRetentionDays": {
+          "title": "Conserver l'activité pendant"
+        },
+        "activityPlace": {
+          "title": "Afficher le lieu",
+          "options": {
+            "city": "Pays et ville",
+            "country": "Pays seulement",
+            "off": "Rien"
+          }
+        },
+        "webhookUrl": {
+          "title": "Adresse",
+          "description": "Laissez vide pour ne rien envoyer."
+        },
+        "webhookSecret": {
+          "title": "Clé de signature",
+          "description": "Chaque appel est signé avec cette clé, pour que le destinataire puisse vérifier qu'il vient de ce serveur."
+        },
+        "webhookFilesReceived": {
+          "title": "Fichiers reçus"
+        },
+        "webhookShareDownloaded": {
+          "title": "Partage téléchargé"
+        },
+        "webhookSecretOpened": {
+          "title": "Secret ouvert"
         }
       }
     }
@@ -2427,6 +2706,22 @@
         "createAndLink": "Créer le partage",
         "deleteList": "Ces éléments seront supprimés",
         "defaultMultiName": "{count} éléments partagés"
+      },
+      "notify": {
+        "download": "Me prévenir à chaque téléchargement",
+        "downloadHint": "Au plus un e-mail par heure.",
+        "downloadHintTo": "Au plus un e-mail par heure, à {email}.",
+        "expiry": "Me le rappeler avant l'expiration",
+        "expiryHint": "Un e-mail 3 jours avant la date de fin.",
+        "noEndDate": "Ce partage n'a pas de date de fin.",
+        "error": "Enregistrement impossible. Réessayez."
+      },
+      "activity": {
+        "title": "Activité",
+        "all": "Toute l'activité",
+        "none": "Rien n'est encore arrivé à ce partage.",
+        "loadError": "Impossible de charger l'activité.",
+        "retry": "Réessayer"
       }
     }
   },
@@ -2909,143 +3204,5 @@
     "passwordRequired": "Le mot de passe est requis",
     "nameRequired": "Le nom est requis",
     "required": "Ce champ est requis"
-  },
-  "secrets": {
-    "pageTitle": "Secrets",
-    "new": "Nouveau",
-    "newSecret": "Nouveau secret",
-    "filterLabel": "Filtrer les secrets",
-    "filters": {
-      "all": "Tous",
-      "waiting": "En attente",
-      "done": "Ouverts ou expirés"
-    },
-    "status": {
-      "waiting": "En attente",
-      "used": "Épuisé",
-      "expired": "Expiré",
-      "burned": "Détruit"
-    },
-    "passphraseTag": "Phrase secrète",
-    "linkOnlyTag": "Lien seul",
-    "untitled": "Secret sans nom",
-    "opensOf": "{opens} sur {max}",
-    "emptyTitle": "Aucun secret pour l'instant",
-    "emptyDescription": "Envoyez un mot de passe ou une clé avec un lien qui se détruit après lecture.",
-    "noResults": "Aucun secret ici.",
-    "loadError": "Impossible de charger les secrets.",
-    "retry": "Réessayer",
-    "notFoundTitle": "Ce secret n'existe pas",
-    "notFoundText": "Il a peut-être été supprimé.",
-    "showAll": "Afficher tous les secrets",
-    "created": "créé le {date}",
-    "copyNowTitle": "Copiez ce lien maintenant.",
-    "copyNowText": "La clé fait partie du lien et n'atteint jamais le serveur, le lien ne peut donc pas être affiché à nouveau.",
-    "copyLink": "Copier le lien",
-    "openPage": "Ouvrir la page que voit le destinataire",
-    "linkCopied": "Lien copié",
-    "copyFailed": "Copie impossible. Sélectionnez le texte et copiez-le vous-même.",
-    "createFailed": "Le secret n'a pas pu être créé. Réessayez.",
-    "deleted": "Supprimé",
-    "deleteFailed": "Suppression impossible. Réessayez.",
-    "linkGoneTitle": "Le lien a été affiché à la création de ce secret.",
-    "linkGoneText": "Il n'est conservé nulle part. Perdu ? Supprimez ce secret et créez-en un nouveau.",
-    "textGoneTitle": "Le texte est supprimé.",
-    "textGoneText": "Seule cette ligne reste, pour que vous puissiez voir ce qui s'est passé.",
-    "facts": {
-      "status": "Statut",
-      "expires": "Expire",
-      "expired": "Expiré",
-      "opened": "Ouvert"
-    },
-    "access": "Accès",
-    "passphraseOn": "Le destinataire doit saisir une phrase secrète.",
-    "passphraseOff": "Toute personne ayant le lien peut l'ouvrir.",
-    "on": "Oui",
-    "off": "Non",
-    "burnedText": "Détruit après trois phrases secrètes erronées.",
-    "notOpened": "Pas encore ouvert.",
-    "neverOpened": "Jamais ouvert. Détruit à l'expiration.",
-    "lastOpened": "Dernière fois {when}.",
-    "leftThenDestroyed": "Encore {count, plural, one {# fois} other {# fois}}, puis il est détruit.",
-    "destroyedAfterLast": "Détruit après la dernière fois.",
-    "encryption": "Chiffrement",
-    "encryptionText": "AES 256, effectué dans le navigateur. Le serveur ne conserve que le texte scellé.",
-    "endToEnd": "De bout en bout",
-    "delete": "Supprimer le secret",
-    "deleteRecord": "Supprimer la ligne",
-    "deleteTitle": "Supprimer ce secret ?",
-    "deleteText": "Le lien cesse de fonctionner immédiatement. Cette action est irréversible.",
-    "deleteConfirm": "Supprimer",
-    "days": "{count, plural, one {# jour} other {# jours}}",
-    "hours": "{count, plural, one {# heure} other {# heures}}",
-    "times": "{count} fois",
-    "form": {
-      "title": "Nouveau secret",
-      "description": "Un mot de passe ou une clé qui se détruit après lecture.",
-      "secret": "Secret",
-      "secretHint": "Chiffré dans votre navigateur. Le serveur ne voit jamais ce texte.",
-      "secretPlaceholder": "Collez ici le mot de passe, la clé ou la note",
-      "label": "Libellé",
-      "labelHint": "Facultatif, vous seul le voyez.",
-      "labelPlaceholder": "Par exemple : mot de passe de base de données d'un client",
-      "expires": "Expire après",
-      "canBeOpened": "Peut être ouvert",
-      "passphrase": "Phrase secrète",
-      "passphraseHint": "Le destinataire en a besoin pour ouvrir le secret. Envoyez-la par un autre moyen.",
-      "create": "Créer le lien",
-      "sealing": "Scellement…"
-    },
-    "public": {
-      "headline": "Un secret, pour vos yeux seulement.",
-      "metaTitle": "Un secret vous attend",
-      "trust": {
-        "opens": {
-          "title": "Ouvertures limitées",
-          "text": "Après la dernière, le texte est détruit."
-        },
-        "sealed": {
-          "title": "Chiffré dans le navigateur",
-          "text": "Le serveur ne peut pas le lire."
-        },
-        "expires": {
-          "title": "Expire tout seul",
-          "text": "Les secrets non ouverts sont aussi supprimés."
-        }
-      },
-      "waitingTitle": "Un secret vous attend",
-      "goneTitle": "Ce secret n'est plus disponible",
-      "goneText": "Il a déjà été ouvert, a expiré ou a été supprimé par l'expéditeur. Demandez un nouveau lien à l'expéditeur.",
-      "shownTitle": "Voici votre secret",
-      "shownTextMore": "Copiez-le maintenant. Chaque ouverture de ce lien compte.",
-      "shownTextLast": "Copiez-le maintenant. Il disparaît dès que vous quittez cette page.",
-      "copy": "Copier",
-      "copied": "Secret copié",
-      "worksMore": "Ce lien fonctionne encore {count} fois, puis le secret est détruit.",
-      "destroyed": "Détruit sur le serveur. Ce lien ne fonctionne plus.",
-      "opensMore": "Il peut encore être ouvert {count} fois.",
-      "opensOnce": "Il peut être affiché une seule fois.",
-      "thenDestroyed": "Ensuite il est détruit et ce lien cesse de fonctionner.",
-      "hasPassphrase": "L'expéditeur l'a protégé par une phrase secrète.",
-      "passphraseHint": "Trois essais erronés détruisent le secret.",
-      "show": "Afficher le secret",
-      "opening": "Ouverture…",
-      "previewSafe": "Ouvrir cette page n'a pas consommé le lien. Seul le bouton le fait.",
-      "wrongPassphrase": "Phrase secrète erronée. Encore {count, plural, one {# essai} other {# essais}}.",
-      "tooManyTries": "Trop d'essais. Attendez une minute et réessayez.",
-      "createTitle": "Partager un secret",
-      "createText": "Collez un mot de passe ou une clé. Vous obtenez un lien qui se détruit après lecture.",
-      "noAccount": "Aucun compte requis.",
-      "tooManySecrets": "Vous avez créé beaucoup de secrets en peu de temps. Réessayez dans une heure.",
-      "readyTitle": "Votre lien est prêt",
-      "readyText": "Copiez-le maintenant. La clé fait partie du lien, il ne peut donc pas être affiché à nouveau.",
-      "another": "En créer un autre",
-      "shareLink": "Partager un secret sans compte",
-      "address": "Adresse de la page publique",
-      "shareEyebrow": "Aucun compte requis",
-      "shareTitle": "Partager un secret",
-      "shareLine": "Se détruit après lecture",
-      "waitingNow": "{count, plural, =0 {Aucun secret créé sans compte n'est en attente.} one {# secret créé sans compte est en attente.} other {# secrets créés sans compte sont en attente.}}"
-    }
   }
 }

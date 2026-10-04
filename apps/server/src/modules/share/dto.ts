@@ -54,6 +54,8 @@ export const ShareResponseSchema = z.object({
   createdAt: z.string().describe("The share creation date"),
   updatedAt: z.string().describe("The share update date"),
   creatorId: z.string().describe("The creator ID"),
+  notifyOnDownload: z.boolean().optional().describe("Email the maker when a file is downloaded"),
+  remindBeforeExpiry: z.boolean().optional().describe("Email the maker three days before the end date"),
   security: z.object({
     maxViews: z.number().nullable().describe("The maximum number of views"),
     hasPassword: z.boolean().describe("Whether the share has a password"),

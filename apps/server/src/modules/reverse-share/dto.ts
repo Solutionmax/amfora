@@ -56,6 +56,7 @@ export const ReverseShareResponseSchema = z.object({
   maxFiles: z.number().nullable().describe("Maximum number of files allowed"),
   maxFileSize: z.number().nullable().describe("Maximum file size in bytes"),
   allowedFileTypes: z.string().nullable().describe("Allowed file types"),
+  remindBeforeExpiry: z.boolean().optional().describe("Email the maker three days before the end date"),
   pageLayout: z.string().describe("Page layout type"),
   isActive: z.boolean().describe("Whether the reverse share is active"),
   hasPassword: z.boolean().describe("Whether the reverse share has a password"),

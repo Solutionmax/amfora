@@ -9,6 +9,8 @@ import {
   parseFileName,
 } from "../../utils/file-name-generator";
 import { getContentType } from "../../utils/mime-types";
+import { recordVisitorActivity } from "../activity/activity";
+import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
 import { dispositionFor } from "./disposition";
 import { canDownloadFromShares } from "./download-access";
@@ -56,6 +58,40 @@ export class FileController {
       isOwner: requesterId === fileRecord.userId,
       playbackEnabled: await this.isPublicPlaybackEnabled(),
     });
+  }
+
+  /** A counted download through a share: a line in the log, and word to the maker if they asked. */
+  private async recordShareDownload(
+    request: FastifyRequest,
+    file: { id: string; name: string; downloads: number },
+    shares: Array<{ id: string }>,
+    admitted: ReadonlySet<string>
+  ) {
+    try {
+      const through = shares.find((share) => admitted.has(share.id)) ?? shares[0];
+      if (!through) return;
+      const share = await prisma.share.findUnique({
+        where: { id: through.id },
+        select: { id: true, name: true, creatorId: true, notifyOnDownload: true },
+      });
+      if (!share) return;
+      const place = await recordVisitorActivity(request, {
+        action: "share.downloaded",
+        ownerId: share.creatorId,
+        subject: share.name,
+        // The file is part of what makes a download its own line: three files, three lines.
+        subjectId: share.id,
+        detail: file.name,
+      });
+      void afterShareDownload({
+        share,
+        fileName: file.name,
+        downloads: file.downloads + 1,
+        place,
+      });
+    } catch (error) {
+      console.error("Error recording download:", error);
+    }
   }
 
   private async getSharesForFile(fileRecord: { id: string; folderId: string | null; userId: string }) {
@@ -322,6 +358,7 @@ export class FileController {
         await prisma.file
           .update({ where: { id: fileRecord.id }, data: { downloads: { increment: 1 } } })
           .catch((error) => console.error("Error counting download:", error));
+        await this.recordShareDownload(request, fileRecord, shares, admittedViews);
       }
 
       return reply.send({ url, expiresIn: expires });
@@ -435,6 +472,7 @@ export class FileController {
         await prisma.file
           .update({ where: { id: fileRecord.id }, data: { downloads: { increment: 1 } } })
           .catch((error) => console.error("Error counting download:", error));
+        await this.recordShareDownload(request, fileRecord, shares, admittedViews);
       }
 
       // Stream from S3/MinIO

@@ -85,6 +85,7 @@ export function ReverseSharesView() {
         onEditPassword={() => setPasswordTarget(selected)}
         onRemovePassword={() => removePassword(selected)}
         onEditAlias={() => rs.setReverseShareToGenerateLink(selected)}
+        onRemind={(on) => rs.handleRemindBeforeExpiry(selected.id, on)}
       />
     );
   };

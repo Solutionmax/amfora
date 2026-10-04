@@ -33,6 +33,11 @@ export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
       ],
     },
     { id: "secrets", rows: [["secretsMaxDays", "secretsMaxOpens"]] },
+    { id: "activity", rows: [["activityRetentionDays", "activityPlace"]] },
+    {
+      id: "webhooks",
+      rows: ["webhookUrl", "webhookSecret", "webhookFilesReceived", "webhookShareDownloaded", "webhookSecretOpened"],
+    },
   ],
   storage: [{ id: "limits", rows: ["maxFileSize", "maxTotalStoragePerUser"] }],
   email: [
@@ -48,6 +53,7 @@ export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
         "smtpTrustSelfSigned",
       ],
     },
+    { id: "notifications", rows: ["notifyDownloadEnabled", "notifyExpiryEnabled", "notifySecretOpenedEnabled"] },
   ],
 };
 
@@ -67,7 +73,6 @@ export const SMTP_FIELDS: readonly string[] = [
   "smtpFromEmail",
 ];
 
-/** Values stored in seconds, shown with a unit next to the input. */
 /** Fields that only make sense while secrets without an account are allowed. */
 export const ANONYMOUS_SECRET_FIELDS: readonly string[] = [
   "secretsAnonymousMaxDays",
@@ -75,7 +80,16 @@ export const ANONYMOUS_SECRET_FIELDS: readonly string[] = [
   "secretsAnonymousMaxLength",
   "secretsAnonymousPerHour",
 ];
+/** Values stored in seconds, shown with a unit next to the input. */
 export const SECONDS_FIELDS: readonly string[] = ["loginBlockDuration", "passwordResetTokenExpiration"];
+/** Values stored in days, shown with a unit next to the input. */
+export const DAYS_FIELDS: readonly string[] = ["activityRetentionDays"];
+
+/** How much of a visitor's place the activity log keeps. */
+export const ACTIVITY_PLACE_OPTIONS: readonly string[] = ["city", "country", "off"];
+
+/** Made by the server: shown to copy, never edited and never sent back. */
+export const READ_ONLY_FIELDS: readonly string[] = ["webhookSecret"];
 
 /** Keys that have no title in the shared messages; their text lives under `settings.calm.fields`. */
 const CALM_FIELDS = ["appPublicTheme", "appSharePlayback", "appBrandpack", "authProvidersEnabled"];

@@ -25,7 +25,14 @@
     "secretsAnonymousMaxLength",
     "secretsAnonymousPerHour",
     "secretsMaxDays",
-    "secretsMaxOpens"
+    "secretsMaxOpens",
+    "activityRetentionDays",
+    "activityPlace",
+    "webhookUrl",
+    "webhookSecret",
+    "webhookFilesReceived",
+    "webhookShareDownloaded",
+    "webhookSecretOpened"
   ],
   "email": [
     "smtpEnabled",
@@ -37,7 +44,10 @@
     "smtpFromEmail",
     "smtpSecure",
     "smtpNoAuth",
-    "smtpTrustSelfSigned"
+    "smtpTrustSelfSigned",
+    "notifyDownloadEnabled",
+    "notifyExpiryEnabled",
+    "notifySecretOpenedEnabled"
   ],
   "auth-providers": [
     "authProvidersEnabled"

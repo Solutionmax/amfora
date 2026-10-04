@@ -16,17 +16,19 @@ import { greetingKey } from "./components/greeting";
 import { JustReceived } from "./components/just-received";
 import { RecentFiles } from "./components/recent-files";
 import { isOpenShare, RecentShares } from "./components/recent-shares";
+import { StorageCard } from "./components/storage-card";
 import { useDashboard } from "./hooks/use-dashboard";
 import { DashboardModals } from "./modals/dashboard-modals";
 
 export default function DashboardPage() {
   const t = useTranslations();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const {
     isLoading,
     loadError,
     diskSpace,
+    storageUsage,
     recentFiles,
     folderCount,
     recentShares,
@@ -36,7 +38,9 @@ export default function DashboardPage() {
     shareManager,
     handleCopyLink,
     loadDashboardData,
-  } = useDashboard();
+  } = useDashboard({ withOwnStorage: isAdmin === false });
+  // Administrators keep the whole disk as a plain figure; a user gets their own storage as a card.
+  const ownStorage = isAdmin === false ? storageUsage : null;
 
   const downloads = recentFiles.reduce((sum: number, file: { downloads?: number }) => sum + (file.downloads ?? 0), 0);
   const activeShares = recentShares.filter(isOpenShare).length;
@@ -52,7 +56,9 @@ export default function DashboardPage() {
 
     return (
       <>
+        {ownStorage && <StorageCard usage={ownStorage} />}
         <DashboardFacts
+          showStorage={!ownStorage}
           diskSpace={diskSpace}
           files={recentFiles.length}
           folders={folderCount}

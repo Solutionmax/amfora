@@ -97,6 +97,9 @@ export function SettingsGroup({ group, configs, form, onSubmit }: SettingsGroupP
           {block.id === "anonymousSecrets" && byKey.get("secretsAnonymousEnabled")?.value === "true" && (
             <AnonymousSecretsNote />
           )}
+          {block.id === "activity" && (
+            <p className="text-[12.5px] text-ink-3">{t("settings.calm.blocks.activity.note")}</p>
+          )}
           {group === "email" && block.id === "outgoing" && smtpOn && (
             <SmtpTestButton
               getFormValues={() => ({

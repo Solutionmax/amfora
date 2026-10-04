@@ -41,6 +41,8 @@ export interface BaseReverseShare {
   updatedAt: string;
   creatorId: string;
   files: ReverseShareFile[];
+  /** Email the maker before the end date. Absent on old data: off. */
+  remindBeforeExpiry?: boolean;
 }
 
 export interface ReverseShareWithAlias extends BaseReverseShare {

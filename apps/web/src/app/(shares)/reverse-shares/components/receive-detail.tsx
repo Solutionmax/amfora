@@ -1,12 +1,20 @@
 "use client";
 
-import { IconFolderShare, IconPencil, IconPlayerPause, IconPlayerPlay, IconTrash } from "@tabler/icons-react";
+import {
+  IconClock,
+  IconFolderShare,
+  IconPencil,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { linkStatus, LinkTags } from "@/components/general/share-tags";
 import { Button } from "@/components/ui/button";
 import { Fact, Facts } from "@/components/ui/facts";
-import { SubHeading } from "@/components/ui/line-list";
+import { LineList, LineRow, SubHeading } from "@/components/ui/line-list";
+import { Switch } from "@/components/ui/switch";
 import { useReverseShareDetails } from "../hooks/use-reverse-share-details";
 import type { ReverseShare } from "../hooks/use-reverse-shares";
 import { ReceiveLinkRow } from "./receive-link-row";
@@ -22,6 +30,8 @@ export interface ReceiveDetailActions extends Omit<SenderRulesProps, "reverseSha
   onManageFiles: () => void;
   onFilesChanged: () => void;
   onDelete: () => void;
+  /** Ask for, or stop, the email before the end date. */
+  onRemind: (on: boolean) => void;
 }
 
 /** Everything about one receive link: header, link, actions, numbers, what came in and the rules. */
@@ -127,6 +137,30 @@ export function ReceiveDetail({ reverseShare, ...actions }: ReceiveDetailActions
             onEditAlias={actions.onEditAlias}
           />
         </div>
+      </section>
+
+      <section aria-labelledby="receive-notify-heading" className="mt-7">
+        <SubHeading>
+          <span id="receive-notify-heading">{t("reverseShares.calm.notify.title")}</span>
+        </SubHeading>
+        <LineList className="mt-1">
+          <LineRow
+            icon={<IconClock stroke={1.8} />}
+            title={t("reverseShares.calm.notify.expiry")}
+            sub={
+              reverseShare.expiration
+                ? t("reverseShares.calm.notify.expiryHint")
+                : t("reverseShares.calm.notify.noEndDate")
+            }
+          >
+            <Switch
+              checked={!!reverseShare.expiration && (reverseShare.remindBeforeExpiry ?? false)}
+              disabled={!reverseShare.expiration}
+              aria-label={t("reverseShares.calm.notify.expiry")}
+              onCheckedChange={actions.onRemind}
+            />
+          </LineRow>
+        </LineList>
       </section>
 
       <div className="mt-[34px]">

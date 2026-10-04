@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import { getCanonicalOrigin } from "../../shared/canonical-origin";
 import { escapeHtml } from "../../shared/escape-html";
 import { ConfigService } from "../config/service";
+import { noticeHtml, type Notice } from "./notice";
 
 interface SmtpConfig {
   smtpEnabled: string;
@@ -168,6 +169,25 @@ export class EmailService {
         <p>This link will expire in 1 hour.</p>
       `,
     });
+  }
+
+  /** Sends a notice to one address. Resolves false when sending email is switched off. */
+  async sendNotice(to: string, notice: Notice): Promise<boolean> {
+    const transporter = await this.createTransporter();
+    if (!transporter) return false;
+
+    const fromName = await this.configService.getValue("smtpFromName");
+    const fromEmail = await this.configService.getValue("smtpFromEmail");
+    const appName = await this.configService.getValue("appName");
+    const color = await this.configService.getValue("appPrimaryColor").catch(() => undefined);
+
+    await transporter.sendMail({
+      from: { name: fromName, address: fromEmail },
+      to,
+      subject: notice.subject,
+      html: noticeHtml(notice, { appName, color }),
+    });
+    return true;
   }
 
   async sendShareNotification(to: string, shareLink: string, shareName?: string, senderName?: string) {

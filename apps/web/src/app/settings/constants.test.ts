@@ -35,6 +35,34 @@ test("unknown keys land in a closing more block, empty blocks disappear", () => 
   assert.deepEqual(blocks[1].rows, ["somethingNew"]);
 });
 
+test("activity and webhook settings have their own blocks, the key between address and switches", () => {
+  const blocks = blocksFor("security", [
+    "webhookSecretOpened",
+    "webhookSecret",
+    "activityPlace",
+    "webhookUrl",
+    "activityRetentionDays",
+    "webhookFilesReceived",
+    "webhookShareDownloaded",
+  ]);
+
+  assert.deepEqual(blocks, [
+    { id: "activity", rows: [["activityRetentionDays", "activityPlace"]] },
+    {
+      id: "webhooks",
+      rows: ["webhookUrl", "webhookSecret", "webhookFilesReceived", "webhookShareDownloaded", "webhookSecretOpened"],
+    },
+  ]);
+});
+
+test("notification switches follow outgoing mail", () => {
+  const blocks = blocksFor("email", ["notifySecretOpenedEnabled", "notifyDownloadEnabled", "notifyExpiryEnabled"]);
+
+  assert.deepEqual(blocks, [
+    { id: "notifications", rows: ["notifyDownloadEnabled", "notifyExpiryEnabled", "notifySecretOpenedEnabled"] },
+  ]);
+});
+
 test("unknown group puts everything in more", () => {
   assert.deepEqual(blocksFor("other", ["a", "b"]), [{ id: "more", rows: ["a", "b"] }]);
 });

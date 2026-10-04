@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Fact, Facts } from "@/components/ui/facts";
 import { SubHeading } from "@/components/ui/line-list";
 import type { Share } from "@/http/endpoints/shares/types";
+import { ShareActivity } from "./share-activity";
 import { AccessSection, DeleteShareSection, FilesSection, RecipientsSection } from "./share-detail-sections";
 import type { ShareDetailActions } from "./share-detail-types";
 
@@ -147,6 +148,7 @@ export function ShareDetail({
 
       <FilesSection share={share} actions={actions} />
       <AccessSection share={share} actions={actions} />
+      <ShareActivity shareId={share.id} />
       <RecipientsSection share={share} actions={actions} smtpEnabled={smtpEnabled} />
       <DeleteShareSection share={share} actions={actions} />
     </article>

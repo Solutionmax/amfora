@@ -4,13 +4,21 @@ import { useTranslations } from "next-intl";
 import { UseFormReturn } from "react-hook-form";
 
 import { PUBLIC_THEMES } from "@/components/brand/public-theme";
+import { CopyField } from "@/components/files/copy-field";
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { LineRow } from "@/components/ui/line-list";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { fieldDescription, fieldTitle, SECONDS_FIELDS } from "../constants";
+import {
+  ACTIVITY_PLACE_OPTIONS,
+  DAYS_FIELDS,
+  fieldDescription,
+  fieldTitle,
+  READ_ONLY_FIELDS,
+  SECONDS_FIELDS,
+} from "../constants";
 import { Config } from "../types";
 import { FileSizeInput } from "./file-size-input";
 import { LogoInput } from "./logo-input";
@@ -72,14 +80,24 @@ function SettingControl({ config, form, disabled }: SettingProps) {
     );
   }
 
-  if (config.key === "smtpSecure" || config.key === "appPublicTheme") {
+  if (READ_ONLY_FIELDS.includes(config.key)) {
+    // The saved value, not the form's: nothing here can change it.
+    return <CopyField value={config.value} label={fieldTitle(t, config.key)} />;
+  }
+
+  if (config.key === "smtpSecure" || config.key === "appPublicTheme" || config.key === "activityPlace") {
     const options =
       config.key === "smtpSecure"
         ? ["auto", "ssl", "tls", "none"].map((option) => ({
             value: option,
             label: t(`settings.fields.smtpSecure.options.${option}`),
           }))
-        : PUBLIC_THEMES.map((theme) => ({ value: theme, label: t(`customization.v2.theme.${theme}`) }));
+        : config.key === "activityPlace"
+          ? ACTIVITY_PLACE_OPTIONS.map((option) => ({
+              value: option,
+              label: t(`settings.calm.fields.activityPlace.options.${option}`),
+            }))
+          : PUBLIC_THEMES.map((theme) => ({ value: theme, label: t(`customization.v2.theme.${theme}`) }));
 
     return (
       <Select value={value || options[0].value} onValueChange={set} disabled={disabled}>
@@ -98,7 +116,11 @@ function SettingControl({ config, form, disabled }: SettingProps) {
   }
 
   if (config.type === "number" || config.type === "bigint") {
-    const unit = SECONDS_FIELDS.includes(config.key) ? t("settings.calm.units.seconds") : null;
+    const unit = SECONDS_FIELDS.includes(config.key)
+      ? t("settings.calm.units.seconds")
+      : DAYS_FIELDS.includes(config.key)
+        ? t("settings.calm.units.days")
+        : null;
 
     return (
       <div className="relative flex items-center">
@@ -141,7 +163,7 @@ export function SettingField({ config, form, disabled }: SettingProps) {
   return (
     <Field
       label={fieldTitle(t, config.key)}
-      htmlFor={config.key}
+      htmlFor={READ_ONLY_FIELDS.includes(config.key) ? undefined : config.key}
       hint={fieldDescription(t, config.key, config.description)}
       error={error?.[config.key]?.message}
     >

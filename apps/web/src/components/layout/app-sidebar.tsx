@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  IconActivity,
   IconChevronRight,
   IconFolder,
   IconInbox,
@@ -27,6 +28,7 @@ import { useAppInfo } from "@/contexts/app-info-context";
 import { useAuth } from "@/contexts/auth-context";
 import { useSecureConfigValue } from "@/hooks/use-secure-configs";
 import { getDiskSpace, logout as logoutAPI } from "@/http/endpoints";
+import { storageLevel, type StorageLevel } from "@/lib/storage-usage";
 import { cn } from "@/lib/utils";
 import packageJson from "../../../package.json";
 
@@ -34,6 +36,13 @@ const { version } = packageJson;
 
 type DiskSpace = { diskSizeGB: number; diskUsedGB: number; diskAvailableGB: number };
 type NavEntry = { href: string; label: string; icon: typeof IconFolder };
+
+/** A user close to their own limit sees it in the label and the colour of the bar. */
+const LEVEL_STYLE: Record<StorageLevel, { label: string; text: string; bar: string }> = {
+  normal: { label: "navbar.yourStorage", text: "", bar: "bg-primary" },
+  almostFull: { label: "navbar.storageAlmostFull", text: "text-warn", bar: "bg-warn" },
+  full: { label: "navbar.storageFull", text: "text-bad", bar: "bg-bad" },
+};
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations();
@@ -68,6 +77,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
     { href: "/shares", label: t("shares.pageTitle"), icon: IconShare },
     { href: "/reverse-shares", label: t("reverseShares.pageTitle"), icon: IconInbox },
     { href: "/secrets", label: t("secrets.pageTitle"), icon: IconKey },
+    { href: "/activity", label: t("activity.pageTitle"), icon: IconActivity },
   ];
 
   const admin: NavEntry[] = isAdmin
@@ -79,6 +89,10 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
     : [];
 
   const used = disk ? Math.min(disk.diskUsedGB / Math.max(disk.diskSizeGB, 1), 1) : 0;
+  // Administrators see the whole disk, as before. Everyone else sees their own use against their own limit.
+  const isOwnStorage = isAdmin === false;
+  const hasLimit = !isOwnStorage || !disk || disk.diskSizeGB > 0;
+  const level = isOwnStorage && disk ? LEVEL_STYLE[storageLevel(disk.diskUsedGB, disk.diskSizeGB)] : null;
   const onProfile = pathname === "/profile";
 
   const item = (entry: NavEntry) => {
@@ -123,22 +137,31 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="flex flex-col gap-3.5">
         <div className="flex flex-col gap-[7px] px-2.5 text-xs text-ink-3">
-          <div className="flex items-baseline justify-between gap-2 whitespace-nowrap">
-            <span>{t("navbar.storage")}</span>
-            <span className="mono text-[11.5px] text-ink-2">
-              {disk ? formatStorageSize(disk.diskUsedGB) : "—"} / {disk ? formatStorageSize(disk.diskSizeGB) : "—"}
+          <div
+            data-testid="sidebar-storage"
+            className={cn("flex items-baseline justify-between gap-2 whitespace-nowrap", level?.text)}
+          >
+            <span>{isOwnStorage ? t(level?.label ?? LEVEL_STYLE.normal.label) : t("navbar.storage")}</span>
+            <span className={cn("mono text-[11.5px]", level?.text || "text-ink-2")}>
+              {disk ? formatStorageSize(disk.diskUsedGB) : "—"}
+              {hasLimit && <> / {disk ? formatStorageSize(disk.diskSizeGB) : "—"}</>}
             </span>
           </div>
-          <div
-            role="progressbar"
-            aria-label={t("storageUsage.title")}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={disk ? Math.round(used * 100) : undefined}
-            className="h-[3px] overflow-hidden rounded-full bg-line"
-          >
-            <div className="h-full rounded-full bg-primary" style={{ width: `${used * 100}%` }} />
-          </div>
+          {hasLimit && (
+            <div
+              role="progressbar"
+              aria-label={t("storageUsage.title")}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={disk ? Math.round(used * 100) : undefined}
+              className="h-[3px] overflow-hidden rounded-full bg-line"
+            >
+              <div
+                className={cn("h-full rounded-full", level?.bar ?? "bg-primary")}
+                style={{ width: `${used * 100}%` }}
+              />
+            </div>
+          )}
         </div>
 
         <Link

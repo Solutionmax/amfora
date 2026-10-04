@@ -61,6 +61,10 @@ export interface Share {
   folders: ShareFolder[];
   recipients: ShareRecipient[];
   alias: ShareAlias;
+  /** Email the maker on a download. Absent on old data: off. */
+  notifyOnDownload?: boolean;
+  /** Email the maker before the end date. Absent on old data: off. */
+  remindBeforeExpiry?: boolean;
 }
 
 export interface SimpleShare {

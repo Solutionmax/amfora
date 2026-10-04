@@ -4,6 +4,8 @@ import { z } from "zod";
 import { sharePasswordRateLimit } from "../../config/rate-limit.config";
 import { createAdminGuard } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
+import { actorOf, recordRequestActivity } from "../activity/activity";
+import { afterSecretOpened } from "../activity/notify";
 import {
   hashVerifier,
   limitError,
@@ -217,7 +219,15 @@ export async function secretRoutes(app: FastifyInstance) {
         return reply.status(400).send({ error: `You can have at most ${MAX_WAITING_PER_USER} secrets waiting.` });
       }
 
-      return reply.status(201).send(await store(body, userId));
+      const created = await store(body, userId);
+      await recordRequestActivity(request, {
+        action: "secret.created",
+        ownerId: userId,
+        subject: body.label || null,
+        subjectId: created.id,
+        ...(await actorOf(userId)),
+      });
+      return reply.status(201).send(created);
     }
   );
 
@@ -330,6 +340,12 @@ export async function secretRoutes(app: FastifyInstance) {
           const attemptsLeft = Math.max(MAX_FAILED_ATTEMPTS - (failed?.failedAttempts ?? MAX_FAILED_ATTEMPTS), 0);
           if (attemptsLeft === 0) {
             await prisma.secret.updateMany({ where: { id }, data: { ciphertext: null } });
+            await recordRequestActivity(request, {
+              action: "secret.destroyed",
+              ownerId: secret.creatorId,
+              subject: secret.label,
+              subjectId: id,
+            });
             return reply.status(404).send(GONE);
           }
           return reply.status(403).send({ error: "Wrong passphrase.", attemptsLeft });
@@ -354,7 +370,20 @@ export async function secretRoutes(app: FastifyInstance) {
         data: { ciphertext: null },
       });
       const after = await prisma.secret.findUnique({ where: { id }, select: { opens: true } });
-      const opensLeft = Math.max(secret.maxOpens - (after?.opens ?? secret.maxOpens), 0);
+      const opens = after?.opens ?? secret.maxOpens;
+      const opensLeft = Math.max(secret.maxOpens - opens, 0);
+
+      const place = await recordRequestActivity(request, {
+        action: "secret.opened",
+        ownerId: secret.creatorId,
+        subject: secret.label,
+        subjectId: id,
+        detail: `${opens}/${secret.maxOpens}`,
+      });
+      void afterSecretOpened({
+        secret: { id, label: secret.label, creatorId: secret.creatorId, opens, maxOpens: secret.maxOpens },
+        place,
+      });
 
       return reply.header("Cache-Control", "no-store").send({ ciphertext: secret.ciphertext, opensLeft });
     }
@@ -375,8 +404,17 @@ export async function secretRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { id } = request.params as z.infer<typeof IdParams>;
-      const { count } = await prisma.secret.deleteMany({ where: { id, creatorId: userIdOf(request) } });
+      const userId = userIdOf(request);
+      const secret = await prisma.secret.findFirst({ where: { id, creatorId: userId }, select: { label: true } });
+      const { count } = await prisma.secret.deleteMany({ where: { id, creatorId: userId } });
       if (count === 0) return reply.status(404).send({ error: "Secret not found" });
+      await recordRequestActivity(request, {
+        action: "secret.deleted",
+        ownerId: userId,
+        subject: secret?.label ?? null,
+        subjectId: id,
+        ...(await actorOf(userId)),
+      });
       return reply.send({ success: true });
     }
   );

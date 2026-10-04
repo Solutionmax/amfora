@@ -52,6 +52,7 @@
     "fastify": "^5.12.5",
     "fastify-type-provider-zod": "^4.0.2",
     "jose": "^5.10.0",
+    "maxmind": "^5.0.7",
     "node-fetch": "^3.3.2",
     "nodemailer": "^9.1.1",
     "openid-client": "^6.8.8",

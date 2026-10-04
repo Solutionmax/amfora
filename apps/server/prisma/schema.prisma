@@ -77,6 +77,13 @@ model Share {
   creatorId String?
   creator   User?   @relation(fields: [creatorId], references: [id], onDelete: SetNull)
 
+  /// Email the maker when a visitor downloads a file from this share.
+  notifyOnDownload   Boolean   @default(false)
+  /// Email the maker three days before the end date.
+  remindBeforeExpiry Boolean   @default(false)
+  /// The end date a reminder was sent for, so a changed end date gets its own reminder.
+  expiryReminderFor  DateTime?
+
   securityId String        @unique
   security   ShareSecurity @relation(fields: [securityId], references: [id])
 
@@ -228,6 +235,9 @@ model ReverseShare {
   nameFieldRequired  FieldRequirement @default(OPTIONAL)
   emailFieldRequired FieldRequirement @default(OPTIONAL)
   createdAt          DateTime         @default(now())
+  /// Email the maker three days before the end date.
+  remindBeforeExpiry Boolean          @default(false)
+  expiryReminderFor  DateTime?
   updatedAt          DateTime         @updatedAt
 
   creatorId String
@@ -405,4 +415,32 @@ model Secret {
   @@index([creatorId])
   @@index([expiresAt])
   @@map("secrets")
+}
+
+/// What happened to links and accounts. No address is stored, only the place it points to.
+model ActivityEvent {
+  id        String   @id @default(cuid())
+  /// share, receive, secret or account
+  kind      String
+  /// For example share.downloaded. The interface turns it into words.
+  action    String
+  /// Name of the link at that moment; it may be renamed or deleted later.
+  subject   String?
+  subjectId String?
+  /// A file name, "1 of 3", a reason.
+  detail    String?
+  /// A count that can be added up: files received.
+  amount    Int?
+  /// Who did it. Null for a visitor.
+  actorId   String?
+  actorName String?
+  /// Whose activity this is: the maker of the link or the account. Null: administrators only.
+  ownerId   String?
+  place     String?
+  createdAt DateTime @default(now())
+
+  @@index([ownerId, createdAt])
+  @@index([subjectId, createdAt])
+  @@index([createdAt])
+  @@map("activity_events")
 }

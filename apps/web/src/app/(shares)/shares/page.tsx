@@ -74,6 +74,7 @@ function SharesView() {
     onViewLimit: detailActions.setShareForViewLimit,
     onLink: shareManager.setShareToGenerateLink,
     onRemoveItem: (share, item) => detailActions.setItemToRemove({ share, item }),
+    onNotifications: detailActions.saveNotifications,
   };
 
   const detail = isLoading ? (

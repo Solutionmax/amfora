@@ -10,5 +10,10 @@ export const SHARE_PASSWORD_HEADER = "x-share-password";
 export function clientAddressHeaders(headers: Headers): Record<string, string> {
   if (process.env.TRUST_CLIENT_IP_HEADERS !== "true") return {};
   const forwardedFor = headers.get("x-forwarded-for");
-  return forwardedFor ? { "x-forwarded-for": forwardedFor } : {};
+  // Cloudflare names the visitor here. The API uses it only to say where an event came from.
+  const connecting = headers.get("cf-connecting-ip");
+  return {
+    ...(forwardedFor ? { "x-forwarded-for": forwardedFor } : {}),
+    ...(connecting ? { "cf-connecting-ip": connecting } : {}),
+  };
 }

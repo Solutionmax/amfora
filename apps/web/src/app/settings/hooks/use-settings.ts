@@ -11,6 +11,7 @@ import { useAppInfo } from "@/contexts/app-info-context";
 import { useShareContext } from "@/contexts/share-context";
 import { useAdminConfigs } from "@/hooks/use-secure-configs";
 import { bulkUpdateConfigs } from "@/http/endpoints";
+import { READ_ONLY_FIELDS } from "../constants";
 import { Config, ConfigType, GroupFormData } from "../types";
 
 const createSchemas = () => ({
@@ -148,6 +149,8 @@ export function useSettings() {
       const configsToUpdate = Object.entries(data.configs)
         .filter(([key, newValue]) => {
           const currentValue = configs[key];
+
+          if (READ_ONLY_FIELDS.includes(key)) return false;
 
           return groupConfigKeys.includes(key) && String(newValue) !== currentValue;
         })

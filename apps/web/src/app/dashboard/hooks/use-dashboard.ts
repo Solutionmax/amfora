@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useEnhancedFileManager } from "@/hooks/use-enhanced-file-manager";
 import { useShareManager } from "@/hooks/use-share-manager";
 import { getDiskSpace, listFiles, listUserShares } from "@/http/endpoints";
+import { getStorageUsage, type StorageUsage } from "@/http/endpoints/activity";
 import { listFolders } from "@/http/endpoints/folders";
 import { listUserReverseShares } from "@/http/endpoints/reverse-shares";
 import type { ReverseShareWithAlias } from "@/http/endpoints/reverse-shares/types";
@@ -17,9 +18,11 @@ import type { DiskSpace } from "../types";
 const byNewest = (a: { createdAt: string }, b: { createdAt: string }) =>
   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
-export function useDashboard() {
+/** `withOwnStorage`: also load the user's own use, for people who do not see the whole disk. */
+export function useDashboard({ withOwnStorage = false }: { withOwnStorage?: boolean } = {}) {
   const t = useTranslations();
   const [diskSpace, setDiskSpace] = useState<DiskSpace | null>(null);
+  const [storageUsage, setStorageUsage] = useState<StorageUsage | null>(null);
   const [recentFiles, setRecentFiles] = useState<any[]>([]);
   const [folderCount, setFolderCount] = useState(0);
   const [recentShares, setRecentShares] = useState<Share[]>([]);
@@ -64,9 +67,20 @@ export function useDashboard() {
       }
     };
 
-    await Promise.all([loadDiskSpace(), loadFilesAndShares(), loadReceiveLinks()]);
+    const loadStorageUsage = async () => {
+      if (!withOwnStorage) return;
+      try {
+        setStorageUsage(await getStorageUsage());
+      } catch (error) {
+        // The plain storage figure stays in its place when this fails.
+        console.warn("Failed to load storage usage:", error);
+        setStorageUsage(null);
+      }
+    };
+
+    await Promise.all([loadDiskSpace(), loadFilesAndShares(), loadReceiveLinks(), loadStorageUsage()]);
     setIsLoading(false);
-  }, [t]);
+  }, [t, withOwnStorage]);
 
   const fileManager = useEnhancedFileManager(loadDashboardData);
   const shareManager = useShareManager(loadDashboardData);
@@ -91,6 +105,7 @@ export function useDashboard() {
     isLoading,
     loadError,
     diskSpace,
+    storageUsage,
     recentFiles,
     folderCount,
     recentShares,

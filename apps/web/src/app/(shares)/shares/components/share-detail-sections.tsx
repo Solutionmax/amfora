@@ -13,6 +13,7 @@ import { getFileIcon } from "@/utils/file-icons";
 import { formatFileSize } from "@/utils/format-file-size";
 import { filesInFolder, topLevelItems } from "../lib/share-list";
 import type { ShareDetailActions } from "./share-detail-types";
+import { ShareNotificationRows } from "./share-notifications";
 
 interface SectionProps {
   share: Share;
@@ -150,6 +151,7 @@ export function AccessSection({ share, actions }: SectionProps) {
             {alias ? t("shares.calm.change") : t("shares.calm.createLink")}
           </TextAction>
         </LineRow>
+        <ShareNotificationRows key={share.id} share={share} actions={actions} />
       </LineList>
     </section>
   );

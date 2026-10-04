@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { env } from "../../env";
+import { prisma } from "../../shared/prisma";
+import { recordRequestActivity, recordVisitorActivity } from "../activity/activity";
 import { ConfigService } from "../config/service";
 import {
   CompleteTwoFactorLoginSchema,
@@ -23,6 +25,34 @@ export class AuthController {
     const ipAddress = realIP || request.ip || request.socket.remoteAddress || "";
 
     return { userAgent, ipAddress };
+  }
+
+  private async recordSignIn(request: FastifyRequest, user: { id: string; firstName?: string; lastName?: string }) {
+    await recordRequestActivity(request, {
+      action: "account.signed_in",
+      ownerId: user.id,
+      actorId: user.id,
+      actorName: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || null,
+    });
+  }
+
+  /** The name that was typed goes in the log only when it belongs to an account. */
+  private async recordFailedSignIn(request: FastifyRequest, reason: string) {
+    const typed = (request.body as { emailOrUsername?: unknown } | undefined)?.emailOrUsername;
+    if (typeof typed !== "string" || !typed) return;
+    const user = await prisma.user
+      .findFirst({
+        where: { OR: [{ email: typed }, { username: typed }] },
+        select: { id: true, firstName: true, lastName: true },
+      })
+      .catch(() => null);
+    await recordVisitorActivity(request, {
+      action: "account.sign_in_failed",
+      ownerId: user?.id ?? null,
+      // The same name a successful sign in shows, so one person is one name in the log.
+      actorName: user ? `${user.firstName} ${user.lastName}`.trim() : null,
+      detail: reason,
+    });
   }
 
   async login(request: FastifyRequest, reply: FastifyReply) {
@@ -48,8 +78,10 @@ export class AuthController {
         sameSite: env.SECURE_SITE === "true" ? "lax" : "strict",
       });
 
+      await this.recordSignIn(request, user);
       return reply.send({ user });
     } catch (error: any) {
+      await this.recordFailedSignIn(request, error.message);
       return reply.status(400).send({ error: error.message });
     }
   }
@@ -89,6 +121,7 @@ export class AuthController {
         sameSite: env.SECURE_SITE === "true" ? "lax" : "strict",
       });
 
+      await this.recordSignIn(request, user);
       return reply.send({ user });
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });

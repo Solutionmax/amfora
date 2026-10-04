@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 
 import { env } from "../../env";
+import { recordActivity } from "../activity/activity";
+import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
 import { FileService } from "../file/service";
 import { UserService } from "../user/service";
@@ -55,6 +57,8 @@ export class ReverseShareService {
       uploaderName: string;
       uploaderEmail?: string;
       files: string[];
+      bytes: number;
+      place: string | null;
       timeout: NodeJS.Timeout;
     }
   >();
@@ -318,7 +322,12 @@ export class ReverseShareService {
     }
   }
 
-  async registerFileUpload(reverseShareId: string, fileData: UploadToReverseShareInput, password?: string) {
+  async registerFileUpload(
+    reverseShareId: string,
+    fileData: UploadToReverseShareInput,
+    password?: string,
+    place: string | null = null
+  ) {
     const reverseShare = await this.reverseShareRepository.findById(reverseShareId);
     if (!reverseShare) {
       throw new Error("Reverse share not found");
@@ -342,10 +351,15 @@ export class ReverseShareService {
       }
     }
 
-    return this.finishUpload(reverseShare, fileData);
+    return this.finishUpload(reverseShare, fileData, place);
   }
 
-  async registerFileUploadByAlias(alias: string, fileData: UploadToReverseShareInput, password?: string) {
+  async registerFileUploadByAlias(
+    alias: string,
+    fileData: UploadToReverseShareInput,
+    password?: string,
+    place: string | null = null
+  ) {
     const reverseShare = await this.reverseShareRepository.findByAlias(alias);
     if (!reverseShare) {
       throw new Error("Reverse share not found");
@@ -369,10 +383,14 @@ export class ReverseShareService {
       }
     }
 
-    return this.finishUpload(reverseShare, fileData);
+    return this.finishUpload(reverseShare, fileData, place);
   }
 
-  private async finishUpload(reverseShare: ReverseShareData, fileData: UploadToReverseShareInput) {
+  private async finishUpload(
+    reverseShare: ReverseShareData,
+    fileData: UploadToReverseShareInput,
+    place: string | null
+  ) {
     const grant = await prisma.reverseUpload.findUnique({ where: { objectName: fileData.objectName } });
     assertUploadGrant(grant, reverseShare.id);
     if (grant!.filename !== fileData.name || grant!.size !== BigInt(fileData.size))
@@ -415,7 +433,7 @@ export class ReverseShareService {
         });
       });
       await this.fileService.deleteObject(fileData.objectName).catch(() => undefined);
-      this.addFileToUploadSession(reverseShare, fileData);
+      this.addFileToUploadSession(reverseShare, fileData, place);
       return this.formatFileResponse(file);
     } catch (error) {
       await this.fileService.deleteObject(finalKey).catch(() => undefined);
@@ -742,7 +760,7 @@ export class ReverseShareService {
     }
   }
 
-  private addFileToUploadSession(reverseShare: any, fileData: UploadToReverseShareInput) {
+  private addFileToUploadSession(reverseShare: any, fileData: UploadToReverseShareInput, place: string | null) {
     const uploaderIdentifier = fileData.uploaderEmail || fileData.uploaderName || "anonymous";
     const sessionKey = this.generateSessionKey(reverseShare.id, uploaderIdentifier);
     const uploaderName = fileData.uploaderName || "Someone";
@@ -751,20 +769,43 @@ export class ReverseShareService {
     if (existingSession) {
       clearTimeout(existingSession.timeout);
       existingSession.files.push(fileData.name);
+      existingSession.bytes += Number(fileData.size) || 0;
     } else {
       this.uploadSessions.set(sessionKey, {
         reverseShareId: reverseShare.id,
         uploaderName,
         uploaderEmail: fileData.uploaderEmail,
         files: [fileData.name],
+        bytes: Number(fileData.size) || 0,
+        place,
         timeout: null as any,
       });
     }
 
     const session = this.uploadSessions.get(sessionKey)!;
     session.timeout = setTimeout(async () => {
-      await this.sendBatchFileUploadNotification(reverseShare, session.uploaderName, session.files);
       this.uploadSessions.delete(sessionKey);
+      // One line per batch of files a sender uploads, not one per file.
+      await recordActivity(
+        {
+          action: "receive.files_received",
+          ownerId: reverseShare.creatorId,
+          subject: reverseShare.name,
+          subjectId: reverseShare.id,
+          amount: session.files.length,
+          detail: String(session.bytes),
+          actorName: fileData.uploaderName || null,
+        },
+        { place: session.place }
+      );
+      void afterFilesReceived({
+        reverseShare,
+        uploaderName: session.uploaderName,
+        files: session.files,
+        bytes: session.bytes,
+        place: session.place,
+      });
+      await this.sendBatchFileUploadNotification(reverseShare, session.uploaderName, session.files);
     }, 5000);
   }
 
@@ -783,6 +824,7 @@ export class ReverseShareService {
       createdAt: reverseShare.createdAt.toISOString(),
       updatedAt: reverseShare.updatedAt.toISOString(),
       creatorId: reverseShare.creatorId,
+      remindBeforeExpiry: (reverseShare as { remindBeforeExpiry?: boolean }).remindBeforeExpiry ?? false,
       files: (reverseShare.files || []).map((file: any) => ({
         id: file.id,
         name: file.name,

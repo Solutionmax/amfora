@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { prisma } from "../../shared/prisma";
 import { getSharePassword } from "../../shared/share-password";
+import { actorOf, recordRequestActivity, recordVisitorActivity } from "../activity/activity";
 import { grantShareDownload } from "../file/share-download-grant";
 import {
   CreateShareSchema,
@@ -14,6 +16,19 @@ import { ShareService } from "./service";
 export class ShareController {
   private shareService = new ShareService();
 
+  private async recordWrongPassword(request: FastifyRequest, where: { id: string } | { alias: { alias: string } }) {
+    const share = await prisma.share
+      .findFirst({ where, select: { id: true, name: true, creatorId: true } })
+      .catch(() => null);
+    if (!share) return;
+    await recordVisitorActivity(request, {
+      action: "share.password_failed",
+      ownerId: share.creatorId,
+      subject: share.name,
+      subjectId: share.id,
+    });
+  }
+
   async createShare(request: FastifyRequest, reply: FastifyReply) {
     try {
       await request.jwtVerify();
@@ -24,6 +39,13 @@ export class ShareController {
 
       const input = CreateShareSchema.parse(request.body);
       const share = await this.shareService.createShare(input, userId);
+      await recordRequestActivity(request, {
+        action: "share.created",
+        ownerId: userId,
+        subject: share.name,
+        subjectId: share.id,
+        ...(await actorOf(userId)),
+      });
       return reply.status(201).send({ share });
     } catch (error: any) {
       console.error("Create Share Error:", error);
@@ -64,8 +86,20 @@ export class ShareController {
 
       const share = await this.shareService.getShare(shareId, password, userId);
       await grantShareDownload(reply, share.id);
+      // The maker looking at their own share is not a visit.
+      if (share.creatorId !== userId) {
+        await recordVisitorActivity(request, {
+          action: "share.opened",
+          ownerId: share.creatorId,
+          subject: share.name,
+          subjectId: share.id,
+        });
+      }
       return reply.send({ share });
     } catch (error: any) {
+      if (error.message === "Invalid password") {
+        await this.recordWrongPassword(request, { id: (request.params as { shareId: string }).shareId });
+      }
       if (error.message === "Share not found") {
         return reply.status(404).send({ error: error.message });
       }
@@ -190,6 +224,13 @@ export class ShareController {
       }
 
       const deleted = await this.shareService.deleteShare(id);
+      await recordRequestActivity(request, {
+        action: "share.deleted",
+        ownerId: userId,
+        subject: share.name,
+        subjectId: share.id,
+        ...(await actorOf(userId)),
+      });
       return reply.send({ share: deleted });
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });
@@ -264,8 +305,17 @@ export class ShareController {
 
       const share = await this.shareService.getShareByAlias(alias, password);
       await grantShareDownload(reply, share.id);
+      await recordVisitorActivity(request, {
+        action: "share.opened",
+        ownerId: share.creatorId,
+        subject: share.name,
+        subjectId: share.id,
+      });
       return reply.send({ share });
     } catch (error: any) {
+      if (error.message === "Invalid password") {
+        await this.recordWrongPassword(request, { alias: { alias: (request.params as { alias: string }).alias } });
+      }
       if (error.message === "Share not found") {
         return reply.status(404).send({ error: error.message });
       }

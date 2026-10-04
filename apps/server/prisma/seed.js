@@ -202,6 +202,67 @@ const defaultConfigs = [
     type: "number",
     group: "security",
   },
+  // Notifications, activity log and webhooks
+  {
+    key: "notifyDownloadEnabled",
+    value: "true",
+    type: "boolean",
+    group: "email",
+  },
+  {
+    key: "notifyExpiryEnabled",
+    value: "true",
+    type: "boolean",
+    group: "email",
+  },
+  {
+    key: "notifySecretOpenedEnabled",
+    value: "false",
+    type: "boolean",
+    group: "email",
+  },
+  {
+    key: "activityRetentionDays",
+    value: "90",
+    type: "number",
+    group: "security",
+  },
+  {
+    key: "activityPlace",
+    value: "city",
+    type: "string",
+    group: "security",
+  },
+  {
+    key: "webhookUrl",
+    value: "",
+    type: "string",
+    group: "security",
+  },
+  {
+    key: "webhookSecret",
+    value: crypto.randomBytes(32).toString("hex"),
+    type: "string",
+    group: "security",
+  },
+  {
+    key: "webhookFilesReceived",
+    value: "true",
+    type: "boolean",
+    group: "security",
+  },
+  {
+    key: "webhookShareDownloaded",
+    value: "true",
+    type: "boolean",
+    group: "security",
+  },
+  {
+    key: "webhookSecretOpened",
+    value: "false",
+    type: "boolean",
+    group: "security",
+  },
   // Secrets: one time text links
   {
     key: "secretsAnonymousEnabled",
