@@ -18,7 +18,14 @@
     "loginBlockDuration",
     "passwordMinLength",
     "passwordAuthEnabled",
-    "passwordResetTokenExpiration"
+    "passwordResetTokenExpiration",
+    "secretsAnonymousEnabled",
+    "secretsAnonymousMaxDays",
+    "secretsAnonymousMaxOpens",
+    "secretsAnonymousMaxLength",
+    "secretsAnonymousPerHour",
+    "secretsMaxDays",
+    "secretsMaxOpens"
   ],
   "email": [
     "smtpEnabled",

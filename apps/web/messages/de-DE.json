@@ -2018,6 +2018,14 @@
         "more": {
           "title": "Weitere",
           "description": "Weitere Einstellungen in dieser Gruppe."
+        },
+        "anonymousSecrets": {
+          "title": "Geheimnisse ohne Konto",
+          "description": "Besucher können unter /secret ein Geheimnis erstellen. Aus, bis du es einschaltest."
+        },
+        "secrets": {
+          "title": "Geheimnisse",
+          "description": "Grenzen für Geheimnisse angemeldeter Benutzer."
         }
       },
       "fields": {
@@ -2036,6 +2044,34 @@
         "authProvidersEnabled": {
           "title": "Externe Anmeldung",
           "description": "Erlauben Sie Benutzern, sich mit einem Konto eines anderen Dienstes anzumelden."
+        },
+        "secretsAnonymousEnabled": {
+          "title": "Geheimnisse ohne Konto erlauben",
+          "description": "Jeder, der die Adresse /secret kennt, kann ein Geheimnis erstellen. Du kannst sie weder lesen noch auflisten: Der Schlüssel steckt im Link."
+        },
+        "secretsAnonymousMaxDays": {
+          "title": "Längste Laufzeit",
+          "description": "In Tagen."
+        },
+        "secretsAnonymousMaxOpens": {
+          "title": "Höchstens zu öffnen",
+          "description": "Pro Geheimnis."
+        },
+        "secretsAnonymousMaxLength": {
+          "title": "Längster Text",
+          "description": "In Zeichen."
+        },
+        "secretsAnonymousPerHour": {
+          "title": "Limit pro Besucher",
+          "description": "Neue Geheimnisse pro Stunde."
+        },
+        "secretsMaxDays": {
+          "title": "Längste Laufzeit",
+          "description": "In Tagen."
+        },
+        "secretsMaxOpens": {
+          "title": "Höchstens zu öffnen",
+          "description": "Pro Geheimnis."
         }
       }
     }
@@ -2873,5 +2909,142 @@
     "passwordRequired": "Passwort ist erforderlich",
     "nameRequired": "Name ist erforderlich",
     "required": "Dieses Feld ist erforderlich"
+  },
+  "secrets": {
+    "pageTitle": "Geheimnisse",
+    "new": "Neu",
+    "newSecret": "Neues Geheimnis",
+    "filterLabel": "Geheimnisse filtern",
+    "filters": {
+      "all": "Alle",
+      "waiting": "Wartend",
+      "done": "Geöffnet oder abgelaufen"
+    },
+    "status": {
+      "waiting": "Wartend",
+      "used": "Verbraucht",
+      "expired": "Abgelaufen",
+      "burned": "Vernichtet"
+    },
+    "passphraseTag": "Passphrase",
+    "linkOnlyTag": "Nur Link",
+    "untitled": "Geheimnis ohne Namen",
+    "opensOf": "{opens} von {max}",
+    "emptyTitle": "Noch keine Geheimnisse",
+    "emptyDescription": "Sende ein Passwort oder einen Schlüssel mit einem Link, der sich nach dem Lesen selbst vernichtet.",
+    "noResults": "Hier sind keine Geheimnisse.",
+    "loadError": "Die Geheimnisse konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "notFoundTitle": "Dieses Geheimnis gibt es nicht",
+    "notFoundText": "Es wurde möglicherweise gelöscht.",
+    "showAll": "Alle Geheimnisse anzeigen",
+    "created": "erstellt am {date}",
+    "copyNowTitle": "Kopiere diesen Link jetzt.",
+    "copyNowText": "Der Schlüssel ist Teil des Links und erreicht den Server nie, daher kann der Link nicht erneut angezeigt werden.",
+    "copyLink": "Link kopieren",
+    "openPage": "Seite öffnen, die der Empfänger sieht",
+    "linkCopied": "Link kopiert",
+    "copyFailed": "Kopieren fehlgeschlagen. Markiere den Text und kopiere ihn selbst.",
+    "createFailed": "Das Geheimnis konnte nicht erstellt werden. Versuche es erneut.",
+    "deleted": "Gelöscht",
+    "deleteFailed": "Löschen fehlgeschlagen. Versuche es erneut.",
+    "linkGoneTitle": "Der Link wurde beim Erstellen dieses Geheimnisses angezeigt.",
+    "linkGoneText": "Er wird nirgends gespeichert. Verloren? Lösche dieses Geheimnis und erstelle ein neues.",
+    "textGoneTitle": "Der Text ist gelöscht.",
+    "textGoneText": "Nur dieser Eintrag bleibt, damit du siehst, was passiert ist.",
+    "facts": {
+      "status": "Status",
+      "expires": "Läuft ab",
+      "expired": "Abgelaufen",
+      "opened": "Geöffnet"
+    },
+    "access": "Zugriff",
+    "passphraseOn": "Der Empfänger muss eine Passphrase eingeben.",
+    "passphraseOff": "Jeder mit dem Link kann es öffnen.",
+    "on": "An",
+    "off": "Aus",
+    "burnedText": "Nach drei falschen Passphrasen vernichtet.",
+    "notOpened": "Noch nicht geöffnet.",
+    "neverOpened": "Nie geöffnet. Beim Ablauf vernichtet.",
+    "lastOpened": "Zuletzt {when}.",
+    "leftThenDestroyed": "Noch {count, plural, one {# Mal} other {# Mal}}, danach wird es vernichtet.",
+    "destroyedAfterLast": "Nach dem letzten Mal vernichtet.",
+    "encryption": "Verschlüsselung",
+    "encryptionText": "AES 256, im Browser ausgeführt. Der Server speichert nur den versiegelten Text.",
+    "endToEnd": "Ende zu Ende",
+    "delete": "Geheimnis löschen",
+    "deleteRecord": "Eintrag löschen",
+    "deleteTitle": "Dieses Geheimnis löschen?",
+    "deleteText": "Der Link funktioniert sofort nicht mehr. Das kann nicht rückgängig gemacht werden.",
+    "deleteConfirm": "Löschen",
+    "days": "{count, plural, one {# Tag} other {# Tage}}",
+    "hours": "{count, plural, one {# Stunde} other {# Stunden}}",
+    "times": "{count} Mal",
+    "form": {
+      "title": "Neues Geheimnis",
+      "description": "Ein Passwort oder Schlüssel, der sich nach dem Lesen selbst vernichtet.",
+      "secret": "Geheimnis",
+      "secretHint": "In deinem Browser verschlüsselt. Der Server sieht diesen Text nie.",
+      "secretPlaceholder": "Passwort, Schlüssel oder Notiz hier einfügen",
+      "label": "Bezeichnung",
+      "labelHint": "Optional, nur du siehst das.",
+      "labelPlaceholder": "Zum Beispiel: Datenbankpasswort für einen Kunden",
+      "expires": "Läuft ab nach",
+      "canBeOpened": "Kann geöffnet werden",
+      "passphrase": "Passphrase",
+      "passphraseHint": "Der Empfänger braucht sie, um das Geheimnis zu öffnen. Sende sie auf einem anderen Weg.",
+      "create": "Link erstellen",
+      "sealing": "Versiegeln…"
+    },
+    "public": {
+      "headline": "Ein Geheimnis, nur für dich.",
+      "metaTitle": "Ein Geheimnis wartet",
+      "trust": {
+        "opens": {
+          "title": "Begrenzt zu öffnen",
+          "text": "Nach dem letzten Mal wird der Text vernichtet."
+        },
+        "sealed": {
+          "title": "Im Browser verschlüsselt",
+          "text": "Der Server kann es nicht lesen."
+        },
+        "expires": {
+          "title": "Läuft von selbst ab",
+          "text": "Ungeöffnete Geheimnisse werden ebenfalls gelöscht."
+        }
+      },
+      "waitingTitle": "Ein Geheimnis wartet auf dich",
+      "goneTitle": "Dieses Geheimnis ist nicht mehr verfügbar",
+      "goneText": "Es wurde bereits geöffnet, ist abgelaufen oder wurde vom Absender gelöscht. Bitte den Absender um einen neuen Link.",
+      "shownTitle": "Hier ist dein Geheimnis",
+      "shownTextMore": "Kopiere es jetzt. Jedes Öffnen dieses Links zählt.",
+      "shownTextLast": "Kopiere es jetzt. Es ist weg, sobald du diese Seite verlässt.",
+      "copy": "Kopieren",
+      "copied": "Geheimnis kopiert",
+      "worksMore": "Dieser Link funktioniert noch {count} Mal, danach wird das Geheimnis vernichtet.",
+      "destroyed": "Auf dem Server vernichtet. Dieser Link funktioniert nicht mehr.",
+      "opensMore": "Es kann noch {count} Mal geöffnet werden.",
+      "opensOnce": "Es kann ein Mal angezeigt werden.",
+      "thenDestroyed": "Danach wird es vernichtet und dieser Link funktioniert nicht mehr.",
+      "hasPassphrase": "Der Absender hat es mit einer Passphrase geschützt.",
+      "passphraseHint": "Drei falsche Versuche vernichten das Geheimnis.",
+      "show": "Geheimnis anzeigen",
+      "opening": "Öffnen…",
+      "previewSafe": "Das Öffnen dieser Seite hat den Link nicht verbraucht. Das macht nur die Schaltfläche.",
+      "wrongPassphrase": "Falsche Passphrase. Noch {count, plural, one {# Versuch} other {# Versuche}}.",
+      "tooManyTries": "Zu viele Versuche. Warte eine Minute und versuche es erneut.",
+      "createTitle": "Ein Geheimnis teilen",
+      "createText": "Füge ein Passwort oder einen Schlüssel ein. Du erhältst einen Link, der sich nach dem Lesen selbst vernichtet.",
+      "noAccount": "Kein Konto nötig.",
+      "tooManySecrets": "Du hast in kurzer Zeit viele Geheimnisse erstellt. Versuche es in einer Stunde erneut.",
+      "readyTitle": "Dein Link ist fertig",
+      "readyText": "Kopiere ihn jetzt. Der Schlüssel ist Teil des Links, daher kann er nicht erneut angezeigt werden.",
+      "another": "Noch eines erstellen",
+      "shareLink": "Ein Geheimnis ohne Konto teilen",
+      "address": "Adresse der öffentlichen Seite",
+      "shareEyebrow": "Kein Konto nötig",
+      "shareTitle": "Ein Geheimnis teilen",
+      "shareLine": "Vernichtet sich nach dem Lesen"
+    }
   }
 }

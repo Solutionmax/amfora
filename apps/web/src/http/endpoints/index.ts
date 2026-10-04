@@ -9,3 +9,4 @@ export * from "./app";
 export * from "./auth/trusted-devices";
 export * from "./invite";
 export * from "./api-keys";
+export * from "./secrets";

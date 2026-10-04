@@ -7,6 +7,7 @@ import {
   IconChevronRight,
   IconFolder,
   IconInbox,
+  IconKey,
   IconLayoutGrid,
   IconLogout,
   IconPalette,
@@ -66,6 +67,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
     { href: "/files", label: t("files.pageTitle"), icon: IconFolder },
     { href: "/shares", label: t("shares.pageTitle"), icon: IconShare },
     { href: "/reverse-shares", label: t("reverseShares.pageTitle"), icon: IconInbox },
+    { href: "/secrets", label: t("secrets.pageTitle"), icon: IconKey },
   ];
 
   const admin: NavEntry[] = isAdmin

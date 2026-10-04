@@ -568,3 +568,51 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* The way to the public secret page on the sign-in card: a light that keeps travelling
+   around the border. The angle is a registered property so it can be animated. */
+@property --secret-ring {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.secret-ring {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    conic-gradient(
+        from var(--secret-ring),
+        var(--line-2) 0 62%,
+        var(--primary) 80%,
+        color-mix(in oklab, var(--primary) 45%, #ffffff) 88%,
+        var(--line-2) 100%
+      )
+      border-box;
+  animation: secret-ring 3.6s linear infinite;
+}
+
+.secret-tilt {
+  animation: secret-tilt 5.6s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) infinite;
+}
+
+@keyframes secret-ring {
+  to {
+    --secret-ring: 360deg;
+  }
+}
+
+@keyframes secret-tilt {
+  0%,
+  40%,
+  60%,
+  100% {
+    transform: none;
+  }
+  46% {
+    transform: rotate(-14deg);
+  }
+  54% {
+    transform: rotate(8deg);
+  }
+}

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { PublicCard } from "@/components/auth/public-card";
 import { PublicShell, type PublicStory } from "@/components/brand/public-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
+import { ShareSecretLink } from "@/components/secrets/share-secret-link";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { LoginForm } from "./components/login-form";
 import { RegisterForm } from "./components/register-form";
@@ -61,6 +62,7 @@ export default function LoginPage() {
         passwordAuthEnabled={login.passwordAuthEnabled}
         authConfigLoading={login.authConfigLoading}
       />
+      <ShareSecretLink />
     </PublicCard>
   );
 

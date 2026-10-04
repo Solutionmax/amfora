@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { publicPaths } from "@/components/auth/paths/public-paths";
+import { isPublicPath } from "@/components/auth/paths/public-paths";
 import { unauthenticatedOnlyPaths } from "@/components/auth/paths/unahthenticated-only-paths";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAuth } from "@/contexts/auth-context";
@@ -26,7 +26,7 @@ export function RedirectHandler({ children }: RedirectHandlerProps) {
         return;
       }
     } else if (isAuthenticated === false) {
-      if (!publicPaths.some((path) => pathname.startsWith(path)) && !homePaths.includes(pathname)) {
+      if (!isPublicPath(pathname) && !homePaths.includes(pathname)) {
         router.replace("/login");
         return;
       }
@@ -44,11 +44,7 @@ export function RedirectHandler({ children }: RedirectHandlerProps) {
     return <LoadingScreen />;
   }
 
-  if (
-    isAuthenticated === false &&
-    !publicPaths.some((path) => pathname.startsWith(path)) &&
-    !homePaths.includes(pathname)
-  ) {
+  if (isAuthenticated === false && !isPublicPath(pathname) && !homePaths.includes(pathname)) {
     return <LoadingScreen />;
   }
 

@@ -34,6 +34,7 @@ model User {
 
   passwordResets PasswordReset[]
   apiKeys        ApiKey[]
+  secrets        Secret[]
   authProviders  UserAuthProvider[]
   trustedDevices TrustedDevice[]
 
@@ -374,4 +375,34 @@ model ApiKey {
 
   @@index([userId])
   @@map("api_keys")
+}
+
+/// A short text that can be opened a limited number of times. The browser encrypts it; the
+/// key travels in the link fragment and never reaches the server.
+model Secret {
+  /// Random, 128 bits. It is the only part of the link the server sees.
+  id             String    @id
+  /// Only the maker sees this.
+  label          String?
+  /// Null once the secret is used up, expired, deleted by wrong tries or removed.
+  ciphertext     String?
+  /// SHA-256 of a value derived from the link key alone: shows that a caller holds the link.
+  proofHash      String
+  /// SHA-256 of a value derived from the link key and the passphrase.
+  verifierHash   String
+  hasPassphrase  Boolean   @default(false)
+  maxOpens       Int       @default(1)
+  opens          Int       @default(0)
+  failedAttempts Int       @default(0)
+  expiresAt      DateTime
+  lastOpenedAt   DateTime?
+  createdAt      DateTime  @default(now())
+
+  /// Null for a secret made without an account.
+  creatorId String?
+  creator   User?   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId])
+  @@index([expiresAt])
+  @@map("secrets")
 }

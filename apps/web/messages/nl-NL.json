@@ -2018,6 +2018,14 @@
         "more": {
           "title": "Meer",
           "description": "Overige instellingen in deze groep."
+        },
+        "anonymousSecrets": {
+          "title": "Geheimen zonder account",
+          "description": "Laat bezoekers een geheim maken op /secret. Uit tenzij je het aanzet."
+        },
+        "secrets": {
+          "title": "Geheimen",
+          "description": "Grenzen voor geheimen van ingelogde gebruikers."
         }
       },
       "fields": {
@@ -2036,6 +2044,34 @@
         "authProvidersEnabled": {
           "title": "Extern aanmelden",
           "description": "Laat mensen aanmelden met een account van een andere dienst."
+        },
+        "secretsAnonymousEnabled": {
+          "title": "Geheimen zonder account toestaan",
+          "description": "Iedereen die het adres /secret kent kan een geheim maken. Je kunt ze niet lezen of opsommen: de sleutel zit in de link."
+        },
+        "secretsAnonymousMaxDays": {
+          "title": "Langste verloop",
+          "description": "In dagen."
+        },
+        "secretsAnonymousMaxOpens": {
+          "title": "Vaakst te openen",
+          "description": "Per geheim."
+        },
+        "secretsAnonymousMaxLength": {
+          "title": "Langste tekst",
+          "description": "In tekens."
+        },
+        "secretsAnonymousPerHour": {
+          "title": "Limiet per bezoeker",
+          "description": "Nieuwe geheimen per uur."
+        },
+        "secretsMaxDays": {
+          "title": "Langste verloop",
+          "description": "In dagen."
+        },
+        "secretsMaxOpens": {
+          "title": "Vaakst te openen",
+          "description": "Per geheim."
         }
       }
     }
@@ -2873,5 +2909,142 @@
     "passwordMinLength": "Wachtwoord moet minimaal 6 tekens bevatten",
     "nameRequired": "Naam is verplicht",
     "required": "Dit veld is verplicht"
+  },
+  "secrets": {
+    "pageTitle": "Geheimen",
+    "new": "Nieuw",
+    "newSecret": "Nieuw geheim",
+    "filterLabel": "Geheimen filteren",
+    "filters": {
+      "all": "Alle",
+      "waiting": "Wachtend",
+      "done": "Geopend of verlopen"
+    },
+    "status": {
+      "waiting": "Wachtend",
+      "used": "Verbruikt",
+      "expired": "Verlopen",
+      "burned": "Vernietigd"
+    },
+    "passphraseTag": "Wachtzin",
+    "linkOnlyTag": "Alleen link",
+    "untitled": "Geheim zonder naam",
+    "opensOf": "{opens} van {max}",
+    "emptyTitle": "Nog geen geheimen",
+    "emptyDescription": "Stuur een wachtwoord of sleutel met een link die zichzelf vernietigt na het lezen.",
+    "noResults": "Geen geheimen hier.",
+    "loadError": "De geheimen konden niet worden geladen.",
+    "retry": "Opnieuw proberen",
+    "notFoundTitle": "Dit geheim bestaat niet",
+    "notFoundText": "Het is mogelijk verwijderd.",
+    "showAll": "Alle geheimen tonen",
+    "created": "gemaakt op {date}",
+    "copyNowTitle": "Kopieer deze link nu.",
+    "copyNowText": "De sleutel zit in de link en bereikt de server nooit, dus de link kan niet opnieuw worden getoond.",
+    "copyLink": "Link kopiëren",
+    "openPage": "Open de pagina die de ontvanger ziet",
+    "linkCopied": "Link gekopieerd",
+    "copyFailed": "Kopiëren lukte niet. Selecteer de tekst en kopieer hem zelf.",
+    "createFailed": "Het geheim kon niet worden gemaakt. Probeer het opnieuw.",
+    "deleted": "Verwijderd",
+    "deleteFailed": "Verwijderen lukte niet. Probeer het opnieuw.",
+    "linkGoneTitle": "De link is getoond toen je dit geheim maakte.",
+    "linkGoneText": "Hij wordt nergens bewaard. Kwijt? Verwijder dit geheim en maak een nieuw.",
+    "textGoneTitle": "De tekst is verwijderd.",
+    "textGoneText": "Alleen deze regel blijft over, zodat je kunt zien wat er is gebeurd.",
+    "facts": {
+      "status": "Status",
+      "expires": "Verloopt",
+      "expired": "Verlopen",
+      "opened": "Geopend"
+    },
+    "access": "Toegang",
+    "passphraseOn": "De ontvanger moet een wachtzin invoeren.",
+    "passphraseOff": "Iedereen met de link kan het openen.",
+    "on": "Aan",
+    "off": "Uit",
+    "burnedText": "Vernietigd na drie foute wachtzinnen.",
+    "notOpened": "Nog niet geopend.",
+    "neverOpened": "Nooit geopend. Vernietigd bij het verlopen.",
+    "lastOpened": "Laatste keer {when}.",
+    "leftThenDestroyed": "Nog {count, plural, one {# keer} other {# keer}}, daarna wordt het vernietigd.",
+    "destroyedAfterLast": "Vernietigd na de laatste keer.",
+    "encryption": "Versleuteling",
+    "encryptionText": "AES 256, uitgevoerd in de browser. De server bewaart alleen de verzegelde tekst.",
+    "endToEnd": "End to end",
+    "delete": "Geheim verwijderen",
+    "deleteRecord": "Regel verwijderen",
+    "deleteTitle": "Dit geheim verwijderen?",
+    "deleteText": "De link werkt direct niet meer. Dit kan niet ongedaan worden gemaakt.",
+    "deleteConfirm": "Verwijderen",
+    "days": "{count, plural, one {# dag} other {# dagen}}",
+    "hours": "{count} uur",
+    "times": "{count} keer",
+    "form": {
+      "title": "Nieuw geheim",
+      "description": "Een wachtwoord of sleutel die zichzelf vernietigt na het lezen.",
+      "secret": "Geheim",
+      "secretHint": "Versleuteld in je browser. De server ziet deze tekst nooit.",
+      "secretPlaceholder": "Plak hier het wachtwoord, de sleutel of de notitie",
+      "label": "Label",
+      "labelHint": "Optioneel, alleen jij ziet dit.",
+      "labelPlaceholder": "Bijvoorbeeld: databasewachtwoord voor een klant",
+      "expires": "Verloopt na",
+      "canBeOpened": "Kan geopend worden",
+      "passphrase": "Wachtzin",
+      "passphraseHint": "De ontvanger heeft hem nodig om het geheim te openen. Stuur hem via een andere weg.",
+      "create": "Link maken",
+      "sealing": "Verzegelen…"
+    },
+    "public": {
+      "headline": "Een geheim, alleen voor jou.",
+      "metaTitle": "Er wacht een geheim",
+      "trust": {
+        "opens": {
+          "title": "Beperkt te openen",
+          "text": "Na de laatste keer wordt de tekst vernietigd."
+        },
+        "sealed": {
+          "title": "Versleuteld in de browser",
+          "text": "De server kan het niet lezen."
+        },
+        "expires": {
+          "title": "Verloopt vanzelf",
+          "text": "Ongeopende geheimen worden ook verwijderd."
+        }
+      },
+      "waitingTitle": "Er wacht een geheim op je",
+      "goneTitle": "Dit geheim is niet meer beschikbaar",
+      "goneText": "Het is al geopend, verlopen of door de afzender verwijderd. Vraag de afzender om een nieuwe link.",
+      "shownTitle": "Hier is je geheim",
+      "shownTextMore": "Kopieer het nu. Elke keer dat deze link wordt geopend telt mee.",
+      "shownTextLast": "Kopieer het nu. Het is weg zodra je deze pagina verlaat.",
+      "copy": "Kopiëren",
+      "copied": "Geheim gekopieerd",
+      "worksMore": "Deze link werkt nog {count} keer, daarna wordt het geheim vernietigd.",
+      "destroyed": "Vernietigd op de server. Deze link werkt niet meer.",
+      "opensMore": "Het kan nog {count} keer worden geopend.",
+      "opensOnce": "Het kan één keer worden getoond.",
+      "thenDestroyed": "Daarna wordt het vernietigd en werkt deze link niet meer.",
+      "hasPassphrase": "De afzender heeft het beveiligd met een wachtzin.",
+      "passphraseHint": "Drie foute pogingen vernietigen het geheim.",
+      "show": "Toon het geheim",
+      "opening": "Openen…",
+      "previewSafe": "Het openen van deze pagina heeft de link niet verbruikt. Alleen de knop doet dat.",
+      "wrongPassphrase": "Verkeerde wachtzin. Nog {count, plural, one {# poging} other {# pogingen}}.",
+      "tooManyTries": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
+      "createTitle": "Deel een geheim",
+      "createText": "Plak een wachtwoord of sleutel. Je krijgt een link die zichzelf vernietigt na het lezen.",
+      "noAccount": "Geen account nodig.",
+      "tooManySecrets": "Je hebt in korte tijd veel geheimen gemaakt. Probeer het over een uur opnieuw.",
+      "readyTitle": "Je link is klaar",
+      "readyText": "Kopieer hem nu. De sleutel zit in de link, dus hij kan niet opnieuw worden getoond.",
+      "another": "Nog een maken",
+      "shareLink": "Deel een geheim zonder account",
+      "address": "Adres van de publieke pagina",
+      "shareEyebrow": "Geen account nodig",
+      "shareTitle": "Deel een geheim",
+      "shareLine": "Vernietigt zichzelf na het lezen"
+    }
   }
 }

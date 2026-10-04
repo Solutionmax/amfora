@@ -24,6 +24,15 @@ export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
   security: [
     { id: "signingIn", rows: ["passwordAuthEnabled", ["passwordMinLength", "passwordResetTokenExpiration"]] },
     { id: "bruteForce", rows: [["maxLoginAttempts", "loginBlockDuration"]] },
+    {
+      id: "anonymousSecrets",
+      rows: [
+        "secretsAnonymousEnabled",
+        ["secretsAnonymousMaxDays", "secretsAnonymousMaxOpens"],
+        ["secretsAnonymousMaxLength", "secretsAnonymousPerHour"],
+      ],
+    },
+    { id: "secrets", rows: [["secretsMaxDays", "secretsMaxOpens"]] },
   ],
   storage: [{ id: "limits", rows: ["maxFileSize", "maxTotalStoragePerUser"] }],
   email: [
@@ -59,6 +68,13 @@ export const SMTP_FIELDS: readonly string[] = [
 ];
 
 /** Values stored in seconds, shown with a unit next to the input. */
+/** Fields that only make sense while secrets without an account are allowed. */
+export const ANONYMOUS_SECRET_FIELDS: readonly string[] = [
+  "secretsAnonymousMaxDays",
+  "secretsAnonymousMaxOpens",
+  "secretsAnonymousMaxLength",
+  "secretsAnonymousPerHour",
+];
 export const SECONDS_FIELDS: readonly string[] = ["loginBlockDuration", "passwordResetTokenExpiration"];
 
 /** Keys that have no title in the shared messages; their text lives under `settings.calm.fields`. */

@@ -202,6 +202,49 @@ const defaultConfigs = [
     type: "number",
     group: "security",
   },
+  // Secrets: one time text links
+  {
+    key: "secretsAnonymousEnabled",
+    value: "false",
+    type: "boolean",
+    group: "security",
+  },
+  {
+    key: "secretsAnonymousMaxDays",
+    value: "7",
+    type: "number",
+    group: "security",
+  },
+  {
+    key: "secretsAnonymousMaxOpens",
+    value: "3",
+    type: "number",
+    group: "security",
+  },
+  {
+    key: "secretsAnonymousMaxLength",
+    value: "5000",
+    type: "number",
+    group: "security",
+  },
+  {
+    key: "secretsAnonymousPerHour",
+    value: "10",
+    type: "number",
+    group: "security",
+  },
+  {
+    key: "secretsMaxDays",
+    value: "30",
+    type: "number",
+    group: "security",
+  },
+  {
+    key: "secretsMaxOpens",
+    value: "10",
+    type: "number",
+    group: "security",
+  },
   // Auth Providers Global Configuration
   {
     key: "authProvidersEnabled",
