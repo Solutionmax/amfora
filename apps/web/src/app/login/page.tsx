@@ -17,12 +17,12 @@ import { LOGIN_TRUST } from "./trust";
 export default function LoginPage() {
   const t = useTranslations();
   const login = useLogin();
-  const { firstAccess, appDescription, appName, loadAppInfo } = useAppInfo();
+  const { firstAccess, appDescription, appName, refreshAppInfo } = useAppInfo();
 
-  // The first-user state can change between visits, so ask again unless the page just asked.
+  // The first-user state can change between visits; always ask the server again here.
   useEffect(() => {
-    void loadAppInfo();
-  }, [loadAppInfo]);
+    void refreshAppInfo();
+  }, [refreshAppInfo]);
 
   if (login.isAuthenticated === null || login.isAuthenticated === true) {
     return <LoadingScreen />;

@@ -661,7 +661,7 @@
     "bulkDownloadFileError": "Fout bij het downloaden van bestand {fileName}",
     "bulkDeleteSuccess": "{count, plural, =1 {1 bestand succesvol verwijderd} other {# bestanden succesvol verwijderd}}",
     "bulkDeleteError": "Fout bij het verwijderen van geselecteerde bestanden",
-    "bulkDeletePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} is niet verwijderd",
+    "bulkDeletePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} konden niet worden verwijderd",
     "viewMode": {
       "table": "Tabel",
       "grid": "Raster",

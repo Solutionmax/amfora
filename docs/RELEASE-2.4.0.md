@@ -18,10 +18,13 @@ providers.
 - **Receive links in the activity log.** Making a receive link and deleting one now write a line,
   like shares do.
 - **The logo in emails.** Every email the server sends shows the logo of the installation at the
-  top. It is attached to the message itself, so it shows even where the installation cannot be
-  reached from outside. A logo is stored as a WebP image, which Gmail, Apple Mail and most
-  others show; some older programs (Outlook on Windows among them) may not, and show the name
-  only. Without a logo the name stays as text, as before.
+  top, in front of the name. It is attached to the message itself as a PNG, so it shows in every
+  mail program, also where the installation cannot be reached from outside. Without a logo the
+  name stays as text.
+- **One look for every email.** The password reset, "shared with you", "files received" and the
+  activity emails now share one calm layout, and every email also has a plain text version.
+  Under the card is one quiet line "Powered by Amfora", which replaces the old "Powered by
+  SolutionMAX" of two of these emails. A brandpack that hides the credit hides it here too.
 
 ## Changed
 

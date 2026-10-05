@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { deleteFile, updateFile } from "@/http/endpoints";
 import { deleteFolder, registerFolder, updateFolder } from "@/http/endpoints/folders";
 import { getCachedDownloadUrl } from "@/lib/download-url-cache";
-import { runInTurn } from "@/lib/run-in-turn";
+import { ignoreNotFound, runInTurn } from "@/lib/run-in-turn";
 
 interface FileToRename {
   id: string;
@@ -358,8 +358,8 @@ export function useEnhancedFileManager(
 
       const { failed } = await runInTurn(
         [
-          ...(filesToDelete ?? []).map((file) => () => deleteFile(file.id)),
-          ...(foldersToDelete ?? []).map((folder) => () => deleteFolder(folder.id)),
+          ...(filesToDelete ?? []).map((file) => () => deleteFile(file.id).catch(ignoreNotFound)),
+          ...(foldersToDelete ?? []).map((folder) => () => deleteFolder(folder.id).catch(ignoreNotFound)),
         ],
         (remove) => remove()
       );

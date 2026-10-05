@@ -17,6 +17,9 @@ interface Config {
 // They share one request; a reload after a change always asks again.
 const sharedPublicConfigs = sharedRequest(() => getPublicConfigs());
 
+/** Asks the server again, for after a setting changed. */
+export const refreshPublicConfigs = () => sharedPublicConfigs.fresh();
+
 /**
  * Hook to fetch public configurations (excludes sensitive SMTP data)
  * Safe to use without authentication

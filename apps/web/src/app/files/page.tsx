@@ -104,6 +104,8 @@ export default function FilesPage() {
     } catch (error) {
       console.error("Error moving items:", error);
       toast.error(t("files.errors.moveItemsFailed"));
+      // Some of the items may have moved before the failure.
+      await loadFiles();
     }
   };
 

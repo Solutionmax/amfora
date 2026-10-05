@@ -5,6 +5,17 @@ import { test } from "node:test";
 import { ConfigService } from "../config/service";
 import { EmailService } from "./service";
 
+/** The decoded text and html parts of a raw message. */
+function parts(raw: string): { html: string; text: string } {
+  const decode = (value: string) =>
+    value.replace(/=\r\n/g, "").replace(/=([0-9A-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  const find = (type: string) => {
+    const part = raw.split(/\r\n--/).find((chunk) => new RegExp(`^Content-Type: ${type}`, "im").test(chunk)) ?? "";
+    return decode(part.split("\r\n\r\n").slice(1).join("\r\n\r\n"));
+  };
+  return { html: find("text/html"), text: find("text/plain") };
+}
+
 test("real SMTP delivery keeps reset origin canonical and escapes uploaded metadata", async () => {
   const messages: string[] = [];
   const server = createServer((socket) => {
@@ -53,22 +64,30 @@ test("real SMTP delivery keeps reset origin canonical and escapes uploaded metad
   try {
     const service = new EmailService();
     await service.sendPasswordResetEmail("fixture@example.test", "synthetic-token", "https://attacker.invalid");
+    const evil = "<script>bad</script>";
     await service.sendReverseShareBatchFileNotification(
       "fixture@example.test",
       '<img src="x">',
       1,
-      "<script>bad</script>.txt",
+      `${evil}.txt`,
       "<b>fake</b>"
     );
-    assert.equal(messages.length, 2);
-    const decoded = messages.map((message) =>
-      message.replace(/=\r\n/g, "").replace(/=([0-9A-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
-    );
-    assert.match(decoded[0], /https:\/\/files\.example\.test\/reset-password\?token=synthetic-token/);
-    assert.doesNotMatch(decoded[0], /attacker\.invalid/);
-    const html = decoded[1].split("\r\n\r\n").slice(1).join("\r\n\r\n");
-    assert.doesNotMatch(html, /<script>|<img src="x">|<b>fake<\/b>/);
-    assert.match(html, /&lt;script&gt;bad&lt;\/script&gt;/);
+    await service.sendShareNotification("fixture@example.test", "https://files.example.test/s/x", evil, "<i>me</i>");
+    assert.equal(messages.length, 3);
+    const [reset, received, shared] = messages.map(parts);
+
+    assert.match(reset.html, /https:\/\/files\.example\.test\/reset-password\?token=synthetic-token/);
+    assert.match(reset.text, /https:\/\/files\.example\.test\/reset-password\?token=synthetic-token/);
+    assert.doesNotMatch(reset.html + reset.text, /attacker\.invalid/);
+
+    for (const { html } of [received, shared]) {
+      assert.doesNotMatch(html, /<script>|<img src="x">|<b>fake<\/b>|<i>me<\/i>/);
+      assert.match(html, /&lt;script&gt;/);
+    }
+    assert.match(received.html, /&lt;script&gt;bad&lt;\/script&gt;\.txt/);
+    assert.match(received.html, /&lt;b&gt;fake&lt;\/b&gt;/);
+    assert.match(shared.html, /&lt;i&gt;me&lt;\/i&gt;/);
+    assert.match(received.text, /<script>bad<\/script>\.txt/, "the text part is plain text, nothing to escape");
   } finally {
     ConfigService.prototype.getValue = originalGet;
     if (originalUrl === undefined) delete process.env.APP_URL;

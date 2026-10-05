@@ -24,6 +24,7 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "Administrators can clear the activity log from the Activity page. One line stays, saying who cleared it and when.",
     "Making or deleting a receive link now shows in the activity log.",
     "Emails carry the logo of the installation at the top. Without a logo, the name stays as text.",
+    "Every email now has the same calm layout and a plain text version.",
   ],
 };
 

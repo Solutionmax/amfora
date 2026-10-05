@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { runInTurn } from "./run-in-turn";
+import { ignoreNotFound, runInTurn } from "./run-in-turn";
 
 test("runs the actions one after the other, never two at once", async () => {
   let running = 0;
@@ -28,4 +28,13 @@ test("when one fails the others still run and the failures are counted", async (
 
 test("an empty list does nothing", async () => {
   assert.deepEqual(await runInTurn([], async () => {}), { done: 0, failed: 0 });
+});
+
+test("a delete that finds the item already gone counts as done, other errors still fail", async () => {
+  const gone = Object.assign(new Error("gone"), { response: { status: 404 } });
+  const broken = Object.assign(new Error("broken"), { response: { status: 500 } });
+  const result = await runInTurn([gone, broken, new Error("no response")], (error) =>
+    Promise.reject(error).catch(ignoreNotFound)
+  );
+  assert.deepEqual(result, { done: 1, failed: 2 });
 });

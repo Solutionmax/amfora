@@ -70,26 +70,29 @@ export async function placeOfRequest(request: Pick<FastifyRequest, "headers" | "
   return placeOf(clientAddress(request), (await activitySettings()).placeMode);
 }
 
+/** The row for one line of the log. */
+export function activityData(input: ActivityInput, place: string | null) {
+  return {
+    kind: input.kind ?? input.action.split(".")[0],
+    action: input.action,
+    ownerId: input.ownerId ?? null,
+    subject: clip(input.subject),
+    subjectId: input.subjectId ?? null,
+    detail: clip(input.detail),
+    amount: input.amount ?? null,
+    actorId: input.actorId ?? null,
+    actorName: clip(input.actorName),
+    place,
+  };
+}
+
 /**
  * Writes one line in the activity log. Never throws: a log that cannot be written must not
  * cost a visitor their download or a user their sign in.
  */
 export async function recordActivity(input: ActivityInput, where?: { place: string | null }): Promise<void> {
   try {
-    await prisma.activityEvent.create({
-      data: {
-        kind: input.kind ?? input.action.split(".")[0],
-        action: input.action,
-        ownerId: input.ownerId ?? null,
-        subject: clip(input.subject),
-        subjectId: input.subjectId ?? null,
-        detail: clip(input.detail),
-        amount: input.amount ?? null,
-        actorId: input.actorId ?? null,
-        actorName: clip(input.actorName),
-        place: where?.place ?? null,
-      },
-    });
+    await prisma.activityEvent.create({ data: activityData(input, where?.place ?? null) });
   } catch (error) {
     console.error("Could not write activity:", error);
   }

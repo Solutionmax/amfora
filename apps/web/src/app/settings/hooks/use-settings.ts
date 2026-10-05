@@ -9,7 +9,7 @@ import { z } from "zod";
 
 import { useAppInfo } from "@/contexts/app-info-context";
 import { useShareContext } from "@/contexts/share-context";
-import { useAdminConfigs } from "@/hooks/use-secure-configs";
+import { refreshPublicConfigs, useAdminConfigs } from "@/hooks/use-secure-configs";
 import { bulkUpdateConfigs } from "@/http/endpoints";
 import { READ_ONLY_FIELDS } from "../constants";
 import { Config, ConfigType, GroupFormData } from "../types";
@@ -169,6 +169,8 @@ export function useSettings() {
       toast.success(t("settings.messages.updateSuccess", { group: t(`settings.groups.${group}.title`) }));
 
       await reloadConfigs();
+      // The notification switches on shares read the public list, whatever group was saved.
+      await refreshPublicConfigs();
 
       if (group === "email") {
         await refreshShareContext();

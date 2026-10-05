@@ -10,7 +10,7 @@ credit and with the paid customization switched on.
 | --- | --- | --- |
 | Name, description, logo, favicon | yes | yes |
 | Accent colour, corner radius, font | yes | yes |
-| "Powered by Amfora" credit | always shown | can be hidden |
+| "Powered by Amfora" credit, on the public pages and in emails | always shown | can be hidden |
 | Public-page background image | no | yes |
 | Download page cover, default link preview image | yes | yes |
 | Custom CSS | no | yes |

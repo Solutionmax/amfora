@@ -514,16 +514,18 @@ test("the counts per kind follow the search term, not the chosen kind", async ()
   await activity.recordActivity({ action: "share.downloaded", ownerId: "alice", subject: "CountMe", detail: "x.pdf" });
   await activity.recordActivity({ action: "share.opened", ownerId: "alice", subject: "CountMe", detail: "" });
   await activity.recordActivity({ action: "share.opened", ownerId: "alice", subject: "Other", detail: "" });
+  await activity.recordActivity({ action: "secret.created", ownerId: "alice", subject: "CountMe" });
 
   const everything = await list("alice");
   const searched = await list("alice", "?q=CountMe");
-  assert.equal(searched.counts.all, 2);
+  assert.equal(searched.counts.all, 3);
   assert.equal(everything.counts.all > searched.counts.all, true, "without a term everything is counted");
 
   const kindOfDownload = (await list("alice", "?q=CountMe")).events.find((e) => e.action === "share.downloaded")?.kind;
   const oneKind = await list("alice", `?q=CountMe&kind=${kindOfDownload}`);
-  assert.equal(oneKind.counts.all, 2, "picking a kind does not shrink the other counts");
+  assert.equal(oneKind.counts.all, 3, "picking a kind does not shrink the other counts");
   assert.equal(oneKind.counts[kindOfDownload as string], 2);
+  assert.equal(oneKind.counts.secret, 1, "another kind with the same term is still counted");
   assert.equal((await list("bob", "?q=CountMe")).counts.all, 0, "another user's events are never counted");
 });
 
@@ -561,7 +563,24 @@ test("only an administrator clears the log, and one line about it remains", asyn
     assert.equal(refused.statusCode, 403, user);
   }
   assert.equal((await app.inject({ method: "DELETE", url: "/activity" })).statusCode, 401);
-  assert.ok((await prisma.activityEvent.count()) > 1, "nothing was removed by the refusals");
+  const before = await prisma.activityEvent.count();
+  assert.ok(before > 1, "nothing was removed by the refusals");
+
+  // An administrator's API key is not a session: it is refused here too.
+  const key = await app.inject({
+    method: "POST",
+    url: "/api-keys",
+    cookies: session("root"),
+    payload: { name: "root full", scope: "full" },
+  });
+  assert.equal(key.statusCode, 201, key.body);
+  const byKey = await app.inject({
+    method: "DELETE",
+    url: "/activity",
+    headers: { authorization: `Bearer ${key.json().token}` },
+  });
+  assert.equal(byKey.statusCode, 403);
+  assert.equal(await prisma.activityEvent.count(), before, "the key removed nothing");
 
   const cleared = await app.inject({ method: "DELETE", url: "/activity", cookies: session("root") });
   assert.equal(cleared.statusCode, 200);
@@ -572,8 +591,29 @@ test("only an administrator clears the log, and one line about it remains", asyn
     [rows[0].action, rows[0].kind, rows[0].ownerId, rows[0].actorId, rows[0].actorName],
     ["activity.cleared", "account", null, "root", "root Test"]
   );
-  assert.equal(cleared.json().removed >= 2, true);
+  assert.equal(cleared.json().removed, before, "removed is the number of rows that were there");
 
   assert.deepEqual(await actionsOf("root"), ["activity.cleared"]);
   assert.deepEqual(await actionsOf("alice"), [], "a member never sees the line about the clearing");
+  const member = await list("alice");
+  assert.equal(member.counts.account ?? 0, 0, "a member's counts never include it");
+  assert.equal(member.counts.all, 0);
+  const csv = await app.inject({ method: "GET", url: "/activity/export", cookies: session("alice") });
+  assert.doesNotMatch(csv.body, /activity\.cleared/);
+});
+
+test("when the remaining line cannot be written, nothing is deleted", async () => {
+  await activity.recordActivity({ action: "share.created", ownerId: "alice", subject: "keep me" });
+  const before = await prisma.activityEvent.count();
+  const original = prisma.activityEvent.create;
+  (prisma.activityEvent as any).create = () => {
+    throw new Error("disk full");
+  };
+  try {
+    const failed = await app.inject({ method: "DELETE", url: "/activity", cookies: session("root") });
+    assert.equal(failed.statusCode, 500);
+  } finally {
+    (prisma.activityEvent as any).create = original;
+  }
+  assert.equal(await prisma.activityEvent.count(), before);
 });

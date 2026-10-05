@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { createAdminGuard, loadAccount } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
-import { actorOf, recordRequestActivity } from "./activity";
+import { activityData, actorOf, placeOfRequest } from "./activity";
 import { placeSource } from "./place";
 
 const KINDS = ["share", "receive", "secret", "account"] as const;
@@ -353,9 +353,15 @@ export async function activityRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const userId = (request.user as { userId: string }).userId;
       const actor = await actorOf(userId);
-      const { count } = await prisma.activityEvent.deleteMany({});
-      // Visible to administrators only: no owner.
-      await recordRequestActivity(request, { action: "activity.cleared", kind: "account", ...actor });
+      const place = await placeOfRequest(request).catch(() => null);
+      // One step: if the remaining line cannot be written, nothing is deleted. The array form keeps
+      // to the single database connection. Visible to administrators only: no owner.
+      const [{ count }] = await prisma.$transaction([
+        prisma.activityEvent.deleteMany({}),
+        prisma.activityEvent.create({
+          data: activityData({ action: "activity.cleared", kind: "account", ...actor }, place),
+        }),
+      ]);
       return reply.send({ removed: count });
     }
   );
