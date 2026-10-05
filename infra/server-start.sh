@@ -88,16 +88,8 @@ run_as_user() {
     fi
 }
 
-if [ ! -f "/app/server/prisma/configs.json" ]; then
-    echo "📄 Copying configuration files..."
-    cp -f /app/infra/configs.json /app/server/prisma/configs.json 2>/dev/null || echo "⚠️ Failed to copy configs.json"
-    cp -f /app/infra/providers.json /app/server/prisma/providers.json 2>/dev/null || echo "⚠️ Failed to copy providers.json"
-    cp -f /app/infra/check-missing.js /app/server/prisma/check-missing.js 2>/dev/null || echo "⚠️ Failed to copy check-missing.js"
-    
-    if [ "$(id -u)" = "0" ]; then
-        chown $TARGET_UID:$TARGET_GID /app/server/prisma/configs.json /app/server/prisma/providers.json /app/server/prisma/check-missing.js 2>/dev/null || true
-    fi
-fi
+# Older versions copied these helpers into the data directory. Nothing reads them any more.
+rm -f /app/server/prisma/configs.json /app/server/prisma/providers.json /app/server/prisma/check-missing.js 2>/dev/null || true
 
 if [ ! -f "/app/server/prisma/amfora.db" ]; then
     echo "🚀 First run detected - setting up database..."
@@ -125,28 +117,11 @@ else
     echo "🔧 Checking for schema updates..."
     run_as_user npx prisma db push --schema=./prisma/schema.prisma --skip-generate
     
-    echo "🔍 Checking if new tables need seeding..."
-    NEEDS_SEEDING=$(run_as_user node ./prisma/check-missing.js check-seeding 2>/dev/null || echo "true")
-    
-    if [ "$NEEDS_SEEDING" = "true" ]; then
-        echo "🌱 New tables detected or missing data, running seed..."
-        
-        MISSING_PROVIDERS=$(run_as_user node ./prisma/check-missing.js check-providers 2>/dev/null || echo "Error checking providers")
-        MISSING_CONFIGS=$(run_as_user node ./prisma/check-missing.js check-configs 2>/dev/null || echo "Error checking configurations")
-
-        if [ "$MISSING_PROVIDERS" != "No missing providers" ] && [ "$MISSING_PROVIDERS" != "Error checking providers" ]; then
-            echo "🔍 $MISSING_PROVIDERS"
-        fi
-        
-        if [ "$MISSING_CONFIGS" != "No missing configurations" ] && [ "$MISSING_CONFIGS" != "Error checking configurations" ]; then
-            echo "⚙️ $MISSING_CONFIGS"
-        fi
-        
-        run_as_user node ./prisma/seed.js
-        echo "✅ Seeding completed!"
-    else
-        echo "✅ All tables have data, no seeding needed"
-    fi
+    # The seed only adds settings and providers that are missing and clears what a newer
+    # version no longer has, so it runs at every start: that is how an upgrade gets its defaults.
+    echo "🌱 Adding new defaults..."
+    run_as_user node ./prisma/seed.js
+    echo "✅ Defaults are up to date"
 fi
 
 # Run again now that the database definitely exists: on a first boot the block above ran
