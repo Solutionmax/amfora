@@ -16,3 +16,7 @@ updates:
     directory: "/"
     schedule:
       interval: monthly
+    ignore:
+      # The image follows the Node line the app is tested on; a new major is a decision, not a bump.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
