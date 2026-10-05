@@ -441,9 +441,9 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             </p>
             <h3>OAuth2 and OIDC</h3>
             <p>
-              External login is optional. The seeded providers are Google,
-              Discord, GitHub, Auth0, Kinde, Zitadel, Authentik, Frontegg and
-              Pocket ID. Additional compatible OIDC providers can be configured.
+              External login is optional. A new installation offers Authentik,
+              GitHub and Google. Any other compatible OIDC or OAuth 2.0
+              provider can be added with Add provider.
               Match callback URLs and client settings at both ends. Keep
               password authentication enabled until an external provider has
               been tested; disabling it also disables password reset.
@@ -466,10 +466,10 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
               never used for either.
             </p>
             <p>
-              <b>Play video and audio on download pages</b> is off by default.
-              While it is off, visitors see no play or Preview button for video
-              and audio and the server refuses to stream those files to them;
-              they download instead.
+              Download pages do not play video and audio. Visitors see no play
+              or Preview button for those files and the server refuses to stream
+              them; they download instead. Images, PDFs and text keep their
+              preview.
             </p>
           </section>
           <section class="docs-section" id="operations">

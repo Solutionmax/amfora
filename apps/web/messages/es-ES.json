@@ -360,9 +360,7 @@
         "linkPreviewHint": "Se muestra cuando un enlace de descarga o de recepción se pega en WhatsApp, Slack y apps similares y no hay portada. Lo ideal es 1200 × 630 px; hasta 3 MB.",
         "upload": "Subir imagen",
         "replace": "Reemplazar imagen",
-        "remove": "Eliminar",
-        "playback": "Reproducir vídeo y audio en las páginas de descarga",
-        "playbackHint": "Desactivado, los archivos de vídeo y audio solo se pueden descargar: sin botón de reproducción ni vista previa. Las imágenes, los PDF y el texto conservan su vista previa."
+        "remove": "Eliminar"
       },
       "theme": {
         "title": "Páginas públicas",
@@ -421,8 +419,6 @@
       "coverHint": "Parte superior de cada página de descarga. Al menos 1200 px de ancho, hasta 3 MB.",
       "linkPreview": "Imagen de vista previa del enlace",
       "linkPreviewHint": "Se usa cuando no hay portada. 1200 × 630 px, hasta 3 MB.",
-      "playback": "Reproducir vídeo en el navegador",
-      "playbackHint": "Los visitantes pueden ver o escuchar antes de descargar.",
       "creditHint": "Línea pequeña bajo cada página pública.",
       "creditLocked": "Línea pequeña bajo cada página pública. Ocultarla requiere un brandpack.",
       "packTitle": "Brandpack",
@@ -430,7 +426,8 @@
       "packActive": "Activo para {organisation}",
       "packIssued": "Emitido el {date}",
       "packKey": "Clave del brandpack",
-      "packKeyHint": "Pega la clave del correo de tu compra."
+      "packKeyHint": "Pega la clave del correo de tu compra.",
+      "previewEnlarge": "Ampliar la vista previa"
     }
   },
   "dashboard": {
@@ -854,7 +851,8 @@
       "auth": "Proveedores de Autenticación"
     },
     "stats": "{iconCount} iconos de {libraryCount} bibliotecas",
-    "categoryBadge": "{category} ({count} iconos)"
+    "categoryBadge": "{category} ({count} iconos)",
+    "loading": "Cargando los iconos..."
   },
   "imageEdit": {
     "title": "Editar Imagen",
@@ -919,10 +917,12 @@
     "account": "Cuenta",
     "roleAdmin": "Administrador",
     "roleUser": "Miembro",
-    "storage": "Almacenamiento",
-    "yourStorage": "Tu almacenamiento",
-    "storageAlmostFull": "Casi lleno",
-    "storageFull": "Lleno"
+    "storageFull": "Lleno",
+    "updateAvailable": "Nueva versión",
+    "storageUsed": "<b>{size}</b> usados",
+    "storageFree": "{size} libres",
+    "storageOnlyFree": "Solo {size} libres",
+    "storageNoLimit": "Sin límite"
   },
   "navigation": {
     "dashboard": "Panel de control"
@@ -2272,10 +2272,6 @@
           "title": "Tema de las páginas públicas",
           "description": "Stage, Workbench o Seal. Vista previa en Personalización."
         },
-        "appSharePlayback": {
-          "title": "Reproducir vídeo y audio en las páginas de descarga",
-          "description": "Desactivado: el vídeo y el audio solo se pueden descargar."
-        },
         "appBrandpack": {
           "title": "Brandpack",
           "description": "Tu clave de marca blanca. Se gestiona en Personalización."
@@ -3004,7 +3000,11 @@
       "version": "Versión {version}",
       "upToDate": "Estás al día",
       "checked": "comprobado {when}",
-      "install": "Instalar"
+      "install": "Instalar",
+      "notesWaiting": "Novedades de la {version}",
+      "notesRunning": "Novedades de la versión {version}",
+      "released": "publicada el {date}",
+      "fullNotes": "Notas de la versión completas"
     }
   },
   "uploadFile": {

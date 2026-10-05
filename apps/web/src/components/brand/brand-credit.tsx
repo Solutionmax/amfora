@@ -4,6 +4,7 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { AmphoraMark } from "@/components/brand/amphora-mark";
+import { usePublicPreview } from "@/components/brand/public-preview";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { DEFAULT_BRAND } from "@/lib/brand";
 import { cn } from "@/lib/utils";
@@ -15,9 +16,10 @@ import { cn } from "@/lib/utils";
 export function BrandCredit({ className, withMark = false }: { className?: string; withMark?: boolean }) {
   const t = useTranslations();
   const { appHideCredit } = useAppInfo();
+  const preview = usePublicPreview();
 
-  // Only a verified brandpack lets the server say true here.
-  if (appHideCredit) return null;
+  // Only a verified brandpack lets the server say true here. A preview shows the unsaved choice.
+  if (preview ? !preview.showCredit : appHideCredit) return null;
 
   return (
     <a

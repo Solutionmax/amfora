@@ -360,9 +360,7 @@
         "linkPreviewHint": "Shown when a download or receive link is pasted into WhatsApp, Slack and similar apps and no cover is set. 1200 × 630 px works best; up to 3 MB.",
         "upload": "Upload image",
         "replace": "Replace image",
-        "remove": "Remove",
-        "playback": "Play video and audio on download pages",
-        "playbackHint": "When off, video and audio files can only be downloaded: no play button and no preview. Images, PDFs and text keep their preview."
+        "remove": "Remove"
       },
       "theme": {
         "title": "Public pages",
@@ -421,8 +419,6 @@
       "coverHint": "Top of every download page. At least 1200 px wide, up to 3 MB.",
       "linkPreview": "Link preview image",
       "linkPreviewHint": "Used when there is no cover. 1200 × 630 px, up to 3 MB.",
-      "playback": "Play video in the browser",
-      "playbackHint": "Visitors can watch or listen before downloading.",
       "creditHint": "Small line under every public page.",
       "creditLocked": "Small line under every public page. Hiding it needs a brand pack.",
       "packTitle": "Brand pack",
@@ -430,7 +426,8 @@
       "packActive": "Active for {organisation}",
       "packIssued": "Issued {date}",
       "packKey": "Brand pack key",
-      "packKeyHint": "Paste the key from your purchase email."
+      "packKeyHint": "Paste the key from your purchase email.",
+      "previewEnlarge": "Enlarge the preview"
     }
   },
   "dashboard": {
@@ -854,7 +851,8 @@
       "auth": "Auth Providers"
     },
     "stats": "{iconCount} icons from {libraryCount} libraries",
-    "categoryBadge": "{category} ({count} icons)"
+    "categoryBadge": "{category} ({count} icons)",
+    "loading": "Loading the icons..."
   },
   "imageEdit": {
     "title": "Edit Image",
@@ -919,10 +917,12 @@
     "account": "Account",
     "roleAdmin": "Administrator",
     "roleUser": "Member",
-    "storage": "Storage",
-    "yourStorage": "Your storage",
-    "storageAlmostFull": "Almost full",
-    "storageFull": "Full"
+    "storageFull": "Full",
+    "updateAvailable": "Update available",
+    "storageUsed": "<b>{size}</b> used",
+    "storageFree": "{size} free",
+    "storageOnlyFree": "Only {size} free",
+    "storageNoLimit": "No limit"
   },
   "navigation": {
     "dashboard": "Dashboard"
@@ -2272,10 +2272,6 @@
           "title": "Public page theme",
           "description": "Stage, Workbench or Seal. Previewed under Customization."
         },
-        "appSharePlayback": {
-          "title": "Play video and audio on download pages",
-          "description": "Off: video and audio can only be downloaded."
-        },
         "appBrandpack": {
           "title": "Brand pack",
           "description": "Your white label key. Managed under Customization."
@@ -3004,7 +3000,11 @@
       "version": "Version {version}",
       "upToDate": "You are up to date",
       "checked": "checked {when}",
-      "install": "Install"
+      "install": "Install",
+      "notesWaiting": "New in {version}",
+      "notesRunning": "What's new in version {version}",
+      "released": "released {date}",
+      "fullNotes": "Full release notes"
     }
   },
   "uploadFile": {

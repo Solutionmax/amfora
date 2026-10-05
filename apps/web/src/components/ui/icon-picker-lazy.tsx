@@ -2,7 +2,10 @@
 
 import { ComponentType, createElement, ReactElement, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { IconChevronDown } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
+import { Button } from "@/components/ui/button";
 import { BUILTIN_ICONS, IconNode } from "./builtin-icons";
 
 type IconComponent = ComponentType<{ className?: string }>;
@@ -108,7 +111,56 @@ export function ProviderIcon({ name, className = "w-5 h-5" }: { name: string; cl
   );
 }
 
-// The picker lists every react-icons pack (~11 MB), so it loads only when a provider form opens.
-export const IconPicker = dynamic(() => import("@/components/ui/icon-picker").then((mod) => mod.IconPicker), {
+function PickerLoading() {
+  const t = useTranslations();
+
+  return (
+    <p role="status" className="mt-1.5 text-[12.5px] text-ink-3">
+      {t("iconPicker.loading")}
+    </p>
+  );
+}
+
+// The dialog lists every react-icons pack (about 13 MB of script), so it loads when the field is
+// pressed and not with the form the field sits in.
+const IconPickerDialog = dynamic(() => import("@/components/ui/icon-picker").then((mod) => mod.IconPickerDialog), {
   ssr: false,
+  loading: PickerLoading,
 });
+
+interface IconPickerProps {
+  value?: string;
+  onChange: (iconName: string) => void;
+  placeholder?: string;
+}
+
+/** The icon field of a provider form: shows the chosen icon, opens the picker when pressed. */
+export function IconPicker({ value, onChange, placeholder }: IconPickerProps) {
+  const t = useTranslations();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isWanted, setIsWanted] = useState(false);
+
+  const openPicker = () => {
+    setIsWanted(true);
+    setIsOpen(true);
+  };
+
+  return (
+    <>
+      <Button type="button" variant="outline" className="w-full justify-between" onClick={openPicker}>
+        <span className="flex min-w-0 items-center gap-2">
+          {value ? (
+            <>
+              <ProviderIcon name={value} className="size-[18px] shrink-0" />
+              <span className="truncate text-sm">{value}</span>
+            </>
+          ) : (
+            <span className="text-ink-3">{placeholder || t("iconPicker.placeholder")}</span>
+          )}
+        </span>
+        <IconChevronDown className="ml-2 size-4 shrink-0 opacity-50" aria-hidden="true" />
+      </Button>
+      {isWanted && <IconPickerDialog open={isOpen} onOpenChange={setIsOpen} onChange={onChange} />}
+    </>
+  );
+}

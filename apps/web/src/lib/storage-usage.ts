@@ -11,6 +11,16 @@ export function storageLevel(used: number, limit: number | null): StorageLevel {
   return ratio >= ALMOST_FULL_RATIO ? "almostFull" : "normal";
 }
 
+/** The smallest arc that still reads as "something is in use". */
+const RING_MIN_PERCENT = 2;
+
+/** How much of the storage ring is drawn, 0 to 100. Any use shows at least a dot; no limit draws nothing. */
+export function ringPercent(used: number, limit: number | null): number {
+  if (!limit || limit <= 0 || used <= 0) return 0;
+
+  return Math.min(100, Math.max(RING_MIN_PERCENT, (used / limit) * 100));
+}
+
 export interface StorageParts {
   /** Files of the user that sit in no share. */
   ownBytes: number;

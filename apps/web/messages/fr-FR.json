@@ -360,9 +360,7 @@
         "linkPreviewHint": "Affichée lorsqu'un lien de téléchargement ou de réception est collé dans WhatsApp, Slack et les applications similaires et qu'aucune couverture n'est définie. Idéalement 1200 × 630 px ; jusqu'à 3 Mo.",
         "upload": "Téléverser une image",
         "replace": "Remplacer l'image",
-        "remove": "Supprimer",
-        "playback": "Lire la vidéo et l'audio sur les pages de téléchargement",
-        "playbackHint": "Désactivé, les fichiers vidéo et audio peuvent seulement être téléchargés : pas de bouton de lecture ni d'aperçu. Les images, les PDF et le texte gardent leur aperçu."
+        "remove": "Supprimer"
       },
       "theme": {
         "title": "Pages publiques",
@@ -421,8 +419,6 @@
       "coverHint": "En haut de chaque page de téléchargement. Au moins 1200 px de large, jusqu'à 3 Mo.",
       "linkPreview": "Image d'aperçu du lien",
       "linkPreviewHint": "Utilisée en l'absence de couverture. 1200 × 630 px, jusqu'à 3 Mo.",
-      "playback": "Lire les vidéos dans le navigateur",
-      "playbackHint": "Les visiteurs peuvent regarder ou écouter avant de télécharger.",
       "creditHint": "Petite ligne en bas de chaque page publique.",
       "creditLocked": "Petite ligne en bas de chaque page publique. La masquer nécessite un pack de marque.",
       "packTitle": "Pack de marque",
@@ -430,7 +426,8 @@
       "packActive": "Actif pour {organisation}",
       "packIssued": "Émis le {date}",
       "packKey": "Clé du pack de marque",
-      "packKeyHint": "Collez la clé figurant dans l'e-mail de votre achat."
+      "packKeyHint": "Collez la clé figurant dans l'e-mail de votre achat.",
+      "previewEnlarge": "Agrandir l'aperçu"
     }
   },
   "dashboard": {
@@ -854,7 +851,8 @@
       "auth": "Fournisseurs d'Authentification"
     },
     "stats": "{iconCount} icônes de {libraryCount} bibliothèques",
-    "categoryBadge": "{category} ({count} icônes)"
+    "categoryBadge": "{category} ({count} icônes)",
+    "loading": "Chargement des icônes..."
   },
   "imageEdit": {
     "title": "Modifier l'Image",
@@ -919,10 +917,12 @@
     "account": "Compte",
     "roleAdmin": "Administrateur",
     "roleUser": "Membre",
-    "storage": "Stockage",
-    "yourStorage": "Votre stockage",
-    "storageAlmostFull": "Presque plein",
-    "storageFull": "Plein"
+    "storageFull": "Plein",
+    "updateAvailable": "Nouvelle version",
+    "storageUsed": "<b>{size}</b> utilisés",
+    "storageFree": "{size} libres",
+    "storageOnlyFree": "Reste {size}",
+    "storageNoLimit": "Sans limite"
   },
   "navigation": {
     "dashboard": "Tableau de bord"
@@ -2272,10 +2272,6 @@
           "title": "Thème des pages publiques",
           "description": "Stage, Workbench ou Seal. Aperçu dans Personnalisation."
         },
-        "appSharePlayback": {
-          "title": "Lire les vidéos et les fichiers audio sur les pages de téléchargement",
-          "description": "Désactivé : les vidéos et les fichiers audio ne peuvent être que téléchargés."
-        },
         "appBrandpack": {
           "title": "Pack de marque",
           "description": "Votre clé de marque blanche. Gérée dans Personnalisation."
@@ -3004,7 +3000,11 @@
       "version": "Version {version}",
       "upToDate": "Vous êtes à jour",
       "checked": "vérifié {when}",
-      "install": "Installer"
+      "install": "Installer",
+      "notesWaiting": "Nouveau dans la {version}",
+      "notesRunning": "Nouveautés de la version {version}",
+      "released": "publiée le {date}",
+      "fullNotes": "Notes de version complètes"
     }
   },
   "uploadFile": {

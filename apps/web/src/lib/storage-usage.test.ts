@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { storageLevel, storageParts } from "./storage-usage";
+import { ringPercent, storageLevel, storageParts } from "./storage-usage";
 
 const GB = 1024 ** 3;
 
@@ -12,6 +12,15 @@ test("level turns amber from 90 percent and red at the limit", () => {
   assert.equal(storageLevel(9.99, 10), "almostFull");
   assert.equal(storageLevel(10, 10), "full");
   assert.equal(storageLevel(12, 10), "full");
+});
+
+test("the ring draws the share in use, a dot for very little, nothing without a limit", () => {
+  assert.equal(ringPercent(6.2, 10), 62);
+  assert.equal(ringPercent(0, 10), 0);
+  assert.equal(ringPercent(0.001, 500), 2, "an administrator on a large disk still sees a dot");
+  assert.equal(ringPercent(12, 10), 100, "over the limit is a full ring");
+  assert.equal(ringPercent(5, 0), 0);
+  assert.equal(ringPercent(5, null), 0);
 });
 
 test("no limit never warns", () => {

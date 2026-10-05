@@ -6,7 +6,6 @@ export interface BrandDraft {
   radiusPx: number;
   font: string;
   theme: string;
-  playback: boolean;
   showCredit: boolean;
   css: string;
 }
@@ -38,7 +37,6 @@ const CONFIG: { [K in keyof BrandDraft]: { key: string; write: (value: BrandDraf
   radiusPx: { key: "appRadius", write: (value) => pxToRem(value) },
   font: { key: "appFontFamily", write: (value) => value },
   theme: { key: "appPublicTheme", write: (value) => value },
-  playback: { key: "appSharePlayback", write: (value) => String(value) },
   showCredit: { key: "appHideCredit", write: (value) => String(!value) },
   css: { key: "appCustomCss", write: (value) => value },
 };

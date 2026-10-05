@@ -10,7 +10,6 @@ const stored: BrandDraft = {
   radiusPx: 8,
   font: "",
   theme: "stage",
-  playback: false,
   showCredit: true,
   css: "",
 };
@@ -21,14 +20,13 @@ test("nothing changed means clean and no writes", () => {
 });
 
 test("changed fields become config writes with stored formats", () => {
-  const draft = { ...stored, color: "#E5641B", radiusPx: 12, playback: true, showCredit: false, name: " Hoasted " };
+  const draft = { ...stored, color: "#E5641B", radiusPx: 12, showCredit: false, name: " Hoasted " };
 
   assert.equal(isDraftDirty(stored, draft), true);
   assert.deepEqual(changedConfigs(stored, draft), [
     { key: "appName", value: "Hoasted" },
     { key: "appPrimaryColor", value: "#e5641b" },
     { key: "appRadius", value: "0.75rem" },
-    { key: "appSharePlayback", value: "true" },
     { key: "appHideCredit", value: "true" },
   ]);
 });

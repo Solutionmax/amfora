@@ -6,6 +6,7 @@ import type { Icon } from "@tabler/icons-react";
 
 import { BrandCredit } from "@/components/brand/brand-credit";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { PAGE_MIN_HEIGHT, usePublicPreview } from "@/components/brand/public-preview";
 import { initials, StageShell, StageStory, type StageFact } from "@/components/brand/stage-shell";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
@@ -56,10 +57,11 @@ function Tools({ className }: { className?: string }) {
 
 function Brand({ className }: { className?: string }) {
   const { appName } = useAppInfo();
+  const name = usePublicPreview()?.name ?? appName;
   return (
     <Link href="/" className={cn("flex min-w-0 items-center gap-2.5 text-ink no-underline", className)}>
       <BrandMark className="size-8 shrink-0 text-primary" />
-      <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{appName}</span>
+      <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{name}</span>
     </Link>
   );
 }
@@ -92,7 +94,9 @@ function BenchShell({ story, card, footnote, children }: ShellProps) {
   const note = noteOf(story);
 
   return (
-    <div className="grid min-h-screen bg-background text-ink lg:grid-cols-[minmax(0,1.25fr)_minmax(400px,1fr)]">
+    <div
+      className={cn("grid bg-background text-ink lg:grid-cols-[minmax(0,1.25fr)_minmax(400px,1fr)]", PAGE_MIN_HEIGHT)}
+    >
       <section className="bench relative flex min-w-0 flex-col justify-between gap-8 overflow-hidden px-5 py-6 md:px-12 md:py-8">
         <div className="flex items-center justify-between gap-4">
           <Brand />
@@ -200,7 +204,12 @@ function SealShell({ story, card, footnote, children }: ShellProps) {
     : (story.trust ?? []).map((item) => ({ key: item.title, value: item.title, icon: item.icon }));
 
   return (
-    <div className="seal relative grid min-h-screen grid-rows-[auto_1fr_auto] bg-background px-4 py-5 text-ink md:px-10 md:py-7">
+    <div
+      className={cn(
+        "seal relative grid grid-rows-[auto_1fr_auto] bg-background px-4 py-5 text-ink md:px-10 md:py-7",
+        PAGE_MIN_HEIGHT
+      )}
+    >
       <header className="relative flex items-center justify-between gap-4">
         <Brand />
         <Tools />
@@ -284,11 +293,12 @@ function SealShell({ story, card, footnote, children }: ShellProps) {
 /** Sign-in, download and receive pages in the theme the admin picked in Customization. */
 export function PublicShell(props: ShellProps) {
   const { appPublicTheme, infoLoaded } = useAppInfo();
+  const theme = usePublicPreview()?.theme ?? appPublicTheme;
 
   // Wait for the first app info so a visitor never sees one theme flip into another.
   if (!infoLoaded) return <LoadingScreen />;
-  if (appPublicTheme === "workbench") return <BenchShell {...props} />;
-  if (appPublicTheme === "seal") return <SealShell {...props} />;
+  if (theme === "workbench") return <BenchShell {...props} />;
+  if (theme === "seal") return <SealShell {...props} />;
 
   const { story, card, footnote, children } = props;
   return (

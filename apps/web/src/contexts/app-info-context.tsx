@@ -16,7 +16,6 @@ interface AppInfoStore {
   appCustomCss: string;
   appShareCover: LinkPreviewInfo | null;
   appLinkPreview: LinkPreviewInfo | null;
-  appSharePlayback: boolean;
   appPublicTheme: PublicTheme;
   brandpack: { organisation: string; issuedAt: string } | null;
   firstAccess: boolean | null;
@@ -45,7 +44,6 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     appCustomCss: "",
     appShareCover: null,
     appLinkPreview: null,
-    appSharePlayback: false,
     appPublicTheme: "stage" as PublicTheme,
     brandpack: null,
     firstAccess: null,
@@ -69,7 +67,6 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appCustomCss: response.data.appCustomCss ?? "",
           appShareCover: response.data.appShareCover ?? null,
           appLinkPreview: response.data.appLinkPreview ?? null,
-          appSharePlayback: response.data.appSharePlayback ?? false,
           appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
           brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,
@@ -111,7 +108,6 @@ export const useAppInfo = create<AppInfoStore>((set) => {
           appCustomCss: response.data.appCustomCss ?? "",
           appShareCover: response.data.appShareCover ?? null,
           appLinkPreview: response.data.appLinkPreview ?? null,
-          appSharePlayback: response.data.appSharePlayback ?? false,
           appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
           brandpack: response.data.brandpack ?? null,
           firstAccess: response.data.firstUserAccess,

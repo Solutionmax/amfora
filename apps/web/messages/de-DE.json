@@ -360,9 +360,7 @@
         "linkPreviewHint": "Wird angezeigt, wenn ein Download- oder Empfangslink in WhatsApp, Slack und ähnliche Apps eingefügt wird und kein Titelbild gesetzt ist. 1200 × 630 px ist ideal; bis zu 3 MB.",
         "upload": "Bild hochladen",
         "replace": "Bild ersetzen",
-        "remove": "Entfernen",
-        "playback": "Video und Audio auf Downloadseiten abspielen",
-        "playbackHint": "Wenn deaktiviert, können Video- und Audiodateien nur heruntergeladen werden: keine Wiedergabetaste und keine Vorschau. Bilder, PDFs und Text behalten ihre Vorschau."
+        "remove": "Entfernen"
       },
       "theme": {
         "title": "Öffentliche Seiten",
@@ -421,8 +419,6 @@
       "coverHint": "Oben auf jeder Download-Seite. Mindestens 1200 px breit, bis zu 3 MB.",
       "linkPreview": "Bild für die Linkvorschau",
       "linkPreviewHint": "Wird verwendet, wenn es kein Titelbild gibt. 1200 × 630 px, bis zu 3 MB.",
-      "playback": "Video im Browser abspielen",
-      "playbackHint": "Besucher können vor dem Herunterladen ansehen oder anhören.",
       "creditHint": "Kleine Zeile unter jeder öffentlichen Seite.",
       "creditLocked": "Kleine Zeile unter jeder öffentlichen Seite. Zum Ausblenden ist ein Brandpack nötig.",
       "packTitle": "Brandpack",
@@ -430,7 +426,8 @@
       "packActive": "Aktiv für {organisation}",
       "packIssued": "Ausgestellt am {date}",
       "packKey": "Brandpack-Schlüssel",
-      "packKeyHint": "Fügen Sie den Schlüssel aus Ihrer Kauf-E-Mail ein."
+      "packKeyHint": "Fügen Sie den Schlüssel aus Ihrer Kauf-E-Mail ein.",
+      "previewEnlarge": "Vorschau vergrößern"
     }
   },
   "dashboard": {
@@ -854,7 +851,8 @@
       "auth": "Authentifizierungsanbieter"
     },
     "stats": "{iconCount} Symbole aus {libraryCount} Bibliotheken",
-    "categoryBadge": "{category} ({count} Symbole)"
+    "categoryBadge": "{category} ({count} Symbole)",
+    "loading": "Symbole werden geladen..."
   },
   "imageEdit": {
     "title": "Bild bearbeiten",
@@ -919,10 +917,12 @@
     "account": "Konto",
     "roleAdmin": "Administrator",
     "roleUser": "Mitglied",
-    "storage": "Speicher",
-    "yourStorage": "Dein Speicher",
-    "storageAlmostFull": "Fast voll",
-    "storageFull": "Voll"
+    "storageFull": "Voll",
+    "updateAvailable": "Neue Version",
+    "storageUsed": "<b>{size}</b> belegt",
+    "storageFree": "{size} frei",
+    "storageOnlyFree": "Nur noch {size} frei",
+    "storageNoLimit": "Kein Limit"
   },
   "navigation": {
     "dashboard": "Übersicht"
@@ -2272,10 +2272,6 @@
           "title": "Design der öffentlichen Seiten",
           "description": "Stage, Workbench oder Seal. Vorschau unter Anpassung."
         },
-        "appSharePlayback": {
-          "title": "Video und Audio auf Download-Seiten abspielen",
-          "description": "Aus: Video und Audio können nur heruntergeladen werden."
-        },
         "appBrandpack": {
           "title": "Brandpack",
           "description": "Ihr White-Label-Schlüssel. Verwaltung unter Anpassung."
@@ -3004,7 +3000,11 @@
       "version": "Version {version}",
       "upToDate": "Sie sind auf dem neuesten Stand",
       "checked": "geprüft {when}",
-      "install": "Installieren"
+      "install": "Installieren",
+      "notesWaiting": "Neu in {version}",
+      "notesRunning": "Was ist neu in Version {version}",
+      "released": "veröffentlicht am {date}",
+      "fullNotes": "Vollständige Versionshinweise"
     }
   },
   "uploadFile": {

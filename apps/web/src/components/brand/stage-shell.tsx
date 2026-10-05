@@ -8,6 +8,7 @@ import { BrandCredit } from "@/components/brand/brand-credit";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { timeLeft } from "@/components/brand/countdown";
 import { coverImageSrc } from "@/components/brand/cover-pick";
+import { PAGE_MIN_HEIGHT, usePublicPreview } from "@/components/brand/public-preview";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -44,6 +45,7 @@ export function StageShell({
   children?: ReactNode;
 }) {
   const { appName, appLogo, appBackground, appShareCover } = useAppInfo();
+  const name = usePublicPreview()?.name ?? appName;
   const backdrop = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLElement>(null);
   const cover = coverImageSrc(appShareCover);
@@ -64,7 +66,7 @@ export function StageShell({
   const glass = "border border-white/20 bg-white/10 backdrop-blur-md";
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden text-white">
+    <div className={cn("relative overflow-x-hidden text-white", PAGE_MIN_HEIGHT)}>
       <div
         ref={backdrop}
         aria-hidden="true"
@@ -85,11 +87,16 @@ export function StageShell({
         </div>
       </div>
 
-      <div className="relative grid min-h-screen w-full grid-rows-[auto_1fr_auto] px-4 py-5 md:px-[5vw] md:py-7 2xl:px-20">
+      <div
+        className={cn(
+          "relative grid w-full grid-rows-[auto_1fr_auto] px-4 py-5 md:px-[5vw] md:py-7 2xl:px-20",
+          PAGE_MIN_HEIGHT
+        )}
+      >
         <header className="flex items-center justify-between gap-4">
           <Link href="/" className="flex min-w-0 items-center gap-2.5 text-white no-underline">
             <BrandMark className={cn("size-8 shrink-0 text-white", appLogo && "rounded-md bg-white/90 p-1")} />
-            <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{appName}</span>
+            <span className="truncate font-display text-base font-semibold tracking-[-0.01em]">{name}</span>
           </Link>
           <div
             className={cn(

@@ -11,17 +11,20 @@ export const APPEARANCE_KEYS = {
 
 /** Applies an appearance value to the document. Same code path for preview and for load. */
 export function applyAppearance(key: keyof typeof APPEARANCE_KEYS, value: string) {
-  const root = document.documentElement.style;
   const vars: Record<keyof typeof APPEARANCE_KEYS, string[]> = {
     color: ["--primary"],
     font: ["--font-body", "--font-display-family"],
     radius: ["--radius"],
   };
+  // A font is written as `var(--font-inter), Inter, ...`, and that variable lives on <body>
+  // (app/layout.tsx). A variable that points at another one only resolves on an element that
+  // has both, so the font goes on <body>; on <html> it would silently fall back to the default.
+  const target = (key === "font" ? document.body : document.documentElement).style;
 
   // An empty value means "the default": the stylesheet's own value must win again.
   for (const name of vars[key]) {
-    if (value) root.setProperty(name, value);
-    else root.removeProperty(name);
+    if (value) target.setProperty(name, value);
+    else target.removeProperty(name);
   }
 }
 

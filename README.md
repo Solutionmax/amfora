@@ -232,9 +232,8 @@ in a request header rather than in a URL.
 
 Administrators can invite and manage users, assign roles, configure storage and
 limits, customize the application, configure email, and enable authentication
-providers. The seeded provider choices are Google, Discord, GitHub, Auth0,
-Kinde, Zitadel, Authentik, Frontegg, and Pocket ID; additional compatible OIDC
-providers can be configured.
+providers. A new installation offers Authentik, GitHub, and Google; any other
+compatible OIDC or OAuth 2.0 provider can be added.
 
 Each user can enable TOTP two factor authentication, download backup codes, and
 remove trusted devices. Password reset requires password authentication and a

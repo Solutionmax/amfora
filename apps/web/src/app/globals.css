@@ -569,6 +569,45 @@
   }
 }
 
+/* The storage ring in the menu draws itself in once. */
+.storage-ring {
+  animation: storage-ring 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes storage-ring {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+/* The update notice in the menu: two rings leave the dot, one after the other. */
+.update-pulse::before,
+.update-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0;
+  animation: update-pulse 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.update-pulse::after {
+  animation-delay: 0.9s;
+}
+
+@keyframes update-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70%,
+  100% {
+    transform: scale(3.6);
+    opacity: 0;
+  }
+}
+
 /* The way to the public secret page on the sign-in card: a light that keeps travelling
    around the border. The angle is a registered property so it can be animated. */
 @property --secret-ring {

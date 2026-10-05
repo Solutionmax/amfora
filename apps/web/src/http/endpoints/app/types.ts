@@ -45,7 +45,6 @@ export interface GetAppInfo200 {
   appCustomCss?: string;
   appShareCover?: LinkPreviewInfo | null;
   appLinkPreview?: LinkPreviewInfo | null;
-  appSharePlayback?: boolean;
   appPublicTheme?: PublicTheme;
   brandpack?: { organisation: string; issuedAt: string } | null;
   appLogo: string;

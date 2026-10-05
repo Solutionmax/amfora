@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   IconActivity,
   IconChevronRight,
+  IconDatabase,
   IconFolder,
   IconInbox,
   IconKey,
@@ -27,8 +28,9 @@ import { Button } from "@/components/ui/button";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { useAuth } from "@/contexts/auth-context";
 import { useSecureConfigValue } from "@/hooks/use-secure-configs";
+import { useUpdateStatus } from "@/hooks/use-update-status";
 import { getDiskSpace, logout as logoutAPI } from "@/http/endpoints";
-import { storageLevel, type StorageLevel } from "@/lib/storage-usage";
+import { ringPercent, storageLevel, type StorageLevel } from "@/lib/storage-usage";
 import { cn } from "@/lib/utils";
 import packageJson from "../../../package.json";
 
@@ -37,12 +39,15 @@ const { version } = packageJson;
 type DiskSpace = { diskSizeGB: number; diskUsedGB: number; diskAvailableGB: number };
 type NavEntry = { href: string; label: string; icon: typeof IconFolder };
 
-/** A user close to their own limit sees it in the label and the colour of the bar. */
-const LEVEL_STYLE: Record<StorageLevel, { label: string; text: string; bar: string }> = {
-  normal: { label: "navbar.yourStorage", text: "", bar: "bg-primary" },
-  almostFull: { label: "navbar.storageAlmostFull", text: "text-warn", bar: "bg-warn" },
-  full: { label: "navbar.storageFull", text: "text-bad", bar: "bg-bad" },
+/** A user close to their own limit sees it in the colour of the ring and of the line under the amount. */
+const LEVEL_STYLE: Record<StorageLevel, { ring: string; text: string }> = {
+  normal: { ring: "stroke-primary", text: "" },
+  almostFull: { ring: "stroke-warn", text: "font-semibold text-warn" },
+  full: { ring: "stroke-bad", text: "font-semibold text-bad" },
 };
+
+// The menu is drawn again on every page; the ring only draws itself in the first time.
+let hasDrawnRing = false;
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations();
@@ -53,12 +58,24 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { user, isAdmin, logout } = useAuth();
   const { appName } = useAppInfo();
   const [disk, setDisk] = useState<DiskSpace | null>(null);
+  const [drawsRing] = useState(() => !hasDrawnRing);
+  const update = useUpdateStatus((store) => store.status);
+  const loadUpdate = useUpdateStatus((store) => store.load);
 
   useEffect(() => {
     getDiskSpace()
-      .then((res) => setDisk(res.data as DiskSpace))
+      .then((res) => {
+        setDisk(res.data as DiskSpace);
+        hasDrawnRing = true;
+      })
       .catch(() => setDisk(null));
   }, []);
+
+  // Only an administrator may ask, and only they can install. A check that fails shows
+  // nothing here: Settings is where the reason is told.
+  useEffect(() => {
+    if (isAdmin) loadUpdate().catch(() => undefined);
+  }, [isAdmin, loadUpdate]);
 
   const handleLogout = async () => {
     try {
@@ -88,11 +105,20 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
       ]
     : [];
 
-  const used = disk ? Math.min(disk.diskUsedGB / Math.max(disk.diskSizeGB, 1), 1) : 0;
-  // Administrators see the whole disk, as before. Everyone else sees their own use against their own limit.
+  // Administrators see what Amfora holds against the disk. Everyone else sees their own use against their own limit.
   const isOwnStorage = isAdmin === false;
   const hasLimit = !isOwnStorage || !disk || disk.diskSizeGB > 0;
-  const level = isOwnStorage && disk ? LEVEL_STYLE[storageLevel(disk.diskUsedGB, disk.diskSizeGB)] : null;
+  const level = LEVEL_STYLE[isOwnStorage && disk ? storageLevel(disk.diskUsedGB, disk.diskSizeGB) : "normal"];
+  const drawn = disk ? ringPercent(disk.diskUsedGB, disk.diskSizeGB) : 0;
+
+  const storageLine = () => {
+    if (!disk) return "—";
+    if (!hasLimit) return t("navbar.storageNoLimit");
+    if (level === LEVEL_STYLE.full) return t("navbar.storageFull");
+
+    const size = formatStorageSize(Math.max(disk.diskSizeGB - disk.diskUsedGB, 0));
+    return t(level === LEVEL_STYLE.almostFull ? "navbar.storageOnlyFree" : "navbar.storageFree", { size });
+  };
   const onProfile = pathname === "/profile";
 
   const item = (entry: NavEntry) => {
@@ -136,32 +162,50 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       <div className="flex flex-col gap-3.5">
-        <div className="flex flex-col gap-[7px] px-2.5 text-xs text-ink-3">
-          <div
-            data-testid="sidebar-storage"
-            className={cn("flex items-baseline justify-between gap-2 whitespace-nowrap", level?.text)}
-          >
-            <span>{isOwnStorage ? t(level?.label ?? LEVEL_STYLE.normal.label) : t("navbar.storage")}</span>
-            <span className={cn("mono text-[11.5px]", level?.text || "text-ink-2")}>
-              {disk ? formatStorageSize(disk.diskUsedGB) : "—"}
-              {hasLimit && <> / {disk ? formatStorageSize(disk.diskSizeGB) : "—"}</>}
-            </span>
-          </div>
-          {hasLimit && (
-            <div
+        <div data-testid="sidebar-storage" className="flex min-w-0 items-center gap-2.5 px-2.5 text-xs text-ink-3">
+          {hasLimit ? (
+            <svg
               role="progressbar"
               aria-label={t("storageUsage.title")}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-valuenow={disk ? Math.round(used * 100) : undefined}
-              className="h-[3px] overflow-hidden rounded-full bg-line"
+              aria-valuenow={disk ? Math.round(drawn) : undefined}
+              viewBox="0 0 32 32"
+              className="size-[30px] shrink-0"
             >
-              <div
-                className={cn("h-full rounded-full", level?.bar ?? "bg-primary")}
-                style={{ width: `${used * 100}%` }}
-              />
-            </div>
+              <circle cx="16" cy="16" r="13" fill="none" strokeWidth="3.6" className="stroke-line" />
+              {drawn > 0 && (
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="13"
+                  fill="none"
+                  strokeWidth="3.6"
+                  strokeLinecap="round"
+                  pathLength={100}
+                  strokeDasharray="100"
+                  strokeDashoffset={100 - drawn}
+                  transform="rotate(-90 16 16)"
+                  className={cn(level.ring, drawsRing && "storage-ring")}
+                />
+              )}
+            </svg>
+          ) : (
+            <span className="grid size-[30px] shrink-0 place-items-center rounded-full text-ink-icon shadow-[inset_0_0_0_1.5px_var(--line)]">
+              <IconDatabase className="size-[15px]" strokeWidth={1.8} aria-hidden="true" />
+            </span>
           )}
+          <div className="min-w-0 leading-tight">
+            <p className="truncate text-[13px] text-ink-2">
+              {disk
+                ? t.rich("navbar.storageUsed", {
+                    size: formatStorageSize(disk.diskUsedGB),
+                    b: (chunks) => <b className="mono font-semibold text-ink">{chunks}</b>,
+                  })
+                : "—"}
+            </p>
+            <p className={cn("truncate", level.text)}>{storageLine()}</p>
+          </div>
         </div>
 
         <Link
@@ -188,6 +232,21 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <IconChevronRight className="size-4 text-ink-icon" aria-hidden="true" />
         </Link>
+
+        {isAdmin && update?.updateAvailable && !update.applying && (
+          <Link
+            href="/settings"
+            onClick={onNavigate}
+            data-testid="sidebar-update"
+            className="group flex h-[38px] min-w-0 items-center gap-[11px] rounded-[10px] bg-surface pl-[13px] pr-2 shadow-[0_0_0_1px_var(--line),0_1px_2px_rgba(14,32,54,.06)] transition-shadow duration-150 hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_45%,var(--line)),0_1px_2px_rgba(14,32,54,.06)]"
+          >
+            <span className="update-pulse relative size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+            <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">{t("navbar.updateAvailable")}</span>
+            <span className="mono shrink-0 rounded-full bg-primary-soft px-2 py-[3px] text-[11.5px] font-semibold text-primary transition-colors duration-150 group-hover:bg-primary group-hover:text-primary-foreground">
+              {update.latestVersion}
+            </span>
+          </Link>
+        )}
 
         <div className="flex items-center gap-1 px-1 [&_button]:size-[30px] [&_button]:text-ink-icon [&_button:hover]:text-ink">
           <LanguageSwitcher />

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { LoadError } from "@/app/settings/components/load-error";
 import { ProtectedRoute } from "@/components/auth/protected-route";
+import { normalizePublicTheme } from "@/components/brand/public-theme";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { SaveBar } from "@/components/ui/save-bar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -62,7 +63,11 @@ function CustomizationForm() {
         <BrandpackSection draft={form.draft} update={form.update} hasBrandpack={form.hasBrandpack} />
       </form>
       <div className="lg:sticky lg:top-10">
-        <PreviewPanel name={form.draft.name} showCredit={form.draft.showCredit} />
+        <PreviewPanel
+          name={form.draft.name}
+          theme={normalizePublicTheme(form.draft.theme)}
+          showCredit={form.draft.showCredit}
+        />
       </div>
       <SaveBar visible={form.dirty} saving={form.saving} onDiscard={form.discard} onSave={form.save} />
     </div>

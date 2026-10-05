@@ -8,6 +8,7 @@ import { useAppInfo } from "@/contexts/app-info-context";
 import { applyAppearance } from "@/hooks/use-appearance";
 import { updateConfig } from "@/http/endpoints";
 import { changedConfigs, isDraftDirty, isHexColor, pxToRem, rebaseDraft, remToPx, type BrandDraft } from "../lib/draft";
+import { normalizeFont } from "../lib/fonts";
 
 /** Put the stored colour, radius and font back on the page (after a discard, or when leaving). */
 function applyStored(stored: BrandDraft) {
@@ -31,9 +32,8 @@ export function useCustomizationDraft() {
       description: info.appDescription,
       color: info.appPrimaryColor,
       radiusPx: info.appRadius ? remToPx(info.appRadius) : remToPx(""),
-      font: info.appFontFamily,
+      font: normalizeFont(info.appFontFamily),
       theme: info.appPublicTheme,
-      playback: info.appSharePlayback,
       showCredit: !info.appHideCredit,
       css: info.appCustomCss,
     }),
@@ -44,7 +44,6 @@ export function useCustomizationDraft() {
       info.appRadius,
       info.appFontFamily,
       info.appPublicTheme,
-      info.appSharePlayback,
       info.appHideCredit,
       info.appCustomCss,
     ]

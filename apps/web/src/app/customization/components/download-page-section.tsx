@@ -13,7 +13,7 @@ import type { CustomizationDraft } from "../hooks/use-customization-draft";
 import { FormBlock } from "./form-block";
 import { ImageUploadField } from "./image-upload-field";
 
-/** Cover and link preview images (saved at once), playback and the credit line (saved with the SaveBar). */
+/** Cover and link preview images (saved at once) and the credit line (saved with the SaveBar). */
 export function DownloadPageSection({
   draft,
   update,
@@ -63,12 +63,6 @@ export function DownloadPageSection({
       <LineList className="-my-3 min-w-0">
         {imageRow("share-cover", appShareCover, "cover")}
         {imageRow("link-preview", appLinkPreview, "linkPreview")}
-        <LineRow
-          title={<label htmlFor="share-playback">{t("customization.calm.playback")}</label>}
-          sub={t("customization.calm.playbackHint")}
-        >
-          <Switch id="share-playback" checked={draft.playback} onCheckedChange={(on) => update("playback", on)} />
-        </LineRow>
         <LineRow
           title={<label htmlFor="show-credit">{t("customization.v2.pack.credit")}</label>}
           sub={hasBrandpack ? t("customization.calm.creditHint") : t("customization.calm.creditLocked")}

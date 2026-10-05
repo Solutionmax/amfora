@@ -13,7 +13,6 @@ credit and with the paid customization switched on.
 | "Powered by Amfora" credit | always shown | can be hidden |
 | Public-page background image | no | yes |
 | Download page cover, default link preview image | yes | yes |
-| Play video and audio on download pages (switch) | yes | yes |
 | Custom CSS | no | yes |
 
 Everything else in the product is identical. The Apache licence and the `NOTICE` file
@@ -79,9 +78,8 @@ plus a 1200 px JPEG for `og:image`:
 | `DELETE` | `/app/share-cover`, `/app/link-preview` | admin | removes it |
 
 `og:image` on `/s/...` and `/r/...` is the cover, else the default link preview image, else
-the app logo, else `/og-card.jpg`; never a file from the share. The switch
-`appSharePlayback` (default `false`) decides whether download pages play video and audio;
-when it is off the API answers 403 to a `preview=1` request for video or audio from anyone
+the app logo, else `/og-card.jpg`; never a file from the share. Download pages do not play
+video or audio: the API answers 403 to a `preview=1` request for video or audio from anyone
 but the owner.
 
 Custom CSS is stored through the normal config endpoint as `appCustomCss` and is

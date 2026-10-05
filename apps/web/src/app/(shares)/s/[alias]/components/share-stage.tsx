@@ -8,7 +8,6 @@ import { canPreviewOnDownloadPage } from "@/components/brand/cover-pick";
 import { kindFromName } from "@/components/brand/file-kind";
 import { FileManifest, type ManifestItem } from "@/components/brand/file-manifest";
 import { Button } from "@/components/ui/button";
-import { useAppInfo } from "@/contexts/app-info-context";
 import { formatFileSize } from "@/utils/format-file-size";
 
 interface ShareFile {
@@ -45,7 +44,6 @@ export function ShareStage({
   onPreview?: (file: ShareFile) => void;
 }) {
   const t = useTranslations();
-  const { appSharePlayback } = useAppInfo();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const itemCount = files.length + folders.length;
@@ -69,9 +67,8 @@ export function ShareStage({
       return onBulkDownload?.() ?? Promise.resolve();
     });
 
-  // Video and audio only play here when the admin allows it; the API refuses the preview otherwise.
-  const openPreview =
-    onPreview && first && canPreviewOnDownloadPage(first.name, appSharePlayback) ? () => onPreview(first) : undefined;
+  // Video and audio are never played here; the API refuses that preview too.
+  const openPreview = onPreview && first && canPreviewOnDownloadPage(first.name) ? () => onPreview(first) : undefined;
 
   const rowIcon = <IconDownload className="size-[18px] text-ink-3" aria-hidden="true" />;
   const items: ManifestItem[] = [

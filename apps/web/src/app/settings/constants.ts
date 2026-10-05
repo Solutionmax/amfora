@@ -18,7 +18,7 @@ export interface SettingsBlock {
 export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
   general: [
     { id: "brand", rows: ["appLogo", "appName", "appDescription"] },
-    { id: "publicPages", rows: ["appPublicTheme", "appSharePlayback"] },
+    { id: "publicPages", rows: ["appPublicTheme"] },
     { id: "behaviour", rows: ["showHomePage", "firstUserAccess", "hideVersion"] },
   ],
   security: [
@@ -92,7 +92,7 @@ export const ACTIVITY_PLACE_OPTIONS: readonly string[] = ["city", "country", "of
 export const READ_ONLY_FIELDS: readonly string[] = ["webhookSecret"];
 
 /** Keys that have no title in the shared messages; their text lives under `settings.calm.fields`. */
-const CALM_FIELDS = ["appPublicTheme", "appSharePlayback", "appBrandpack", "authProvidersEnabled"];
+const CALM_FIELDS = ["appPublicTheme", "appBrandpack", "authProvidersEnabled"];
 
 function lookup(t: Translator, key: string, part: "title" | "description"): string | null {
   const calm = `settings.calm.fields.${key}.${part}`;

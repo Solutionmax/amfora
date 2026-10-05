@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import * as AiIcons from "react-icons/ai";
 import * as BiIcons from "react-icons/bi";
@@ -37,7 +37,7 @@ import * as WiIcons from "react-icons/wi";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -65,10 +65,10 @@ interface IconData {
   category: string;
 }
 
-interface IconPickerProps {
-  value?: string;
+interface IconPickerDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onChange: (iconName: string) => void;
-  placeholder?: string;
 }
 
 const ICONS_PER_BATCH = 100;
@@ -263,12 +263,13 @@ const AUTH_PROVIDER_ICONS = [
   "AiOutlineSecurityScan",
 ];
 
-export function IconPicker({ value, onChange, placeholder }: IconPickerProps) {
+/**
+ * The dialog with every icon. It pulls in all of react-icons, so nothing imports this file
+ * directly: the field in icon-picker-lazy.tsx loads it when it is pressed.
+ */
+export function IconPickerDialog({ open, onOpenChange, onChange }: IconPickerDialogProps) {
   const t = useTranslations();
-  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-
-  const displayPlaceholder = placeholder || t("iconPicker.placeholder");
 
   const allIcons = useMemo(() => {
     const iconSets = [
@@ -341,18 +342,13 @@ export function IconPicker({ value, onChange, placeholder }: IconPickerProps) {
     return AUTH_PROVIDER_ICONS.map((name) => allIcons.find((icon) => icon.name === name)).filter(Boolean) as IconData[];
   }, [allIcons]);
 
-  const currentIcon = useMemo(() => {
-    if (!value) return null;
-    return allIcons.find((icon) => icon.name === value);
-  }, [value, allIcons]);
-
   const handleIconSelect = useCallback(
     (iconName: string) => {
       onChange(iconName);
-      setOpen(false);
+      onOpenChange(false);
       setSearch("");
     },
-    [onChange]
+    [onChange, onOpenChange]
   );
 
   const renderIcon = useCallback((icon: IconData, className = "w-7 h-7", size?: number) => {
@@ -366,22 +362,7 @@ export function IconPicker({ value, onChange, placeholder }: IconPickerProps) {
   }, [allIcons]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full justify-between">
-          <div className="flex items-center gap-2">
-            {currentIcon ? (
-              <>
-                {renderIcon(currentIcon, "", 18)}
-                <span className="text-sm">{currentIcon.name}</span>
-              </>
-            ) : (
-              <span className="text-muted-foreground">{displayPlaceholder}</span>
-            )}
-          </div>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl xl:max-w-6xl max-h-[90vh] overflow-hidden">
         <div className="space-y-4 overflow-hidden">
           <div className="flex items-center justify-between">
@@ -476,49 +457,4 @@ export function IconPicker({ value, onChange, placeholder }: IconPickerProps) {
       </DialogContent>
     </Dialog>
   );
-}
-
-export function renderIconByName(iconName: string, className = "w-5 h-5") {
-  const iconSets = [
-    AiIcons,
-    BiIcons,
-    BsIcons,
-    CgIcons,
-    CiIcons,
-    DiIcons,
-    FaIcons,
-    Fa6Icons,
-    FcIcons,
-    FiIcons,
-    GiIcons,
-    GoIcons,
-    GrIcons,
-    HiIcons,
-    Hi2Icons,
-    ImIcons,
-    IoIcons,
-    Io5Icons,
-    LiaIcons,
-    LuIcons,
-    MdIcons,
-    PiIcons,
-    RiIcons,
-    RxIcons,
-    SiIcons,
-    SlIcons,
-    TbIcons,
-    TfiIcons,
-    TiIcons,
-    VscIcons,
-    WiIcons,
-  ];
-
-  for (const iconSet of iconSets) {
-    const IconComponent = (iconSet as any)[iconName];
-    if (IconComponent && typeof IconComponent === "function") {
-      return React.createElement(IconComponent, { className });
-    }
-  }
-
-  return React.createElement(FaIcons.FaCog, { className });
 }

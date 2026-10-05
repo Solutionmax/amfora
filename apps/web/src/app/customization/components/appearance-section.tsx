@@ -7,34 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { CustomizationDraft } from "../hooks/use-customization-draft";
 import { RADIUS_MAX_PX, radiusFeel } from "../lib/draft";
+import { fontName, PREDEFINED_FONTS } from "../lib/fonts";
 import { FormBlock } from "./form-block";
 
 const SWATCHES = ["#0079d2", "#e8590c", "#1a7f4b", "#6941c6", "#b42318", "#0c1626"];
 const DEFAULT_FONT = "default";
 const RADIUS_STEP_PX = 2;
 
-const PREDEFINED_FONTS = [
-  { name: "Outfit", value: "var(--font-outfit), Outfit, sans-serif" },
-  { name: "Inter", value: "var(--font-inter), Inter, sans-serif" },
-  { name: "Roboto", value: "var(--font-roboto), Roboto, sans-serif" },
-  { name: "Open Sans", value: "var(--font-open-sans), 'Open Sans', sans-serif" },
-  { name: "Poppins", value: "var(--font-poppins), Poppins, sans-serif" },
-  { name: "Nunito", value: "var(--font-nunito), Nunito, sans-serif" },
-  { name: "Lato", value: "var(--font-lato), Lato, sans-serif" },
-  { name: "Montserrat", value: "var(--font-montserrat), Montserrat, sans-serif" },
-  { name: "Source Sans 3", value: "var(--font-source-sans), 'Source Sans 3', sans-serif" },
-  { name: "Raleway", value: "var(--font-raleway), Raleway, sans-serif" },
-  { name: "Work Sans", value: "var(--font-work-sans), 'Work Sans', sans-serif" },
-];
-
 /** Accent swatches with a hex field, the corner radius slider and the font. Previews at once. */
 export function AppearanceSection({ draft, update }: Pick<CustomizationDraft, "draft" | "update">) {
   const t = useTranslations();
   const hex = draft.color || SWATCHES[0];
-  // A font set before this list existed still shows up as its own option.
+  // A font family of somebody's own (set through the API) still shows up as its own option.
   const fonts =
     draft.font && !PREDEFINED_FONTS.some((font) => font.value === draft.font)
-      ? [...PREDEFINED_FONTS, { name: draft.font.split(",")[0].replace(/var\(|\)|'/g, ""), value: draft.font }]
+      ? [...PREDEFINED_FONTS, { name: fontName(draft.font), value: draft.font }]
       : PREDEFINED_FONTS;
 
   return (

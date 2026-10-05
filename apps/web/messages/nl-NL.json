@@ -360,9 +360,7 @@
         "linkPreviewHint": "Getoond als een download- of ontvangstlink in WhatsApp, Slack en vergelijkbare apps wordt geplakt en er geen omslag is ingesteld. 1200 × 630 px werkt het best; maximaal 3 MB.",
         "upload": "Afbeelding uploaden",
         "replace": "Afbeelding vervangen",
-        "remove": "Verwijderen",
-        "playback": "Video en audio afspelen op downloadpagina's",
-        "playbackHint": "Uit: video- en audiobestanden kunnen alleen gedownload worden, zonder afspeelknop en zonder voorbeeld. Afbeeldingen, pdf's en tekst houden hun voorbeeld."
+        "remove": "Verwijderen"
       },
       "theme": {
         "title": "Publieke pagina's",
@@ -421,8 +419,6 @@
       "coverHint": "Bovenaan elke downloadpagina. Minstens 1200 px breed, tot 3 MB.",
       "linkPreview": "Afbeelding voor linkvoorbeeld",
       "linkPreviewHint": "Wordt gebruikt als er geen omslag is. 1200 × 630 px, tot 3 MB.",
-      "playback": "Video in de browser afspelen",
-      "playbackHint": "Bezoekers kunnen kijken of luisteren voordat ze downloaden.",
       "creditHint": "Kleine regel onder elke openbare pagina.",
       "creditLocked": "Kleine regel onder elke openbare pagina. Verbergen vereist een merkpakket.",
       "packTitle": "Merkpakket",
@@ -430,7 +426,8 @@
       "packActive": "Actief voor {organisation}",
       "packIssued": "Uitgegeven {date}",
       "packKey": "Sleutel van het merkpakket",
-      "packKeyHint": "Plak de sleutel uit je aankoopmail."
+      "packKeyHint": "Plak de sleutel uit je aankoopmail.",
+      "previewEnlarge": "Preview vergroten"
     }
   },
   "dashboard": {
@@ -854,7 +851,8 @@
       "auth": "Authenticatie Providers"
     },
     "stats": "{iconCount} pictogrammen van {libraryCount} bibliotheken",
-    "categoryBadge": "{category} ({count} pictogrammen)"
+    "categoryBadge": "{category} ({count} pictogrammen)",
+    "loading": "Iconen laden..."
   },
   "imageEdit": {
     "title": "Afbeelding bewerken",
@@ -919,10 +917,12 @@
     "account": "Account",
     "roleAdmin": "Beheerder",
     "roleUser": "Lid",
-    "storage": "Opslag",
-    "yourStorage": "Jouw opslag",
-    "storageAlmostFull": "Bijna vol",
-    "storageFull": "Vol"
+    "storageFull": "Vol",
+    "updateAvailable": "Nieuwe versie",
+    "storageUsed": "<b>{size}</b> gebruikt",
+    "storageFree": "{size} vrij",
+    "storageOnlyFree": "Nog maar {size} vrij",
+    "storageNoLimit": "Geen limiet"
   },
   "navigation": {
     "dashboard": "Controlepaneel"
@@ -2272,10 +2272,6 @@
           "title": "Thema van openbare pagina's",
           "description": "Stage, Workbench of Seal. Voorbeeld onder Aanpassing."
         },
-        "appSharePlayback": {
-          "title": "Video en audio afspelen op downloadpagina's",
-          "description": "Uit: video en audio kunnen alleen worden gedownload."
-        },
         "appBrandpack": {
           "title": "Merkpakket",
           "description": "Je white-labelsleutel. Te beheren onder Aanpassing."
@@ -3004,7 +3000,11 @@
       "version": "Versie {version}",
       "upToDate": "Je bent bij",
       "checked": "gecontroleerd {when}",
-      "install": "Installeren"
+      "install": "Installeren",
+      "notesWaiting": "Nieuw in {version}",
+      "notesRunning": "Wat is er nieuw in versie {version}",
+      "released": "uitgebracht op {date}",
+      "fullNotes": "Volledige release notes"
     }
   },
   "uploadFile": {
