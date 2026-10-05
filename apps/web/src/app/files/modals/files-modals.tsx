@@ -8,6 +8,7 @@ import { FilePreviewModal } from "@/components/modals/file-preview-modal";
 import { ShareItemModal } from "@/components/modals/share-item-modal";
 import { ShareMultipleItemsModal } from "@/components/modals/share-multiple-items-modal";
 import { UploadFileModal } from "@/components/modals/upload-file-modal";
+import { useTrashDays } from "@/hooks/use-trash-days";
 import type { FilesModalsProps } from "../types";
 
 export function FilesModals({
@@ -18,6 +19,7 @@ export function FilesModals({
   currentFolderName,
 }: FilesModalsProps & { currentFolderId?: string | null; currentFolderName?: string }) {
   const t = useTranslations();
+  const trashDays = useTrashDays();
   const bulkNames = [
     ...(fileManager.foldersToDelete?.map((f) => f.name) || []),
     ...(fileManager.filesToDelete?.map((f) => f.name) || []),
@@ -110,7 +112,7 @@ export function FilesModals({
         }}
         onConfirm={fileManager.handleDeleteBulk}
         title={t("files.calm.bulkDeleteTitle", { count: bulkNames.length })}
-        description={t("fileActions.deleteWarning")}
+        description={t("files.calm.trashBulkHint", { days: trashDays })}
         names={bulkNames}
       />
 

@@ -20,19 +20,29 @@ interface Converted {
   width: number;
 }
 
-// The last converted logo, so a burst of mails converts it once. The stored value is the key.
-let converted: { stored: string; value: Converted } | null = null;
+const MAX_LOGO_PIXELS = 4_000_000;
+
+// The last converted logo, so a burst of mails converts it once. The stored value is the key and
+// the promise is kept, so a conversion in progress is shared and a failure is remembered too.
+let converted: { stored: string; result: Promise<Converted | null> } | null = null;
+
+async function convert(bytes: Buffer): Promise<Converted | null> {
+  try {
+    const { data, info } = await sharp(bytes, { limitInputPixels: MAX_LOGO_PIXELS, failOn: "error" })
+      .resize({ height: LOGO_HEIGHT_PX * 2, withoutEnlargement: true })
+      .png()
+      .toBuffer({ resolveWithObject: true });
+    return { png: data, width: Math.round((info.width / info.height) * LOGO_HEIGHT_PX) };
+  } catch (error) {
+    console.error("Could not prepare the logo for email:", error instanceof Error ? error.message : error);
+    return null;
+  }
+}
 
 /** Stored images are WebP, which Outlook on Windows does not show; a mail carries PNG. */
-async function toPng(stored: string, bytes: Buffer): Promise<Converted> {
-  if (converted?.stored === stored) return converted.value;
-  const { data, info } = await sharp(bytes)
-    .resize({ height: LOGO_HEIGHT_PX * 2, withoutEnlargement: true })
-    .png()
-    .toBuffer({ resolveWithObject: true });
-  const value = { png: data, width: Math.round((info.width / info.height) * LOGO_HEIGHT_PX) };
-  converted = { stored, value };
-  return value;
+function toPng(stored: string, bytes: Buffer): Promise<Converted | null> {
+  if (converted?.stored !== stored) converted = { stored, result: convert(bytes) };
+  return converted.result;
 }
 
 /** The installation logo, as stored (a data address), turned into an inline PNG attachment. Null: keep the name as text. */
@@ -40,21 +50,23 @@ export async function mailLogo(stored: string | null | undefined): Promise<MailL
   const match = MAIL_IMAGE.exec(stored ?? "");
   if (!match) return null;
   // Whatever is wrong with the logo, the mail goes out without it.
-  try {
-    const bytes = Buffer.from(match[1], "base64");
-    if (bytes.length === 0 || bytes.length > MAX_LOGO_BYTES) return null;
-    const { png, width } = await toPng(stored as string, bytes);
-    const cid = `logo-${randomUUID()}@amfora`;
-    return {
+  const bytes = Buffer.from(match[1], "base64");
+  if (bytes.length === 0 || bytes.length > MAX_LOGO_BYTES) return null;
+  const result = await toPng(stored as string, bytes);
+  if (!result) return null;
+  const cid = `logo-${randomUUID()}@amfora`;
+  return {
+    cid,
+    width: Math.max(result.width, 1),
+    height: LOGO_HEIGHT_PX,
+    attachment: {
+      filename: "logo.png",
+      content: result.png,
+      contentType: "image/png",
       cid,
-      width: Math.max(width, 1),
-      height: LOGO_HEIGHT_PX,
-      attachment: { filename: "logo.png", content: png, contentType: "image/png", cid, contentDisposition: "inline" },
-    };
-  } catch (error) {
-    console.error("Could not prepare the logo for email:", error instanceof Error ? error.message : error);
-    return null;
-  }
+      contentDisposition: "inline",
+    },
+  };
 }
 
 /** The image tag in front of the name in the header; empty without a logo. */

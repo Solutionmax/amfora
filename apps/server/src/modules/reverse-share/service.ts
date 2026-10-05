@@ -184,7 +184,9 @@ export class ReverseShareService {
       throw new Error("Unauthorized to update this reverse share");
     }
 
-    if (data.expiration !== undefined) await assertLinkLifetime(new Date(data.expiration), reverseShare.expiration);
+    if (data.expiration !== undefined) {
+      await assertLinkLifetime(data.expiration === null ? null : new Date(data.expiration), reverseShare.expiration);
+    }
 
     const updatedReverseShare = await this.reverseShareRepository.update(id, data);
     return ReverseShareResponseSchema.parse(this.formatReverseShareResponse(updatedReverseShare));
@@ -654,7 +656,7 @@ export class ReverseShareService {
     const currentStorage = userFiles.reduce((acc: bigint, userFile: any) => acc + userFile.size, BigInt(0));
 
     if (currentStorage + file.size > maxTotalStorage) {
-      const availableSpace = Number(maxTotalStorage - currentStorage) / (1024 * 1024);
+      const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
       throw new Error(`Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`);
     }
 
@@ -749,13 +751,12 @@ export class ReverseShareService {
       const creator = await this.userService.getUserById(reverseShare.creatorId);
       const reverseShareName = reverseShare.name || "Unnamed Reverse Share";
       const fileCount = fileNames.length;
-      const fileList = fileNames.join(", ");
 
       await this.emailService.sendReverseShareBatchFileNotification(
         creator.email,
         reverseShareName,
         fileCount,
-        fileList,
+        fileNames,
         uploaderName
       );
     } catch (error) {

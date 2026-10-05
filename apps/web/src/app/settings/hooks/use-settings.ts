@@ -181,14 +181,17 @@ export function useSettings() {
       toast.success(t("settings.messages.updateSuccess", { group: t(`settings.groups.${group}.title`) }));
 
       await reloadConfigs();
-      // The notification switches on shares read the public list, whatever group was saved.
-      await refreshPublicConfigs();
 
       if (group === "email") {
         await refreshShareContext();
       }
 
       await refreshAppInfo();
+      // The notification switches on shares read the public list, whatever group was saved. Last, and
+      // on its own: the save worked, so a failing refresh is no reason for an error toast.
+      await refreshPublicConfigs().catch((refreshError) =>
+        console.error("Could not refresh the public settings:", refreshError)
+      );
     } catch (error: any) {
       const errorMessage = error?.response?.data?.error || error?.message || "";
 

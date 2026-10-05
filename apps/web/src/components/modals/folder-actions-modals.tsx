@@ -16,6 +16,7 @@ import {
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTrashDays } from "@/hooks/use-trash-days";
 
 interface FolderToEdit {
   id: string;
@@ -137,6 +138,7 @@ export function FolderActionsModals({
   onCloseDelete,
 }: FolderActionsModalsProps) {
   const t = useTranslations();
+  const trashDays = useTrashDays();
 
   return (
     <>
@@ -165,7 +167,7 @@ export function FolderActionsModals({
       <ConfirmDeleteDialog
         open={!!folderToDelete}
         title={t("files.calm.deleteFolderTitle", { name: folderToDelete?.name ?? "" })}
-        description={t("files.calm.deleteFolderHint")}
+        description={t("files.calm.trashFolderHint", { days: trashDays })}
         onConfirm={async () => {
           if (folderToDelete) await onDeleteFolder(folderToDelete.id);
         }}

@@ -1,4 +1,10 @@
 import { prisma } from "../shared/prisma";
+import { notDeleted } from "../shared/trash";
+
+/** A name without an extension must not end in a dot. */
+function withExtension(baseName: string, extension: string): string {
+  return extension ? `${baseName}.${extension}` : baseName;
+}
 
 /**
  * Generates a unique filename by checking for duplicates in the database
@@ -16,7 +22,7 @@ export async function generateUniqueFileName(
   userId: string,
   folderId: string | null | undefined
 ): Promise<string> {
-  const fullName = `${baseName}.${extension}`;
+  const fullName = withExtension(baseName, extension);
   const targetFolderId = folderId || null;
 
   // Check if the original filename exists in the target folder
@@ -25,6 +31,7 @@ export async function generateUniqueFileName(
       name: fullName,
       userId,
       folderId: targetFolderId,
+      ...notDeleted,
     },
   });
 
@@ -35,7 +42,7 @@ export async function generateUniqueFileName(
 
   // Find the next available suffix number
   let suffix = 1;
-  let uniqueName = `${baseName} (${suffix}).${extension}`;
+  let uniqueName = withExtension(`${baseName} (${suffix})`, extension);
 
   while (true) {
     const duplicateFile = await prisma.file.findFirst({
@@ -43,6 +50,7 @@ export async function generateUniqueFileName(
         name: uniqueName,
         userId,
         folderId: targetFolderId,
+        ...notDeleted,
       },
     });
 
@@ -51,7 +59,7 @@ export async function generateUniqueFileName(
     }
 
     suffix++;
-    uniqueName = `${baseName} (${suffix}).${extension}`;
+    uniqueName = withExtension(`${baseName} (${suffix})`, extension);
   }
 }
 
@@ -73,7 +81,7 @@ export async function generateUniqueFileNameForRename(
   folderId: string | null | undefined,
   excludeFileId: string
 ): Promise<string> {
-  const fullName = `${baseName}.${extension}`;
+  const fullName = withExtension(baseName, extension);
   const targetFolderId = folderId || null;
 
   // Check if the original filename exists in the target folder (excluding current file)
@@ -83,6 +91,7 @@ export async function generateUniqueFileNameForRename(
       userId,
       folderId: targetFolderId,
       id: { not: excludeFileId },
+      ...notDeleted,
     },
   });
 
@@ -93,7 +102,7 @@ export async function generateUniqueFileNameForRename(
 
   // Find the next available suffix number
   let suffix = 1;
-  let uniqueName = `${baseName} (${suffix}).${extension}`;
+  let uniqueName = withExtension(`${baseName} (${suffix})`, extension);
 
   while (true) {
     const duplicateFile = await prisma.file.findFirst({
@@ -102,6 +111,7 @@ export async function generateUniqueFileNameForRename(
         userId,
         folderId: targetFolderId,
         id: { not: excludeFileId },
+        ...notDeleted,
       },
     });
 
@@ -110,7 +120,7 @@ export async function generateUniqueFileNameForRename(
     }
 
     suffix++;
-    uniqueName = `${baseName} (${suffix}).${extension}`;
+    uniqueName = withExtension(`${baseName} (${suffix})`, extension);
   }
 }
 
@@ -137,6 +147,7 @@ export async function generateUniqueFolderName(
     name,
     userId,
     parentId: targetParentId,
+    ...notDeleted,
   };
 
   // Exclude the current folder if this is a rename operation
@@ -163,6 +174,7 @@ export async function generateUniqueFolderName(
       name: uniqueName,
       userId,
       parentId: targetParentId,
+      ...notDeleted,
     };
 
     if (excludeFolderId) {

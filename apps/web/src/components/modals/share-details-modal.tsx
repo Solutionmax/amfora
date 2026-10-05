@@ -112,7 +112,7 @@ export function ShareDetailsModal({
     onSuccess?.();
   };
 
-  // Saved here, with the end date sent along: the update endpoint clears it when it is left out.
+  // Saved here; the end date is left out, so the server keeps it.
   const saveDraft = async () => {
     if (!share || !draft) return;
     setIsSaving(true);
@@ -121,7 +121,6 @@ export function ShareDetailsModal({
         id: share.id,
         name: draft.name,
         description: draft.description,
-        expiration: share.expiration ?? undefined,
       });
       toast.success(t("shareManager.updateSuccess"));
       setDraft(null);

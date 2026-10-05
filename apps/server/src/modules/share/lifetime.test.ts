@@ -107,7 +107,8 @@ test("a share that runs longer already can be renamed, but not stretched or made
   const renamed = await put({ id: share.id, name: "new name", expiration });
   assert.equal(renamed.statusCode, 200, renamed.body);
   assert.equal((await put({ id: share.id, name: "x", expiration: inDays(120) })).statusCode, 400);
-  assert.equal((await put({ id: share.id, name: "x" })).statusCode, 400);
+  assert.equal((await put({ id: share.id, name: "x" })).statusCode, 200, "a missing end date is left alone");
+  assert.equal((await put({ id: share.id, expiration: null })).statusCode, 400);
   assert.equal((await put({ id: share.id, expiration: inDays(10) })).statusCode, 200);
 });
 
@@ -121,4 +122,104 @@ test("a receive link that runs longer already can be renamed, but not stretched"
   assert.equal((await put({ id: link.id, name: "new name" })).statusCode, 200);
   assert.equal((await put({ id: link.id, expiration: inDays(120) })).statusCode, 400);
   assert.equal((await put({ id: link.id, expiration: inDays(10) })).statusCode, 200);
+});
+
+const putShare = (auth: object, payload: object) => app.inject({ method: "PUT", url: "/shares", ...auth, payload });
+const putLink = (auth: object, payload: object) =>
+  app.inject({ method: "PUT", url: "/reverse-shares", ...auth, payload });
+const created = (res: { json: () => any }) => {
+  const body = res.json();
+  return body.share ?? body.reverseShare ?? body;
+};
+
+test("a share update without an end date leaves the end date alone, also past the maximum", async () => {
+  await setMax(0);
+  const share = created(await newShare(asSession(), inDays(90)));
+  await setMax(30);
+  const renamed = await putShare(asSession(), { id: share.id, name: "only a new name" });
+  assert.equal(renamed.statusCode, 200, renamed.body);
+  assert.equal(renamed.json().share.expiration, share.expiration);
+  assert.equal(renamed.json().share.name, "only a new name");
+});
+
+test("a null end date clears it when there is no maximum, and is refused when there is one", async () => {
+  await setMax(0);
+  const share = created(await newShare(asSession(), inDays(20)));
+  const cleared = await putShare(asSession(), { id: share.id, expiration: null });
+  assert.equal(cleared.statusCode, 200, cleared.body);
+  assert.equal(cleared.json().share.expiration, null);
+
+  const other = created(await newShare(asSession(), inDays(20)));
+  await setMax(30);
+  const refused = await putShare(asSession(), { id: other.id, expiration: null });
+  assert.equal(refused.statusCode, 400);
+  const still = await prisma.share.findUnique({ where: { id: other.id } });
+  assert.equal(still!.expiration?.toISOString(), other.expiration);
+});
+
+test("a receive link follows the same rule for a missing and a null end date", async () => {
+  await setMax(0);
+  const link = created(await newLink(asSession(), inDays(20)));
+  const cleared = await putLink(asSession(), { id: link.id, expiration: null });
+  assert.equal(cleared.statusCode, 200, cleared.body);
+  assert.equal(cleared.json().reverseShare.expiration, null);
+
+  const other = created(await newLink(asSession(), inDays(20)));
+  await setMax(30);
+  assert.equal((await putLink(asSession(), { id: other.id, expiration: null })).statusCode, 400);
+  const renamed = await putLink(asSession(), { id: other.id, name: "kept" });
+  assert.equal(renamed.statusCode, 200, renamed.body);
+  assert.equal(renamed.json().reverseShare.expiration, other.expiration);
+});
+
+test("a refused share update changes nothing: password and recipients stay as they were", async () => {
+  await setMax(0);
+  const share = created(
+    await app.inject({
+      method: "POST",
+      url: "/shares",
+      ...asSession(),
+      payload: { name: "s", files: ["f1"], expiration: inDays(10), password: "old-password", recipients: ["a@x.test"] },
+    })
+  );
+  await setMax(30);
+  const refused = await putShare(asSession(), {
+    id: share.id,
+    expiration: inDays(200),
+    password: "new-password",
+    maxViews: 3,
+    recipients: ["b@x.test"],
+  });
+  assert.equal(refused.statusCode, 400);
+
+  const stored = await prisma.share.findUnique({
+    where: { id: share.id },
+    include: { security: true, recipients: true },
+  });
+  const bcrypt = (await import("bcryptjs")).default;
+  assert.equal(await bcrypt.compare("old-password", stored!.security.password!), true);
+  assert.equal(stored!.security.maxViews, null);
+  assert.deepEqual(
+    stored!.recipients.map((r) => r.email),
+    ["a@x.test"]
+  );
+});
+
+test("a share can be shortened below its current end date even when still past the maximum", async () => {
+  await setMax(0);
+  const share = created(await newShare(asSession(), inDays(400)));
+  await setMax(30);
+  assert.equal((await putShare(asSession(), { id: share.id, expiration: inDays(300) })).statusCode, 200);
+  assert.equal((await putShare(asSession(), { id: share.id, expiration: inDays(350) })).statusCode, 400);
+});
+
+test("an API key update of a share follows the lifetime rule too", async () => {
+  await setMax(0);
+  const share = created(await newShare(asSession(), inDays(20)));
+  await setMax(30);
+  const key = { headers: await apiKeyHeader() };
+  assert.equal((await putShare(key, { id: share.id, expiration: inDays(90) })).statusCode, 400);
+  assert.equal((await putShare(key, { id: share.id, expiration: null })).statusCode, 400);
+  assert.equal((await putShare(key, { id: share.id, name: "renamed by key" })).statusCode, 200);
+  assert.equal((await putShare(key, { id: share.id, expiration: inDays(10) })).statusCode, 200);
 });

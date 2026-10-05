@@ -324,7 +324,7 @@ export async function shareRoutes(app: FastifyInstance) {
           shareId: z.string().describe("The share ID"),
         }),
         body: z.object({
-          shareLink: z.string().url().describe("The frontend share URL"),
+          shareLink: z.string().url().optional().describe("Ignored: the link is built from the share"),
         }),
         response: {
           200: z.object({

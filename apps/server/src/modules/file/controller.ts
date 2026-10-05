@@ -3,6 +3,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { env } from "../../env";
 import { verifyCapability } from "../../shared/capability";
 import { prisma } from "../../shared/prisma";
+import { notDeleted } from "../../shared/trash";
 import {
   generateUniqueFileName,
   generateUniqueFileNameForRename,
@@ -13,6 +14,7 @@ import { recordVisitorActivity } from "../activity/activity";
 import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
 import { storageLimitOf } from "../storage/limit";
+import { moveFileToTrash } from "../trash/service";
 import { dispositionFor } from "./disposition";
 import { canDownloadFromShares } from "./download-access";
 import { shouldCountDownload } from "./download-count";
@@ -162,7 +164,7 @@ export class FileController {
       const currentStorage = userFiles.reduce((acc, file) => acc + file.size, BigInt(0));
 
       if (currentStorage + BigInt(input.size) > maxTotalStorage) {
-        const availableSpace = Number(maxTotalStorage - currentStorage) / (1024 * 1024);
+        const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
         return reply.status(400).send({
           error: `Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`,
         });
@@ -170,7 +172,7 @@ export class FileController {
 
       if (input.folderId) {
         const folder = await prisma.folder.findFirst({
-          where: { id: input.folderId, userId },
+          where: { id: input.folderId, userId, ...notDeleted },
         });
         if (!folder) {
           return reply.status(400).send({ error: "Folder not found or access denied." });
@@ -249,7 +251,7 @@ export class FileController {
       const currentStorage = userFiles.reduce((acc, file) => acc + file.size, BigInt(0));
 
       if (currentStorage + BigInt(input.size) > maxTotalStorage) {
-        const availableSpace = Number(maxTotalStorage - currentStorage) / (1024 * 1024);
+        const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
         return reply.status(400).send({
           error: `Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`,
           code: "insufficientStorage",
@@ -289,7 +291,7 @@ export class FileController {
         return reply.status(400).send({ error: "The 'objectName' parameter is required." });
       }
 
-      const fileRecord = await prisma.file.findFirst({ where: { objectName } });
+      const fileRecord = await prisma.file.findFirst({ where: { objectName, ...notDeleted } });
 
       if (!fileRecord) {
         return reply.status(404).send({ error: "File not found." });
@@ -371,7 +373,7 @@ export class FileController {
         return reply.status(400).send({ error: "The 'objectName' parameter is required." });
       }
 
-      const fileRecord = await prisma.file.findFirst({ where: { objectName } });
+      const fileRecord = await prisma.file.findFirst({ where: { objectName, ...notDeleted } });
 
       if (!fileRecord) {
         if (objectName.startsWith("reverse-shares/")) {
@@ -514,7 +516,7 @@ export class FileController {
         }
       } else {
         files = await prisma.file.findMany({
-          where: { userId, folderId: targetFolderId },
+          where: { userId, folderId: targetFolderId, ...notDeleted },
         });
       }
 
@@ -548,7 +550,7 @@ export class FileController {
         return reply.status(400).send({ error: "The 'id' parameter is required." });
       }
 
-      const fileRecord = await prisma.file.findUnique({ where: { id } });
+      const fileRecord = await prisma.file.findFirst({ where: { id, ...notDeleted } });
       if (!fileRecord) {
         return reply.status(404).send({ error: "File not found." });
       }
@@ -558,9 +560,8 @@ export class FileController {
         return reply.status(403).send({ error: "Access denied." });
       }
 
-      await this.fileService.deleteObject(fileRecord.objectName);
-
-      await prisma.file.delete({ where: { id } });
+      // To the trash; the object leaves storage when it is deleted for good from there.
+      await moveFileToTrash(id, new Date());
 
       return reply.send({ message: "File deleted successfully." });
     } catch (error) {
@@ -583,7 +584,7 @@ export class FileController {
 
       const updateData = UpdateFileSchema.parse(request.body);
 
-      const fileRecord = await prisma.file.findUnique({ where: { id } });
+      const fileRecord = await prisma.file.findFirst({ where: { id, ...notDeleted } });
 
       if (!fileRecord) {
         return reply.status(404).send({ error: "File not found." });
@@ -641,7 +642,7 @@ export class FileController {
       const input: MoveFileInput = MoveFileSchema.parse(request.body);
 
       const existingFile = await prisma.file.findFirst({
-        where: { id, userId },
+        where: { id, userId, ...notDeleted },
       });
 
       if (!existingFile) {
@@ -650,7 +651,7 @@ export class FileController {
 
       if (input.folderId) {
         const targetFolder = await prisma.folder.findFirst({
-          where: { id: input.folderId, userId },
+          where: { id: input.folderId, userId, ...notDeleted },
         });
         if (!targetFolder) {
           return reply.status(400).send({ error: "Target folder not found." });
@@ -693,8 +694,8 @@ export class FileController {
         return reply.status(400).send({ error: "File ID is required." });
       }
 
-      const fileRecord = await prisma.file.findUnique({
-        where: { id },
+      const fileRecord = await prisma.file.findFirst({
+        where: { id, ...notDeleted },
         include: {
           shares: {
             select: {
@@ -747,11 +748,11 @@ export class FileController {
 
   private async getAllUserFilesRecursively(userId: string): Promise<any[]> {
     const rootFiles = await prisma.file.findMany({
-      where: { userId, folderId: null },
+      where: { userId, folderId: null, ...notDeleted },
     });
 
     const rootFolders = await prisma.folder.findMany({
-      where: { userId, parentId: null },
+      where: { userId, parentId: null, ...notDeleted },
       select: { id: true },
     });
 

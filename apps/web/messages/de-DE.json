@@ -591,8 +591,7 @@
     "descriptionPlaceholder": "Dateibeschreibung eingeben",
     "addDescriptionPlaceholder": "Beschreibung hinzufügen...",
     "deleteFile": "Datei löschen",
-    "deleteConfirmation": "Sind Sie sicher, dass Sie  löschen möchten?",
-    "deleteWarning": "Diese Aktion kann nicht rückgängig gemacht werden."
+    "deleteConfirmation": "Sind Sie sicher, dass Sie  löschen möchten?"
   },
   "fileManager": {
     "downloadError": "Fehler beim Herunterladen der Datei",
@@ -725,7 +724,6 @@
       "editFolderHint": "Ändere den Namen oder die Beschreibung.",
       "deleteTitle": "{name} löschen?",
       "deleteFolderTitle": "Ordner {name} löschen?",
-      "deleteFolderHint": "Alles darin wird ebenfalls gelöscht. Das lässt sich nicht rückgängig machen.",
       "bulkDeleteTitle": "{count, plural, =1 {1 Element} other {# Elemente}} löschen?",
       "zipTitle": "Als ZIP herunterladen",
       "zipSummary": "{files, plural, =0 {Keine Dateien} =1 {# Datei} other {# Dateien}}{folders, plural, =0 {} =1 { und # Ordner} other { und # Ordner}} in einer ZIP-Datei",
@@ -748,7 +746,10 @@
       "done": "Fertig",
       "fullScreen": "Vollbild anzeigen",
       "zoomIn": "Vergrößern",
-      "zoomOut": "Verkleinern"
+      "zoomOut": "Verkleinern",
+      "trashHint": "Es kommt in den Papierkorb und bleibt dort {days} Tage. Bis dahin kannst du es wiederherstellen.",
+      "trashFolderHint": "Der Ordner und alles darin kommen in den Papierkorb und bleiben dort {days} Tage. Bis dahin kannst du sie wiederherstellen.",
+      "trashBulkHint": "Sie kommen in den Papierkorb und bleiben dort {days} Tage. Bis dahin kannst du sie wiederherstellen."
     }
   },
   "filesTable": {
@@ -2189,6 +2190,14 @@
       "shareMaxExpiryDays": {
         "title": "Maximale Laufzeit von Links",
         "description": "Kein Link kann länger offen bleiben als dies. 0 bedeutet kein Maximum."
+      },
+      "trashRetentionDays": {
+        "title": "Tage im Papierkorb",
+        "description": "Wie lange gelöschte Dateien und Ordner im Papierkorb bleiben, bevor sie endgültig entfernt werden. Mindestens 1."
+      },
+      "expiredLinkRetentionDays": {
+        "title": "Abgelaufene Links entfernen nach",
+        "description": "Freigaben und leere Empfangslinks werden so viele Tage nach ihrem Enddatum entfernt. Dateien werden nie entfernt, und ein Empfangslink mit Dateien bleibt bestehen. 0 bedeutet nie."
       }
     },
     "buttons": {
@@ -2289,6 +2298,10 @@
         "linkLifetime": {
           "title": "Laufzeit von Links",
           "description": "Wie lange Freigabe- und Empfangslinks offen bleiben dürfen."
+        },
+        "cleanUp": {
+          "title": "Aufräumen",
+          "description": "Was von selbst entfernt wird und wann."
         }
       },
       "fields": {
@@ -2821,6 +2834,43 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System"
+  },
+  "trash": {
+    "pageTitle": "Papierkorb",
+    "subline": "Gelöschte Elemente bleiben hier {days} Tage und werden dann endgültig entfernt. Der Papierkorb enthält {size} und zählt zu deinem Speicher.",
+    "sublineEmpty": "Gelöschte Elemente bleiben hier {days} Tage und werden dann endgültig entfernt.",
+    "emptyTrash": "Papierkorb leeren",
+    "emptyTitle": "Der Papierkorb ist leer",
+    "emptyText": "Dateien und Ordner, die du löschst, landen zuerst hier, damit du sie zurückholen kannst.",
+    "loadError": "Der Papierkorb konnte nicht geladen werden.",
+    "tableLabel": "Gelöschte Dateien und Ordner",
+    "selectAll": "Alle auswählen",
+    "selectItem": "{name} auswählen",
+    "columns": {
+      "name": "Name",
+      "place": "War in",
+      "deleted": "Gelöscht",
+      "timeLeft": "Verbleibend",
+      "size": "Größe",
+      "actions": "Aktionen"
+    },
+    "topLevel": "Oberste Ebene",
+    "daysLeft": "{count, plural, =0 {Heute} =1 {1 Tag} other {# Tage}}",
+    "folderMeta": "Ordner, {count, plural, =1 {1 Datei} other {# Dateien}}",
+    "restore": "Wiederherstellen",
+    "restoreItem": "{name} wiederherstellen",
+    "deleteForGood": "Endgültig löschen",
+    "deleteItem": "{name} endgültig löschen",
+    "restored": "{count, plural, =1 {1 Element wiederhergestellt} other {# Elemente wiederhergestellt}}",
+    "restorePartial": "{failed} von {total, plural, =1 {1 Element} other {# Elementen}} konnten nicht wiederhergestellt werden",
+    "purged": "{count, plural, =1 {1 Element endgültig gelöscht} other {# Elemente endgültig gelöscht}}",
+    "purgePartial": "{failed} von {total, plural, =1 {1 Element} other {# Elementen}} konnten nicht gelöscht werden",
+    "purgeError": "Der Papierkorb konnte nicht geleert werden.",
+    "purgeTitle": "{name} endgültig löschen?",
+    "purgeBulkTitle": "{count} Elemente endgültig löschen?",
+    "purgeHint": "Es wird aus dem Speicher entfernt und kann nicht wiederhergestellt werden.",
+    "emptyConfirmTitle": "Papierkorb leeren?",
+    "emptyConfirm": "{count, plural, =1 {1 Element} other {# Elemente}} ({size}) werden aus dem Speicher entfernt. Das kann nicht rückgängig gemacht werden."
   },
   "twoFactor": {
     "title": "Zwei-Faktor-Authentifizierung",

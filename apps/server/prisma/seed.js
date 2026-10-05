@@ -115,6 +115,20 @@ const defaultConfigs = [
     type: "number",
     group: "storage",
   },
+  // Trash: days a deleted file stays before it goes for good (minimum 1), and days an ended
+  // link stays before it is cleaned up (0 means never)
+  {
+    key: "trashRetentionDays",
+    value: "30",
+    type: "number",
+    group: "storage",
+  },
+  {
+    key: "expiredLinkRetentionDays",
+    value: "0",
+    type: "number",
+    group: "storage",
+  },
   // Security Configurations
   {
     key: "jwtSecret",

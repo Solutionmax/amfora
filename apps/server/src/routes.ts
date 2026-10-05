@@ -14,6 +14,7 @@ import { reverseShareRoutes } from "./modules/reverse-share/routes";
 import { secretRoutes } from "./modules/secret/routes";
 import { shareRoutes } from "./modules/share/routes";
 import { storageRoutes } from "./modules/storage/routes";
+import { trashRoutes } from "./modules/trash/routes";
 import { twoFactorRoutes } from "./modules/two-factor/routes";
 import { updateRoutes } from "./modules/update/routes";
 import { userRoutes } from "./modules/user/routes";
@@ -39,4 +40,5 @@ export function registerRoutes(app: FastifyInstance) {
   app.register(apiKeyRoutes);
   app.register(secretRoutes);
   app.register(activityRoutes);
+  app.register(trashRoutes);
 }

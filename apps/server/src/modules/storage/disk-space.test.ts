@@ -43,3 +43,29 @@ test("an administrator sees what Amfora holds for every user, not what else is o
     "the total is what Amfora holds plus the free room on the disk"
   );
 });
+
+test("an administrator with an own limit is held to it by own usage, and by the real disk", async () => {
+  await prisma.user.create({
+    data: { id: "boss", firstName: "b", lastName: "T", username: "boss", email: "boss@example.test", isAdmin: true },
+  });
+  await prisma.file.create({
+    data: { name: "own.mp4", extension: "mp4", objectName: "o", size: GB, userId: "boss" },
+  });
+  const service = new StorageService();
+
+  await prisma.user.update({ where: { id: "boss" }, data: { storageLimitBytes: GB * BigInt(3) } });
+  const limited = await service.getDiskSpace("boss", true);
+  assert.equal(limited.diskUsedGB, 1, "own usage, not the whole installation");
+  assert.equal(limited.diskAvailableGB, 2);
+
+  await prisma.user.update({ where: { id: "boss" }, data: { storageLimitBytes: GB / BigInt(2) } });
+  assert.equal((await service.getDiskSpace("boss", true)).diskAvailableGB, 0, "never below 0");
+
+  await prisma.user.update({ where: { id: "boss" }, data: { storageLimitBytes: GB * BigInt(1_000_000) } });
+  const huge = await service.getDiskSpace("boss", true);
+  assert.ok(huge.diskAvailableGB < 999_000, "capped by the free disk space");
+
+  await prisma.user.update({ where: { id: "boss" }, data: { storageLimitBytes: null } });
+  const unlimited = await service.getDiskSpace("boss", true);
+  assert.equal(unlimited.diskUsedGB, 5, "without own limit the whole installation, as before");
+});

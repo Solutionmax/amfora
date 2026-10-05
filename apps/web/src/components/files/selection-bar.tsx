@@ -1,6 +1,6 @@
 "use client";
 
-import { IconArrowsMove, IconDownload, IconShare, IconTrash, IconX } from "@tabler/icons-react";
+import { IconArrowBackUp, IconArrowsMove, IconDownload, IconShare, IconTrash, IconX } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,9 @@ export function SelectionBar({
   onDownload,
   onMove,
   onDelete,
+  onRestore,
+  restoreLabel,
+  deleteLabel,
   onClear,
 }: {
   count: number;
@@ -22,6 +25,10 @@ export function SelectionBar({
   onDownload?: () => void;
   onMove?: () => void;
   onDelete?: () => void;
+  /** The trash restores instead of sharing, and says "delete for good" where the files page says "delete". */
+  onRestore?: () => void;
+  restoreLabel?: string;
+  deleteLabel?: string;
   onClear: () => void;
 }) {
   const t = useTranslations();
@@ -32,7 +39,8 @@ export function SelectionBar({
     { key: "share", icon: IconShare, label: t("common.share"), onClick: onShare },
     { key: "download", icon: IconDownload, label: t("files.calm.downloadZip"), onClick: onDownload },
     { key: "move", icon: IconArrowsMove, label: t("common.move"), onClick: onMove },
-    { key: "delete", icon: IconTrash, label: t("common.delete"), onClick: onDelete },
+    { key: "restore", icon: IconArrowBackUp, label: restoreLabel ?? "", onClick: onRestore },
+    { key: "delete", icon: IconTrash, label: deleteLabel ?? t("common.delete"), onClick: onDelete },
   ].filter((a) => a.onClick);
 
   return (

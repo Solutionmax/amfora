@@ -31,7 +31,8 @@ export const UpdateShareSchema = z.object({
   id: z.string(),
   name: z.string().optional(),
   description: z.string().optional(),
-  expiration: z.string().datetime().optional(),
+  // Missing leaves the end date alone, null clears it.
+  expiration: z.string().datetime().nullable().optional(),
   password: z.string().optional(),
   maxViews: z.number().optional().nullable(),
   recipients: z.array(z.string().email()).optional(),

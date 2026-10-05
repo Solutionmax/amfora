@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
 
+import { getCanonicalOrigin } from "../../shared/canonical-origin";
 import { assertLinkLifetime } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
+import { notDeleted } from "../../shared/trash";
 import { EmailService } from "../email/service";
 import { FolderService } from "../folder/service";
 import { UserService } from "../user/service";
@@ -72,6 +74,7 @@ export class ShareService {
         where: {
           id: { in: files },
           userId: userId,
+          ...notDeleted,
         },
       });
       const notFoundFiles = files.filter((id) => !existingFiles.some((file) => file.id === id));
@@ -85,6 +88,7 @@ export class ShareService {
         where: {
           id: { in: folders },
           userId: userId,
+          ...notDeleted,
         },
       });
       const notFoundFolders = folders.filter((id) => !existingFolders.some((folder) => folder.id === id));
@@ -168,6 +172,11 @@ export class ShareService {
       throw new Error("Unauthorized to update this share");
     }
 
+    // Missing leaves the end date alone, null clears it. Judged before anything is written, so a
+    // refused update changes nothing.
+    const expiration = typeof shareData.expiration === "string" ? new Date(shareData.expiration) : shareData.expiration;
+    if (expiration !== undefined) await assertLinkLifetime(expiration, share.expiration);
+
     if (password || maxViews !== undefined) {
       await this.shareRepository.updateShareSecurity(share.securityId, {
         password: password ? await bcrypt.hash(password, 10) : undefined,
@@ -184,10 +193,6 @@ export class ShareService {
         await this.shareRepository.addRecipients(shareId, recipients);
       }
     }
-
-    // No end date in the request clears it, so only the end date itself is judged, never the other fields.
-    const expiration = shareData.expiration ? new Date(shareData.expiration) : null;
-    await assertLinkLifetime(expiration, share.expiration);
 
     await this.shareRepository.updateShare(shareId, { ...shareData, expiration });
     const shareWithRelations = await this.shareRepository.findShareById(shareId);
@@ -370,7 +375,7 @@ export class ShareService {
         share: {
           include: {
             security: true,
-            files: true,
+            files: { where: notDeleted },
             recipients: true,
           },
         },
@@ -384,7 +389,7 @@ export class ShareService {
     return this.getShare(shareAlias.shareId, password);
   }
 
-  async notifyRecipients(shareId: string, userId: string, shareLink: string) {
+  async notifyRecipients(shareId: string, userId: string) {
     const share = await this.shareRepository.findShareById(shareId);
 
     if (!share) {
@@ -398,6 +403,12 @@ export class ShareService {
     if (!share.recipients || share.recipients.length === 0) {
       throw new Error("No recipients found for this share");
     }
+
+    if (!share.alias) {
+      throw new Error("This share has no link yet");
+    }
+    // Built here from the share itself: a link from the request would let a maker point the button anywhere.
+    const shareLink = `${getCanonicalOrigin()}/s/${share.alias.alias}`;
 
     let senderName = "Someone";
     try {

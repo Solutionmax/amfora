@@ -139,7 +139,7 @@ function EditShareDialog({
       await onEdit(share.id, {
         name: editForm.name,
         description: editForm.description,
-        expiration: editForm.expiresAt ? new Date(editForm.expiresAt).toISOString() : undefined,
+        expiration: editForm.expiresAt ? new Date(editForm.expiresAt).toISOString() : null,
         maxViews: editForm.maxViews ? parseInt(editForm.maxViews) : null,
       });
 

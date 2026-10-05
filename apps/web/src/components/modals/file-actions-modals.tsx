@@ -16,6 +16,7 @@ import {
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTrashDays } from "@/hooks/use-trash-days";
 
 interface FileActionsModalsProps {
   fileToRename: { id: string; name: string; description?: string } | null;
@@ -127,6 +128,7 @@ export function FileActionsModals({
   onCloseDelete,
 }: FileActionsModalsProps) {
   const t = useTranslations();
+  const trashDays = useTrashDays();
 
   return (
     <>
@@ -135,7 +137,7 @@ export function FileActionsModals({
       <ConfirmDeleteDialog
         open={!!fileToDelete}
         title={t("files.calm.deleteTitle", { name: fileToDelete?.name ?? "" })}
-        description={t("fileActions.deleteWarning")}
+        description={t("files.calm.trashHint", { days: trashDays })}
         onConfirm={async () => {
           if (fileToDelete) await onDelete(fileToDelete.id);
         }}

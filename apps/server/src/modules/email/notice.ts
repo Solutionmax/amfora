@@ -24,6 +24,12 @@ export interface MailBrand {
 const DEFAULT_COLOR = "#0079d2";
 const FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
+/** A button only gets a web address, never javascript:, data: or any other kind. */
+const isWebUrl = (url: string) => /^https?:\/\/\S+$/i.test(url);
+
+/** Values typed by people can carry line breaks; the plain text part must stay one line per value. */
+const oneLine = (value: string) => value.replace(/\s+/g, " ").trim();
+
 /** Only a plain hex colour goes into a style attribute; anything else falls back. */
 export function safeColor(color: string | undefined): string {
   return color && /^#[0-9a-fA-F]{6}$/.test(color) ? color : DEFAULT_COLOR;
@@ -50,9 +56,10 @@ export function noticeHtml(notice: Notice, brand: MailBrand): string {
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #eceef1; border-radius: 12px; margin-bottom: 18px;">${rows}
               </table>`
     : "";
-  const button = notice.button
-    ? `<a href="${escapeHtml(notice.button.url)}" style="display: inline-block; padding: 11px 16px; border-radius: 9px; background-color: ${color}; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none;">${escapeHtml(notice.button.label)}</a>`
-    : "";
+  const button =
+    notice.button && isWebUrl(notice.button.url)
+      ? `<a href="${escapeHtml(notice.button.url)}" style="display: inline-block; padding: 11px 16px; border-radius: 9px; background-color: ${color}; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none;">${escapeHtml(notice.button.label)}</a>`
+      : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -90,10 +97,14 @@ export function noticeHtml(notice: Notice, brand: MailBrand): string {
 
 /** The same content as plain text, for programs and readers that show no HTML. */
 export function noticeText(notice: Notice, brand: MailBrand): string {
-  const lines = [brand.appName, "", notice.title, "", notice.text];
-  if (notice.rows?.length) lines.push("", ...notice.rows.map(([label, value]) => `${label}: ${value}`));
-  if (notice.button) lines.push("", `${notice.button.label}: ${notice.button.url}`);
-  lines.push("", "--", notice.footer);
+  const lines = [oneLine(brand.appName), "", oneLine(notice.title), "", oneLine(notice.text)];
+  if (notice.rows?.length) {
+    lines.push("", ...notice.rows.map(([label, value]) => `${oneLine(label)}: ${oneLine(value)}`));
+  }
+  if (notice.button && isWebUrl(notice.button.url)) {
+    lines.push("", `${oneLine(notice.button.label)}: ${notice.button.url}`);
+  }
+  lines.push("", "--", oneLine(notice.footer));
   if (brand.credit) lines.push("", `Powered by ${CREDIT.name}: ${CREDIT.url}`);
   return lines.join("\n");
 }

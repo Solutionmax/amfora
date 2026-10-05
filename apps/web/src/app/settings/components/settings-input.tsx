@@ -128,7 +128,7 @@ function SettingControl({ config, form, disabled }: SettingProps) {
           id={config.key}
           type="number"
           inputMode="numeric"
-          min={0}
+          min={config.key === "trashRetentionDays" ? 1 : 0}
           disabled={disabled}
           className={unit ? "pr-20" : undefined}
           {...form.register(name, {

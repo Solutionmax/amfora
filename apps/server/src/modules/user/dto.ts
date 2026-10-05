@@ -50,8 +50,9 @@ export const UserResponseSchema = z.object({
   image: z.string().nullable(),
   isAdmin: z.boolean(),
   isActive: z.boolean(),
+  // A user parsed once is a number already, and a route response schema parses it again.
   storageLimitBytes: z
-    .bigint()
+    .union([z.bigint(), z.number()])
     .nullable()
     .transform((bytes) => (bytes === null ? null : Number(bytes))),
   createdAt: z.date(),

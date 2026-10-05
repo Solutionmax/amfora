@@ -358,8 +358,9 @@ export function useEnhancedFileManager(
 
       const { failed } = await runInTurn(
         [
-          ...(filesToDelete ?? []).map((file) => () => deleteFile(file.id).catch(ignoreNotFound)),
+          // Folders first: what is inside goes to the trash with it, under one moment, and comes back together.
           ...(foldersToDelete ?? []).map((folder) => () => deleteFolder(folder.id).catch(ignoreNotFound)),
+          ...(filesToDelete ?? []).map((file) => () => deleteFile(file.id).catch(ignoreNotFound)),
         ],
         (remove) => remove()
       );

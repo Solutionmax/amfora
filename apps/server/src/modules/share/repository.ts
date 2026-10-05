@@ -1,6 +1,7 @@
 import type { Share, ShareSecurity } from "@prisma/client";
 
 import { prisma } from "../../shared/prisma";
+import { liveFolderCounts, notDeleted } from "../../shared/trash";
 import type { CreateShareInput } from "./dto";
 
 export interface IShareRepository {
@@ -11,6 +12,7 @@ export interface IShareRepository {
         files: any[];
         folders: any[];
         recipients: { email: string }[];
+        alias: { alias: string } | null;
       })
     | null
   >;
@@ -81,8 +83,9 @@ export class PrismaShareRepository implements IShareRepository {
       include: {
         alias: true,
         security: true,
-        files: true,
+        files: { where: notDeleted },
         folders: {
+          where: notDeleted,
           select: {
             id: true,
             name: true,
@@ -92,12 +95,7 @@ export class PrismaShareRepository implements IShareRepository {
             userId: true,
             createdAt: true,
             updatedAt: true,
-            _count: {
-              select: {
-                files: true,
-                children: true,
-              },
-            },
+            _count: liveFolderCounts,
           },
         },
         recipients: true,
@@ -110,8 +108,9 @@ export class PrismaShareRepository implements IShareRepository {
       where: { securityId },
       include: {
         security: true,
-        files: true,
+        files: { where: notDeleted },
         folders: {
+          where: notDeleted,
           select: {
             id: true,
             name: true,
@@ -121,12 +120,7 @@ export class PrismaShareRepository implements IShareRepository {
             userId: true,
             createdAt: true,
             updatedAt: true,
-            _count: {
-              select: {
-                files: true,
-                children: true,
-              },
-            },
+            _count: liveFolderCounts,
           },
         },
       },
@@ -140,8 +134,9 @@ export class PrismaShareRepository implements IShareRepository {
         share: {
           include: {
             security: true,
-            files: true,
+            files: { where: notDeleted },
             folders: {
+              where: notDeleted,
               select: {
                 id: true,
                 name: true,
@@ -151,12 +146,7 @@ export class PrismaShareRepository implements IShareRepository {
                 userId: true,
                 createdAt: true,
                 updatedAt: true,
-                _count: {
-                  select: {
-                    files: true,
-                    children: true,
-                  },
-                },
+                _count: liveFolderCounts,
               },
             },
             recipients: true,
@@ -249,6 +239,7 @@ export class PrismaShareRepository implements IShareRepository {
         id: {
           in: fileIds,
         },
+        ...notDeleted,
       },
     });
   }
@@ -259,6 +250,7 @@ export class PrismaShareRepository implements IShareRepository {
         id: {
           in: folderIds,
         },
+        ...notDeleted,
       },
     });
   }
@@ -298,8 +290,9 @@ export class PrismaShareRepository implements IShareRepository {
       },
       include: {
         security: true,
-        files: true,
+        files: { where: notDeleted },
         folders: {
+          where: notDeleted,
           select: {
             id: true,
             name: true,
@@ -309,12 +302,7 @@ export class PrismaShareRepository implements IShareRepository {
             userId: true,
             createdAt: true,
             updatedAt: true,
-            _count: {
-              select: {
-                files: true,
-                children: true,
-              },
-            },
+            _count: liveFolderCounts,
           },
         },
         recipients: true,

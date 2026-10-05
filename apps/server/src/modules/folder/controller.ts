@@ -2,7 +2,9 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
+import { liveFolderCounts, notDeleted } from "../../shared/trash";
 import { ConfigService } from "../config/service";
+import { moveFolderToTrash } from "../trash/service";
 import {
   CheckFolderSchema,
   ListFoldersSchema,
@@ -28,7 +30,7 @@ export class FolderController {
 
       if (input.parentId) {
         const parentFolder = await prisma.folder.findFirst({
-          where: { id: input.parentId, userId },
+          where: { id: input.parentId, userId, ...notDeleted },
         });
         if (!parentFolder) {
           return reply.status(400).send({ error: "Parent folder not found or access denied" });
@@ -48,12 +50,7 @@ export class FolderController {
           userId,
         },
         include: {
-          _count: {
-            select: {
-              files: true,
-              children: true,
-            },
-          },
+          _count: liveFolderCounts,
         },
       });
 
@@ -108,6 +105,7 @@ export class FolderController {
           name: input.name,
           parentId: input.parentId || null,
           userId,
+          ...notDeleted,
         },
       });
 
@@ -143,15 +141,8 @@ export class FolderController {
 
       if (recursive) {
         folders = await prisma.folder.findMany({
-          where: { userId },
-          include: {
-            _count: {
-              select: {
-                files: true,
-                children: true,
-              },
-            },
-          },
+          where: { userId, ...notDeleted },
+          include: { _count: liveFolderCounts },
           orderBy: [{ name: "asc" }],
         });
       } else {
@@ -161,15 +152,9 @@ export class FolderController {
           where: {
             userId,
             parentId: targetParentId,
+            ...notDeleted,
           },
-          include: {
-            _count: {
-              select: {
-                files: true,
-                children: true,
-              },
-            },
-          },
+          include: { _count: liveFolderCounts },
           orderBy: [{ name: "asc" }],
         });
       }
@@ -213,7 +198,7 @@ export class FolderController {
 
       const updateData = UpdateFolderSchema.parse(request.body);
 
-      const folderRecord = await prisma.folder.findUnique({ where: { id } });
+      const folderRecord = await prisma.folder.findFirst({ where: { id, ...notDeleted } });
 
       if (!folderRecord) {
         return reply.status(404).send({ error: "Folder not found." });
@@ -234,12 +219,7 @@ export class FolderController {
         where: { id },
         data: updateData,
         include: {
-          _count: {
-            select: {
-              files: true,
-              children: true,
-            },
-          },
+          _count: liveFolderCounts,
         },
       });
 
@@ -287,7 +267,7 @@ export class FolderController {
       const validatedInput = MoveFolderSchema.parse(input);
 
       const existingFolder = await prisma.folder.findFirst({
-        where: { id, userId },
+        where: { id, userId, ...notDeleted },
       });
 
       if (!existingFolder) {
@@ -296,7 +276,7 @@ export class FolderController {
 
       if (validatedInput.parentId) {
         const parentFolder = await prisma.folder.findFirst({
-          where: { id: validatedInput.parentId, userId },
+          where: { id: validatedInput.parentId, userId, ...notDeleted },
         });
         if (!parentFolder) {
           return reply.status(400).send({ error: "Parent folder not found or access denied" });
@@ -311,12 +291,7 @@ export class FolderController {
         where: { id },
         data: { parentId: validatedInput.parentId },
         include: {
-          _count: {
-            select: {
-              files: true,
-              children: true,
-            },
-          },
+          _count: liveFolderCounts,
         },
       });
 
@@ -354,7 +329,7 @@ export class FolderController {
         return reply.status(400).send({ error: "The 'id' parameter is required." });
       }
 
-      const folderRecord = await prisma.folder.findUnique({ where: { id } });
+      const folderRecord = await prisma.folder.findFirst({ where: { id, ...notDeleted } });
       if (!folderRecord) {
         return reply.status(404).send({ error: "Folder not found." });
       }
@@ -364,9 +339,8 @@ export class FolderController {
         return reply.status(403).send({ error: "Access denied." });
       }
 
-      await this.folderService.deleteObject(folderRecord.objectName);
-
-      await prisma.folder.delete({ where: { id } });
+      // To the trash, with everything in it; storage is only touched when it is deleted for good.
+      await moveFolderToTrash(id, userId, new Date());
 
       return reply.send({ message: "Folder deleted successfully." });
     } catch (error) {

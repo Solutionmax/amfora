@@ -103,7 +103,7 @@ export function toCreateBody(values: ReceiveFormValues): CreateReverseShareBody 
 }
 
 /**
- * The server cannot clear an end date, so a missing one is left out. A password is only sent when it
+ * A missing end date is sent as null, which clears it. A password is only sent when it
  * is new, or as null when protection was switched off.
  */
 export function toUpdateBody(values: ReceiveFormValues, id: string, hadPassword: boolean): UpdateReverseShareBody {
@@ -119,8 +119,7 @@ export function toUpdateBody(values: ReceiveFormValues, id: string, hadPassword:
     maxFileSize: positiveIntOrNull(values.maxFileSize),
     allowedFileTypes: parseFileTypes(values.allowedFileTypes).join(",") || null,
   };
-  const expiration = isoOrUndefined(values);
-  if (expiration) body.expiration = expiration;
+  body.expiration = isoOrUndefined(values) ?? null;
   if (values.hasPassword && values.password.trim()) body.password = values.password;
   else if (!values.hasPassword && hadPassword) body.password = null;
   return body;

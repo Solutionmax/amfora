@@ -1,6 +1,7 @@
 import { assertLifetimeSettings } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
+import { assertCleanUpSettings } from "../trash/settings";
 import { resolvePaidAppearance } from "./appearance";
 import { backgroundImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { verifyBrandpack } from "./brandpack";
@@ -134,6 +135,7 @@ export class AppService {
     }
     if (key === "appPublicTheme") assertPublicTheme(value);
     await assertLifetimeSettings([{ key, value }]);
+    assertCleanUpSettings([{ key, value }]);
 
     if (key === "passwordAuthEnabled") {
       if (value === "false") {
@@ -166,6 +168,7 @@ export class AppService {
     }
     updates.filter((update) => update.key === "appPublicTheme").forEach((update) => assertPublicTheme(update.value));
     await assertLifetimeSettings(updates);
+    assertCleanUpSettings(updates);
     const passwordAuthUpdate = updates.find((update) => update.key === "passwordAuthEnabled");
     if (passwordAuthUpdate && passwordAuthUpdate.value === "false") {
       const canDisable = await this.configService.validatePasswordAuthDisable();

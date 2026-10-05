@@ -74,7 +74,7 @@ test("update body keeps the password unless a new one is typed or protection is 
   assert.equal("password" in toUpdateBody({ ...values, hasPassword: false }, "id1", false), false);
 });
 
-test("update body clears limits with null and never sends an empty end date", () => {
+test("update body clears limits and the end date with null", () => {
   const values = {
     ...receiveFormFrom(link),
     maxFiles: "",
@@ -86,7 +86,7 @@ test("update body clears limits with null and never sends an empty end date", ()
   assert.equal(body.maxFiles, null);
   assert.equal(body.maxFileSize, null);
   assert.equal(body.allowedFileTypes, null);
-  assert.equal("expiration" in body, false);
+  assert.equal(body.expiration, null);
   assert.equal(body.isActive, false);
   assert.equal(body.id, "id1");
 });

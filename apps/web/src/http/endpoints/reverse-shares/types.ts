@@ -143,7 +143,8 @@ export interface UpdateReverseShareBody {
   id: string;
   name?: string;
   description?: string;
-  expiration?: string;
+  /** Left out keeps the end date, null clears it. */
+  expiration?: string | null;
   maxFiles?: number | null;
   maxFileSize?: number | null;
   allowedFileTypes?: string | null;

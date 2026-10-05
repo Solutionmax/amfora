@@ -147,7 +147,8 @@ export interface UpdateShareBody {
   id: string;
   name?: string;
   description?: string;
-  expiration?: string;
+  /** Left out keeps the end date, null clears it. */
+  expiration?: string | null;
   password?: string;
   maxViews?: number | null;
   recipients?: string[];

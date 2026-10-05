@@ -108,3 +108,34 @@ test("without a logo the header has neither attachment nor cid, only the name", 
   assert.ok(!message.html.includes("<img"));
   assert.ok(message.html.includes(">Acme</td>"));
 });
+
+test("a logo that fails to convert is converted once, also for mails sent at the same time", async () => {
+  const stored = `data:image/png;base64,${Buffer.from("this is not an image either").toString("base64")}`;
+  const log = console.error;
+  let logged = 0;
+  console.error = () => {
+    logged += 1;
+  };
+  try {
+    const [one, two] = await Promise.all([mailLogo(stored), mailLogo(stored)]);
+    const three = await mailLogo(stored);
+    assert.deepEqual([one, two, three], [null, null, null]);
+  } finally {
+    console.error = log;
+  }
+  assert.equal(logged, 1, "one conversion, one failure, remembered");
+});
+
+test("an image with too many pixels gives no logo", async () => {
+  const huge = await sharp({ create: { width: 3000, height: 3000, channels: 3, background: "#fff" } })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+  assert.ok(huge.length < 256 * 1024, "small on disk, large in pixels");
+  const log = console.error;
+  console.error = () => {};
+  try {
+    assert.equal(await mailLogo(`data:image/png;base64,${huge.toString("base64")}`), null);
+  } finally {
+    console.error = log;
+  }
+});

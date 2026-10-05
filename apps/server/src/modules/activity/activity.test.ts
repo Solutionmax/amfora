@@ -605,15 +605,15 @@ test("only an administrator clears the log, and one line about it remains", asyn
 test("when the remaining line cannot be written, nothing is deleted", async () => {
   await activity.recordActivity({ action: "share.created", ownerId: "alice", subject: "keep me" });
   const before = await prisma.activityEvent.count();
-  const original = prisma.activityEvent.create;
-  (prisma.activityEvent as any).create = () => {
-    throw new Error("disk full");
-  };
+  // The insert fails inside the transaction, after the delete already ran: the delete must roll back.
+  await prisma.$executeRawUnsafe(
+    `CREATE TRIGGER fail_clear BEFORE INSERT ON activity_events WHEN NEW.action = 'activity.cleared' BEGIN SELECT RAISE(ABORT, 'disk full'); END`
+  );
   try {
     const failed = await app.inject({ method: "DELETE", url: "/activity", cookies: session("root") });
     assert.equal(failed.statusCode, 500);
   } finally {
-    (prisma.activityEvent as any).create = original;
+    await prisma.$executeRawUnsafe("DROP TRIGGER fail_clear");
   }
   assert.equal(await prisma.activityEvent.count(), before);
 });

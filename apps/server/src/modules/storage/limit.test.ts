@@ -135,3 +135,32 @@ test("an administrator sets the limit of a user, a member cannot, not even the o
   });
   assert.equal(profile.statusCode, 200, "a member can still change the own profile");
 });
+
+test("the message never shows a negative amount when the limit is below the usage", async () => {
+  const { ReverseShareService } = await import("../reverse-share/service");
+  const used = await prisma.file.create({
+    data: { name: "big", extension: "bin", objectName: "big", size: BigInt(8 * MB), userId: "alice" },
+  });
+  await setLimit("alice", 5 * MB);
+  const payload = { name: "more", extension: "bin", size: MB, objectName: "o2" };
+
+  const checked = await app.inject({ method: "POST", url: "/files/check", cookies: session("alice"), payload });
+  assert.equal(checked.statusCode, 400);
+  assert.match(checked.json().error, /You have 0\.00MB available/);
+
+  const registered = await app.inject({ method: "POST", url: "/files", cookies: session("alice"), payload });
+  assert.equal(registered.statusCode, 400);
+  assert.match(registered.json().error, /You have 0\.00MB available/);
+
+  const link = await prisma.reverseShare.create({ data: { name: "In2", creatorId: "alice" } });
+  const received = await prisma.reverseShareFile.create({
+    data: { name: "g", extension: "bin", objectName: "y", size: BigInt(MB), reverseShareId: link.id },
+  });
+  await assert.rejects(
+    () => new ReverseShareService().copyReverseShareFileToUserFiles(received.id, "alice"),
+    /You have 0\.00MB available/
+  );
+
+  await prisma.file.delete({ where: { id: used.id } });
+  await setLimit("alice", null);
+});

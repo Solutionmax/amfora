@@ -1,5 +1,6 @@
 import { S3StorageProvider } from "../../providers/s3-storage.provider";
 import { prisma } from "../../shared/prisma";
+import { notDeleted } from "../../shared/trash";
 import { StorageProvider } from "../../types/storage";
 
 export class FolderService {
@@ -39,11 +40,11 @@ export class FolderService {
 
   async getAllFilesInFolder(folderId: string, userId: string, basePath: string = ""): Promise<any[]> {
     const files = await prisma.file.findMany({
-      where: { folderId, userId },
+      where: { folderId, userId, ...notDeleted },
     });
 
     const subfolders = await prisma.folder.findMany({
-      where: { parentId: folderId, userId },
+      where: { parentId: folderId, userId, ...notDeleted },
       select: { id: true, name: true },
     });
 
@@ -63,12 +64,12 @@ export class FolderService {
 
   async calculateFolderSize(folderId: string, userId: string): Promise<bigint> {
     const files = await prisma.file.findMany({
-      where: { folderId, userId },
+      where: { folderId, userId, ...notDeleted },
       select: { size: true },
     });
 
     const subfolders = await prisma.folder.findMany({
-      where: { parentId: folderId, userId },
+      where: { parentId: folderId, userId, ...notDeleted },
       select: { id: true },
     });
 

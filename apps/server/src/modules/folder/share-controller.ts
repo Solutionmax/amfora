@@ -4,6 +4,7 @@ import { env } from "../../env";
 import { verifyCapability } from "../../shared/capability";
 import { prisma } from "../../shared/prisma";
 import { getSharePassword } from "../../shared/share-password";
+import { notDeleted } from "../../shared/trash";
 import { canDownloadFromShares } from "../file/download-access";
 import { FileService } from "../file/service";
 import { shareGrantSubject } from "../file/share-download-grant";
@@ -85,7 +86,7 @@ export class FolderShareController {
     if (!share.creatorId) throw new Error("Folder not found");
 
     const folders = await prisma.folder.findMany({
-      where: { userId: share.creatorId },
+      where: { userId: share.creatorId, ...notDeleted },
       orderBy: { name: "asc" },
     });
     const parents = new Map(folders.map((folder) => [folder.id, folder.parentId]));
@@ -134,11 +135,11 @@ export class FolderShareController {
 
       const [folders, files] = await Promise.all([
         prisma.folder.findMany({
-          where: { userId: share.creatorId!, parentId: folderId },
+          where: { userId: share.creatorId!, parentId: folderId, ...notDeleted },
           orderBy: { name: "asc" },
         }),
         prisma.file.findMany({
-          where: { userId: share.creatorId!, folderId },
+          where: { userId: share.creatorId!, folderId, ...notDeleted },
           orderBy: { name: "asc" },
         }),
       ]);
@@ -167,7 +168,7 @@ export class FolderShareController {
         .filter((folder) => isFolderIncludedInShare(folder.id, new Set([folderId]), graph.parents))
         .map((folder) => folder.id);
       const files = await prisma.file.findMany({
-        where: { userId: share.creatorId!, folderId: { in: descendantIds } },
+        where: { userId: share.creatorId!, folderId: { in: descendantIds }, ...notDeleted },
         orderBy: { name: "asc" },
       });
       const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);

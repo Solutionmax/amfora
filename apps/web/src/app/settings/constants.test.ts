@@ -81,3 +81,9 @@ test("the two link lifetime settings sit side by side under the storage limits",
   );
   assert.deepEqual(blocks[1].rows, [["shareDefaultExpiryDays", "shareMaxExpiryDays"]]);
 });
+
+test("the trash and ended link settings sit side by side in a clean up block", () => {
+  const blocks = blocksFor("storage", ["maxFileSize", "trashRetentionDays", "expiredLinkRetentionDays"]);
+
+  assert.deepEqual(blocks.at(-1), { id: "cleanUp", rows: [["trashRetentionDays", "expiredLinkRetentionDays"]] });
+});

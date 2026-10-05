@@ -1,5 +1,6 @@
 import { getCanonicalOrigin } from "../../shared/canonical-origin";
 import { prisma } from "../../shared/prisma";
+import { notDeleted } from "../../shared/trash";
 import type { Notice } from "../email/notice";
 import { EmailService } from "../email/service";
 import { QuietPeriod } from "./quiet";
@@ -172,7 +173,10 @@ export async function sendExpiryReminders(now = new Date()): Promise<number> {
   };
 
   const origin = getCanonicalOrigin();
-  const shares = await prisma.share.findMany({ where: due, include: { _count: { select: { files: true } } } });
+  const shares = await prisma.share.findMany({
+    where: due,
+    include: { _count: { select: { files: { where: notDeleted } } } },
+  });
   for (const share of shares) {
     await remind(
       "share",

@@ -11,18 +11,23 @@ export function LineList({ children, className, top }: { children: ReactNode; cl
   );
 }
 
-const PLAIN_TAGS = ["span", "div", "p", "svg", "time", "strong", "em"];
+const CONTROL_TAGS = ["button", "a", "input", "select", "textarea"];
 
-/** A control in the row is described by the line under the title, so a screen reader reads why it is off. */
-function describe(children: ReactNode, id: string): ReactNode {
-  return Children.map(children, (child) =>
-    isValidElement(child) &&
-    child.type !== Fragment &&
-    !PLAIN_TAGS.includes(child.type as string) &&
-    !(child.props as { "aria-describedby"?: string })["aria-describedby"]
-      ? cloneElement(child as ReactElement<{ "aria-describedby"?: string }>, { "aria-describedby": id })
-      : child
-  );
+/**
+ * A control in the row is described by the line under the title, so a screen reader reads why it is
+ * off. Always walked, with or without a line, so the children keep their place when the line comes
+ * and goes. Only things that can take focus get the link: components and real controls.
+ */
+function describe(children: ReactNode, id: string | undefined): ReactNode {
+  return Children.map(children, (child) => {
+    if (!isValidElement(child)) return child;
+    const props = child.props as { "aria-describedby"?: string; children?: ReactNode };
+    if (child.type === Fragment)
+      return cloneElement(child as ReactElement<{ children?: ReactNode }>, undefined, describe(props.children, id));
+    const isControl = typeof child.type !== "string" || CONTROL_TAGS.includes(child.type);
+    if (!id || !isControl || props["aria-describedby"]) return child;
+    return cloneElement(child as ReactElement<{ "aria-describedby"?: string }>, { "aria-describedby": id });
+  });
 }
 
 export function LineRow({
@@ -51,7 +56,9 @@ export function LineRow({
           </div>
         )}
       </div>
-      {children && <div className="flex shrink-0 items-center gap-2">{sub ? describe(children, subId) : children}</div>}
+      {children && (
+        <div className="flex shrink-0 items-center gap-2">{describe(children, sub ? subId : undefined)}</div>
+      )}
     </div>
   );
 }

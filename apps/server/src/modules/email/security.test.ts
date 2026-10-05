@@ -69,7 +69,7 @@ test("real SMTP delivery keeps reset origin canonical and escapes uploaded metad
       "fixture@example.test",
       '<img src="x">',
       1,
-      `${evil}.txt`,
+      [`${evil}.txt`],
       "<b>fake</b>"
     );
     await service.sendShareNotification("fixture@example.test", "https://files.example.test/s/x", evil, "<i>me</i>");

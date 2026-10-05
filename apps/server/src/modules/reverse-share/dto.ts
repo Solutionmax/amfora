@@ -24,7 +24,8 @@ export const UpdateReverseShareSchema = z.object({
   id: z.string(),
   name: z.string().optional(),
   description: z.string().optional(),
-  expiration: z.string().datetime().optional(),
+  // Missing leaves the end date alone, null clears it.
+  expiration: z.string().datetime().nullable().optional(),
   maxFiles: z.number().int().positive().nullable().optional(),
   maxFileSize: z.number().int().positive().nullable().optional(),
   allowedFileTypes: z.string().nullable().optional(),

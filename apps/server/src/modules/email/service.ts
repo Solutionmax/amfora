@@ -193,9 +193,12 @@ export class EmailService {
     recipientEmail: string,
     reverseShareName: string,
     fileCount: number,
-    fileList: string,
+    fileNames: string[],
     uploaderName: string
   ) {
-    await this.deliverOrThrow(recipientEmail, filesReceivedNotice(reverseShareName, fileCount, fileList, uploaderName));
+    await this.deliverOrThrow(
+      recipientEmail,
+      filesReceivedNotice(reverseShareName, fileCount, fileNames, uploaderName)
+    );
   }
 }

@@ -591,7 +591,6 @@
     "descriptionPlaceholder": "Voer bestandsbeschrijving in",
     "deleteFile": "Bestand Verwijderen",
     "deleteConfirmation": "Weet je zeker dat je  wilt verwijderen?",
-    "deleteWarning": "Deze actie kan niet ongedaan worden gemaakt.",
     "addDescriptionPlaceholder": "Beschrijving toevoegen..."
   },
   "fileManager": {
@@ -725,7 +724,6 @@
       "editFolderHint": "Wijzig de naam of de beschrijving.",
       "deleteTitle": "{name} verwijderen?",
       "deleteFolderTitle": "De map {name} verwijderen?",
-      "deleteFolderHint": "Alles erin wordt ook verwijderd. Dit kan niet ongedaan worden gemaakt.",
       "bulkDeleteTitle": "{count, plural, =1 {1 item} other {# items}} verwijderen?",
       "zipTitle": "Downloaden als zip",
       "zipSummary": "{files, plural, =0 {Geen bestanden} =1 {# bestand} other {# bestanden}}{folders, plural, =0 {} =1 { en # map} other { en # mappen}} in één zipbestand",
@@ -748,7 +746,10 @@
       "done": "Klaar",
       "fullScreen": "Volledig scherm bekijken",
       "zoomIn": "Inzoomen",
-      "zoomOut": "Uitzoomen"
+      "zoomOut": "Uitzoomen",
+      "trashHint": "Het gaat naar de prullenbak en blijft daar {days} dagen staan. Tot dan kun je het terugzetten.",
+      "trashFolderHint": "De map en alles erin gaan naar de prullenbak en blijven daar {days} dagen staan. Tot dan kun je ze terugzetten.",
+      "trashBulkHint": "Ze gaan naar de prullenbak en blijven daar {days} dagen staan. Tot dan kun je ze terugzetten."
     }
   },
   "filesTable": {
@@ -2189,6 +2190,14 @@
       "shareMaxExpiryDays": {
         "title": "Maximale looptijd van links",
         "description": "Geen link kan langer open blijven dan dit. 0 betekent geen maximum."
+      },
+      "trashRetentionDays": {
+        "title": "Dagen in de prullenbak",
+        "description": "Hoe lang verwijderde bestanden en mappen in de prullenbak blijven voordat ze definitief worden verwijderd. Minimaal 1."
+      },
+      "expiredLinkRetentionDays": {
+        "title": "Verlopen links opruimen na",
+        "description": "Deellinks en lege ontvanglinks worden zoveel dagen na hun einddatum verwijderd. Bestanden worden nooit verwijderd en een ontvanglink met bestanden blijft staan. 0 betekent nooit."
       }
     },
     "buttons": {
@@ -2289,6 +2298,10 @@
         "linkLifetime": {
           "title": "Looptijd van links",
           "description": "Hoe lang deellinks en ontvanglinks open mogen blijven."
+        },
+        "cleanUp": {
+          "title": "Opruimen",
+          "description": "Wat vanzelf wordt verwijderd en wanneer."
         }
       },
       "fields": {
@@ -2821,6 +2834,43 @@
     "light": "Licht",
     "dark": "Donker",
     "system": "Systeem"
+  },
+  "trash": {
+    "pageTitle": "Prullenbak",
+    "subline": "Verwijderde items blijven hier {days} dagen staan en worden daarna definitief verwijderd. De prullenbak bevat {size} en telt mee voor je opslag.",
+    "sublineEmpty": "Verwijderde items blijven hier {days} dagen staan en worden daarna definitief verwijderd.",
+    "emptyTrash": "Prullenbak legen",
+    "emptyTitle": "De prullenbak is leeg",
+    "emptyText": "Bestanden en mappen die je verwijdert komen eerst hier terecht, zodat je ze kunt terugzetten.",
+    "loadError": "De prullenbak kon niet worden geladen.",
+    "tableLabel": "Verwijderde bestanden en mappen",
+    "selectAll": "Alles selecteren",
+    "selectItem": "{name} selecteren",
+    "columns": {
+      "name": "Naam",
+      "place": "Stond in",
+      "deleted": "Verwijderd",
+      "timeLeft": "Resterend",
+      "size": "Grootte",
+      "actions": "Acties"
+    },
+    "topLevel": "Hoofdniveau",
+    "daysLeft": "{count, plural, =0 {Vandaag} =1 {1 dag} other {# dagen}}",
+    "folderMeta": "Map, {count, plural, =1 {1 bestand} other {# bestanden}}",
+    "restore": "Terugzetten",
+    "restoreItem": "{name} terugzetten",
+    "deleteForGood": "Definitief verwijderen",
+    "deleteItem": "{name} definitief verwijderen",
+    "restored": "{count, plural, =1 {1 item teruggezet} other {# items teruggezet}}",
+    "restorePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} kon niet worden teruggezet",
+    "purged": "{count, plural, =1 {1 item definitief verwijderd} other {# items definitief verwijderd}}",
+    "purgePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} kon niet worden verwijderd",
+    "purgeError": "De prullenbak kon niet worden geleegd.",
+    "purgeTitle": "{name} definitief verwijderen?",
+    "purgeBulkTitle": "{count} items definitief verwijderen?",
+    "purgeHint": "Het wordt uit de opslag gehaald en kan niet meer worden teruggezet.",
+    "emptyConfirmTitle": "Prullenbak legen?",
+    "emptyConfirm": "{count, plural, =1 {1 item} other {# items}} ({size}) worden uit de opslag gehaald. Dit kan niet ongedaan worden gemaakt."
   },
   "twoFactor": {
     "title": "Twee-Factor Authenticatie",

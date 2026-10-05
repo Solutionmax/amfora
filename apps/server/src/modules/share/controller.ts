@@ -332,9 +332,8 @@ export class ShareController {
       }
 
       const { shareId } = request.params as { shareId: string };
-      const { shareLink } = request.body as { shareLink: string };
 
-      const result = await this.shareService.notifyRecipients(shareId, userId, shareLink);
+      const result = await this.shareService.notifyRecipients(shareId, userId);
       return reply.send(result);
     } catch (error: any) {
       if (error.message === "Share not found") {

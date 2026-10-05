@@ -338,13 +338,20 @@ export class StorageService {
           prisma.reverseShareFile.aggregate({ _sum: { size: true } }),
         ]);
         const used = Number((files._sum.size ?? BigInt(0)) + (received._sum.size ?? BigInt(0)));
-        // Counts what Amfora holds in total; only the limit is the own one when an administrator set it.
+        // An administrator with an own limit is held to it like a member: own files against the limit,
+        // and never more than the disk really has.
         const ownLimit = userId ? await ownStorageLimitOf(userId) : null;
-        const available = ownLimit === null ? diskInfo.available : Math.max(Number(ownLimit) - used, 0);
-        const total = used + available;
+        let shownUsed = used;
+        let available = diskInfo.available;
+        if (userId && ownLimit !== null) {
+          const own = await prisma.file.aggregate({ where: { userId }, _sum: { size: true } });
+          shownUsed = Number(own._sum.size ?? BigInt(0));
+          available = Math.max(Math.min(Number(ownLimit) - shownUsed, diskInfo.available), 0);
+        }
+        const total = shownUsed + available;
 
         const diskSizeGB = this._ensureNumber(total / (1024 * 1024 * 1024), 0);
-        const diskUsedGB = this._ensureNumber(used / (1024 * 1024 * 1024), 0);
+        const diskUsedGB = this._ensureNumber(shownUsed / (1024 * 1024 * 1024), 0);
         const diskAvailableGB = this._ensureNumber(available / (1024 * 1024 * 1024), 0);
 
         return {

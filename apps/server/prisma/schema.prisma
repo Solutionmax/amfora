@@ -58,12 +58,16 @@ model File {
   folderId String?
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
+  /// Set when the file is moved to the trash; null for a file in the workspace.
+  deletedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   shares Share[] @relation("ShareFiles")
 
   @@index([folderId])
+  @@index([deletedAt])
   @@map("files")
 }
 
@@ -324,11 +328,15 @@ model Folder {
 
   shares Share[] @relation("ShareFolders")
 
+  /// Set when the folder is moved to the trash, on everything under it as well.
+  deletedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([parentId])
+  @@index([deletedAt])
   @@map("folders")
 }
 

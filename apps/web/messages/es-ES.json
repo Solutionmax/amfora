@@ -591,8 +591,7 @@
     "descriptionPlaceholder": "Introduce una descripción del archivo",
     "addDescriptionPlaceholder": "Agregar descripción...",
     "deleteFile": "Eliminar archivo",
-    "deleteConfirmation": "¿Estás seguro de que deseas eliminar ?",
-    "deleteWarning": "Esta acción no se puede deshacer."
+    "deleteConfirmation": "¿Estás seguro de que deseas eliminar ?"
   },
   "fileManager": {
     "downloadError": "Error al descargar el archivo",
@@ -725,7 +724,6 @@
       "editFolderHint": "Cambia el nombre o la descripción.",
       "deleteTitle": "¿Eliminar {name}?",
       "deleteFolderTitle": "¿Eliminar la carpeta {name}?",
-      "deleteFolderHint": "Todo lo que contiene también se elimina. No se puede deshacer.",
       "bulkDeleteTitle": "¿Eliminar {count, plural, =1 {1 elemento} other {# elementos}}?",
       "zipTitle": "Descargar como ZIP",
       "zipSummary": "{files, plural, =0 {Sin archivos} =1 {# archivo} other {# archivos}}{folders, plural, =0 {} =1 { y # carpeta} other { y # carpetas}} en un solo archivo ZIP",
@@ -748,7 +746,10 @@
       "done": "Hecho",
       "fullScreen": "Ver a pantalla completa",
       "zoomIn": "Acercar",
-      "zoomOut": "Alejar"
+      "zoomOut": "Alejar",
+      "trashHint": "Va a la papelera y permanece allí {days} días. Puedes restaurarlo hasta entonces.",
+      "trashFolderHint": "La carpeta y todo lo que contiene van a la papelera y permanecen allí {days} días. Puedes restaurarlos hasta entonces.",
+      "trashBulkHint": "Van a la papelera y permanecen allí {days} días. Puedes restaurarlos hasta entonces."
     }
   },
   "filesTable": {
@@ -2189,6 +2190,14 @@
       "shareMaxExpiryDays": {
         "title": "Duración máxima de los enlaces",
         "description": "Ningún enlace puede seguir abierto más tiempo que esto. 0 significa sin máximo."
+      },
+      "trashRetentionDays": {
+        "title": "Días en la papelera",
+        "description": "Cuánto tiempo permanecen los archivos y carpetas eliminados en la papelera antes de eliminarse definitivamente. Al menos 1."
+      },
+      "expiredLinkRetentionDays": {
+        "title": "Quitar enlaces terminados después de",
+        "description": "Los enlaces de compartir y los enlaces de recibir vacíos se quitan tantos días después de su fecha de fin. Los archivos nunca se quitan, y un enlace de recibir que aún contiene archivos permanece. 0 significa nunca."
       }
     },
     "buttons": {
@@ -2289,6 +2298,10 @@
         "linkLifetime": {
           "title": "Duración de los enlaces",
           "description": "Cuánto tiempo pueden seguir abiertos los enlaces de compartir y de recibir."
+        },
+        "cleanUp": {
+          "title": "Limpieza",
+          "description": "Lo que se elimina solo, y cuándo."
         }
       },
       "fields": {
@@ -2821,6 +2834,43 @@
     "light": "Claro",
     "dark": "Oscuro",
     "system": "Sistema"
+  },
+  "trash": {
+    "pageTitle": "Papelera",
+    "subline": "Los elementos eliminados permanecen aquí {days} días y después se eliminan definitivamente. La papelera contiene {size} y cuenta para tu almacenamiento.",
+    "sublineEmpty": "Los elementos eliminados permanecen aquí {days} días y después se eliminan definitivamente.",
+    "emptyTrash": "Vaciar la papelera",
+    "emptyTitle": "La papelera está vacía",
+    "emptyText": "Los archivos y carpetas que eliminas llegan primero aquí, para que puedas recuperarlos.",
+    "loadError": "No se pudo cargar la papelera.",
+    "tableLabel": "Archivos y carpetas eliminados",
+    "selectAll": "Seleccionar todo",
+    "selectItem": "Seleccionar {name}",
+    "columns": {
+      "name": "Nombre",
+      "place": "Estaba en",
+      "deleted": "Eliminado",
+      "timeLeft": "Tiempo restante",
+      "size": "Tamaño",
+      "actions": "Acciones"
+    },
+    "topLevel": "Nivel superior",
+    "daysLeft": "{count, plural, =0 {Hoy} =1 {1 día} other {# días}}",
+    "folderMeta": "Carpeta, {count, plural, =1 {1 archivo} other {# archivos}}",
+    "restore": "Restaurar",
+    "restoreItem": "Restaurar {name}",
+    "deleteForGood": "Eliminar definitivamente",
+    "deleteItem": "Eliminar {name} definitivamente",
+    "restored": "{count, plural, =1 {1 elemento restaurado} other {# elementos restaurados}}",
+    "restorePartial": "{failed} de {total, plural, =1 {1 elemento} other {# elementos}} no se pudieron restaurar",
+    "purged": "{count, plural, =1 {1 elemento eliminado definitivamente} other {# elementos eliminados definitivamente}}",
+    "purgePartial": "{failed} de {total, plural, =1 {1 elemento} other {# elementos}} no se pudieron eliminar",
+    "purgeError": "No se pudo vaciar la papelera.",
+    "purgeTitle": "¿Eliminar {name} definitivamente?",
+    "purgeBulkTitle": "¿Eliminar {count} elementos definitivamente?",
+    "purgeHint": "Se quita del almacenamiento y no se puede restaurar.",
+    "emptyConfirmTitle": "¿Vaciar la papelera?",
+    "emptyConfirm": "{count, plural, =1 {1 elemento} other {# elementos}} ({size}) se quitarán del almacenamiento. Esta acción no se puede deshacer."
   },
   "twoFactor": {
     "title": "Autenticación de dos factores",

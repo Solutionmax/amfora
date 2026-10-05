@@ -591,8 +591,7 @@
     "descriptionPlaceholder": "Entrez la description du fichier",
     "addDescriptionPlaceholder": "Ajouter une description...",
     "deleteFile": "Supprimer le Fichier",
-    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer  ?",
-    "deleteWarning": "Cette action ne peut pas être annulée."
+    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer  ?"
   },
   "fileManager": {
     "downloadError": "Échec du téléchargement du fichier",
@@ -725,7 +724,6 @@
       "editFolderHint": "Modifiez le nom ou la description.",
       "deleteTitle": "Supprimer {name} ?",
       "deleteFolderTitle": "Supprimer le dossier {name} ?",
-      "deleteFolderHint": "Tout son contenu est aussi supprimé. Cette action est irréversible.",
       "bulkDeleteTitle": "Supprimer {count, plural, =1 {1 élément} other {# éléments}} ?",
       "zipTitle": "Télécharger en ZIP",
       "zipSummary": "{files, plural, =0 {Aucun fichier} =1 {# fichier} other {# fichiers}}{folders, plural, =0 {} =1 { et # dossier} other { et # dossiers}} dans un seul fichier ZIP",
@@ -748,7 +746,10 @@
       "done": "Terminé",
       "fullScreen": "Afficher en plein écran",
       "zoomIn": "Zoom avant",
-      "zoomOut": "Zoom arrière"
+      "zoomOut": "Zoom arrière",
+      "trashHint": "Il va dans la corbeille et y reste {days} jours. Vous pouvez le restaurer jusque là.",
+      "trashFolderHint": "Le dossier et tout son contenu vont dans la corbeille et y restent {days} jours. Vous pouvez les restaurer jusque là.",
+      "trashBulkHint": "Ils vont dans la corbeille et y restent {days} jours. Vous pouvez les restaurer jusque là."
     }
   },
   "filesTable": {
@@ -2192,6 +2193,14 @@
       "shareMaxExpiryDays": {
         "title": "Durée maximale des liens",
         "description": "Aucun lien ne peut rester ouvert plus longtemps. 0 signifie aucun maximum."
+      },
+      "trashRetentionDays": {
+        "title": "Jours dans la corbeille",
+        "description": "Combien de temps les fichiers et dossiers supprimés restent dans la corbeille avant d'être supprimés définitivement. Au moins 1."
+      },
+      "expiredLinkRetentionDays": {
+        "title": "Supprimer les liens terminés après",
+        "description": "Les liens de partage et les liens de réception vides sont supprimés ce nombre de jours après leur date de fin. Les fichiers ne sont jamais supprimés, et un lien de réception qui contient encore des fichiers reste. 0 signifie jamais."
       }
     },
     "buttons": {
@@ -2289,6 +2298,10 @@
         "linkLifetime": {
           "title": "Durée des liens",
           "description": "Combien de temps les liens de partage et de réception peuvent rester ouverts."
+        },
+        "cleanUp": {
+          "title": "Nettoyage",
+          "description": "Ce qui est supprimé automatiquement, et quand."
         }
       },
       "fields": {
@@ -2821,6 +2834,43 @@
     "light": "Clair",
     "dark": "Sombre",
     "system": "Système"
+  },
+  "trash": {
+    "pageTitle": "Corbeille",
+    "subline": "Les éléments supprimés restent ici {days} jours, puis ils sont supprimés définitivement. La corbeille contient {size} et compte dans votre stockage.",
+    "sublineEmpty": "Les éléments supprimés restent ici {days} jours, puis ils sont supprimés définitivement.",
+    "emptyTrash": "Vider la corbeille",
+    "emptyTitle": "La corbeille est vide",
+    "emptyText": "Les fichiers et dossiers que vous supprimez arrivent d'abord ici, pour que vous puissiez les récupérer.",
+    "loadError": "La corbeille n'a pas pu être chargée.",
+    "tableLabel": "Fichiers et dossiers supprimés",
+    "selectAll": "Tout sélectionner",
+    "selectItem": "Sélectionner {name}",
+    "columns": {
+      "name": "Nom",
+      "place": "Se trouvait dans",
+      "deleted": "Supprimé",
+      "timeLeft": "Temps restant",
+      "size": "Taille",
+      "actions": "Actions"
+    },
+    "topLevel": "Niveau supérieur",
+    "daysLeft": "{count, plural, =0 {Aujourd'hui} =1 {1 jour} other {# jours}}",
+    "folderMeta": "Dossier, {count, plural, =1 {1 fichier} other {# fichiers}}",
+    "restore": "Restaurer",
+    "restoreItem": "Restaurer {name}",
+    "deleteForGood": "Supprimer définitivement",
+    "deleteItem": "Supprimer {name} définitivement",
+    "restored": "{count, plural, =1 {1 élément restauré} other {# éléments restaurés}}",
+    "restorePartial": "{failed} sur {total, plural, =1 {1 élément} other {# éléments}} n'ont pas pu être restaurés",
+    "purged": "{count, plural, =1 {1 élément supprimé définitivement} other {# éléments supprimés définitivement}}",
+    "purgePartial": "{failed} sur {total, plural, =1 {1 élément} other {# éléments}} n'ont pas pu être supprimés",
+    "purgeError": "La corbeille n'a pas pu être vidée.",
+    "purgeTitle": "Supprimer {name} définitivement ?",
+    "purgeBulkTitle": "Supprimer {count} éléments définitivement ?",
+    "purgeHint": "Il est retiré du stockage et ne peut plus être restauré.",
+    "emptyConfirmTitle": "Vider la corbeille ?",
+    "emptyConfirm": "{count, plural, =1 {1 élément} other {# éléments}} ({size}) seront retirés du stockage. Cette action est irréversible."
   },
   "twoFactor": {
     "title": "Authentification à Deux Facteurs",

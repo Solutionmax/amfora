@@ -15,6 +15,7 @@ import {
   IconPalette,
   IconSettings,
   IconShare,
+  IconTrash,
   IconUsers,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -91,6 +92,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const main: NavEntry[] = [
     { href: "/dashboard", label: t("dashboard.pageTitle"), icon: IconLayoutGrid },
     { href: "/files", label: t("files.pageTitle"), icon: IconFolder },
+    { href: "/trash", label: t("trash.pageTitle"), icon: IconTrash },
     { href: "/shares", label: t("shares.pageTitle"), icon: IconShare },
     { href: "/reverse-shares", label: t("reverseShares.pageTitle"), icon: IconInbox },
     { href: "/secrets", label: t("secrets.pageTitle"), icon: IconKey },

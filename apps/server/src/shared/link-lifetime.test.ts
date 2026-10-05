@@ -43,7 +43,7 @@ test("an end date the form sent back at minute precision counts as unchanged", (
 });
 
 test("a changed end date is checked, also on a link that runs longer already", () => {
-  assert.equal(check(inDays(80), 30, inDays(90)).ok, false);
+  assert.equal(check(inDays(120), 30, inDays(90)).ok, false);
   assert.equal(check(null, 30, inDays(90)).ok, false);
   assert.deepEqual(check(inDays(20), 30, inDays(90)), { ok: true });
 });
@@ -60,4 +60,9 @@ test("days must be whole numbers from 0 to 3650", () => {
     assert.notEqual(lifetimeSettingsError({ defaultDays: bad, maxDays: 0 }), null, String(bad));
     assert.notEqual(lifetimeSettingsError({ defaultDays: 0, maxDays: bad }), null, String(bad));
   }
+});
+
+test("an end date earlier than the one the link has is allowed, even past the maximum", () => {
+  assert.deepEqual(check(inDays(80), 30, inDays(90)), { ok: true });
+  assert.equal(check(inDays(91), 30, inDays(90)).ok, false);
 });

@@ -27,6 +27,8 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "Every email now has the same calm layout and a plain text version.",
     "Administrators can give a user their own storage limit on the Users page. The ring in that person's menu follows it.",
     "Settings has a default and a maximum lifetime for shares and receive links. New links start with the default end date and cannot run past the maximum.",
+    "Deleting a file or folder moves it to the new Trash page, where it stays for 30 days (changeable in Settings). Restore it, or delete it for good. The trash counts toward your storage.",
+    "Settings can remove ended shares and empty receive links by themselves after a number of days. Files are never removed, and a receive link that holds files stays.",
   ],
 };
 

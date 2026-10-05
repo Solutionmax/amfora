@@ -27,10 +27,9 @@ export function useShareDetailActions(reload: () => Promise<void>) {
     }
   };
 
-  /** The update endpoint clears the end date when it is left out, so the current one is always sent along. */
   const saveViewLimit = async (share: Share, maxViews: number | null) => {
     try {
-      await updateShare({ id: share.id, maxViews, expiration: share.expiration ?? undefined });
+      await updateShare({ id: share.id, maxViews });
       toast.success(t("shares.calm.viewLimitSaved"));
       await reload();
       return true;

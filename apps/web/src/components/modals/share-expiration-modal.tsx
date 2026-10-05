@@ -60,10 +60,10 @@ export function ShareExpirationModal({ shareId, share, onClose, onSuccess }: Sha
 
     setIsLoading(true);
     try {
-      // Leaving the date out clears it on the server.
+      // Leaving the date out keeps it on the server, null clears it.
       await updateShare({
         id: shareId,
-        expiration: hasExpiration ? new Date(expirationDate).toISOString() : undefined,
+        expiration: hasExpiration ? new Date(expirationDate).toISOString() : null,
       });
 
       const successMessage = hasExpiration

@@ -591,8 +591,7 @@
     "descriptionPlaceholder": "Enter file description",
     "addDescriptionPlaceholder": "Add description...",
     "deleteFile": "Delete File",
-    "deleteConfirmation": "Are you sure you want to delete this file?",
-    "deleteWarning": "This action cannot be undone."
+    "deleteConfirmation": "Are you sure you want to delete this file?"
   },
   "fileManager": {
     "downloadError": "Failed to download file",
@@ -725,7 +724,6 @@
       "editFolderHint": "Change the name or the description.",
       "deleteTitle": "Delete {name}?",
       "deleteFolderTitle": "Delete the folder {name}?",
-      "deleteFolderHint": "Everything inside it is deleted too. This cannot be undone.",
       "bulkDeleteTitle": "Delete {count, plural, =1 {1 item} other {# items}}?",
       "zipTitle": "Download as zip",
       "zipSummary": "{files, plural, =0 {No files} =1 {# file} other {# files}}{folders, plural, =0 {} =1 { and # folder} other { and # folders}} in one zip file",
@@ -748,7 +746,10 @@
       "done": "Done",
       "fullScreen": "View full screen",
       "zoomIn": "Zoom in",
-      "zoomOut": "Zoom out"
+      "zoomOut": "Zoom out",
+      "trashHint": "It moves to the trash and stays there for {days} days. You can restore it until then.",
+      "trashFolderHint": "The folder and everything in it move to the trash and stay there for {days} days. You can restore them until then.",
+      "trashBulkHint": "They move to the trash and stay there for {days} days. You can restore them until then."
     }
   },
   "filesTable": {
@@ -2189,6 +2190,14 @@
       "shareMaxExpiryDays": {
         "title": "Maximum lifetime of links",
         "description": "No link can stay open longer than this. 0 means no maximum."
+      },
+      "trashRetentionDays": {
+        "title": "Days in the trash",
+        "description": "How long deleted files and folders stay in the trash before they are removed for good. At least 1."
+      },
+      "expiredLinkRetentionDays": {
+        "title": "Remove ended links after",
+        "description": "Shares and empty receive links are removed this many days after their end date. Files are never removed, and a receive link that still holds files stays. 0 means never."
       }
     },
     "buttons": {
@@ -2289,6 +2298,10 @@
         "linkLifetime": {
           "title": "Lifetime of links",
           "description": "How long shares and receive links may stay open."
+        },
+        "cleanUp": {
+          "title": "Clean up",
+          "description": "What is removed by itself, and when."
         }
       },
       "fields": {
@@ -2821,6 +2834,43 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "trash": {
+    "pageTitle": "Trash",
+    "subline": "Deleted items stay here for {days} days, then they are removed for good. The trash holds {size} and counts toward your storage.",
+    "sublineEmpty": "Deleted items stay here for {days} days, then they are removed for good.",
+    "emptyTrash": "Empty trash",
+    "emptyTitle": "The trash is empty",
+    "emptyText": "Files and folders you delete show up here first, so you can get them back.",
+    "loadError": "The trash could not be loaded.",
+    "tableLabel": "Deleted files and folders",
+    "selectAll": "Select all",
+    "selectItem": "Select {name}",
+    "columns": {
+      "name": "Name",
+      "place": "Was in",
+      "deleted": "Deleted",
+      "timeLeft": "Time left",
+      "size": "Size",
+      "actions": "Actions"
+    },
+    "topLevel": "Top level",
+    "daysLeft": "{count, plural, =0 {Today} =1 {1 day} other {# days}}",
+    "folderMeta": "Folder, {count, plural, =1 {1 file} other {# files}}",
+    "restore": "Restore",
+    "restoreItem": "Restore {name}",
+    "deleteForGood": "Delete for good",
+    "deleteItem": "Delete {name} for good",
+    "restored": "{count, plural, =1 {1 item restored} other {# items restored}}",
+    "restorePartial": "{failed} of {total, plural, =1 {1 item} other {# items}} could not be restored",
+    "purged": "{count, plural, =1 {1 item deleted for good} other {# items deleted for good}}",
+    "purgePartial": "{failed} of {total, plural, =1 {1 item} other {# items}} could not be deleted",
+    "purgeError": "The trash could not be emptied.",
+    "purgeTitle": "Delete {name} for good?",
+    "purgeBulkTitle": "Delete {count} items for good?",
+    "purgeHint": "It is removed from storage and cannot be restored.",
+    "emptyConfirmTitle": "Empty the trash?",
+    "emptyConfirm": "{count, plural, =1 {1 item} other {# items}} ({size}) will be removed from storage. This cannot be undone."
   },
   "twoFactor": {
     "title": "Two-Factor Authentication",
