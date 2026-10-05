@@ -58,13 +58,13 @@
             <p class="eyebrow">
               <span class="status-dot" aria-hidden="true"></span> LATEST RELEASE
             </p>
-            <h2 id="latest-title">Amfora 2.3.0</h2>
+            <h2 id="latest-title">Amfora 2.3.1</h2>
             <p class="release-date">
               Released <time datetime="2026-10-05">5 October 2026</time>
             </p>
             <p>
-              A calmer interface, three themes for the public pages, secrets
-              that destroy themselves, an activity log and an API.
+              A fix release: deleting several shares at once works again, and
+              select all on the Shares page.
             </p>
             <div class="release-actions">
               <a class="button primary" href="/docs/#getting-started"
@@ -72,7 +72,7 @@
               >
               <a
                 class="button release-secondary"
-                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.3.0.zip"
+                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.3.1.zip"
                 >Download source ZIP ↓</a
               >
             </div>
@@ -110,12 +110,12 @@
             <p class="eyebrow">02 / DOCKER IMAGE</p>
             <h2>Use a published version.</h2>
             <p>
-              Pull version 2.3.0. No account and no login needed. Docker selects
+              Pull version 2.3.1. No account and no login needed. Docker selects
               the image for your processor.
             </p>
             <pre
               class="install-command"
-            ><code>docker pull ghcr.io/solutionmax/amfora:2.3.0</code></pre>
+            ><code>docker pull ghcr.io/solutionmax/amfora:2.3.1</code></pre>
             <p class="release-detail">
               Version 1.0.0 remains under <code>ghcr.io/raym0nz82/amfora</code>.
               Keep the repository's Compose settings for storage and persistent
@@ -123,7 +123,7 @@
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/blob/v2.3.0/docker-compose.yaml"
+              href="https://github.com/Solutionmax/amfora/blob/v2.3.1/docker-compose.yaml"
               >View the Compose configuration ↗</a
             >
           </article>
@@ -131,12 +131,12 @@
             <p class="eyebrow">03 / SOURCE CODE</p>
             <h2>Build a specific release.</h2>
             <p>
-              Download the version 2.3.0 source archive or check out its tag to
+              Download the version 2.3.1 source archive or check out its tag to
               build this release yourself.
             </p>
             <pre
               class="install-command"
-            ><code>git clone --branch v2.3.0 --depth 1 https://github.com/Solutionmax/amfora.git
+            ><code>git clone --branch v2.3.1 --depth 1 https://github.com/Solutionmax/amfora.git
 cd amfora
 bash infra/build-docker.sh local</code></pre>
             <p class="release-detail">
@@ -145,7 +145,7 @@ bash infra/build-docker.sh local</code></pre>
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/tree/v2.3.0"
+              href="https://github.com/Solutionmax/amfora/tree/v2.3.1"
               >Browse the release source ↗</a
             >
           </article>
@@ -156,6 +156,10 @@ bash infra/build-docker.sh local</code></pre>
           <aside class="release-index">
             <p class="eyebrow">RELEASE HISTORY</p>
             <nav aria-label="Release versions">
+              <a href="#v2-3-1"
+                ><strong>2.3.1</strong
+                ><time datetime="2026-10-05">5 Oct 2026</time></a
+              >
               <a href="#v2-3-0"
                 ><strong>2.3.0</strong
                 ><time datetime="2026-10-05">5 Oct 2026</time></a
@@ -196,10 +200,25 @@ bash infra/build-docker.sh local</code></pre>
             >
           </aside>
           <div class="release-entries">
-            <article class="release-entry" id="v2-3-0">
+            <article class="release-entry" id="v2-3-1">
               <div class="release-entry-heading">
                 <div>
                   <p class="eyebrow">LATEST RELEASE</p>
+                  <h2>Amfora 2.3.1</h2>
+                </div>
+                <time datetime="2026-10-05">5 October 2026</time>
+              </div>
+              <p>A fix release, with select all on the Shares page.</p>
+              <ul>
+                <li>Deleting several shares at once works again. It removed one or two and then reported a failure, because the deletes collided in the database.</li>
+                <li>The storage meter of an administrator counts what Amfora holds, not everything else on the same disk.</li>
+                <li>Select all: in selection mode a box above the list picks every share the list shows.</li>
+              </ul>
+            </article>
+            <article class="release-entry" id="v2-3-0">
+              <div class="release-entry-heading">
+                <div>
+                  <p class="eyebrow">RELEASE</p>
                   <h2>Amfora 2.3.0</h2>
                 </div>
                 <time datetime="2026-10-05">5 October 2026</time>
@@ -662,7 +681,7 @@ docker compose up -d --no-build amfora</code></pre>
         </div>
       </section>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.3.0 &middot; released 30 Sep 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.3.1 &middot; released 5 Oct 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>
