@@ -56,7 +56,7 @@
           ><a href="#getting-started"><span>02</span>Getting started</a
           ><a href="#deployment"><span>03</span>HTTPS deployment</a
           ><a href="#storage"><span>04</span>Storage & limits</a
-          ><a href="#sharing"><span>05</span>Send & receive</a
+          ><a href="#sharing"><span>05</span>Send, receive & secrets</a
           ><a href="#admin"><span>06</span>Administration</a
           ><a href="#operations"><span>07</span>Backups & upgrades</a
           ><a href="#troubleshooting"><span>08</span>Troubleshooting</a
@@ -64,7 +64,7 @@
         </nav>
         <div class="docs-sidebar-bottom">
           <span class="badge">Self hosted installation</span>
-          <p>Current guide<br />Updated September 2026</p>
+          <p>Current guide<br />Updated October 2026</p>
           <a href="https://github.com/Solutionmax/amfora">View source ↗</a>
         </div>
       </aside>
@@ -331,6 +331,62 @@ S3_FORCE_PATH_STYLE=false</code></pre>
               The sender uploads from the public receive page without an Amfora
               account. The owner reviews the received files in
               <strong>Reverse shares</strong>.
+            </p>
+            <h3 id="secrets">Share a secret</h3>
+            <ol>
+              <li>Open <strong>Secrets</strong> and choose <strong>New</strong>.</li>
+              <li>
+                Paste the password or key, choose how long the link lives and how
+                often it may be opened, and set a passphrase if you want one.
+              </li>
+              <li>
+                Copy the <code>/x/&lt;id&gt;#&lt;key&gt;</code> link straight away.
+                It is shown once.
+              </li>
+            </ol>
+            <p>
+              The text is encrypted in your browser. The key is the part of the
+              link behind the <code>#</code>, which a browser never sends to a
+              server, so nobody can read the secret without the link, also not
+              an administrator. After the last opening, or when its time runs
+              out, the text is destroyed. Three wrong passphrases destroy it too.
+            </p>
+            <p>
+              The reader presses one button to see the secret. Loading the page
+              costs nothing, so a chat app that fetches the link for a preview
+              cannot use it up.
+            </p>
+            <p>
+              An administrator can open <code>/secret</code> to visitors without
+              an account, with its own limits, under <strong>Settings</strong>,
+              <strong>Security</strong>. It is off by default. A full access API
+              key can store secrets too; the sealing recipe and test vectors are
+              in
+              <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/SECRETS.md">SECRETS.md</a>.
+            </p>
+            <h3 id="activity">See what happened</h3>
+            <p>
+              <strong>Activity</strong> lists what happened to your links and your
+              account: a share opened or downloaded, a wrong password, files
+              received, a secret opened, a sign in. A user sees their own links,
+              an administrator sees everyone, and the list can be exported as
+              CSV. It is kept for 90 days unless you change that.
+            </p>
+            <p>
+              Each line can say where a visitor was. The address itself is never
+              stored. Places need a database you supply in MaxMind format, for
+              example the free DB-IP City Lite; without it only your own network
+              is recognised. See
+              <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/ACTIVITY.md">ACTIVITY.md</a>
+              for the file location and for running behind a reverse proxy.
+            </p>
+            <p>
+              On a share you can ask for an email when it is downloaded, and on a
+              share or receive link for a reminder three days before it ends.
+              Both need outgoing email. Under <strong>Settings</strong>,
+              <strong>Security</strong> you can also give one webhook address
+              that is called, signed, when files are received, a share is
+              downloaded or a secret is opened.
             </p>
           </section>
           <section class="docs-section" id="admin">

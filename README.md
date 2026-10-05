@@ -63,6 +63,19 @@ the public page and can be asked for a name or email address. The owner reviews
 those uploads in **Reverse shares**, downloads them, or copies them into the
 workspace.
 
+### 4. Share a secret
+
+Open **Secrets** to send a password or a key. The text is encrypted in your
+browser; the key is part of the `/x/<id>#<key>` link and never reaches the
+server. You choose how long the link lives and how often it may be opened.
+After the last opening the text is destroyed.
+
+### 5. See what happened
+
+**Activity** lists what happened to your links: opened, downloaded, a wrong
+password, files received, a secret opened, and where the visitor was. You can
+ask for an email when a share is downloaded or a reminder before a link ends.
+
 ## Product tour
 
 The screenshots show the English interface with demonstration data.
@@ -82,6 +95,22 @@ download it all. This is the Stage theme; Workbench and Seal are the other two.
 A receive link gives outside collaborators a simple upload form with the limits
 set by its owner.
 
+![Amfora secrets](site/assets/screenshots/2.3/secrets.webp)
+
+Secrets keep a record of every link you made: waiting, used up or expired, and
+how often it was opened. The text itself is never in the list.
+
+![Opening a secret](site/assets/screenshots/2.3/secret-open-stage.webp)
+
+The reader presses one button to see the secret. Loading the page costs
+nothing, so a chat app that fetches the link for a preview cannot use it up.
+
+![Amfora activity](site/assets/screenshots/2.3/activity.webp)
+
+Activity groups what happened per day. A user sees their own links, an
+administrator sees everyone. The address of a visitor is never stored, only the
+place it points to.
+
 ![Amfora sign in](site/assets/screenshots/2.3/login-workbench.webp)
 
 The sign in screen supports password authentication, password recovery, and
@@ -94,6 +123,9 @@ two factor authentication when it is enabled for the account.
 | **Workspace** | Files, folders, downloads and shares, with a dashboard for recent activity and storage usage. |
 | **Send files** | Download links with optional passwords, expiry dates, view limits, recipient email notifications and QR codes. |
 | **Collect files** | Upload requests with optional password, expiry, file count, size and type limits. Senders do not need an account. |
+| **Secrets** | Passwords and keys behind a link that destroys itself. Encrypted in the browser, opened a set number of times, optional passphrase. Optionally open to visitors without an account. See [docs/SECRETS.md](docs/SECRETS.md). |
+| **Activity** | A log per user of what happened to links and accounts, with the place of a visitor, a CSV export, emails to the maker and signed webhooks. See [docs/ACTIVITY.md](docs/ACTIVITY.md). |
+| **API** | API keys with read or full access for other tools. See [docs/API.md](docs/API.md). |
 | **Storage** | Bundled MinIO or an external S3 compatible provider, on infrastructure you control. |
 | **Branding** | Application name, description, logo, accent colour, font, corner radius and default language, all stored on the server. A [brandpack](https://amfora.solutionmax.net/brandpack/) removes the "Powered by Amfora" credit and unlocks a background image and custom CSS. |
 | **Access** | User invitations, roles, deactivation, trusted devices and TOTP two factor authentication with backup codes. Optional OAuth2/OIDC sign in. |

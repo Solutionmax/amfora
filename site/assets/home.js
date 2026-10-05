@@ -1,7 +1,7 @@
 (() => {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const IMG = {"download-stage": "/assets/screenshots/2.3/download-stage.webp?v=2.3h2", "download-workbench": "/assets/screenshots/2.3/download-workbench.webp?v=2.3h2", "download-seal": "/assets/screenshots/2.3/download-seal.webp?v=2.3h2", "upload-stage": "/assets/screenshots/2.3/upload-stage.webp?v=2.3h2", "upload-workbench": "/assets/screenshots/2.3/upload-workbench.webp?v=2.3h2", "upload-seal": "/assets/screenshots/2.3/upload-seal.webp?v=2.3h2", "login-stage": "/assets/screenshots/2.3/login-stage.webp?v=2.3h2", "login-workbench": "/assets/screenshots/2.3/login-workbench.webp?v=2.3h2", "login-seal": "/assets/screenshots/2.3/login-seal.webp?v=2.3h2"};
+  const IMG = {"download-stage": "/assets/screenshots/2.3/download-stage.webp?v=2.3h3", "download-workbench": "/assets/screenshots/2.3/download-workbench.webp?v=2.3h3", "download-seal": "/assets/screenshots/2.3/download-seal.webp?v=2.3h3", "upload-stage": "/assets/screenshots/2.3/upload-stage.webp?v=2.3h3", "upload-workbench": "/assets/screenshots/2.3/upload-workbench.webp?v=2.3h3", "upload-seal": "/assets/screenshots/2.3/upload-seal.webp?v=2.3h3", "login-stage": "/assets/screenshots/2.3/login-stage.webp?v=2.3h3", "login-workbench": "/assets/screenshots/2.3/login-workbench.webp?v=2.3h3", "login-seal": "/assets/screenshots/2.3/login-seal.webp?v=2.3h3"};
 
   // menu on small screens
   const menu = $(".menu-toggle"), nav = $("#navigation");
