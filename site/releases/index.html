@@ -60,11 +60,11 @@
             </p>
             <h2 id="latest-title">Amfora 2.3.0</h2>
             <p class="release-date">
-              Released <time datetime="2026-09-30">30 September 2026</time>
+              Released <time datetime="2026-10-05">5 October 2026</time>
             </p>
             <p>
-              Three themes for the public pages. Pick Stage, Workbench or Seal
-              in Customization and sign-in, download and receive pages follow.
+              A calmer interface, three themes for the public pages, secrets
+              that destroy themselves, an activity log and an API.
             </p>
             <div class="release-actions">
               <a class="button primary" href="/docs/#getting-started"
@@ -158,7 +158,7 @@ bash infra/build-docker.sh local</code></pre>
             <nav aria-label="Release versions">
               <a href="#v2-3-0"
                 ><strong>2.3.0</strong
-                ><time datetime="2026-09-30">30 Sep 2026</time></a
+                ><time datetime="2026-10-05">5 Oct 2026</time></a
               >
               <a href="#v2-2-0"
                 ><strong>2.2.0</strong
@@ -202,14 +202,17 @@ bash infra/build-docker.sh local</code></pre>
                   <p class="eyebrow">LATEST RELEASE</p>
                   <h2>Amfora 2.3.0</h2>
                 </div>
-                <time datetime="2026-09-30">30 September 2026</time>
+                <time datetime="2026-10-05">5 October 2026</time>
               </div>
-              <p>Three themes for the public pages.</p>
+              <p>A calmer interface, three public themes, secrets, activity and an API.</p>
               <ul>
-                <li>Customization has a new Public pages choice: Stage, Workbench or Seal. Sign-in, download and receive pages follow it for every visitor.</li>
-                <li>Stage: the full-screen cover with the message in large type and the card floating beside it, now also on sign-in.</li>
-                <li>Workbench: a calm sand bench with the message and the facts, the working card on a white panel.</li>
-                <li>Seal: one centred card with your mark as a seal and the facts in a status row. The most neutral, best with your own brand.</li>
+                <li>Secrets: send a password or key behind a link that destroys itself. Encrypted in the browser, opened a set number of times, optional passphrase. Optionally open to visitors without an account.</li>
+                <li>Activity: what happened to your links and your account, with the place of a visitor and a CSV export. The address itself is never stored.</li>
+                <li>Emails to the maker when a share is downloaded, before a link ends and when a secret is opened. One signed webhook for other tools.</li>
+                <li>API keys with read only or full access, under <code>/api/v1</code>.</li>
+                <li>A user sees their own storage against their own limit, in the sidebar and on the dashboard.</li>
+                <li>Three themes for the public pages: Stage, Workbench or Seal, chosen in Customization.</li>
+                <li>Every signed-in page has the new calm layout, in five languages. Settings and sign-in load far less script.</li>
                 <li>Download and receive pages use the full screen, with a live countdown to the end date, the total size and the number of files.</li>
               </ul>
             </article>

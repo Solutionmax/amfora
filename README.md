@@ -309,6 +309,8 @@ Client supplied IP headers are ignored by default. Only behind an ingress that r
 incoming forwarding headers and blocks direct web access, set
 `TRUST_CLIENT_IP_HEADERS=true` for the web process and `TRUST_PROXY=127.0.0.1,::1`
 for the API's known proxy hops. Never configure blanket trust of arbitrary proxies.
+Behind Cloudflare the visitor named in `CF-Connecting-IP` is then used for rate limits
+and for the place shown in Activity.
 Without this opt in, request rate limits conservatively share the proxy address;
 password failures are additionally limited per account.
 

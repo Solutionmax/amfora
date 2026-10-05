@@ -6,12 +6,18 @@
  */
 export const SHARE_PASSWORD_HEADER = "x-share-password";
 
-/** Only opt in behind a private ingress that replaces incoming forwarding headers. */
+/**
+ * The visitor's address for the API. Only opt in behind a private ingress that replaces incoming
+ * forwarding headers and blocks direct access: without that a caller could name any address.
+ *
+ * Behind Cloudflare the visitor is in `CF-Connecting-IP`, and the proxies in between each add
+ * their own hop to `X-Forwarded-For`. The API counts requests per address from that last header,
+ * so the visitor Cloudflare names goes first in both.
+ */
 export function clientAddressHeaders(headers: Headers): Record<string, string> {
   if (process.env.TRUST_CLIENT_IP_HEADERS !== "true") return {};
-  const forwardedFor = headers.get("x-forwarded-for");
-  // Cloudflare names the visitor here. The API uses it only to say where an event came from.
-  const connecting = headers.get("cf-connecting-ip");
+  const connecting = headers.get("cf-connecting-ip")?.trim();
+  const forwardedFor = connecting || headers.get("x-forwarded-for");
   return {
     ...(forwardedFor ? { "x-forwarded-for": forwardedFor } : {}),
     ...(connecting ? { "cf-connecting-ip": connecting } : {}),

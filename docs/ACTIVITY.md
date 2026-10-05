@@ -29,8 +29,8 @@ and everything else as unknown.
 
 Behind a reverse proxy the server only sees the proxy. Set `TRUST_CLIENT_IP_HEADERS=true` for
 the web process when your ingress replaces incoming forwarding headers; behind Cloudflare the
-visitor then comes from `CF-Connecting-IP`. This setting alone changes what the log says, not
-how rate limits count; see the README for `TRUST_PROXY`.
+visitor then comes from `CF-Connecting-IP`. This setting alone changes what the log says. Rate
+limits count per visitor once `TRUST_PROXY` is set as well; see the README.
 
 **Settings** lets you choose city and country, country only, or no place at all.
 
