@@ -13,9 +13,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useLinkLifetime } from "@/hooks/use-link-lifetime";
 import type { UpdateReverseShareBody } from "@/http/endpoints/reverse-shares/types";
 import type { ReverseShare } from "../hooks/use-reverse-shares";
 import { emptyReceiveForm, receiveFormFrom, toUpdateBody, type ReceiveFormValues } from "../lib/receive-form";
+import { toDateTimeLocal } from "../lib/receive-format";
 import { ReverseShareFormFields } from "./reverse-share-form-fields";
 
 interface EditReverseShareModalProps {
@@ -41,8 +43,12 @@ export function EditReverseShareModal({
     if (isOpen && reverseShare) form.reset(receiveFormFrom(reverseShare));
   }, [isOpen, reverseShare, form]);
 
+  const { acceptsExpiry } = useLinkLifetime();
+  const currentExpiration = toDateTimeLocal(reverseShare?.expiration);
+
   const submit = form.handleSubmit(async (values) => {
     if (!reverseShare) return;
+    if (!acceptsExpiry(values.hasExpiration ? values.expiration : "", currentExpiration)) return;
     await onUpdateReverseShare(toUpdateBody(values, reverseShare.id, reverseShare.hasPassword));
   });
 
@@ -59,6 +65,7 @@ export function EditReverseShareModal({
             mode="edit"
             hadPassword={!!reverseShare?.hasPassword}
             hadExpiration={!!reverseShare?.expiration}
+            unchangedExpiration={currentExpiration}
           />
         </form>
         <DialogFooter>

@@ -46,3 +46,9 @@ test("the mail server and webhook settings stay out of the public list", async (
     assert.equal(configs.has(key), false, key);
   }
 });
+
+test("the dialogs for a new link can read the default and maximum lifetime", async () => {
+  const configs = await publicConfigs();
+  assert.equal(configs.get("shareDefaultExpiryDays"), "0");
+  assert.equal(configs.get("shareMaxExpiryDays"), "0");
+});

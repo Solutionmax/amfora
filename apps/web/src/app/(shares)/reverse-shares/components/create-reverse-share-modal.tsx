@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useStartingExpiry } from "@/hooks/use-link-lifetime";
 import type { CreateReverseShareBody } from "@/http/endpoints/reverse-shares/types";
 import { emptyReceiveForm, toCreateBody, type ReceiveFormValues } from "../lib/receive-form";
 import { ReverseShareFormFields } from "./reverse-share-form-fields";
@@ -38,7 +39,13 @@ export function CreateReverseShareModal({
     if (isOpen) form.reset(emptyReceiveForm());
   }, [isOpen, form]);
 
+  // After the effect above, so the default end date lands on the freshly reset form.
+  const { maxDays, acceptsExpiry } = useStartingExpiry(isOpen, (expiration) =>
+    form.reset({ ...emptyReceiveForm(), expiration, hasExpiration: expiration !== "" || maxDays > 0 })
+  );
+
   const submit = form.handleSubmit(async (values) => {
+    if (!acceptsExpiry(values.hasExpiration ? values.expiration : "")) return;
     await onCreateReverseShare(toCreateBody(values));
   });
 

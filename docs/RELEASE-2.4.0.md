@@ -26,6 +26,17 @@ providers.
   Under the card is one quiet line "Powered by Amfora", which replaces the old "Powered by
   SolutionMAX" of two of these emails. A brandpack that hides the credit hides it here too.
 
+- **A storage limit per user.** Administrators can set a limit for one user in the user form on
+  the Users page (a number with MB, GB or TB). Empty means the default of the installation, which
+  is shown in the field. Uploads, files taken from a receive link, and the ring in the menu all
+  follow that limit. Only administrators can set it; nobody can change their own.
+- **Default and maximum lifetime for links.** Two settings under Settings, Storage, in whole
+  days (0 means none). The dialogs for a new share and a new receive link start with the default
+  end date, and the date picker stops at the maximum. The server refuses a longer date, or no
+  date while a maximum is set, also for API keys. A link that already runs longer keeps its end
+  date and can still be renamed. A default longer than the maximum is refused in Settings. Secrets
+  keep their own bounds.
+
 ## Changed
 
 - **The storage meter in the menu is a ring.** Next to it: what is in use and what is still

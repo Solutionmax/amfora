@@ -11,6 +11,7 @@ type UserWithPassword = {
   lastName?: string;
   username?: string;
   password?: string;
+  storageLimitBytes?: number | null;
 };
 
 export class UserService {
@@ -62,9 +63,12 @@ export class UserService {
   }
 
   async updateUser(userId: string, data: Partial<UserWithPassword>) {
-    const { password, ...rest } = data;
+    const { password, storageLimitBytes, ...rest } = data;
 
     const updateData: any = { ...rest };
+    if (storageLimitBytes !== undefined) {
+      updateData.storageLimitBytes = storageLimitBytes === null ? null : BigInt(storageLimitBytes);
+    }
 
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);

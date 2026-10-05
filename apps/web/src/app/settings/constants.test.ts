@@ -66,3 +66,18 @@ test("notification switches follow outgoing mail", () => {
 test("unknown group puts everything in more", () => {
   assert.deepEqual(blocksFor("other", ["a", "b"]), [{ id: "more", rows: ["a", "b"] }]);
 });
+
+test("the two link lifetime settings sit side by side under the storage limits", () => {
+  const blocks = blocksFor("storage", [
+    "maxFileSize",
+    "maxTotalStoragePerUser",
+    "shareDefaultExpiryDays",
+    "shareMaxExpiryDays",
+  ]);
+
+  assert.deepEqual(
+    blocks.map((block) => block.id),
+    ["limits", "linkLifetime"]
+  );
+  assert.deepEqual(blocks[1].rows, [["shareDefaultExpiryDays", "shareMaxExpiryDays"]]);
+});

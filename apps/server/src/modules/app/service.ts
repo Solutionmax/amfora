@@ -1,3 +1,4 @@
+import { assertLifetimeSettings } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
 import { resolvePaidAppearance } from "./appearance";
@@ -132,6 +133,7 @@ export class AppService {
       throw new Error("JWT Secret cannot be updated through this endpoint");
     }
     if (key === "appPublicTheme") assertPublicTheme(value);
+    await assertLifetimeSettings([{ key, value }]);
 
     if (key === "passwordAuthEnabled") {
       if (value === "false") {
@@ -163,6 +165,7 @@ export class AppService {
       throw new Error("JWT Secret cannot be updated through this endpoint");
     }
     updates.filter((update) => update.key === "appPublicTheme").forEach((update) => assertPublicTheme(update.value));
+    await assertLifetimeSettings(updates);
     const passwordAuthUpdate = updates.find((update) => update.key === "passwordAuthEnabled");
     if (passwordAuthUpdate && passwordAuthUpdate.value === "false") {
       const canDisable = await this.configService.validatePasswordAuthDisable();

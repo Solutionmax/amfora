@@ -22,7 +22,7 @@ export async function userRoutes(app: FastifyInstance) {
       return reply.status(401).send({ error: "Unauthorized: a valid token is required to access this resource." });
     }
 
-    const body = request.body as { id?: string; isAdmin?: boolean } | undefined;
+    const body = request.body as { id?: string; isAdmin?: boolean; storageLimitBytes?: number | null } | undefined;
     const userId = (request.user as { userId?: string }).userId;
 
     let account;
@@ -35,7 +35,14 @@ export async function userRoutes(app: FastifyInstance) {
     // Privilege comes from the database, not from the day-long token claim.
     const authenticatedUser = { userId, isAdmin: account?.isActive === true && account.isAdmin };
 
-    if (!account?.isActive || !canUpdateUser(authenticatedUser, { id: body?.id ?? "", isAdmin: body?.isAdmin })) {
+    if (
+      !account?.isActive ||
+      !canUpdateUser(authenticatedUser, {
+        id: body?.id ?? "",
+        isAdmin: body?.isAdmin,
+        storageLimitBytes: body?.storageLimitBytes,
+      })
+    ) {
       return reply.status(403).send({ error: "You can only update your own profile" });
     }
   };
@@ -80,6 +87,10 @@ export async function userRoutes(app: FastifyInstance) {
               image: z.string().nullable().describe("User profile image URL"),
               isAdmin: z.boolean().describe("User is admin"),
               isActive: z.boolean().describe("User is active"),
+              storageLimitBytes: z
+                .number()
+                .nullable()
+                .describe("Own storage limit in bytes, null for the installation default"),
               createdAt: z.date().describe("User creation date"),
               updatedAt: z.date().describe("User last update date"),
             }),
@@ -114,6 +125,10 @@ export async function userRoutes(app: FastifyInstance) {
               image: z.string().nullable().describe("User profile image URL"),
               isAdmin: z.boolean().describe("User is admin"),
               isActive: z.boolean().describe("User is active"),
+              storageLimitBytes: z
+                .number()
+                .nullable()
+                .describe("Own storage limit in bytes, null for the installation default"),
               createdAt: z.date().describe("User creation date"),
               updatedAt: z.date().describe("User last update date"),
             })
@@ -147,6 +162,10 @@ export async function userRoutes(app: FastifyInstance) {
             image: z.string().nullable().describe("User profile image URL"),
             isAdmin: z.boolean().describe("User is admin"),
             isActive: z.boolean().describe("User is active"),
+            storageLimitBytes: z
+              .number()
+              .nullable()
+              .describe("Own storage limit in bytes, null for the installation default"),
             createdAt: z.date().describe("User creation date"),
             updatedAt: z.date().describe("User last update date"),
           }),
@@ -180,6 +199,10 @@ export async function userRoutes(app: FastifyInstance) {
             image: z.string().nullable().describe("User profile image URL"),
             isAdmin: z.boolean().describe("User is admin"),
             isActive: z.boolean().describe("User is active"),
+            storageLimitBytes: z
+              .number()
+              .nullable()
+              .describe("Own storage limit in bytes, null for the installation default"),
             createdAt: z.date().describe("User creation date"),
             updatedAt: z.date().describe("User last update date"),
           }),
@@ -212,6 +235,10 @@ export async function userRoutes(app: FastifyInstance) {
             image: z.string().nullable().describe("User profile image URL"),
             isAdmin: z.boolean().describe("User is admin"),
             isActive: z.boolean().describe("User is active"),
+            storageLimitBytes: z
+              .number()
+              .nullable()
+              .describe("Own storage limit in bytes, null for the installation default"),
             createdAt: z.date().describe("User creation date"),
             updatedAt: z.date().describe("User last update date"),
           }),
@@ -244,6 +271,10 @@ export async function userRoutes(app: FastifyInstance) {
             image: z.string().nullable().describe("User profile image URL"),
             isAdmin: z.boolean().describe("User is admin"),
             isActive: z.boolean().describe("User is active"),
+            storageLimitBytes: z
+              .number()
+              .nullable()
+              .describe("Own storage limit in bytes, null for the installation default"),
             createdAt: z.date().describe("User creation date"),
             updatedAt: z.date().describe("User last update date"),
           }),
@@ -276,6 +307,10 @@ export async function userRoutes(app: FastifyInstance) {
             image: z.string().nullable().describe("User profile image URL"),
             isAdmin: z.boolean().describe("User is admin"),
             isActive: z.boolean().describe("User is active"),
+            storageLimitBytes: z
+              .number()
+              .nullable()
+              .describe("Own storage limit in bytes, null for the installation default"),
             createdAt: z.date().describe("User creation date"),
             updatedAt: z.date().describe("User last update date"),
           }),
@@ -311,6 +346,10 @@ export async function userRoutes(app: FastifyInstance) {
             image: z.string().nullable().describe("User profile image URL"),
             isAdmin: z.boolean().describe("User is admin"),
             isActive: z.boolean().describe("User is active"),
+            storageLimitBytes: z
+              .number()
+              .nullable()
+              .describe("Own storage limit in bytes, null for the installation default"),
             createdAt: z.date().describe("User creation date"),
             updatedAt: z.date().describe("User last update date"),
           }),

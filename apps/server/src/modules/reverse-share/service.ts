@@ -1,11 +1,13 @@
 import { randomUUID } from "node:crypto";
 
 import { env } from "../../env";
+import { assertLinkLifetime } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { recordActivity } from "../activity/activity";
 import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
 import { FileService } from "../file/service";
+import { storageLimitOf } from "../storage/limit";
 import { UserService } from "../user/service";
 import {
   CreateReverseShareInput,
@@ -62,6 +64,7 @@ export class ReverseShareService {
   >();
 
   async createReverseShare(data: CreateReverseShareInput, creatorId: string) {
+    await assertLinkLifetime(data.expiration ? new Date(data.expiration) : null);
     const reverseShare = await this.reverseShareRepository.create(data, creatorId);
     return ReverseShareResponseSchema.parse(this.formatReverseShareResponse(reverseShare));
   }
@@ -180,6 +183,8 @@ export class ReverseShareService {
     if (reverseShare.creatorId !== creatorId) {
       throw new Error("Unauthorized to update this reverse share");
     }
+
+    if (data.expiration !== undefined) await assertLinkLifetime(new Date(data.expiration), reverseShare.expiration);
 
     const updatedReverseShare = await this.reverseShareRepository.update(id, data);
     return ReverseShareResponseSchema.parse(this.formatReverseShareResponse(updatedReverseShare));
@@ -639,7 +644,7 @@ export class ReverseShareService {
       throw new Error(`File size exceeds the maximum allowed size of ${maxSizeMB}MB`);
     }
 
-    const maxTotalStorage = BigInt(await configService.getValue("maxTotalStoragePerUser"));
+    const maxTotalStorage = await storageLimitOf(creatorId);
 
     const userFiles = await prisma.file.findMany({
       where: { userId: creatorId },

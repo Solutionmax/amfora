@@ -12,6 +12,7 @@ import { getContentType } from "../../utils/mime-types";
 import { recordVisitorActivity } from "../activity/activity";
 import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
+import { storageLimitOf } from "../storage/limit";
 import { dispositionFor } from "./disposition";
 import { canDownloadFromShares } from "./download-access";
 import { shouldCountDownload } from "./download-count";
@@ -151,7 +152,7 @@ export class FileController {
         });
       }
 
-      const maxTotalStorage = BigInt(await this.configService.getValue("maxTotalStoragePerUser"));
+      const maxTotalStorage = await storageLimitOf(userId);
 
       const userFiles = await prisma.file.findMany({
         where: { userId },
@@ -238,7 +239,7 @@ export class FileController {
         });
       }
 
-      const maxTotalStorage = BigInt(await this.configService.getValue("maxTotalStoragePerUser"));
+      const maxTotalStorage = await storageLimitOf(userId);
 
       const userFiles = await prisma.file.findMany({
         where: { userId },

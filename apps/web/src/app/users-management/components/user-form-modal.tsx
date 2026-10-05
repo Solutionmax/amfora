@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 
+import { formatStorageSize } from "@/app/dashboard/utils/format-storage-size";
+import { FileSizeInput } from "@/app/settings/components/file-size-input";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +14,10 @@ import {
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSecureConfigValue } from "@/hooks/use-secure-configs";
 import { UserFormModalProps } from "../types";
+
+const BYTES_PER_GB = 1024 * 1024 * 1024;
 
 export function UserFormModal({ isOpen, onClose, modalMode, selectedUser, formMethods, onSubmit }: UserFormModalProps) {
   const t = useTranslations();
@@ -24,6 +29,9 @@ export function UserFormModal({ isOpen, onClose, modalMode, selectedUser, formMe
   } = formMethods;
   const isCreate = modalMode === "create";
   const isAdmin = watch("isAdmin");
+  const storageLimit = watch("storageLimitBytes");
+  const { value: defaultLimit } = useSecureConfigValue("maxTotalStoragePerUser");
+  const defaultSize = defaultLimit ? formatStorageSize(Number(defaultLimit) / BYTES_PER_GB) : "";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -90,6 +98,21 @@ export function UserFormModal({ isOpen, onClose, modalMode, selectedUser, formMe
                 {...register("password")}
               />
             </Field>
+            {!isCreate && (
+              <Field
+                label={t("users.calm.form.storageLimit")}
+                htmlFor="user-storage-limit"
+                hint={t("users.calm.form.storageLimitHint")}
+              >
+                <FileSizeInput
+                  id="user-storage-limit"
+                  unitLabel={t("settings.calm.units.unit")}
+                  value={storageLimit || "0"}
+                  onChange={(bytes) => setValue("storageLimitBytes", bytes, { shouldDirty: true })}
+                  placeholder={defaultSize ? t("users.calm.form.storageDefault", { size: defaultSize }) : undefined}
+                />
+              </Field>
+            )}
             {!isCreate && (
               <Field label={t("users.form.role")} htmlFor="user-role" error={errors.isAdmin?.message}>
                 <Select

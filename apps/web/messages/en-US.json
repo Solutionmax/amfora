@@ -2181,6 +2181,14 @@
       "passwordAuthEnabled": {
         "title": "Password Authentication",
         "description": "Enable or disable password-based authentication"
+      },
+      "shareDefaultExpiryDays": {
+        "title": "Default lifetime of links",
+        "description": "The end date a new share or receive link starts with. 0 means none."
+      },
+      "shareMaxExpiryDays": {
+        "title": "Maximum lifetime of links",
+        "description": "No link can stay open longer than this. 0 means no maximum."
       }
     },
     "buttons": {
@@ -2191,7 +2199,8 @@
     "errors": {
       "loadFailed": "Failed to load settings",
       "updateFailed": "Failed to update settings",
-      "passwordAuthRequiresProvider": "Cannot disable password authentication without having at least one active authentication provider"
+      "passwordAuthRequiresProvider": "Cannot disable password authentication without having at least one active authentication provider",
+      "defaultTooLong": "The default cannot be longer than the maximum of {days, plural, one {# day} other {# days}}."
     },
     "messages": {
       "noChanges": "No changes to save",
@@ -2276,6 +2285,10 @@
         "webhooks": {
           "title": "Webhooks",
           "description": "Tell another tool when something happens."
+        },
+        "linkLifetime": {
+          "title": "Lifetime of links",
+          "description": "How long shares and receive links may stay open."
         }
       },
       "fields": {
@@ -2732,6 +2745,11 @@
         "loadError": "The activity could not be loaded.",
         "retry": "Try again"
       }
+    },
+    "lifetime": {
+      "maxHint": "{days, plural, one {At most # day, set by the administrator} other {At most # days, set by the administrator}}",
+      "tooLong": "That date is more than {days, plural, one {# day} other {# days}} away. Pick an earlier one.",
+      "required": "An end date is needed, at most {days, plural, one {# day} other {# days}} ahead."
     }
   },
   "sharesTable": {
@@ -3181,7 +3199,10 @@
         "descriptionCreate": "They can sign in right away with this username and password.",
         "descriptionEdit": "Change the details of @{username}.",
         "newPassword": "New password",
-        "passwordHint": "At least 8 characters."
+        "passwordHint": "At least 8 characters.",
+        "storageLimit": "Storage limit",
+        "storageLimitHint": "Leave empty to use the default of the installation.",
+        "storageDefault": "Default: {size}"
       },
       "delete": {
         "title": "Delete {name}?",
@@ -3200,7 +3221,9 @@
         "create": "Create link",
         "linkLabel": "Link",
         "hint": "Works once. Expires in 15 minutes."
-      }
+      },
+      "storage": "Storage",
+      "storageDefault": "Default"
     }
   },
   "validation": {

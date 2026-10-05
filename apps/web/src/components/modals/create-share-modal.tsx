@@ -14,12 +14,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ExpiryField } from "@/components/ui/expiry-field";
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useStartingExpiry } from "@/hooks/use-link-lifetime";
 import { createShare } from "@/http/endpoints";
 
 interface CreateShareModalProps {
@@ -93,6 +95,7 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
   }, [isOpen, loadData]);
 
   const update = (patch: Partial<typeof EMPTY_FORM>) => setFormData((prev) => ({ ...prev, ...patch }));
+  const { maxDays, acceptsExpiry } = useStartingExpiry(isOpen, (expiresAt) => update({ expiresAt }));
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) {
@@ -103,6 +106,8 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
       toast.error(t("createShare.errors.selectItems"));
       return;
     }
+
+    if (!acceptsExpiry(formData.expiresAt)) return;
 
     try {
       setIsLoading(true);
@@ -183,18 +188,14 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
               />
             </Field>
             <div className="grid gap-[18px] sm:grid-cols-2">
-              <Field
+              <ExpiryField
+                id="expiration"
                 label={t("shares.calm.modals.expiresLabel")}
-                htmlFor="expiration"
                 hint={t("shares.calm.modals.expiresHint")}
-              >
-                <Input
-                  id="expiration"
-                  type="datetime-local"
-                  value={formData.expiresAt}
-                  onChange={(e) => update({ expiresAt: e.target.value })}
-                />
-              </Field>
+                value={formData.expiresAt}
+                onChange={(expiresAt) => update({ expiresAt })}
+                maxDays={maxDays}
+              />
               <Field
                 label={t("shares.calm.modals.maxViewsLabel")}
                 htmlFor="max-views"

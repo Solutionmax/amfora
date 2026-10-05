@@ -40,6 +40,8 @@ export interface UpdateUserBody {
   image?: string;
   password?: string;
   isAdmin?: boolean;
+  /** Administrators only. Null clears the own limit. */
+  storageLimitBytes?: number | null;
 }
 
 export interface UpdateUserImageBody {

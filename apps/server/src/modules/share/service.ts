@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 
+import { assertLinkLifetime } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { EmailService } from "../email/service";
 import { FolderService } from "../folder/service";
@@ -63,6 +64,8 @@ export class ShareService {
 
   async createShare(data: CreateShareInput, userId: string) {
     const { password, maxViews, files, folders, ...shareData } = data;
+
+    await assertLinkLifetime(shareData.expiration ? new Date(shareData.expiration) : null);
 
     if (files && files.length > 0) {
       const existingFiles = await prisma.file.findMany({
@@ -182,10 +185,11 @@ export class ShareService {
       }
     }
 
-    await this.shareRepository.updateShare(shareId, {
-      ...shareData,
-      expiration: shareData.expiration ? new Date(shareData.expiration) : null,
-    });
+    // No end date in the request clears it, so only the end date itself is judged, never the other fields.
+    const expiration = shareData.expiration ? new Date(shareData.expiration) : null;
+    await assertLinkLifetime(expiration, share.expiration);
+
+    await this.shareRepository.updateShare(shareId, { ...shareData, expiration });
     const shareWithRelations = await this.shareRepository.findShareById(shareId);
 
     return await this.formatShareResponse(shareWithRelations);

@@ -2184,6 +2184,14 @@
       "hideVersion": {
         "title": "Masquer la Version",
         "description": "Masquer la version de Amfora dans le pied de page de toutes les pages"
+      },
+      "shareDefaultExpiryDays": {
+        "title": "Durée par défaut des liens",
+        "description": "La date de fin avec laquelle commence un nouveau lien de partage ou de réception. 0 signifie aucune."
+      },
+      "shareMaxExpiryDays": {
+        "title": "Durée maximale des liens",
+        "description": "Aucun lien ne peut rester ouvert plus longtemps. 0 signifie aucun maximum."
       }
     },
     "buttons": {
@@ -2194,7 +2202,8 @@
     "errors": {
       "loadFailed": "Échec du chargement des paramètres",
       "updateFailed": "Échec de la mise à jour des paramètres",
-      "passwordAuthRequiresProvider": "Impossible de désactiver l'authentification par mot de passe sans avoir au moins un fournisseur d'authentification actif"
+      "passwordAuthRequiresProvider": "Impossible de désactiver l'authentification par mot de passe sans avoir au moins un fournisseur d'authentification actif",
+      "defaultTooLong": "La valeur par défaut ne peut pas dépasser le maximum de {days, plural, one {# jour} other {# jours}}."
     },
     "messages": {
       "noChanges": "Aucun changement à enregistrer",
@@ -2276,6 +2285,10 @@
         "webhooks": {
           "title": "Webhooks",
           "description": "Prévenir un autre outil quand quelque chose se produit."
+        },
+        "linkLifetime": {
+          "title": "Durée des liens",
+          "description": "Combien de temps les liens de partage et de réception peuvent rester ouverts."
         }
       },
       "fields": {
@@ -2732,6 +2745,11 @@
         "loadError": "Impossible de charger l'activité.",
         "retry": "Réessayer"
       }
+    },
+    "lifetime": {
+      "maxHint": "{days, plural, one {Au plus # jour, défini par l'administrateur} other {Au plus # jours, défini par l'administrateur}}",
+      "tooLong": "Cette date est à plus de {days, plural, one {# jour} other {# jours}}. Choisissez-en une plus proche.",
+      "required": "Une date de fin est nécessaire, au plus {days, plural, one {# jour} other {# jours}} à l'avance."
     }
   },
   "sharesTable": {
@@ -3181,7 +3199,10 @@
         "descriptionCreate": "Cette personne pourra se connecter tout de suite avec ce nom d'utilisateur et ce mot de passe.",
         "descriptionEdit": "Modifiez les informations de @{username}.",
         "newPassword": "Nouveau mot de passe",
-        "passwordHint": "Au moins 8 caractères."
+        "passwordHint": "Au moins 8 caractères.",
+        "storageLimit": "Limite de stockage",
+        "storageLimitHint": "Laissez vide pour utiliser la valeur par défaut de l'installation.",
+        "storageDefault": "Par défaut : {size}"
       },
       "delete": {
         "title": "Supprimer {name} ?",
@@ -3200,7 +3221,9 @@
         "create": "Créer le lien",
         "linkLabel": "Lien",
         "hint": "Utilisable une seule fois. Expire dans 15 minutes."
-      }
+      },
+      "storage": "Stockage",
+      "storageDefault": "Par défaut"
     }
   },
   "validation": {

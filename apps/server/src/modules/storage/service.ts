@@ -6,6 +6,7 @@ import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { IS_RUNNING_IN_CONTAINER } from "../../utils/container-detection";
 import { ConfigService } from "../config/service";
+import { ownStorageLimitOf, storageLimitOf } from "./limit";
 
 const execAsync = promisify(exec);
 
@@ -337,7 +338,9 @@ export class StorageService {
           prisma.reverseShareFile.aggregate({ _sum: { size: true } }),
         ]);
         const used = Number((files._sum.size ?? BigInt(0)) + (received._sum.size ?? BigInt(0)));
-        const { available } = diskInfo;
+        // Counts what Amfora holds in total; only the limit is the own one when an administrator set it.
+        const ownLimit = userId ? await ownStorageLimitOf(userId) : null;
+        const available = ownLimit === null ? diskInfo.available : Math.max(Number(ownLimit) - used, 0);
         const total = used + available;
 
         const diskSizeGB = this._ensureNumber(total / (1024 * 1024 * 1024), 0);
@@ -351,7 +354,7 @@ export class StorageService {
           uploadAllowed: diskAvailableGB > 0.1,
         };
       } else if (userId) {
-        const maxTotalStorage = BigInt(await this.configService.getValue("maxTotalStoragePerUser"));
+        const maxTotalStorage = await storageLimitOf(userId);
         const maxStorageGB = this._ensureNumber(Number(maxTotalStorage) / (1024 * 1024 * 1024), 10);
 
         const userFiles = await prisma.file.findMany({

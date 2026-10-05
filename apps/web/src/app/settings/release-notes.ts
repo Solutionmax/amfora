@@ -25,6 +25,8 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "Making or deleting a receive link now shows in the activity log.",
     "Emails carry the logo of the installation at the top. Without a logo, the name stays as text.",
     "Every email now has the same calm layout and a plain text version.",
+    "Administrators can give a user their own storage limit on the Users page. The ring in that person's menu follows it.",
+    "Settings has a default and a maximum lifetime for shares and receive links. New links start with the default end date and cannot run past the maximum.",
   ],
 };
 

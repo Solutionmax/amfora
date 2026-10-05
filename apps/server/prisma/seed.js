@@ -102,6 +102,19 @@ const defaultConfigs = [
     type: "bigint",
     group: "storage",
   },
+  // Lifetime of shares and receive links, whole days, 0 means none
+  {
+    key: "shareDefaultExpiryDays",
+    value: "0",
+    type: "number",
+    group: "storage",
+  },
+  {
+    key: "shareMaxExpiryDays",
+    value: "0",
+    type: "number",
+    group: "storage",
+  },
   // Security Configurations
   {
     key: "jwtSecret",

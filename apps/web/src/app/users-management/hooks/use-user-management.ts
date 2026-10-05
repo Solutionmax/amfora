@@ -22,6 +22,7 @@ const createSchemas = (t: (key: string) => string) => ({
       .regex(/^[^\s]+$/, t("validation.usernameSpaces")),
     email: z.string().email(t("validation.invalidEmail")),
     password: z.string().min(8, t("validation.passwordLength")).or(z.literal("")),
+    storageLimitBytes: z.string().optional(),
     isAdmin: z
       .union([z.enum(["true", "false"]), z.boolean()])
       .transform((val) => (typeof val === "string" ? val === "true" : val))
@@ -85,6 +86,7 @@ export function useUserManagement() {
       username: user.username,
       email: user.email,
       isAdmin: user.isAdmin,
+      storageLimitBytes: user.storageLimitBytes ? String(user.storageLimitBytes) : "0",
       password: "",
     });
     onOpen();
@@ -97,10 +99,13 @@ export function useUserManagement() {
         toast.success(t("users.messages.createSuccess"));
       } else {
         if (!selectedUser) return;
+        const { storageLimitBytes, ...rest } = data;
+        const limit = Number(storageLimitBytes);
         const updateData = {
-          ...data,
+          ...rest,
           id: selectedUser.id,
-        } as { id: string } & Partial<typeof data>;
+          storageLimitBytes: limit > 0 ? limit : null,
+        } as { id: string; storageLimitBytes: number | null } & Partial<typeof rest>;
 
         if (!data.password || data.password.trim() === "") {
           delete updateData.password;

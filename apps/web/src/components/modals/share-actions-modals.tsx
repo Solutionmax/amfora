@@ -16,12 +16,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ExpiryField } from "@/components/ui/expiry-field";
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useLinkLifetime } from "@/hooks/use-link-lifetime";
 import { addFiles, addFolders, removeFiles, removeFolders, updateSharePassword } from "@/http/endpoints";
 import { listFolders } from "@/http/endpoints/folders";
 
@@ -125,9 +127,12 @@ function EditShareDialog({
   }, [share]);
 
   const update = (patch: Partial<typeof EMPTY_EDIT_FORM>) => setEditForm((prev) => ({ ...prev, ...patch }));
+  const { maxDays, acceptsExpiry } = useLinkLifetime();
+  const currentExpiry = share?.expiration ? toLocalInputValue(new Date(share.expiration)) : "";
 
   const handleEdit = async () => {
     if (!share) return;
+    if (!acceptsExpiry(editForm.expiresAt, currentExpiry)) return;
     setIsLoading(true);
 
     try {
@@ -188,18 +193,15 @@ function EditShareDialog({
             />
           </Field>
           <div className="grid gap-[18px] sm:grid-cols-2">
-            <Field
+            <ExpiryField
+              id="share-edit-expires"
               label={t("shares.calm.modals.expiresLabel")}
-              htmlFor="share-edit-expires"
               hint={t("shares.calm.modals.expiresHint")}
-            >
-              <Input
-                id="share-edit-expires"
-                type="datetime-local"
-                value={editForm.expiresAt}
-                onChange={(e) => update({ expiresAt: e.target.value })}
-              />
-            </Field>
+              value={editForm.expiresAt}
+              onChange={(expiresAt) => update({ expiresAt })}
+              maxDays={maxDays}
+              unchanged={currentExpiry}
+            />
             <Field
               label={t("shares.calm.modals.maxViewsLabel")}
               htmlFor="share-edit-views"

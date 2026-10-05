@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Controller, type UseFormReturn } from "react-hook-form";
 
+import { ExpiryField } from "@/components/ui/expiry-field";
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { SubHeading } from "@/components/ui/line-list";
@@ -11,6 +12,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useLinkLifetime } from "@/hooks/use-link-lifetime";
 import type { FieldRequirement } from "@/http/endpoints/reverse-shares/types";
 import { MIN_PASSWORD_LENGTH, type ReceiveFormValues } from "../lib/receive-form";
 import { parseFileTypes } from "../lib/receive-format";
@@ -26,6 +28,8 @@ interface ReverseShareFormFieldsProps {
   hadPassword?: boolean;
   /** Edit only: the link already has an end date, which the server cannot remove. */
   hadExpiration?: boolean;
+  /** Edit only: the end date the link has now, as the form shows it. It stays allowed as it is. */
+  unchangedExpiration?: string;
 }
 
 function FormGroup({ title, children }: { title: string; children: ReactNode }) {
@@ -77,8 +81,10 @@ export function ReverseShareFormFields({
   mode,
   hadPassword = false,
   hadExpiration = false,
+  unchangedExpiration,
 }: ReverseShareFormFieldsProps) {
   const t = useTranslations();
+  const { maxDays } = useLinkLifetime();
   const { register, control, watch, formState } = form;
   const { errors } = formState;
   const hasExpiration = watch("hasExpiration");
@@ -210,22 +216,26 @@ export function ReverseShareFormFields({
                 onCheckedChange={field.onChange}
               >
                 {hasExpiration && (
-                  <Field
-                    label={t("reverseShares.form.expiration.label")}
-                    htmlFor="receive-expiration"
-                    error={errors.expiration?.message}
-                  >
-                    <Input
-                      id="receive-expiration"
-                      type="datetime-local"
-                      className="max-w-[260px]"
-                      aria-invalid={!!errors.expiration}
-                      {...register("expiration", {
-                        validate: (value, values) =>
-                          !values.hasExpiration || !!value || t("reverseShares.calm.form.expiryRequired"),
-                      })}
-                    />
-                  </Field>
+                  <Controller
+                    control={control}
+                    name="expiration"
+                    rules={{
+                      validate: (value, values) =>
+                        !values.hasExpiration || !!value || t("reverseShares.calm.form.expiryRequired"),
+                    }}
+                    render={({ field }) => (
+                      <ExpiryField
+                        id="receive-expiration"
+                        label={t("reverseShares.form.expiration.label")}
+                        value={field.value}
+                        onChange={field.onChange}
+                        maxDays={maxDays}
+                        unchanged={unchangedExpiration}
+                        error={errors.expiration?.message}
+                        className="max-w-[260px]"
+                      />
+                    )}
+                  />
                 )}
               </SwitchRow>
             )}

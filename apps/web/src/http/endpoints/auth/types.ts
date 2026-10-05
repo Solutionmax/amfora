@@ -14,6 +14,8 @@ export interface BaseUser {
 
 export interface User extends BaseUser {
   image: string | null;
+  /** Own storage limit in bytes, set by an administrator. Null: the installation default. */
+  storageLimitBytes?: number | null;
 }
 
 export type LoginUser = BaseUser;

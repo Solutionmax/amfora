@@ -2181,6 +2181,14 @@
       "hideVersion": {
         "title": "Ocultar Versión",
         "description": "Ocultar la versión de Amfora en el pie de página de todas las páginas"
+      },
+      "shareDefaultExpiryDays": {
+        "title": "Duración predeterminada de los enlaces",
+        "description": "La fecha de fin con la que empieza un enlace nuevo de compartir o de recibir. 0 significa ninguna."
+      },
+      "shareMaxExpiryDays": {
+        "title": "Duración máxima de los enlaces",
+        "description": "Ningún enlace puede seguir abierto más tiempo que esto. 0 significa sin máximo."
       }
     },
     "buttons": {
@@ -2191,7 +2199,8 @@
     "errors": {
       "loadFailed": "Error al cargar la configuración",
       "updateFailed": "Error al actualizar la configuración",
-      "passwordAuthRequiresProvider": "No se puede deshabilitar la autenticación por contraseña sin tener al menos un proveedor de autenticación activo"
+      "passwordAuthRequiresProvider": "No se puede deshabilitar la autenticación por contraseña sin tener al menos un proveedor de autenticación activo",
+      "defaultTooLong": "El valor predeterminado no puede superar el máximo de {days, plural, one {# día} other {# días}}."
     },
     "messages": {
       "noChanges": "No hay cambios para guardar",
@@ -2276,6 +2285,10 @@
         "webhooks": {
           "title": "Webhooks",
           "description": "Avisa a otra herramienta cuando pase algo."
+        },
+        "linkLifetime": {
+          "title": "Duración de los enlaces",
+          "description": "Cuánto tiempo pueden seguir abiertos los enlaces de compartir y de recibir."
         }
       },
       "fields": {
@@ -2732,6 +2745,11 @@
         "loadError": "No se pudo cargar la actividad.",
         "retry": "Reintentar"
       }
+    },
+    "lifetime": {
+      "maxHint": "{days, plural, one {Como máximo # día, fijado por el administrador} other {Como máximo # días, fijado por el administrador}}",
+      "tooLong": "Esa fecha está a más de {days, plural, one {# día} other {# días}}. Elige una anterior.",
+      "required": "Hace falta una fecha de fin, como máximo dentro de {days, plural, one {# día} other {# días}}."
     }
   },
   "sharesTable": {
@@ -3181,7 +3199,10 @@
         "descriptionCreate": "Podrá iniciar sesión enseguida con este nombre de usuario y esta contraseña.",
         "descriptionEdit": "Cambia los datos de @{username}.",
         "newPassword": "Nueva contraseña",
-        "passwordHint": "Al menos 8 caracteres."
+        "passwordHint": "Al menos 8 caracteres.",
+        "storageLimit": "Límite de almacenamiento",
+        "storageLimitHint": "Déjalo vacío para usar el valor predeterminado de la instalación.",
+        "storageDefault": "Predeterminado: {size}"
       },
       "delete": {
         "title": "¿Eliminar a {name}?",
@@ -3200,7 +3221,9 @@
         "create": "Crear enlace",
         "linkLabel": "Enlace",
         "hint": "Funciona una sola vez. Caduca en 15 minutos."
-      }
+      },
+      "storage": "Almacenamiento",
+      "storageDefault": "Predeterminado"
     }
   },
   "validation": {

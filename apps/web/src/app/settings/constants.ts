@@ -39,7 +39,10 @@ export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
       rows: ["webhookUrl", "webhookSecret", "webhookFilesReceived", "webhookShareDownloaded", "webhookSecretOpened"],
     },
   ],
-  storage: [{ id: "limits", rows: ["maxFileSize", "maxTotalStoragePerUser"] }],
+  storage: [
+    { id: "limits", rows: ["maxFileSize", "maxTotalStoragePerUser"] },
+    { id: "linkLifetime", rows: [["shareDefaultExpiryDays", "shareMaxExpiryDays"]] },
+  ],
   email: [
     {
       id: "outgoing",
@@ -83,7 +86,7 @@ export const ANONYMOUS_SECRET_FIELDS: readonly string[] = [
 /** Values stored in seconds, shown with a unit next to the input. */
 export const SECONDS_FIELDS: readonly string[] = ["loginBlockDuration", "passwordResetTokenExpiration"];
 /** Values stored in days, shown with a unit next to the input. */
-export const DAYS_FIELDS: readonly string[] = ["activityRetentionDays"];
+export const DAYS_FIELDS: readonly string[] = ["activityRetentionDays", "shareDefaultExpiryDays", "shareMaxExpiryDays"];
 
 /** How much of a visitor's place the activity log keeps. */
 export const ACTIVITY_PLACE_OPTIONS: readonly string[] = ["city", "country", "off"];

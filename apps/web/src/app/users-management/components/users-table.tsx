@@ -1,11 +1,13 @@
 import { useFormatter, useTranslations } from "next-intl";
 
+import { formatStorageSize } from "@/app/dashboard/utils/format-storage-size";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { UsersTableProps } from "../types";
 import { UserActionsDropdown } from "./user-actions-dropdown";
 import { UserAvatar } from "./user-avatar";
 
+const BYTES_PER_GB = 1024 * 1024 * 1024;
 const ROW_ACTIONS =
   "md:opacity-0 md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:has-[[aria-expanded=true]]:opacity-100";
 
@@ -32,6 +34,7 @@ export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatu
           <TableHead>{t("users.calm.name")}</TableHead>
           <TableHead className="hidden w-[34%] md:table-cell">{t("users.calm.email")}</TableHead>
           <TableHead className="hidden w-[140px] md:table-cell">{t("users.calm.role")}</TableHead>
+          <TableHead className="hidden w-[110px] lg:table-cell">{t("users.calm.storage")}</TableHead>
           <TableHead className="hidden w-[120px] lg:table-cell">{t("users.calm.created")}</TableHead>
           <TableHead className="w-[52px]">
             <span className="sr-only">{t("users.table.actions")}</span>
@@ -70,6 +73,13 @@ export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatu
               </TableCell>
               <TableCell className="hidden truncate text-[13px] text-ink-2 md:table-cell">{user.email}</TableCell>
               <TableCell className="hidden text-[13px] text-ink-2 md:table-cell">{role}</TableCell>
+              <TableCell className="hidden text-[13px] text-ink-2 lg:table-cell">
+                {user.storageLimitBytes ? (
+                  formatStorageSize(user.storageLimitBytes / BYTES_PER_GB)
+                ) : (
+                  <span className="text-ink-3">{t("users.calm.storageDefault")}</span>
+                )}
+              </TableCell>
               <TableCell className="hidden text-[13px] text-ink-3 lg:table-cell">{created(user.createdAt)}</TableCell>
               <TableCell className="px-1 text-right">
                 <div className={cn("flex justify-end", ROW_ACTIONS)}>

@@ -2181,6 +2181,14 @@
       "hideVersion": {
         "title": "Versie Verbergen",
         "description": "Verberg de Amfora-versie in de voettekst van alle pagina's"
+      },
+      "shareDefaultExpiryDays": {
+        "title": "Standaard looptijd van links",
+        "description": "De einddatum waarmee een nieuwe deellink of ontvanglink begint. 0 betekent geen."
+      },
+      "shareMaxExpiryDays": {
+        "title": "Maximale looptijd van links",
+        "description": "Geen link kan langer open blijven dan dit. 0 betekent geen maximum."
       }
     },
     "buttons": {
@@ -2191,7 +2199,8 @@
     "errors": {
       "loadFailed": "Fout bij het laden van instellingen",
       "updateFailed": "Fout bij het bijwerken van instellingen",
-      "passwordAuthRequiresProvider": "Wachtwoordauthenticatie kan niet worden uitgeschakeld zonder ten minste één actieve authenticatieprovider"
+      "passwordAuthRequiresProvider": "Wachtwoordauthenticatie kan niet worden uitgeschakeld zonder ten minste één actieve authenticatieprovider",
+      "defaultTooLong": "De standaard kan niet langer zijn dan het maximum van {days, plural, one {# dag} other {# dagen}}."
     },
     "messages": {
       "noChanges": "Geen wijzigingen om op te slaan",
@@ -2276,6 +2285,10 @@
         "webhooks": {
           "title": "Webhooks",
           "description": "Vertel een ander programma dat er iets gebeurt."
+        },
+        "linkLifetime": {
+          "title": "Looptijd van links",
+          "description": "Hoe lang deellinks en ontvanglinks open mogen blijven."
         }
       },
       "fields": {
@@ -2732,6 +2745,11 @@
         "loadError": "De activiteit kon niet worden geladen.",
         "retry": "Opnieuw proberen"
       }
+    },
+    "lifetime": {
+      "maxHint": "{days, plural, one {Hoogstens # dag, ingesteld door de beheerder} other {Hoogstens # dagen, ingesteld door de beheerder}}",
+      "tooLong": "Die datum ligt meer dan {days, plural, one {# dag} other {# dagen}} vooruit. Kies een eerdere.",
+      "required": "Een einddatum is nodig, hoogstens {days, plural, one {# dag} other {# dagen}} vooruit."
     }
   },
   "sharesTable": {
@@ -3181,7 +3199,10 @@
         "descriptionCreate": "Deze persoon kan meteen aanmelden met deze gebruikersnaam en dit wachtwoord.",
         "descriptionEdit": "Wijzig de gegevens van @{username}.",
         "newPassword": "Nieuw wachtwoord",
-        "passwordHint": "Minimaal 8 tekens."
+        "passwordHint": "Minimaal 8 tekens.",
+        "storageLimit": "Opslaglimiet",
+        "storageLimitHint": "Laat leeg voor de standaard van de installatie.",
+        "storageDefault": "Standaard: {size}"
       },
       "delete": {
         "title": "{name} verwijderen?",
@@ -3200,7 +3221,9 @@
         "create": "Link maken",
         "linkLabel": "Link",
         "hint": "Werkt één keer. Verloopt na 15 minuten."
-      }
+      },
+      "storage": "Opslag",
+      "storageDefault": "Standaard"
     }
   },
   "validation": {

@@ -36,6 +36,7 @@ export const UpdateUserSchema = z.object({
   image: z.string().optional(),
   password: z.string().optional(),
   isAdmin: z.boolean().optional(),
+  storageLimitBytes: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).nullable().optional(),
 });
 
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
@@ -49,6 +50,10 @@ export const UserResponseSchema = z.object({
   image: z.string().nullable(),
   isAdmin: z.boolean(),
   isActive: z.boolean(),
+  storageLimitBytes: z
+    .bigint()
+    .nullable()
+    .transform((bytes) => (bytes === null ? null : Number(bytes))),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

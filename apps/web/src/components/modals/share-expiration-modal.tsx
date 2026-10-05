@@ -14,9 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Field } from "@/components/ui/form-section";
-import { Input } from "@/components/ui/input";
+import { ExpiryField } from "@/components/ui/expiry-field";
 import { Switch } from "@/components/ui/switch";
+import { useLinkLifetime } from "@/hooks/use-link-lifetime";
 import { updateShare } from "@/http/endpoints";
 
 interface ShareExpirationModalProps {
@@ -26,13 +26,15 @@ interface ShareExpirationModalProps {
   onSuccess?: () => void;
 }
 
-const DEFAULT_DAYS = 7;
+const FALLBACK_DAYS = 7;
 
 export function ShareExpirationModal({ shareId, share, onClose, onSuccess }: ShareExpirationModalProps) {
   const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
   const [hasExpiration, setHasExpiration] = useState(false);
   const [expirationDate, setExpirationDate] = useState("");
+  const { defaultDays, maxDays, acceptsExpiry } = useLinkLifetime();
+  const currentDate = share?.expiration ? toLocalInputValue(new Date(share.expiration)) : "";
 
   useEffect(() => {
     if (share) {
@@ -43,6 +45,7 @@ export function ShareExpirationModal({ shareId, share, onClose, onSuccess }: Sha
 
   const handleSave = async () => {
     if (!shareId) return;
+    if (!acceptsExpiry(hasExpiration ? expirationDate : "", currentDate)) return;
 
     if (hasExpiration) {
       if (!expirationDate.trim()) {
@@ -86,7 +89,8 @@ export function ShareExpirationModal({ shareId, share, onClose, onSuccess }: Sha
       setExpirationDate("");
     } else if (!expirationDate) {
       const defaultDate = new Date();
-      defaultDate.setDate(defaultDate.getDate() + DEFAULT_DAYS);
+      const days = defaultDays > 0 ? defaultDays : maxDays > 0 ? Math.min(FALLBACK_DAYS, maxDays) : FALLBACK_DAYS;
+      defaultDate.setDate(defaultDate.getDate() + days);
       setExpirationDate(toLocalInputValue(defaultDate));
     }
   };
@@ -109,19 +113,15 @@ export function ShareExpirationModal({ shareId, share, onClose, onSuccess }: Sha
           </label>
 
           {hasExpiration && (
-            <Field
+            <ExpiryField
+              id="expiration-date"
               label={t("shares.calm.modals.expiresOn")}
-              htmlFor="expiration-date"
               hint={t("shareExpiration.info.willBeInaccessible")}
-            >
-              <Input
-                id="expiration-date"
-                type="datetime-local"
-                value={expirationDate}
-                onChange={(e) => setExpirationDate(e.target.value)}
-                min={toLocalInputValue(new Date())}
-              />
-            </Field>
+              value={expirationDate}
+              onChange={setExpirationDate}
+              maxDays={maxDays}
+              unchanged={currentDate}
+            />
           )}
         </div>
 

@@ -15,10 +15,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ExpiryField } from "@/components/ui/expiry-field";
 import { Field } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Switch } from "@/components/ui/switch";
+import { useStartingExpiry } from "@/hooks/use-link-lifetime";
 import { createShare, createShareAlias, listFiles, listFolders } from "@/http/endpoints";
 import { copyText } from "@/lib/clipboard";
 import { downloadQrCodeAsPng } from "@/lib/qr-code";
@@ -122,6 +124,11 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
     }
   }, [isOpen, files, folders, t]);
 
+  // After the effect above, so the default end date lands on the freshly reset form.
+  const { maxDays, acceptsExpiry } = useStartingExpiry(isOpen, (expiresAt) =>
+    setFormData((prev) => ({ ...prev, expiresAt }))
+  );
+
   const getAllFolderContents = async (folderId: string): Promise<{ files: string[]; folders: string[] }> => {
     try {
       const [filesResponse, foldersResponse] = await Promise.all([listFiles(), listFolders()]);
@@ -159,6 +166,7 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
     const folderCount = folders ? folders.length : 0;
 
     if (fileCount === 0 && folderCount === 0) return;
+    if (!acceptsExpiry(formData.expiresAt)) return;
 
     try {
       setIsLoading(true);
@@ -325,18 +333,14 @@ export function ShareMultipleItemsModal({ files, folders, isOpen, onClose, onSuc
               />
             </Field>
             <div className="grid gap-[18px] sm:grid-cols-2">
-              <Field
+              <ExpiryField
+                id="share-multi-expires"
                 label={t("shares.calm.modals.expiresLabel")}
-                htmlFor="share-multi-expires"
                 hint={t("shares.calm.modals.expiresHint")}
-              >
-                <Input
-                  id="share-multi-expires"
-                  type="datetime-local"
-                  value={formData.expiresAt}
-                  onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
-                />
-              </Field>
+                value={formData.expiresAt}
+                onChange={(expiresAt) => setFormData((prev) => ({ ...prev, expiresAt }))}
+                maxDays={maxDays}
+              />
               <Field
                 label={t("shares.calm.modals.maxViewsLabel")}
                 htmlFor="share-multi-views"

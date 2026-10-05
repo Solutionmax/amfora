@@ -11,6 +11,7 @@ import { useAppInfo } from "@/contexts/app-info-context";
 import { useShareContext } from "@/contexts/share-context";
 import { refreshPublicConfigs, useAdminConfigs } from "@/hooks/use-secure-configs";
 import { bulkUpdateConfigs } from "@/http/endpoints";
+import { lifetimeSettingsProblem } from "@/lib/link-lifetime";
 import { READ_ONLY_FIELDS } from "../constants";
 import { Config, ConfigType, GroupFormData } from "../types";
 
@@ -158,6 +159,17 @@ export function useSettings() {
           key,
           value: String(value),
         }));
+
+      const lifetimeProblem = lifetimeSettingsProblem(
+        Number(data.configs.shareDefaultExpiryDays ?? 0),
+        Number(data.configs.shareMaxExpiryDays ?? 0)
+      );
+      if (lifetimeProblem) {
+        groupForms[group].setError("configs.shareDefaultExpiryDays", {
+          message: t(`settings.errors.${lifetimeProblem}`, { days: Number(data.configs.shareMaxExpiryDays) }),
+        });
+        return;
+      }
 
       if (configsToUpdate.length === 0) {
         toast.info(t("settings.messages.noChanges"));

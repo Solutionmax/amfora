@@ -2181,6 +2181,14 @@
       "hideVersion": {
         "title": "Version Ausblenden",
         "description": "Die Amfora-Version in der Fußzeile aller Seiten ausblenden"
+      },
+      "shareDefaultExpiryDays": {
+        "title": "Standardlaufzeit von Links",
+        "description": "Das Enddatum, mit dem ein neuer Freigabe- oder Empfangslink beginnt. 0 bedeutet keines."
+      },
+      "shareMaxExpiryDays": {
+        "title": "Maximale Laufzeit von Links",
+        "description": "Kein Link kann länger offen bleiben als dies. 0 bedeutet kein Maximum."
       }
     },
     "buttons": {
@@ -2191,7 +2199,8 @@
     "errors": {
       "loadFailed": "Fehler beim Laden der Einstellungen",
       "updateFailed": "Fehler beim Aktualisieren der Einstellungen",
-      "passwordAuthRequiresProvider": "Passwort-basierte Authentifizierung kann nicht deaktiviert werden, wenn kein aktiver Authentifizierungsanbieter vorhanden ist"
+      "passwordAuthRequiresProvider": "Passwort-basierte Authentifizierung kann nicht deaktiviert werden, wenn kein aktiver Authentifizierungsanbieter vorhanden ist",
+      "defaultTooLong": "Der Standard darf nicht länger sein als das Maximum von {days, plural, one {# Tag} other {# Tagen}}."
     },
     "messages": {
       "noChanges": "Keine Änderungen zum Speichern",
@@ -2276,6 +2285,10 @@
         "webhooks": {
           "title": "Webhooks",
           "description": "Einem anderen Programm mitteilen, wenn etwas passiert."
+        },
+        "linkLifetime": {
+          "title": "Laufzeit von Links",
+          "description": "Wie lange Freigabe- und Empfangslinks offen bleiben dürfen."
         }
       },
       "fields": {
@@ -2732,6 +2745,11 @@
         "loadError": "Die Aktivität konnte nicht geladen werden.",
         "retry": "Erneut versuchen"
       }
+    },
+    "lifetime": {
+      "maxHint": "{days, plural, one {Höchstens # Tag, festgelegt vom Administrator} other {Höchstens # Tage, festgelegt vom Administrator}}",
+      "tooLong": "Dieses Datum liegt mehr als {days, plural, one {# Tag} other {# Tage}} in der Zukunft. Wähle ein früheres.",
+      "required": "Ein Enddatum ist nötig, höchstens {days, plural, one {# Tag} other {# Tage}} in der Zukunft."
     }
   },
   "sharesTable": {
@@ -3181,7 +3199,10 @@
         "descriptionCreate": "Der Benutzer kann sich sofort mit diesem Benutzernamen und Passwort anmelden.",
         "descriptionEdit": "Ändern Sie die Angaben von @{username}.",
         "newPassword": "Neues Passwort",
-        "passwordHint": "Mindestens 8 Zeichen."
+        "passwordHint": "Mindestens 8 Zeichen.",
+        "storageLimit": "Speicherlimit",
+        "storageLimitHint": "Leer lassen, um den Standard der Installation zu verwenden.",
+        "storageDefault": "Standard: {size}"
       },
       "delete": {
         "title": "{name} löschen?",
@@ -3200,7 +3221,9 @@
         "create": "Link erstellen",
         "linkLabel": "Link",
         "hint": "Funktioniert nur einmal. Läuft nach 15 Minuten ab."
-      }
+      },
+      "storage": "Speicher",
+      "storageDefault": "Standard"
     }
   },
   "validation": {

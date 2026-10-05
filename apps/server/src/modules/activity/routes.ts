@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { createAdminGuard, loadAccount } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
+import { storageLimitOf } from "../storage/limit";
 import { activityData, actorOf, placeOfRequest } from "./activity";
 import { placeSource } from "./place";
 
@@ -276,9 +277,7 @@ export async function activityRoutes(app: FastifyInstance) {
         where: { reverseShare: { creatorId: userId } },
         _sum: { size: true },
       });
-      const limit = Number(
-        (await prisma.appConfig.findUnique({ where: { key: "maxTotalStoragePerUser" } }))?.value ?? 0
-      );
+      const limit = Number(await storageLimitOf(userId));
       return reply.send({
         limitBytes: Number.isFinite(limit) && limit > 0 ? limit : null,
         usedBytes: await sum({ userId }),
