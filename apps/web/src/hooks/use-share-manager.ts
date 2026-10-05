@@ -89,7 +89,11 @@ export function useShareManager(onSuccess: () => void) {
     const loadingToast = toast.loading(t("shareManager.bulkDeleteLoading", { count: sharesToDelete.length }));
 
     try {
-      await Promise.all(sharesToDelete.map((share) => deleteShare(share.id)));
+      // One after another: the server writes them in turn anyway, and a large selection sent
+      // all at once only waits in line there until requests give up.
+      for (const share of sharesToDelete) {
+        await deleteShare(share.id);
+      }
       toast.dismiss(loadingToast);
       toast.success(t("shareManager.bulkDeleteSuccess", { count: sharesToDelete.length }));
       setSharesToDelete(null);
@@ -101,6 +105,11 @@ export function useShareManager(onSuccess: () => void) {
     } catch {
       toast.dismiss(loadingToast);
       toast.error(t("shareManager.bulkDeleteError"));
+      // Part of the selection may already be gone. Reload and start the selection over, so trying
+      // again only asks for what is left.
+      setSharesToDelete(null);
+      onSuccess();
+      clearSelectionCallback?.();
     }
   };
 

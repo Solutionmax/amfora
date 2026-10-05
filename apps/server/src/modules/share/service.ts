@@ -197,32 +197,13 @@ export class ShareService {
       throw new Error("Share not found");
     }
 
-    const deleted = await prisma.$transaction(async (tx) => {
-      await tx.share.update({
-        where: { id },
-        data: {
-          files: {
-            set: [],
-          },
-        },
-      });
-
-      const deletedShare = await tx.share.delete({
-        where: { id },
-        include: {
-          security: true,
-          files: true,
-        },
-      });
-
-      if (deletedShare.security) {
-        await tx.shareSecurity.delete({
-          where: { id: deletedShare.security.id },
-        });
-      }
-
-      return deletedShare;
-    });
+    // One batch rather than a transaction that is held open between queries: a large selection
+    // deleted at once would otherwise wait too long for its turn. The links to files and folders
+    // go with the share, the database removes them.
+    const [deleted] = await prisma.$transaction([
+      prisma.share.delete({ where: { id }, include: { security: true } }),
+      prisma.shareSecurity.delete({ where: { id: share.securityId } }),
+    ]);
 
     return ShareResponseSchema.parse(await this.formatShareResponse(deleted));
   }

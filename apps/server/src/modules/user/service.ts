@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { prisma } from "../../shared/prisma";
 import { RegisterUserInput, UserResponseSchema } from "./dto";
 import { IUserRepository, PrismaUserRepository } from "./repository";
 
@@ -12,8 +12,6 @@ type UserWithPassword = {
   username?: string;
   password?: string;
 };
-
-const prisma = new PrismaClient();
 
 export class UserService {
   constructor(private readonly userRepository: IUserRepository = new PrismaUserRepository()) {}

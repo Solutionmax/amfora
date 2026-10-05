@@ -1,14 +1,13 @@
 import { exec } from "child_process";
 import fs from "node:fs";
 import { promisify } from "util";
-import { PrismaClient } from "@prisma/client";
 
 import { env } from "../../env";
+import { prisma } from "../../shared/prisma";
 import { IS_RUNNING_IN_CONTAINER } from "../../utils/container-detection";
 import { ConfigService } from "../config/service";
 
 const execAsync = promisify(exec);
-const prisma = new PrismaClient();
 
 export class StorageService {
   private configService = new ConfigService();

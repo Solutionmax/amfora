@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { PrismaClient } from "@prisma/client";
 
 import { env } from "../../env";
+import { prisma } from "../../shared/prisma";
 import { recordActivity } from "../activity/activity";
 import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
@@ -41,8 +41,6 @@ interface ReverseShareData {
     updatedAt: Date;
   } | null;
 }
-
-const prisma = new PrismaClient();
 
 export class ReverseShareService {
   private reverseShareRepository = new ReverseShareRepository();
