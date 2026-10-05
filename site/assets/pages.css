@@ -1004,3 +1004,5 @@ h2{font-size:clamp(30px,3.8vw,50px)}
 .rv{transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0ms)}
 @media(max-width:1000px){.section,.faq-section{padding:72px 0}.nav{top:66px}.closing-grid{padding:40px 28px}.nav .btn{margin-left:0}}
 @media(prefers-reduced-motion:reduce){.rv{transform:none}.plan,.steps li,.button{transition:none}}
+/* a feature that arrives with the next release, next to a docs heading */
+.docs-section h3 .soon{display:inline-block;margin-left:10px;padding:3px 8px;border-radius:999px;background:rgba(0,121,210,.1);color:#005a9e;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;vertical-align:middle}
