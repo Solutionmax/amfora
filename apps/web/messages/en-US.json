@@ -4,6 +4,12 @@
     "subline": "What happened to your links, and who signed in.",
     "kept": "Kept for {days, plural, one {# day} other {# days}}.",
     "exportCsv": "Export CSV",
+    "clearLog": "Clear log",
+    "clearTitle": "Clear the activity log?",
+    "clearText": "This removes every line, for everyone. One line stays, saying who cleared the log and when. This cannot be undone.",
+    "clearConfirm": "Clear log",
+    "cleared": "The activity log is cleared.",
+    "clearError": "The log could not be cleared.",
     "facts": {
       "downloads": "Downloads this week",
       "opened": "Links opened",
@@ -32,6 +38,8 @@
       "shareOpened": "Opened the share",
       "shareDownloaded": "Downloaded",
       "sharePasswordFailed": "Wrong password",
+      "receiveCreated": "Made a receive link",
+      "receiveDeleted": "Deleted a receive link",
       "receiveFilesReceived": "Sent {count, plural, one {# file} other {# files}}",
       "secretCreated": "Made a secret",
       "secretDeleted": "Deleted a secret",
@@ -39,6 +47,7 @@
       "secretDestroyed": "Secret destroyed",
       "accountSignedIn": "Signed in",
       "accountSignInFailed": "Sign in failed",
+      "activityCleared": "Cleared the log",
       "other": "Something else happened"
     },
     "details": {

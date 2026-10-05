@@ -90,3 +90,9 @@ test("initials take two words at most; the filter all means no kind", () => {
   assert.equal(kindOf("all"), undefined);
   assert.equal(kindOf("secret"), "secret");
 });
+
+test("a deleted receive link has no page to link to, a made one has", () => {
+  assert.equal(eventLink({ kind: "receive", action: "receive.deleted", subjectId: "r1" }), null);
+  assert.equal(eventLink({ kind: "receive", action: "receive.created", subjectId: "r1" }), "/reverse-shares?id=r1");
+  assert.equal(eventTone("receive.created"), "accent");
+});

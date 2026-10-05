@@ -3,7 +3,8 @@ import nodemailer from "nodemailer";
 import { getCanonicalOrigin } from "../../shared/canonical-origin";
 import { escapeHtml } from "../../shared/escape-html";
 import { ConfigService } from "../config/service";
-import { noticeHtml, type Notice } from "./notice";
+import { logoImg, mailLogo, type MailLogo } from "./logo";
+import { noticeMessage, type Notice } from "./notice";
 
 interface SmtpConfig {
   smtpEnabled: string;
@@ -18,6 +19,11 @@ interface SmtpConfig {
 
 export class EmailService {
   private configService = new ConfigService();
+
+  /** The logo of the installation for the top of a mail. A missing setting is no logo. */
+  private async logo(): Promise<MailLogo | null> {
+    return mailLogo(await this.configService.getValue("appLogo").catch(() => ""));
+  }
 
   private async createTransporter() {
     const smtpEnabled = await this.configService.getValue("smtpEnabled");
@@ -155,12 +161,15 @@ export class EmailService {
     const fromName = await this.configService.getValue("smtpFromName");
     const fromEmail = await this.configService.getValue("smtpFromEmail");
     const appName = await this.configService.getValue("appName");
+    const logo = await this.logo();
 
     await transporter.sendMail({
       from: { name: fromName, address: fromEmail },
       to,
       subject: `${appName} - Password Reset Request`,
+      attachments: logo ? [logo.attachment] : [],
       html: `
+        ${logoImg(logo)}
         <h1>${escapeHtml(appName)} - Password Reset Request</h1>
         <p>Click the link below to reset your password:</p>
         <a href="${canonicalOrigin}/reset-password?token=${encodeURIComponent(resetToken)}">
@@ -184,8 +193,7 @@ export class EmailService {
     await transporter.sendMail({
       from: { name: fromName, address: fromEmail },
       to,
-      subject: notice.subject,
-      html: noticeHtml(notice, { appName, color }),
+      ...noticeMessage(notice, { appName, color, logo: await this.logo() }),
     });
     return true;
   }
@@ -199,6 +207,7 @@ export class EmailService {
     const fromName = await this.configService.getValue("smtpFromName");
     const fromEmail = await this.configService.getValue("smtpFromEmail");
     const appName = await this.configService.getValue("appName");
+    const logo = await this.logo();
 
     const shareTitle = shareName || "Files";
     const sender = senderName || "Someone";
@@ -207,6 +216,7 @@ export class EmailService {
       from: { name: fromName, address: fromEmail },
       to,
       subject: `${appName} - ${shareTitle} shared with you`,
+      attachments: logo ? [logo.attachment] : [],
       html: `
         <!DOCTYPE html>
         <html lang="en">
@@ -219,6 +229,7 @@ export class EmailService {
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden; margin-top: 40px; margin-bottom: 40px;">
             <!-- Header -->
             <div style="background-color: #22B14C; padding: 30px 20px; text-align: center;">
+              ${logoImg(logo)}
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">${escapeHtml(appName)}</h1>
               <p style="margin: 2px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.9;">Shared Files</p>
             </div>
@@ -281,11 +292,13 @@ export class EmailService {
     const fromName = await this.configService.getValue("smtpFromName");
     const fromEmail = await this.configService.getValue("smtpFromEmail");
     const appName = await this.configService.getValue("appName");
+    const logo = await this.logo();
 
     await transporter.sendMail({
       from: { name: fromName, address: fromEmail },
       to: recipientEmail,
       subject: `${appName} - ${fileCount} file${fileCount > 1 ? "s" : ""} uploaded to "${reverseShareName}"`,
+      attachments: logo ? [logo.attachment] : [],
       html: `
         <!DOCTYPE html>
         <html lang="en">
@@ -298,6 +311,7 @@ export class EmailService {
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden; margin-top: 40px; margin-bottom: 40px;">
             <!-- Header -->
             <div style="background-color: #22B14C; padding: 30px 20px; text-align: center;">
+              ${logoImg(logo)}
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">${escapeHtml(appName)}</h1>
               <p style="margin: 2px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.9;">File Upload Notification</p>
             </div>

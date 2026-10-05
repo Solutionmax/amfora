@@ -4,6 +4,12 @@
     "subline": "Qué pasó con tus enlaces y quién inició sesión.",
     "kept": "Se guarda {days, plural, one {# día} other {# días}}.",
     "exportCsv": "Exportar CSV",
+    "clearLog": "Vaciar registro",
+    "clearTitle": "¿Vaciar el registro de actividad?",
+    "clearText": "Esto elimina cada línea, para todos. Queda una línea que indica quién vació el registro y cuándo. No se puede deshacer.",
+    "clearConfirm": "Vaciar",
+    "cleared": "El registro de actividad está vaciado.",
+    "clearError": "No se pudo vaciar el registro.",
     "facts": {
       "downloads": "Descargas esta semana",
       "opened": "Enlaces abiertos",
@@ -32,6 +38,8 @@
       "shareOpened": "Compartición abierta",
       "shareDownloaded": "Descargado",
       "sharePasswordFailed": "Contraseña incorrecta",
+      "receiveCreated": "Enlace de recepción creado",
+      "receiveDeleted": "Enlace de recepción eliminado",
       "receiveFilesReceived": "{count, plural, one {# archivo enviado} other {# archivos enviados}}",
       "secretCreated": "Secreto creado",
       "secretDeleted": "Secreto eliminado",
@@ -39,6 +47,7 @@
       "secretDestroyed": "Secreto destruido",
       "accountSignedIn": "Sesión iniciada",
       "accountSignInFailed": "Inicio de sesión fallido",
+      "activityCleared": "Registro vaciado",
       "other": "Pasó otra cosa"
     },
     "details": {

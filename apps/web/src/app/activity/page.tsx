@@ -1,16 +1,20 @@
 "use client";
 
-import { IconActivity, IconDownload, IconSearch } from "@tabler/icons-react";
+import { useState } from "react";
+import { IconActivity, IconDownload, IconEraser, IconSearch } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
+import { ConfirmDeleteDialog } from "@/components/files/confirm-delete-dialog";
 import { InlineError } from "@/components/files/inline-error";
 import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth-context";
 import { useSecureConfigValue } from "@/hooks/use-secure-configs";
-import { activityExportUrl } from "@/http/endpoints/activity";
+import { activityExportUrl, clearActivity } from "@/http/endpoints/activity";
 import { cn } from "@/lib/utils";
 import { ActivityFacts } from "./components/activity-facts";
 import { ActivityList } from "./components/activity-list";
@@ -28,6 +32,20 @@ function ActivityView() {
   const { value: retentionDays } = useSecureConfigValue("activityRetentionDays");
   const { overview, events, filter, query } = activity;
   const days = Number(retentionDays);
+  const { isAdmin } = useAuth();
+  const [isClearing, setIsClearing] = useState(false);
+
+  const clearLog = async () => {
+    try {
+      await clearActivity();
+      toast.success(t("cleared"));
+      setIsClearing(false);
+      await activity.load();
+    } catch (error) {
+      console.error("Failed to clear activity:", error);
+      toast.error(t("clearError"));
+    }
+  };
 
   const renderList = () => {
     if (activity.isLoading && events.length === 0) return <ActivityRowsSkeleton />;
@@ -72,12 +90,20 @@ function ActivityView() {
         </>
       }
       actions={
-        <Button variant="outline" asChild>
-          <a href={activityExportUrl({ kind: kindOf(filter), q: query })} download="activity.csv">
-            <IconDownload />
-            {t("exportCsv")}
-          </a>
-        </Button>
+        <>
+          <Button variant="outline" asChild>
+            <a href={activityExportUrl({ kind: kindOf(filter), q: query })} download="activity.csv">
+              <IconDownload />
+              {t("exportCsv")}
+            </a>
+          </Button>
+          {isAdmin && (
+            <Button variant="outline" onClick={() => setIsClearing(true)}>
+              <IconEraser />
+              {t("clearLog")}
+            </Button>
+          )}
+        </>
       }
     >
       <ActivityFacts summary={overview?.summary ?? null} />
@@ -143,6 +169,14 @@ function ActivityView() {
           )}
         </p>
       </div>
+      <ConfirmDeleteDialog
+        open={isClearing}
+        onClose={() => setIsClearing(false)}
+        onConfirm={clearLog}
+        title={t("clearTitle")}
+        description={t("clearText")}
+        confirmLabel={t("clearConfirm")}
+      />
     </FileManagerLayout>
   );
 }

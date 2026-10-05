@@ -4,6 +4,12 @@
     "subline": "Ce qui est arrivé à vos liens, et qui s'est connecté.",
     "kept": "Conservée pendant {days, plural, one {# jour} other {# jours}}.",
     "exportCsv": "Exporter en CSV",
+    "clearLog": "Vider le journal",
+    "clearTitle": "Vider le journal d'activité ?",
+    "clearText": "Cela supprime chaque ligne, pour tout le monde. Une ligne reste et indique qui a vidé le journal et quand. Cette action est irréversible.",
+    "clearConfirm": "Vider",
+    "cleared": "Le journal d'activité est vidé.",
+    "clearError": "Le journal n'a pas pu être vidé.",
     "facts": {
       "downloads": "Téléchargements cette semaine",
       "opened": "Liens ouverts",
@@ -32,6 +38,8 @@
       "shareOpened": "Partage ouvert",
       "shareDownloaded": "Téléchargé",
       "sharePasswordFailed": "Mot de passe erroné",
+      "receiveCreated": "Lien de réception créé",
+      "receiveDeleted": "Lien de réception supprimé",
       "receiveFilesReceived": "{count, plural, one {# fichier envoyé} other {# fichiers envoyés}}",
       "secretCreated": "Secret créé",
       "secretDeleted": "Secret supprimé",
@@ -39,6 +47,7 @@
       "secretDestroyed": "Secret détruit",
       "accountSignedIn": "Connexion",
       "accountSignInFailed": "Connexion échouée",
+      "activityCleared": "Journal vidé",
       "other": "Autre chose s'est produit"
     },
     "details": {

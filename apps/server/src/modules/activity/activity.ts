@@ -13,6 +13,8 @@ export const ACTIVITY_ACTIONS = [
   "share.opened",
   "share.downloaded",
   "share.password_failed",
+  "receive.created",
+  "receive.deleted",
   "receive.files_received",
   "secret.created",
   "secret.deleted",
@@ -20,11 +22,14 @@ export const ACTIVITY_ACTIONS = [
   "secret.destroyed",
   "account.signed_in",
   "account.sign_in_failed",
+  "activity.cleared",
 ] as const;
 export type ActivityAction = (typeof ACTIVITY_ACTIONS)[number];
 
 export interface ActivityInput {
   action: ActivityAction;
+  /** Only when it is not the part of the action before the dot. */
+  kind?: ActivityKind;
   /** Whose activity this is: the maker of the link, or the account. */
   ownerId?: string | null;
   subject?: string | null;
@@ -73,7 +78,7 @@ export async function recordActivity(input: ActivityInput, where?: { place: stri
   try {
     await prisma.activityEvent.create({
       data: {
-        kind: input.action.split(".")[0],
+        kind: input.kind ?? input.action.split(".")[0],
         action: input.action,
         ownerId: input.ownerId ?? null,
         subject: clip(input.subject),

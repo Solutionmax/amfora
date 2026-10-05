@@ -21,6 +21,9 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "Deleting many files and folders at once no longer fails halfway. It runs one after the other, and tells you how many could not be deleted.",
     "A share or receive link switch for an email the administrator has turned off now shows off and cannot be changed, with a line that says why.",
     "The numbers on the Activity filters follow the search term.",
+    "Administrators can clear the activity log from the Activity page. One line stays, saying who cleared it and when.",
+    "Making or deleting a receive link now shows in the activity log.",
+    "Emails carry the logo of the installation at the top. Without a logo, the name stays as text.",
   ],
 };
 

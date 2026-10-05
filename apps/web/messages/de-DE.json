@@ -4,6 +4,12 @@
     "subline": "Was mit deinen Links geschah und wer sich angemeldet hat.",
     "kept": "Wird {days, plural, one {# Tag} other {# Tage}} aufbewahrt.",
     "exportCsv": "CSV exportieren",
+    "clearLog": "Protokoll leeren",
+    "clearTitle": "Das Aktivitätsprotokoll leeren?",
+    "clearText": "Das entfernt jede Zeile, für alle. Eine Zeile bleibt und zeigt, wer das Protokoll wann geleert hat. Das kann nicht rückgängig gemacht werden.",
+    "clearConfirm": "Leeren",
+    "cleared": "Das Aktivitätsprotokoll wurde geleert.",
+    "clearError": "Das Protokoll konnte nicht geleert werden.",
     "facts": {
       "downloads": "Downloads diese Woche",
       "opened": "Geöffnete Links",
@@ -32,6 +38,8 @@
       "shareOpened": "Freigabe geöffnet",
       "shareDownloaded": "Heruntergeladen",
       "sharePasswordFailed": "Falsches Passwort",
+      "receiveCreated": "Empfangslink erstellt",
+      "receiveDeleted": "Empfangslink gelöscht",
       "receiveFilesReceived": "{count, plural, one {# Datei} other {# Dateien}} gesendet",
       "secretCreated": "Geheimnis erstellt",
       "secretDeleted": "Geheimnis gelöscht",
@@ -39,6 +47,7 @@
       "secretDestroyed": "Geheimnis vernichtet",
       "accountSignedIn": "Angemeldet",
       "accountSignInFailed": "Anmeldung fehlgeschlagen",
+      "activityCleared": "Protokoll geleert",
       "other": "Etwas anderes ist passiert"
     },
     "details": {

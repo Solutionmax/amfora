@@ -1,6 +1,7 @@
 import {
   IconAlertTriangle,
   IconDownload,
+  IconEraser,
   IconEye,
   IconFlame,
   IconKey,
@@ -21,6 +22,8 @@ const ICONS: Record<string, Icon> = {
   "share.opened": IconEye,
   "share.downloaded": IconDownload,
   "share.password_failed": IconAlertTriangle,
+  "receive.created": IconUpload,
+  "receive.deleted": IconTrash,
   "receive.files_received": IconUpload,
   "secret.created": IconKey,
   "secret.deleted": IconTrash,
@@ -28,6 +31,7 @@ const ICONS: Record<string, Icon> = {
   "secret.destroyed": IconFlame,
   "account.signed_in": IconLogin2,
   "account.sign_in_failed": IconAlertTriangle,
+  "activity.cleared": IconEraser,
 };
 
 const TONE_CLASS: Record<EventTone, string> = {

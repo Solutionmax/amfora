@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { getSharePassword } from "../../shared/share-password";
-import { placeOfRequest } from "../activity/activity";
+import { actorOf, placeOfRequest, recordRequestActivity } from "../activity/activity";
 import {
   CreateReverseShareSchema,
   ReverseSharePasswordSchema,
@@ -24,6 +24,13 @@ export class ReverseShareController {
 
       const input = CreateReverseShareSchema.parse(request.body);
       const reverseShare = await this.reverseShareService.createReverseShare(input, userId);
+      await recordRequestActivity(request, {
+        action: "receive.created",
+        ownerId: userId,
+        subject: reverseShare.name,
+        subjectId: reverseShare.id,
+        ...(await actorOf(userId)),
+      });
       return reply.status(201).send({ reverseShare });
     } catch (error: any) {
       console.error("Create Reverse Share Error:", error);
@@ -177,6 +184,13 @@ export class ReverseShareController {
 
       const { id } = request.params as { id: string };
       const reverseShare = await this.reverseShareService.deleteReverseShare(id, userId);
+      await recordRequestActivity(request, {
+        action: "receive.deleted",
+        ownerId: userId,
+        subject: reverseShare.name,
+        subjectId: reverseShare.id,
+        ...(await actorOf(userId)),
+      });
       return reply.send({ reverseShare });
     } catch (error: any) {
       if (error.message === "Reverse share not found") {

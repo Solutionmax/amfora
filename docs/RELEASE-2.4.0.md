@@ -12,6 +12,17 @@ providers.
   under the storage meter and their name. It leads to Settings. Other users never see it and
   their browser never asks for it.
 
+- **Clear the activity log.** Administrators get a Clear log button on the Activity page, with a
+  confirmation. Every line goes; one line stays, saying who cleared the log and when. Only
+  administrators see that line.
+- **Receive links in the activity log.** Making a receive link and deleting one now write a line,
+  like shares do.
+- **The logo in emails.** Every email the server sends shows the logo of the installation at the
+  top. It is attached to the message itself, so it shows even where the installation cannot be
+  reached from outside. A logo is stored as a WebP image, which Gmail, Apple Mail and most
+  others show; some older programs (Outlook on Windows among them) may not, and show the name
+  only. Without a logo the name stays as text, as before.
+
 ## Changed
 
 - **The storage meter in the menu is a ring.** Next to it: what is in use and what is still

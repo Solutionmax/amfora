@@ -4,6 +4,12 @@
     "subline": "Wat er met je links gebeurde, en wie er inlogde.",
     "kept": "Wordt {days, plural, one {# dag} other {# dagen}} bewaard.",
     "exportCsv": "CSV exporteren",
+    "clearLog": "Logboek leegmaken",
+    "clearTitle": "Het activiteitenlogboek leegmaken?",
+    "clearText": "Dit verwijdert elke regel, voor iedereen. Eén regel blijft staan met wie het logboek heeft leeggemaakt en wanneer. Dit kan niet ongedaan worden gemaakt.",
+    "clearConfirm": "Leegmaken",
+    "cleared": "Het activiteitenlogboek is leeggemaakt.",
+    "clearError": "Het logboek kon niet worden leeggemaakt.",
     "facts": {
       "downloads": "Downloads deze week",
       "opened": "Links geopend",
@@ -32,6 +38,8 @@
       "shareOpened": "Deling geopend",
       "shareDownloaded": "Gedownload",
       "sharePasswordFailed": "Verkeerd wachtwoord",
+      "receiveCreated": "Ontvangstlink gemaakt",
+      "receiveDeleted": "Ontvangstlink verwijderd",
       "receiveFilesReceived": "{count, plural, one {# bestand} other {# bestanden}} gestuurd",
       "secretCreated": "Geheim gemaakt",
       "secretDeleted": "Geheim verwijderd",
@@ -39,6 +47,7 @@
       "secretDestroyed": "Geheim vernietigd",
       "accountSignedIn": "Ingelogd",
       "accountSignInFailed": "Inloggen mislukt",
+      "activityCleared": "Logboek leeggemaakt",
       "other": "Er gebeurde iets anders"
     },
     "details": {

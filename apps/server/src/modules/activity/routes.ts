@@ -2,8 +2,9 @@ import type { Prisma } from "@prisma/client";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { loadAccount } from "../../shared/admin-guard";
+import { createAdminGuard, loadAccount } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
+import { actorOf, recordRequestActivity } from "./activity";
 import { placeSource } from "./place";
 
 const KINDS = ["share", "receive", "secret", "account"] as const;
@@ -334,6 +335,28 @@ export async function activityRoutes(app: FastifyInstance) {
         .header("Content-Disposition", 'attachment; filename="activity.csv"')
         .header("Cache-Control", "no-store")
         .send(lines.join("\r\n"));
+    }
+  );
+
+  app.delete(
+    "/activity",
+    {
+      preValidation: createAdminGuard(),
+      schema: {
+        tags: ["Activity"],
+        operationId: "clearActivity",
+        summary: "Clear the activity log",
+        description: "Administrators only. Removes every line; one line about the clearing itself remains.",
+        response: { 200: z.object({ removed: z.number() }), 401: ErrorSchema, 403: ErrorSchema },
+      },
+    },
+    async (request, reply) => {
+      const userId = (request.user as { userId: string }).userId;
+      const actor = await actorOf(userId);
+      const { count } = await prisma.activityEvent.deleteMany({});
+      // Visible to administrators only: no owner.
+      await recordRequestActivity(request, { action: "activity.cleared", kind: "account", ...actor });
+      return reply.send({ removed: count });
     }
   );
 }

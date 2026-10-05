@@ -17,6 +17,7 @@ const TONES: Record<string, EventTone> = {
   "secret.destroyed": "bad",
   "share.created": "accent",
   "secret.created": "accent",
+  "receive.created": "accent",
 };
 
 export const eventTone = (action: string): EventTone => TONES[action] ?? "plain";
@@ -33,7 +34,7 @@ export function parseOpening(detail: string | null): { opening: number; max: num
 
 const PAGES: Partial<Record<string, string>> = { share: "/shares", receive: "/reverse-shares", secret: "/secrets" };
 /** After these the thing is gone, so there is nothing to link to. */
-const GONE_ACTIONS: readonly string[] = ["share.deleted", "secret.deleted", "secret.destroyed"];
+const GONE_ACTIONS: readonly string[] = ["share.deleted", "receive.deleted", "secret.deleted", "secret.destroyed"];
 
 /** The page of the share, receive link or secret an event is about, if it can still exist. */
 export function eventLink(event: Pick<ActivityEvent, "kind" | "action" | "subjectId">): string | null {

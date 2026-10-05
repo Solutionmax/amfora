@@ -526,3 +526,54 @@ test("the counts per kind follow the search term, not the chosen kind", async ()
   assert.equal(oneKind.counts[kindOfDownload as string], 2);
   assert.equal((await list("bob", "?q=CountMe")).counts.all, 0, "another user's events are never counted");
 });
+
+test("making and deleting a receive link writes a line each, for its maker", async () => {
+  const made = await app.inject({
+    method: "POST",
+    url: "/reverse-shares",
+    cookies: session("alice"),
+    payload: { name: "Photos for me" },
+  });
+  assert.equal(made.statusCode, 201);
+  const id = made.json().reverseShare.id as string;
+  assert.equal(
+    (await app.inject({ method: "DELETE", url: `/reverse-shares/${id}`, cookies: session("alice") })).statusCode,
+    200
+  );
+
+  const mine = (await list("alice", `?subjectId=${id}`)).events;
+  assert.deepEqual(
+    mine.map((event) => [event.action, event.kind, event.subject, event.actorName]),
+    [
+      ["receive.deleted", "receive", "Photos for me", "alice Test"],
+      ["receive.created", "receive", "Photos for me", "alice Test"],
+    ]
+  );
+  assert.deepEqual((await list("bob", `?subjectId=${id}`)).events, [], "another user does not see them");
+});
+
+test("only an administrator clears the log, and one line about it remains", async () => {
+  await activity.recordActivity({ action: "share.created", ownerId: "alice", subject: "x" });
+  await activity.recordActivity({ action: "account.signed_in", ownerId: "bob" });
+
+  for (const user of ["alice", "bob"]) {
+    const refused = await app.inject({ method: "DELETE", url: "/activity", cookies: session(user) });
+    assert.equal(refused.statusCode, 403, user);
+  }
+  assert.equal((await app.inject({ method: "DELETE", url: "/activity" })).statusCode, 401);
+  assert.ok((await prisma.activityEvent.count()) > 1, "nothing was removed by the refusals");
+
+  const cleared = await app.inject({ method: "DELETE", url: "/activity", cookies: session("root") });
+  assert.equal(cleared.statusCode, 200);
+
+  const rows = await prisma.activityEvent.findMany();
+  assert.equal(rows.length, 1);
+  assert.deepEqual(
+    [rows[0].action, rows[0].kind, rows[0].ownerId, rows[0].actorId, rows[0].actorName],
+    ["activity.cleared", "account", null, "root", "root Test"]
+  );
+  assert.equal(cleared.json().removed >= 2, true);
+
+  assert.deepEqual(await actionsOf("root"), ["activity.cleared"]);
+  assert.deepEqual(await actionsOf("alice"), [], "a member never sees the line about the clearing");
+});

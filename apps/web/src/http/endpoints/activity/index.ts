@@ -45,6 +45,9 @@ const clean = (query: ActivityQuery) =>
 export const listActivity = async (query: ActivityQuery = {}): Promise<ActivityList> =>
   (await apiInstance.get("/api/activity", { params: clean(query) })).data;
 
+/** Administrators only: removes every line; one line about the clearing remains. */
+export const clearActivity = async (): Promise<{ removed: number }> => (await apiInstance.delete("/api/activity")).data;
+
 /** Address of the CSV file for the same filter; the browser downloads it with the session cookie. */
 export function activityExportUrl(query: Pick<ActivityQuery, "kind" | "q">): string {
   const params = new URLSearchParams(clean(query) as Record<string, string>).toString();
