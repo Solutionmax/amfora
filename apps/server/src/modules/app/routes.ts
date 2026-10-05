@@ -49,7 +49,6 @@ export async function appRoutes(app: FastifyInstance) {
             appCustomCss: z.string().describe("Custom CSS, sanitised, empty without a valid brandpack"),
             appShareCover: linkPreviewInfo.describe("The download page cover (free), or null"),
             appLinkPreview: linkPreviewInfo.describe("The default link preview image (free), or null"),
-            appSharePlayback: z.boolean().describe("Whether video and audio play on public download pages"),
             appPublicTheme: z
               .enum(PUBLIC_THEMES)
               .describe("How the sign-in, download and receive pages look: stage, workbench or seal"),

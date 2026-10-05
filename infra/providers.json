@@ -1,11 +1,5 @@
 [
-  "google",
-  "discord",
-  "github",
-  "auth0",
-  "kinde",
-  "zitadel",
   "authentik",
-  "frontegg",
-  "pocketid"
+  "github",
+  "google"
 ]

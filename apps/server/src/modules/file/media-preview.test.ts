@@ -10,11 +10,10 @@ import { useTestDatabase } from "../../../test-support/test-db";
 import { isPlayableMedia, refusesMediaPreview } from "./media-preview";
 import { FileService } from "./service";
 
-test("only a non-owner preview of video or audio with playback off is refused", () => {
-  const base = { isPreview: true, contentType: "video/mp4", isOwner: false, playbackEnabled: false };
+test("only a non-owner preview of video or audio is refused", () => {
+  const base = { isPreview: true, contentType: "video/mp4", isOwner: false };
   assert.equal(refusesMediaPreview(base), true);
   assert.equal(refusesMediaPreview({ ...base, contentType: "audio/mpeg" }), true);
-  assert.equal(refusesMediaPreview({ ...base, playbackEnabled: true }), false, "switch on");
   assert.equal(refusesMediaPreview({ ...base, isOwner: true }), false, "the owner in the workspace");
   assert.equal(refusesMediaPreview({ ...base, isPreview: false }), false, "a download is a download");
   for (const type of ["image/png", "application/pdf", "text/plain"]) {
@@ -78,8 +77,6 @@ after(async () => {
   database.cleanup();
 });
 
-const setPlayback = (value: string) => prisma.appConfig.update({ where: { key: "appSharePlayback" }, data: { value } });
-
 function request(route: "download-url" | "download", objectName: string, preview: boolean, owner = false) {
   const query = `objectName=${encodeURIComponent(objectName)}${preview ? "&preview=1" : ""}`;
   return app.inject({
@@ -90,29 +87,25 @@ function request(route: "download-url" | "download", objectName: string, preview
 }
 
 for (const route of ["download-url", "download"] as const) {
-  test(`/files/${route}: video and audio preview through a share is 403 with playback off`, async () => {
-    await setPlayback("false");
+  test(`/files/${route}: video and audio preview through a share is 403`, async () => {
     for (const objectName of ["owner/launch.mp4", "owner/track.mp3"]) {
       const refused = await request(route, objectName, true);
       assert.equal(refused.statusCode, 403, `${objectName} preview`);
-      assert.match(refused.json().error, /switched off/);
+      assert.match(refused.json().error, /do not play/);
       assert.equal((await request(route, objectName, false)).statusCode, 200, `${objectName} download still works`);
       assert.equal((await request(route, objectName, true, true)).statusCode, 200, `${objectName} owner preview`);
     }
     assert.equal((await request(route, "owner/poster.png", true)).statusCode, 200, "images keep their preview");
   });
-
-  test(`/files/${route}: video and audio preview is allowed with playback on`, async () => {
-    await setPlayback("true");
-    for (const objectName of ["owner/launch.mp4", "owner/track.mp3"]) {
-      assert.equal((await request(route, objectName, true)).statusCode, 200, objectName);
-    }
-  });
 }
 
-test("a missing playback row (an old install) counts as off", async () => {
-  await prisma.appConfig.delete({ where: { key: "appSharePlayback" } });
+// The switch that allowed playback is gone. A row left behind by an older version changes nothing.
+test("a leftover playback setting from an older version does not bring playback back", async () => {
+  await prisma.appConfig.create({
+    data: { key: "appSharePlayback", value: "true", type: "boolean", group: "general" },
+  });
   assert.equal((await request("download-url", "owner/launch.mp4", true)).statusCode, 403);
+  await prisma.appConfig.delete({ where: { key: "appSharePlayback" } });
 });
 
 test("previews are not counted as downloads, refused ones neither", async () => {

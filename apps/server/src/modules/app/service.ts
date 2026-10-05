@@ -25,7 +25,6 @@ export class AppService {
       appHideCredit,
       appCustomCss,
       appBrandpack,
-      appSharePlayback,
       appPublicTheme,
       backgroundExists,
       appShareCover,
@@ -41,7 +40,6 @@ export class AppService {
       value("appHideCredit"),
       value("appCustomCss"),
       value("appBrandpack"),
-      value("appSharePlayback"),
       value("appPublicTheme"),
       backgroundImage.exists(),
       shareCoverImage.linkPreviewInfo(),
@@ -63,8 +61,6 @@ export class AppService {
       appRadius: appRadius ?? "",
       appShareCover,
       appLinkPreview,
-      // Missing config (an install from before the switch existed) means off.
-      appSharePlayback: appSharePlayback === "true",
       appPublicTheme: normalizePublicTheme(appPublicTheme),
       ...resolvePaidAppearance({ appHideCredit, appCustomCss, backgroundExists }, brandpack),
     };

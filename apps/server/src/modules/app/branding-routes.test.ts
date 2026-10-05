@@ -119,11 +119,11 @@ for (const url of ["/app/share-cover", "/app/link-preview"]) {
   });
 }
 
-test("/app/info reports the cover and link preview without a brandpack, and playback off by default", async () => {
+test("/app/info reports the cover and link preview without a brandpack", async () => {
   let info = await appInfo();
   assert.equal(info.appShareCover, null);
   assert.equal(info.appLinkPreview, null);
-  assert.equal(info.appSharePlayback, false);
+  assert.equal("appSharePlayback" in info, false, "the playback switch is gone");
   assert.equal(info.brandpack, null);
 
   assert.equal((await upload("/app/share-cover", await png(1200, 630))).statusCode, 200);
@@ -133,11 +133,4 @@ test("/app/info reports the cover and link preview without a brandpack, and play
   assert.equal(typeof info.appShareCover.version, "string");
   assert.equal(info.appLinkPreview, null);
   assert.equal(info.appBackground, false, "the paid background stays off without a brandpack");
-
-  await prisma.appConfig.update({ where: { key: "appSharePlayback" }, data: { value: "true" } });
-  assert.equal((await appInfo()).appSharePlayback, true);
-
-  // An installation from before the switch has no row at all; that reads as off.
-  await prisma.appConfig.delete({ where: { key: "appSharePlayback" } });
-  assert.equal((await appInfo()).appSharePlayback, false);
 });

@@ -59,14 +59,6 @@ const defaultConfigs = [
     group: "general",
   },
   {
-    // Off by default, also for installs from before the switch existed: a download page
-    // offers the file, it does not stream it.
-    key: "appSharePlayback",
-    value: "false",
-    type: "boolean",
-    group: "general",
-  },
-  {
     // Look of the sign-in, download and receive pages: stage, workbench or seal.
     key: "appPublicTheme",
     value: "stage",
@@ -327,7 +319,46 @@ const defaultConfigs = [
   },
 ];
 
+// The providers a new installation offers. Any other OpenID Connect or OAuth 2.0 service
+// is added by the administrator under Settings, External sign-in.
 const defaultAuthProviders = [
+  {
+    name: "authentik",
+    displayName: "Authentik",
+    type: "oidc",
+    icon: "FaShieldAlt",
+    enabled: false,
+    issuerUrl: "https://your-authentik.domain.com",
+    authorizationEndpoint: "/application/o/authorize/",
+    tokenEndpoint: "/application/o/token/",
+    userInfoEndpoint: "/application/o/userinfo/",
+    scope: "openid profile email",
+    sortOrder: 1,
+    metadata: JSON.stringify({
+      description: "Sign in with Authentik - Replace with your Authentik instance URL",
+      docs: "https://goauthentik.io/docs/providers/oauth2",
+      supportsDiscovery: true,
+    }),
+  },
+  {
+    name: "github",
+    displayName: "GitHub",
+    type: "oauth2",
+    icon: "SiGithub",
+    enabled: false,
+    issuerUrl: "https://github.com/login/oauth",
+    authorizationEndpoint: "/authorize",
+    tokenEndpoint: "/access_token",
+    // GitHub answers on another host than the one that signs in.
+    userInfoEndpoint: "https://api.github.com/user",
+    scope: "user:email",
+    sortOrder: 2,
+    metadata: JSON.stringify({
+      description: "Sign in with your GitHub account",
+      docs: "https://docs.github.com/en/developers/apps/building-oauth-apps",
+      specialHandling: "email_fetch_required",
+    }),
+  },
   {
     name: "google",
     displayName: "Google",
@@ -339,7 +370,7 @@ const defaultAuthProviders = [
     tokenEndpoint: "/o/oauth2/token",
     userInfoEndpoint: "https://www.googleapis.com/oauth2/v3/userinfo",
     scope: "openid profile email",
-    sortOrder: 1,
+    sortOrder: 3,
     metadata: JSON.stringify({
       description: "Sign in with your Google account",
       docs: "https://developers.google.com/identity/protocols/oauth2",
@@ -347,153 +378,51 @@ const defaultAuthProviders = [
       authMethod: "body",
     }),
   },
-  {
-    name: "discord",
-    displayName: "Discord",
-    type: "oauth2",
-    icon: "FaDiscord",
-    enabled: false,
-    issuerUrl: "https://discord.com",
-    authorizationEndpoint: "/oauth2/authorize",
-    tokenEndpoint: "/api/oauth2/token",
-    userInfoEndpoint: "/api/users/@me",
-    scope: "identify email",
-    sortOrder: 2,
-    metadata: JSON.stringify({
-      description: "Sign in with your Discord account",
-      docs: "https://discord.com/developers/docs/topics/oauth2",
-      supportsDiscovery: false,
-      authMethod: "body",
-    }),
-  },
-  {
-    name: "github",
-    displayName: "GitHub",
-    type: "oauth2",
-    icon: "SiGithub",
-    enabled: false,
-    issuerUrl: "https://github.com/login/oauth", // URL fixa do GitHub
-    authorizationEndpoint: "/authorize",
-    tokenEndpoint: "/access_token",
-    userInfoEndpoint: "https://api.github.com/user", // GitHub usa URL absoluta para userInfo
-    scope: "user:email",
-    sortOrder: 3,
-    metadata: JSON.stringify({
-      description: "Sign in with your GitHub account",
-      docs: "https://docs.github.com/en/developers/apps/building-oauth-apps",
-      specialHandling: "email_fetch_required",
-    }),
-  },
-  {
-    name: "auth0",
-    displayName: "Auth0",
-    type: "oidc",
-    icon: "SiAuth0",
-    enabled: false,
-    issuerUrl: "https://your-tenant.auth0.com", // Placeholder - usuário deve configurar
-    authorizationEndpoint: "/authorize",
-    tokenEndpoint: "/oauth/token",
-    userInfoEndpoint: "/userinfo",
-    scope: "openid profile email",
-    sortOrder: 4,
-    metadata: JSON.stringify({
-      description: "Sign in with Auth0 - Replace 'your-tenant' with your Auth0 domain",
-      docs: "https://auth0.com/docs/get-started/authentication-and-authorization-flow",
-      supportsDiscovery: true,
-    }),
-  },
-  {
-    name: "kinde",
-    displayName: "Kinde Auth",
-    type: "oidc",
-    icon: "FaKey",
-    enabled: false,
-    issuerUrl: "https://your-tenant.kinde.com", // Placeholder - usuário deve configurar
-    authorizationEndpoint: "/oauth2/auth",
-    tokenEndpoint: "/oauth2/token",
-    userInfoEndpoint: "/oauth2/user_profile",
-    scope: "openid profile email",
-    sortOrder: 5,
-    metadata: JSON.stringify({
-      description: "Sign in with Kinde - Replace 'your-tenant' with your Kinde domain",
-      docs: "https://kinde.com/docs/developer-tools/about/",
-      supportsDiscovery: true,
-    }),
-  },
-  {
-    name: "zitadel",
-    displayName: "Zitadel",
-    type: "oidc",
-    icon: "FaShield",
-    enabled: false,
-    issuerUrl: "https://your-instance.zitadel.cloud", // Placeholder - usuário deve configurar
-    authorizationEndpoint: "/oauth/v2/authorize",
-    tokenEndpoint: "/oauth/v2/token",
-    userInfoEndpoint: "/oidc/v1/userinfo",
-    scope: "openid profile email",
-    sortOrder: 6,
-    metadata: JSON.stringify({
-      description: "Sign in with Zitadel - Replace with your Zitadel instance URL",
-      docs: "https://zitadel.com/docs/guides/integrate/login/oidc",
-      supportsDiscovery: true,
-      authMethod: "basic",
-    }),
-  },
-  {
-    name: "authentik",
-    displayName: "Authentik",
-    type: "oidc",
-    icon: "FaShieldAlt",
-    enabled: false,
-    issuerUrl: "https://your-authentik.domain.com", // Placeholder - usuário deve configurar
-    authorizationEndpoint: "/application/o/authorize/",
-    tokenEndpoint: "/application/o/token/",
-    userInfoEndpoint: "/application/o/userinfo/",
-    scope: "openid profile email",
-    sortOrder: 7,
-    metadata: JSON.stringify({
-      description: "Sign in with Authentik - Replace with your Authentik instance URL",
-      docs: "https://goauthentik.io/docs/providers/oauth2",
-      supportsDiscovery: true,
-    }),
-  },
-  {
-    name: "frontegg",
-    displayName: "Frontegg",
-    type: "oidc",
-    icon: "FaEgg",
-    enabled: false,
-    issuerUrl: "https://your-tenant.frontegg.com", // Placeholder - usuário deve configurar
-    authorizationEndpoint: "/oauth/authorize",
-    tokenEndpoint: "/oauth/token",
-    userInfoEndpoint: "/identity/resources/users/v2/me",
-    scope: "openid profile email",
-    sortOrder: 8,
-    metadata: JSON.stringify({
-      description: "Sign in with Frontegg - Replace 'your-tenant' with your Frontegg tenant",
-      docs: "https://docs.frontegg.com",
-      supportsDiscovery: true,
-    }),
-  },
-  {
-    name: "pocketid",
-    displayName: "Pocket ID",
-    type: "oidc",
-    icon: "BsFillPSquareFill",
-    enabled: false,
-    issuerUrl: "https://your-pocket-id.domain.com",
-    authorizationEndpoint: "/authorize",
-    tokenEndpoint: "/api/oidc/token",
-    userInfoEndpoint: "/api/oidc/userinfo",
-    scope: "openid profile email",
-    sortOrder: 9,
-    metadata: JSON.stringify({
-      description: "Sign in with Pocket ID - Replace with your Pocket ID instance URL",
-      docs: "https://docs.pocket-id.org",
-      supportsDiscovery: true,
-    }),
-  },
 ];
+
+// Providers that older versions seeded, with the address they were seeded with. On an upgrade,
+// one that was never set up leaves the list; one with client details, an address of its own, a
+// switch that is on or a linked account stays and keeps working.
+const retiredAuthProviders = [
+  { name: "discord", issuerUrl: "https://discord.com" },
+  { name: "auth0", issuerUrl: "https://your-tenant.auth0.com" },
+  { name: "kinde", issuerUrl: "https://your-tenant.kinde.com" },
+  { name: "zitadel", issuerUrl: "https://your-instance.zitadel.cloud" },
+  { name: "frontegg", issuerUrl: "https://your-tenant.frontegg.com" },
+  { name: "pocketid", issuerUrl: "https://your-pocket-id.domain.com" },
+];
+
+// Settings that no longer exist. Their rows go, so they do not come back under "More".
+const removedConfigs = ["appSharePlayback"];
+
+// Versions before 2.3 stored this font as their default. It is not shipped any more, so the
+// page already falls back to the default font; the setting follows.
+const removedDefaultFont = "var(--font-jakarta)";
+
+/** This file runs at every start of the container (infra/server-start.sh), so this is the upgrade path. */
+async function removeWhatIsGone() {
+  const configs = await prisma.appConfig.deleteMany({ where: { key: { in: removedConfigs } } });
+  const providers = await prisma.authProvider.deleteMany({
+    where: {
+      enabled: false,
+      AND: [
+        { OR: retiredAuthProviders },
+        { OR: [{ clientId: null }, { clientId: "" }] },
+        { OR: [{ clientSecret: null }, { clientSecret: "" }] },
+      ],
+      userAuthProviders: { none: {} },
+    },
+  });
+
+  const fonts = await prisma.appConfig.updateMany({
+    where: { key: "appFontFamily", value: removedDefaultFont },
+    data: { value: "" },
+  });
+
+  if (configs.count > 0) console.log(`🧹 Removed ${configs.count} settings that no longer exist`);
+  if (fonts.count > 0) console.log("🧹 Reset the font setting: the old default font is no longer shipped");
+  if (providers.count > 0) console.log(`🧹 Removed ${providers.count} sign-in providers that were never set up`);
+}
 
 async function main() {
   console.log("🌱 Starting app configurations seed...");
@@ -526,6 +455,8 @@ async function main() {
     await prisma.appConfig.update({ where: { key: "appLogo" }, data: { value: "", updatedAt: new Date() } });
     console.log("🏺 Replaced the 1.x default logo with the built-in mark");
   }
+
+  await removeWhatIsGone();
 
   console.log("\n📊 Seed Summary:");
   console.log(`   ✅ Created: ${createdCount} configurations`);

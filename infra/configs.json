@@ -5,8 +5,7 @@
     "appDescription",
     "appLogo",
     "firstUserAccess",
-    "serverUrl",
-    "appSharePlayback"
+    "serverUrl"
   ],
   "storage": [
     "maxFileSize",
