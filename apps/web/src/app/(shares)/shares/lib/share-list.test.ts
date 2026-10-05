@@ -7,7 +7,9 @@ import {
   folderWithContents,
   matchesFilter,
   parseViewLimit,
+  selectionState,
   shareUrl,
+  toggleAll,
   toLocalInputValue,
   topLevelItems,
 } from "./share-list";
@@ -91,4 +93,25 @@ test("view limit accepts empty or a whole number of 1 or more", () => {
   assert.deepEqual(parseViewLimit("0"), { ok: false });
   assert.deepEqual(parseViewLimit("2.5"), { ok: false });
   assert.deepEqual(parseViewLimit("-3"), { ok: false });
+});
+
+test("the box above the list says whether none, some or all listed shares are picked", () => {
+  assert.equal(selectionState(["a", "b"], new Set()), "none");
+  assert.equal(selectionState(["a", "b"], new Set(["a"])), "some");
+  assert.equal(selectionState(["a", "b"], new Set(["a", "b"])), "all");
+  assert.equal(selectionState([], new Set()), "none", "an empty list is never all picked");
+});
+
+test("select all picks what is listed and keeps shares picked under another filter", () => {
+  assert.deepEqual([...toggleAll(["a", "b"], new Set())].sort(), ["a", "b"]);
+  assert.deepEqual([...toggleAll(["a", "b"], new Set(["z"]))].sort(), ["a", "b", "z"]);
+});
+
+test("select all on a fully picked list clears the selection", () => {
+  assert.equal(toggleAll(["a", "b"], new Set(["a", "b"])).size, 0);
+  assert.equal(toggleAll(["a", "b"], new Set(["a", "b", "z"])).size, 0);
+});
+
+test("with nothing listed, select all clears what was picked under another filter", () => {
+  assert.equal(toggleAll([], new Set(["z"])).size, 0);
 });

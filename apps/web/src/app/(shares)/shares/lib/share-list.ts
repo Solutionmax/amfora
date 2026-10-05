@@ -34,6 +34,22 @@ export function filterShares<T extends Named>(shares: readonly T[], filter: Shar
   );
 }
 
+export type SelectionState = "none" | "some" | "all";
+
+/** What the box above the list shows: every listed share picked, some picked, or none. */
+export function selectionState(listed: readonly string[], picked: ReadonlySet<string>): SelectionState {
+  if (listed.length > 0 && listed.every((id) => picked.has(id))) return "all";
+  return picked.size > 0 ? "some" : "none";
+}
+
+/**
+ * Picks every listed share and keeps what was picked under another filter. When there is nothing
+ * left to pick (all listed are picked, or nothing is listed) it clears the selection instead.
+ */
+export function toggleAll(listed: readonly string[], picked: ReadonlySet<string>): Set<string> {
+  return listed.every((id) => picked.has(id)) ? new Set() : new Set([...picked, ...listed]);
+}
+
 export function shareUrl(origin: string, alias: string): string {
   return `${origin}/s/${alias}`;
 }

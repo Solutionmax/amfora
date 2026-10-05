@@ -2600,6 +2600,7 @@
       "fileCount": "{count, plural, =0 {Geen bestanden} =1 {1 bestand} other {# bestanden}}",
       "moreActions": "Meer acties",
       "selectShares": "Delingen selecteren",
+      "selectAll": "Alles selecteren",
       "selectedCount": "{count} geselecteerd",
       "downloadSelected": "Downloaden",
       "deleteSelected": "Verwijderen",

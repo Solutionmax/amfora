@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SplitListHeader, SplitListItem } from "@/components/ui/split-view";
 import type { Share } from "@/http/endpoints/shares/types";
 import { cn } from "@/lib/utils";
-import { SHARE_FILTERS, type ShareFilter } from "../lib/share-list";
+import { selectionState, SHARE_FILTERS, toggleAll, type ShareFilter } from "../lib/share-list";
 
 interface SharesListProps {
   shares: Share[];
@@ -115,6 +115,8 @@ export function SharesList(props: SharesListProps) {
       return next;
     });
   const pickedShares = shares.filter((share) => picked.has(share.id));
+  const listedIds = visibleShares.map((share) => share.id);
+  const pickedState = selectionState(listedIds, picked);
 
   const header = (
     <SplitListHeader
@@ -185,7 +187,14 @@ export function SharesList(props: SharesListProps) {
 
       {isSelecting && (
         <div className="mx-4 mt-2 flex flex-wrap items-center gap-x-1 gap-y-1 border-b border-line pb-2 text-[13px]">
-          <span className="mr-auto text-ink-3">{t("shares.calm.selectedCount", { count: picked.size })}</span>
+          <label className="mr-auto flex cursor-pointer items-center gap-3 pl-1.5 text-ink-3">
+            <Checkbox
+              checked={pickedState === "some" ? "indeterminate" : pickedState === "all"}
+              onCheckedChange={() => setPicked(toggleAll(listedIds, picked))}
+              aria-label={t("shares.calm.selectAll")}
+            />
+            {picked.size === 0 ? t("shares.calm.selectAll") : t("shares.calm.selectedCount", { count: picked.size })}
+          </label>
           <Button
             variant="ghost"
             size="sm"
