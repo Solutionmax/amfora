@@ -7,14 +7,19 @@ import { useTranslations } from "next-intl";
 import { LineRow } from "@/components/ui/line-list";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/contexts/auth-context";
+import { useSecureConfigs } from "@/hooks/use-secure-configs";
 import type { ShareNotifications } from "@/http/endpoints/activity";
 import type { Share } from "@/http/endpoints/shares/types";
+import { adminSwitchedOff } from "@/lib/admin-notifications";
 import type { ShareDetailActions } from "./share-detail-types";
 
 /** Two rows in the Access list: an email on a download, and one before the end date. */
 export function ShareNotificationRows({ share, actions }: { share: Share; actions: ShareDetailActions }) {
   const t = useTranslations("shares.calm.notify");
   const { user } = useAuth();
+  const { configs } = useSecureConfigs();
+  const downloadOff = adminSwitchedOff(configs, "notifyDownloadEnabled");
+  const expiryOff = adminSwitchedOff(configs, "notifyExpiryEnabled");
   // Shown at once; dropped again when the answer is in, so a failed save falls back by itself.
   const [pending, setPending] = useState<Partial<ShareNotifications>>({});
   const value: ShareNotifications = {
@@ -35,11 +40,13 @@ export function ShareNotificationRows({ share, actions }: { share: Share; action
       <LineRow
         icon={<IconBell stroke={1.8} />}
         title={t("download")}
-        sub={user?.email ? t("downloadHintTo", { email: user.email }) : t("downloadHint")}
+        sub={
+          downloadOff ? t("offByAdmin") : user?.email ? t("downloadHintTo", { email: user.email }) : t("downloadHint")
+        }
       >
         <Switch
-          checked={value.notifyOnDownload}
-          disabled={"notifyOnDownload" in pending}
+          checked={!downloadOff && value.notifyOnDownload}
+          disabled={downloadOff || "notifyOnDownload" in pending}
           aria-label={t("download")}
           onCheckedChange={(on) => void toggle("notifyOnDownload", on)}
         />
@@ -47,11 +54,11 @@ export function ShareNotificationRows({ share, actions }: { share: Share; action
       <LineRow
         icon={<IconClock stroke={1.8} />}
         title={t("expiry")}
-        sub={hasEndDate ? t("expiryHint") : t("noEndDate")}
+        sub={expiryOff ? t("offByAdmin") : hasEndDate ? t("expiryHint") : t("noEndDate")}
       >
         <Switch
-          checked={hasEndDate && value.remindBeforeExpiry}
-          disabled={!hasEndDate || "remindBeforeExpiry" in pending}
+          checked={hasEndDate && !expiryOff && value.remindBeforeExpiry}
+          disabled={!hasEndDate || expiryOff || "remindBeforeExpiry" in pending}
           aria-label={t("expiry")}
           onCheckedChange={(on) => void toggle("remindBeforeExpiry", on)}
         />

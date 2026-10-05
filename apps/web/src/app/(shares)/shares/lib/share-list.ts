@@ -34,6 +34,11 @@ export function filterShares<T extends Named>(shares: readonly T[], filter: Shar
   );
 }
 
+/** The picked items that are in the list now. Picks hidden by a filter or search are not acted on. */
+export function pickedAmong<T extends { id: string }>(listed: readonly T[], picked: ReadonlySet<string>): T[] {
+  return listed.filter((item) => picked.has(item.id));
+}
+
 export type SelectionState = "none" | "some" | "all";
 
 /** What the box above the list shows: every listed share picked, some picked, or none. */

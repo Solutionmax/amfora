@@ -2,7 +2,8 @@ import { create } from "zustand";
 
 import { normalizePublicTheme, type PublicTheme } from "@/components/brand/public-theme";
 import { getAppInfo } from "@/http/endpoints";
-import type { LinkPreviewInfo } from "@/http/endpoints/app/types";
+import type { GetAppInfoResult, LinkPreviewInfo } from "@/http/endpoints/app/types";
+import { sharedRequest } from "@/lib/shared-request";
 
 interface AppInfoStore {
   appName: string;
@@ -24,8 +25,15 @@ interface AppInfoStore {
   infoLoaded: boolean;
   setAppName: (name: string) => void;
   setAppLogo: (logo: string) => void;
+  /** Loads the info, or takes the answer a caller a moment ago already asked for. */
+  loadAppInfo: () => Promise<void>;
+  /** Always asks again, for after something changed. */
   refreshAppInfo: () => Promise<void>;
 }
+
+// Several parts of a page ask for the app info while it loads; they all get one request.
+const sharedAppInfo = sharedRequest(() => getAppInfo());
+export const fetchAppInfo = () => sharedAppInfo.get();
 
 const updateTitle = (name: string) => {
   document.title = name;
@@ -51,37 +59,35 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     infoLoaded: false,
   };
 
-  const loadAppInfo = async () => {
-    if (typeof window !== "undefined") {
-      try {
-        const response = await getAppInfo();
-        set({
-          appName: response.data.appName,
-          appLogo: response.data.appLogo,
-          appDescription: response.data.appDescription,
-          appPrimaryColor: response.data.appPrimaryColor ?? "",
-          appFontFamily: response.data.appFontFamily ?? "",
-          appRadius: response.data.appRadius ?? "",
-          appHideCredit: response.data.appHideCredit ?? false,
-          appBackground: response.data.appBackground ?? false,
-          appCustomCss: response.data.appCustomCss ?? "",
-          appShareCover: response.data.appShareCover ?? null,
-          appLinkPreview: response.data.appLinkPreview ?? null,
-          appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
-          brandpack: response.data.brandpack ?? null,
-          firstAccess: response.data.firstUserAccess,
-          isLoading: false,
-          infoLoaded: true,
-        });
-        updateTitle(response.data.appName);
-      } catch (error) {
-        console.error("Failed to fetch app info:", error);
-        set({ isLoading: false, infoLoaded: true });
-      }
+  const apply = async (request: Promise<GetAppInfoResult>) => {
+    try {
+      const response = await request;
+      set({
+        appName: response.data.appName,
+        appLogo: response.data.appLogo,
+        appDescription: response.data.appDescription,
+        appPrimaryColor: response.data.appPrimaryColor ?? "",
+        appFontFamily: response.data.appFontFamily ?? "",
+        appRadius: response.data.appRadius ?? "",
+        appHideCredit: response.data.appHideCredit ?? false,
+        appBackground: response.data.appBackground ?? false,
+        appCustomCss: response.data.appCustomCss ?? "",
+        appShareCover: response.data.appShareCover ?? null,
+        appLinkPreview: response.data.appLinkPreview ?? null,
+        appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
+        brandpack: response.data.brandpack ?? null,
+        firstAccess: response.data.firstUserAccess,
+        isLoading: false,
+        infoLoaded: true,
+      });
+      updateTitle(response.data.appName);
+    } catch (error) {
+      console.error("Failed to fetch app info:", error);
+      set({ isLoading: false, infoLoaded: true });
     }
   };
 
-  loadAppInfo();
+  if (typeof window !== "undefined") void apply(fetchAppInfo());
 
   return {
     ...initialState,
@@ -92,33 +98,10 @@ export const useAppInfo = create<AppInfoStore>((set) => {
     setAppLogo: (logo: string) => {
       set({ appLogo: logo });
     },
+    loadAppInfo: () => apply(fetchAppInfo()),
     refreshAppInfo: async () => {
       set({ isLoading: true });
-      try {
-        const response = await getAppInfo();
-        set({
-          appName: response.data.appName,
-          appLogo: response.data.appLogo,
-          appDescription: response.data.appDescription,
-          appPrimaryColor: response.data.appPrimaryColor ?? "",
-          appFontFamily: response.data.appFontFamily ?? "",
-          appRadius: response.data.appRadius ?? "",
-          appHideCredit: response.data.appHideCredit ?? false,
-          appBackground: response.data.appBackground ?? false,
-          appCustomCss: response.data.appCustomCss ?? "",
-          appShareCover: response.data.appShareCover ?? null,
-          appLinkPreview: response.data.appLinkPreview ?? null,
-          appPublicTheme: normalizePublicTheme(response.data.appPublicTheme),
-          brandpack: response.data.brandpack ?? null,
-          firstAccess: response.data.firstUserAccess,
-          isLoading: false,
-          infoLoaded: true,
-        });
-        updateTitle(response.data.appName);
-      } catch (error) {
-        console.error("Failed to fetch app info:", error);
-        set({ isLoading: false, infoLoaded: true });
-      }
+      await apply(sharedAppInfo.fresh());
     },
   };
 });

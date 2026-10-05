@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getAllConfigs, getPublicConfigs } from "@/http/endpoints";
+import { sharedRequest } from "@/lib/shared-request";
 
 interface Config {
   key: string;
@@ -11,6 +12,10 @@ interface Config {
   group: string;
   updatedAt: string;
 }
+
+// The sidebar, the footer and the share context each want a public setting while a page loads.
+// They share one request; a reload after a change always asks again.
+const sharedPublicConfigs = sharedRequest(() => getPublicConfigs());
 
 /**
  * Hook to fetch public configurations (excludes sensitive SMTP data)
@@ -21,11 +26,11 @@ export function useSecureConfigs() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadConfigs = async () => {
+  const loadConfigs = async (isReload = false) => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await getPublicConfigs();
+      const response = await (isReload ? sharedPublicConfigs.fresh() : sharedPublicConfigs.get());
       setConfigs(response.data.configs);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
@@ -43,7 +48,7 @@ export function useSecureConfigs() {
     configs,
     isLoading,
     error,
-    reload: loadConfigs,
+    reload: () => loadConfigs(true),
   };
 }
 
@@ -103,29 +108,32 @@ export function useSecureConfigValue(key: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadConfigValue = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await getPublicConfigs();
-      const config = response.data.configs.find((c) => c.key === key);
-      setValue(config?.value || null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-      console.error(`Error loading config value for ${key}:`, err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [key]);
+  const loadConfigValue = useCallback(
+    async (isReload = false) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await (isReload ? sharedPublicConfigs.fresh() : sharedPublicConfigs.get());
+        const config = response.data.configs.find((c) => c.key === key);
+        setValue(config?.value || null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Unknown error");
+        console.error(`Error loading config value for ${key}:`, err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [key]
+  );
 
   useEffect(() => {
-    loadConfigValue();
+    void loadConfigValue();
   }, [key, loadConfigValue]);
 
   return {
     value,
     isLoading,
     error,
-    reload: loadConfigValue,
+    reload: () => loadConfigValue(true),
   };
 }

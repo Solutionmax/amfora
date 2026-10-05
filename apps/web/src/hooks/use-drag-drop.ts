@@ -212,17 +212,11 @@ export function useDragDrop({
           });
         }
 
-        // Move all items in parallel
-        const movePromises = validItems.map((item) => {
-          if (item.type === "file") {
-            return moveFile(item.id, { folderId: target.id });
-          } else if (item.type === "folder") {
-            return moveFolder(item.id, { parentId: target.id });
-          }
-          return Promise.resolve();
-        });
-
-        await Promise.all(movePromises);
+        // One at a time: the server keeps a single database connection.
+        for (const item of validItems) {
+          if (item.type === "file") await moveFile(item.id, { folderId: target.id });
+          else if (item.type === "folder") await moveFolder(item.id, { parentId: target.id });
+        }
 
         // Show success message
         if (validItems.length === 1) {

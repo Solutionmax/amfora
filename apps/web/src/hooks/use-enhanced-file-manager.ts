@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { deleteFile, updateFile } from "@/http/endpoints";
 import { deleteFolder, registerFolder, updateFolder } from "@/http/endpoints/folders";
 import { getCachedDownloadUrl } from "@/lib/download-url-cache";
+import { runInTurn } from "@/lib/run-in-turn";
 
 interface FileToRename {
   id: string;
@@ -355,20 +356,22 @@ export function useEnhancedFileManager(
         });
       }
 
-      const deletePromises = [];
-
-      if (filesToDelete) {
-        deletePromises.push(...filesToDelete.map((file) => deleteFile(file.id)));
-      }
-
-      if (foldersToDelete) {
-        deletePromises.push(...foldersToDelete.map((folder) => deleteFolder(folder.id)));
-      }
-
-      await Promise.all(deletePromises);
+      const { failed } = await runInTurn(
+        [
+          ...(filesToDelete ?? []).map((file) => () => deleteFile(file.id)),
+          ...(foldersToDelete ?? []).map((folder) => () => deleteFolder(folder.id)),
+        ],
+        (remove) => remove()
+      );
 
       const totalCount = (filesToDelete?.length || 0) + (foldersToDelete?.length || 0);
-      toast.success(t("files.bulkDeleteSuccess", { count: totalCount }));
+      if (failed > 0) {
+        // The list was already emptied of everything; load it again so what is left shows up.
+        toast.error(t("files.bulkDeletePartial", { failed, total: totalCount }));
+        await onRefresh();
+      } else {
+        toast.success(t("files.bulkDeleteSuccess", { count: totalCount }));
+      }
       setFilesToDelete(null);
       setFoldersToDelete(null);
     } catch (error) {

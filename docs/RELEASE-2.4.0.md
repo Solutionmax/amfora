@@ -36,6 +36,19 @@ providers.
   it showed in the list under its internal name. It now shows as Default, and the first start
   of 2.4.0 clears that old value.
 
+- **The selection bar on the Shares page only acts on shares you can see.** Shares ticked
+  before you changed the filter or typed a search stayed in the selection and were still
+  deleted or downloaded. The bar now counts, deletes and downloads only the ticked shares that
+  are in the list.
+- **Deleting many files and folders at once no longer fails halfway.** The items are deleted one
+  after the other, the rest carries on when one fails, and you are told how many could not be
+  deleted.
+- **Email switches follow the administrator.** When the administrator has download or expiry
+  emails off, the switch on a share or receive link shows off and cannot be changed, with a
+  line that says why. Nothing changes in what the server sends.
+- **The numbers on the Activity filters follow the search term.** They used to count every
+  event whatever you searched for.
+
 ## Removed
 
 - **The switch "Play video and audio on download pages".** It is gone from Settings and from

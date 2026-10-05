@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Fact, Facts } from "@/components/ui/facts";
 import { LineList, LineRow, SubHeading } from "@/components/ui/line-list";
 import { Switch } from "@/components/ui/switch";
+import { useSecureConfigs } from "@/hooks/use-secure-configs";
+import { adminSwitchedOff } from "@/lib/admin-notifications";
 import { useReverseShareDetails } from "../hooks/use-reverse-share-details";
 import type { ReverseShare } from "../hooks/use-reverse-shares";
 import { ReceiveLinkRow } from "./receive-link-row";
@@ -37,6 +39,8 @@ export interface ReceiveDetailActions extends Omit<SenderRulesProps, "reverseSha
 /** Everything about one receive link: header, link, actions, numbers, what came in and the rules. */
 export function ReceiveDetail({ reverseShare, ...actions }: ReceiveDetailActions & { reverseShare: ReverseShare }) {
   const t = useTranslations();
+  const { configs } = useSecureConfigs();
+  const expiryOff = adminSwitchedOff(configs, "notifyExpiryEnabled");
   const { formatShortDate, formatFileSize } = useReverseShareDetails();
   const files = reverseShare.files ?? [];
   const status = linkStatus({ expiration: reverseShare.expiration, isActive: reverseShare.isActive });
@@ -148,14 +152,16 @@ export function ReceiveDetail({ reverseShare, ...actions }: ReceiveDetailActions
             icon={<IconClock stroke={1.8} />}
             title={t("reverseShares.calm.notify.expiry")}
             sub={
-              reverseShare.expiration
-                ? t("reverseShares.calm.notify.expiryHint")
-                : t("reverseShares.calm.notify.noEndDate")
+              expiryOff
+                ? t("reverseShares.calm.notify.offByAdmin")
+                : reverseShare.expiration
+                  ? t("reverseShares.calm.notify.expiryHint")
+                  : t("reverseShares.calm.notify.noEndDate")
             }
           >
             <Switch
-              checked={!!reverseShare.expiration && (reverseShare.remindBeforeExpiry ?? false)}
-              disabled={!reverseShare.expiration}
+              checked={!!reverseShare.expiration && !expiryOff && (reverseShare.remindBeforeExpiry ?? false)}
+              disabled={!reverseShare.expiration || expiryOff}
               aria-label={t("reverseShares.calm.notify.expiry")}
               onCheckedChange={actions.onRemind}
             />

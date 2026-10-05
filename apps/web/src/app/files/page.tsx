@@ -88,11 +88,12 @@ export default function FilesPage() {
 
     try {
       if (itemsToMove.files.length > 0) {
-        await Promise.all(itemsToMove.files.map((file) => moveFile(file.id, { folderId: targetFolderId })));
+        // One at a time: the server keeps a single database connection.
+        for (const file of itemsToMove.files) await moveFile(file.id, { folderId: targetFolderId });
       }
 
       if (itemsToMove.folders.length > 0) {
-        await Promise.all(itemsToMove.folders.map((folder) => moveFolder(folder.id, { parentId: targetFolderId })));
+        for (const folder of itemsToMove.folders) await moveFolder(folder.id, { parentId: targetFolderId });
       }
 
       const itemCount = itemsToMove.files.length + itemsToMove.folders.length;
@@ -189,11 +190,11 @@ export default function FilesPage() {
     validItems.forEach((item) => handleImmediateUpdate(item.id, item.type, targetId));
 
     try {
-      await Promise.all(
-        validItems.map((item) =>
-          item.type === "file" ? moveFile(item.id, { folderId: targetId }) : moveFolder(item.id, { parentId: targetId })
-        )
-      );
+      for (const item of validItems) {
+        await (item.type === "file"
+          ? moveFile(item.id, { folderId: targetId })
+          : moveFolder(item.id, { parentId: targetId }));
+      }
       toast.success(t("moveItems.success", { count: validItems.length }));
     } catch (error) {
       console.error("Error moving items:", error);

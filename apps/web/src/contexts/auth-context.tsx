@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { getAppInfo, getCurrentUser } from "@/http/endpoints";
+import { fetchAppInfo } from "@/contexts/app-info-context";
+import { getCurrentUser } from "@/http/endpoints";
 import type { User } from "@/http/endpoints/auth/types";
 
 type AuthUser = Omit<User, "isAdmin">;
@@ -43,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const checkAuth = async () => {
       try {
-        const appInfoResponse = await getAppInfo();
+        const appInfoResponse = await fetchAppInfo();
         const appInfo = appInfoResponse.data;
 
         if (!isMounted) return;

@@ -7,6 +7,7 @@ import {
   folderWithContents,
   matchesFilter,
   parseViewLimit,
+  pickedAmong,
   selectionState,
   shareUrl,
   toggleAll,
@@ -114,4 +115,11 @@ test("select all on a fully picked list clears the selection", () => {
 
 test("with nothing listed, select all clears what was picked under another filter", () => {
   assert.equal(toggleAll([], new Set(["z"])).size, 0);
+});
+
+test("the selection bar acts only on picked shares that are listed now", () => {
+  const listed = [{ id: "a" }, { id: "b" }];
+  assert.deepEqual(pickedAmong(listed, new Set(["a", "z"])), [{ id: "a" }], "z is hidden by the filter or search");
+  assert.deepEqual(pickedAmong(listed, new Set(["z"])), []);
+  assert.deepEqual(pickedAmong([], new Set(["a"])), []);
 });

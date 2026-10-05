@@ -652,6 +652,7 @@
     "bulkDownloadFileError": "Fout bij het downloaden van bestand {fileName}",
     "bulkDeleteSuccess": "{count, plural, =1 {1 bestand succesvol verwijderd} other {# bestanden succesvol verwijderd}}",
     "bulkDeleteError": "Fout bij het verwijderen van geselecteerde bestanden",
+    "bulkDeletePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} is niet verwijderd",
     "viewMode": {
       "table": "Tabel",
       "grid": "Raster",
@@ -1890,6 +1891,7 @@
         "expiry": "Herinner mij voordat het verloopt",
         "expiryHint": "Een bericht 3 dagen voor de einddatum.",
         "noEndDate": "Deze link heeft geen einddatum.",
+        "offByAdmin": "De beheerder heeft deze e-mails uitgezet.",
         "error": "Opslaan lukte niet. Probeer het opnieuw."
       }
     }
@@ -2711,6 +2713,7 @@
         "expiry": "Herinner mij voordat het verloopt",
         "expiryHint": "Een bericht 3 dagen voor de einddatum.",
         "noEndDate": "Deze deling heeft geen einddatum.",
+        "offByAdmin": "De beheerder heeft deze e-mails uitgezet.",
         "error": "Opslaan lukte niet. Probeer het opnieuw."
       },
       "activity": {

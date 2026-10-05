@@ -17,6 +17,10 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "External sign-in starts with Authentik, GitHub and Google. Providers that were never set up leave the list; any other service is still added with Add provider.",
     "Download pages no longer play video and audio. The switch for it is gone from Settings and Customization.",
     "Opening a sign-in provider no longer downloads every icon set (13 MB). The icon picker loads when you press its field.",
+    "The selection bar on the Shares page counts and acts on the shares you can see. Ticked shares hidden by a filter or a search are left alone.",
+    "Deleting many files and folders at once no longer fails halfway. It runs one after the other, and tells you how many could not be deleted.",
+    "A share or receive link switch for an email the administrator has turned off now shows off and cannot be changed, with a line that says why.",
+    "The numbers on the Activity filters follow the search term.",
   ],
 };
 

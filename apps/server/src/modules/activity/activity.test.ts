@@ -509,3 +509,20 @@ test("secrets leave their trail: made, opened, deleted", async () => {
     ]
   );
 });
+
+test("the counts per kind follow the search term, not the chosen kind", async () => {
+  await activity.recordActivity({ action: "share.downloaded", ownerId: "alice", subject: "CountMe", detail: "x.pdf" });
+  await activity.recordActivity({ action: "share.opened", ownerId: "alice", subject: "CountMe", detail: "" });
+  await activity.recordActivity({ action: "share.opened", ownerId: "alice", subject: "Other", detail: "" });
+
+  const everything = await list("alice");
+  const searched = await list("alice", "?q=CountMe");
+  assert.equal(searched.counts.all, 2);
+  assert.equal(everything.counts.all > searched.counts.all, true, "without a term everything is counted");
+
+  const kindOfDownload = (await list("alice", "?q=CountMe")).events.find((e) => e.action === "share.downloaded")?.kind;
+  const oneKind = await list("alice", `?q=CountMe&kind=${kindOfDownload}`);
+  assert.equal(oneKind.counts.all, 2, "picking a kind does not shrink the other counts");
+  assert.equal(oneKind.counts[kindOfDownload as string], 2);
+  assert.equal((await list("bob", "?q=CountMe")).counts.all, 0, "another user's events are never counted");
+});

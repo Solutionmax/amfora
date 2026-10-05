@@ -652,6 +652,7 @@
     "bulkDownloadFileError": "Erreur lors du téléchargement du fichier {fileName}",
     "bulkDeleteSuccess": "{count, plural, =1 {1 fichier supprimé avec succès} other {# fichiers supprimés avec succès}}",
     "bulkDeleteError": "Erreur lors de la suppression des fichiers sélectionnés",
+    "bulkDeletePartial": "{failed} sur {total, plural, =1 {1 élément} other {# éléments}} n'ont pas pu être supprimés",
     "bulkDeleteTitle": "Supprimer les Fichiers Sélectionnés",
     "bulkDeleteConfirmation": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {1 fichier} other {# fichiers}} ? Cette action ne peut pas être annulée.",
     "viewMode": {
@@ -1890,6 +1891,7 @@
         "expiry": "Me le rappeler avant l'expiration",
         "expiryHint": "Un e-mail 3 jours avant la date de fin.",
         "noEndDate": "Ce lien n'a pas de date de fin.",
+        "offByAdmin": "L'administrateur a désactivé ces e-mails.",
         "error": "Enregistrement impossible. Réessayez."
       }
     }
@@ -2711,6 +2713,7 @@
         "expiry": "Me le rappeler avant l'expiration",
         "expiryHint": "Un e-mail 3 jours avant la date de fin.",
         "noEndDate": "Ce partage n'a pas de date de fin.",
+        "offByAdmin": "L'administrateur a désactivé ces e-mails.",
         "error": "Enregistrement impossible. Réessayez."
       },
       "activity": {

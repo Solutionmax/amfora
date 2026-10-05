@@ -652,6 +652,7 @@
     "bulkDownloadFileError": "Error al descargar archivo {fileName}",
     "bulkDeleteSuccess": "{count, plural, =1 {1 archivo eliminado exitosamente} other {# archivos eliminados exitosamente}}",
     "bulkDeleteError": "Error al eliminar archivos seleccionados",
+    "bulkDeletePartial": "{failed} de {total, plural, =1 {1 elemento} other {# elementos}} no se pudieron eliminar",
     "bulkDeleteTitle": "Eliminar Archivos Seleccionados",
     "bulkDeleteConfirmation": "¿Está seguro de que desea eliminar {count, plural, =1 {1 archivo} other {# archivos}}? Esta acción no se puede deshacer.",
     "viewMode": {
@@ -1890,6 +1891,7 @@
         "expiry": "Recuérdamelo antes de que caduque",
         "expiryHint": "Un correo 3 días antes de la fecha final.",
         "noEndDate": "Este enlace no tiene fecha final.",
+        "offByAdmin": "El administrador ha desactivado estos correos.",
         "error": "No se pudo guardar. Inténtalo de nuevo."
       }
     }
@@ -2711,6 +2713,7 @@
         "expiry": "Recuérdamelo antes de que caduque",
         "expiryHint": "Un correo 3 días antes de la fecha final.",
         "noEndDate": "Esta compartición no tiene fecha final.",
+        "offByAdmin": "El administrador ha desactivado estos correos.",
         "error": "No se pudo guardar. Inténtalo de nuevo."
       },
       "activity": {

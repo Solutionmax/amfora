@@ -24,7 +24,6 @@ import { RedirectHandler } from "@/components/auth/redirect-handler";
 import { BrandStyle } from "@/components/brand/brand-style";
 import { Favicon } from "@/components/layout/favicon";
 import { DynamicToaster } from "@/components/ui/dynamic-toaster";
-import { useAppInfo } from "@/contexts/app-info-context";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ShareProvider } from "@/contexts/share-context";
 import { ThemeProvider } from "../providers/theme-provider";
@@ -35,10 +34,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-
-  if (typeof window !== "undefined") {
-    useAppInfo.getState().refreshAppInfo();
-  }
 
   return (
     <html lang={locale} suppressHydrationWarning>

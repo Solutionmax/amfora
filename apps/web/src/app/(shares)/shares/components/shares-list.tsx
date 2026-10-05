@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SplitListHeader, SplitListItem } from "@/components/ui/split-view";
 import type { Share } from "@/http/endpoints/shares/types";
 import { cn } from "@/lib/utils";
-import { selectionState, SHARE_FILTERS, toggleAll, type ShareFilter } from "../lib/share-list";
+import { pickedAmong, selectionState, SHARE_FILTERS, toggleAll, type ShareFilter } from "../lib/share-list";
 
 interface SharesListProps {
   shares: Share[];
@@ -114,9 +114,10 @@ export function SharesList(props: SharesListProps) {
       else next.delete(id);
       return next;
     });
-  const pickedShares = shares.filter((share) => picked.has(share.id));
+  // Picks hidden by the filter or the search do not count and are never deleted or downloaded.
+  const pickedShares = pickedAmong(visibleShares, picked);
   const listedIds = visibleShares.map((share) => share.id);
-  const pickedState = selectionState(listedIds, picked);
+  const pickedState = selectionState(listedIds, new Set(pickedShares.map((share) => share.id)));
 
   const header = (
     <SplitListHeader
@@ -193,12 +194,14 @@ export function SharesList(props: SharesListProps) {
               onCheckedChange={() => setPicked(toggleAll(listedIds, picked))}
               aria-label={t("shares.calm.selectAll")}
             />
-            {picked.size === 0 ? t("shares.calm.selectAll") : t("shares.calm.selectedCount", { count: picked.size })}
+            {pickedShares.length === 0
+              ? t("shares.calm.selectAll")
+              : t("shares.calm.selectedCount", { count: pickedShares.length })}
           </label>
           <Button
             variant="ghost"
             size="sm"
-            disabled={picked.size === 0}
+            disabled={pickedShares.length === 0}
             onClick={() => props.onBulkDownload(pickedShares)}
           >
             {t("shares.calm.downloadSelected")}
@@ -207,7 +210,7 @@ export function SharesList(props: SharesListProps) {
             variant="ghost"
             size="sm"
             className="text-bad hover:text-bad"
-            disabled={picked.size === 0}
+            disabled={pickedShares.length === 0}
             onClick={() => props.onBulkDelete(pickedShares)}
           >
             {t("shares.calm.deleteSelected")}

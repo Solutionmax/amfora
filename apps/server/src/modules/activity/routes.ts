@@ -83,8 +83,8 @@ export async function activityRoutes(app: FastifyInstance) {
     return account.isAdmin ? {} : { ownerId: userId };
   };
 
-  const filterOf = (query: z.infer<typeof QuerySchema>): Prisma.ActivityEventWhereInput => ({
-    ...(query.kind ? { kind: query.kind } : {}),
+  /** The search term and the subject, without the kind: what the counts per kind are taken over. */
+  const searchOf = (query: z.infer<typeof QuerySchema>): Prisma.ActivityEventWhereInput => ({
     ...(query.subjectId ? { subjectId: query.subjectId } : {}),
     ...(query.q
       ? {
@@ -96,6 +96,11 @@ export async function activityRoutes(app: FastifyInstance) {
           ],
         }
       : {}),
+  });
+
+  const filterOf = (query: z.infer<typeof QuerySchema>): Prisma.ActivityEventWhereInput => ({
+    ...searchOf(query),
+    ...(query.kind ? { kind: query.kind } : {}),
   });
 
   app.get(
@@ -140,7 +145,11 @@ export async function activityRoutes(app: FastifyInstance) {
         select: { ...fields, ownerId: true },
       });
 
-      const grouped = await prisma.activityEvent.groupBy({ by: ["kind"], where: scope, _count: { _all: true } });
+      const grouped = await prisma.activityEvent.groupBy({
+        by: ["kind"],
+        where: { AND: [scope, searchOf(query)] },
+        _count: { _all: true },
+      });
       const counts: Record<string, number> = { all: 0 };
       for (const kind of KINDS) counts[kind] = 0;
       for (const group of grouped) {

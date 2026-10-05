@@ -652,6 +652,7 @@
     "bulkDownloadFileError": "Fehler beim Herunterladen der Datei {fileName}",
     "bulkDeleteSuccess": "{count, plural, =1 {1 Datei erfolgreich gelöscht} other {# Dateien erfolgreich gelöscht}}",
     "bulkDeleteError": "Fehler beim Löschen der ausgewählten Dateien",
+    "bulkDeletePartial": "{failed} von {total, plural, =1 {1 Element} other {# Elementen}} konnten nicht gelöscht werden",
     "bulkDeleteTitle": "Ausgewählte Dateien Löschen",
     "bulkDeleteConfirmation": "Sind Sie sicher, dass Sie {count, plural, =1 {1 Datei} other {# Dateien}} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
     "viewMode": {
@@ -1890,6 +1891,7 @@
         "expiry": "Erinnere mich vor dem Ablauf",
         "expiryHint": "Eine Mail 3 Tage vor dem Enddatum.",
         "noEndDate": "Dieser Link hat kein Enddatum.",
+        "offByAdmin": "Der Administrator hat diese E-Mails ausgeschaltet.",
         "error": "Speichern fehlgeschlagen. Versuche es erneut."
       }
     }
@@ -2711,6 +2713,7 @@
         "expiry": "Erinnere mich vor dem Ablauf",
         "expiryHint": "Eine Mail 3 Tage vor dem Enddatum.",
         "noEndDate": "Diese Freigabe hat kein Enddatum.",
+        "offByAdmin": "Der Administrator hat diese E-Mails ausgeschaltet.",
         "error": "Speichern fehlgeschlagen. Versuche es erneut."
       },
       "activity": {
