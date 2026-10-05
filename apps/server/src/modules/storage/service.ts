@@ -330,8 +330,15 @@ export class StorageService {
           throw new Error("Unable to determine actual disk space - system configuration issue");
         }
 
-        const { total, available } = diskInfo;
-        const used = total - available;
+        // Used is what Amfora itself holds, for every user. The disk may be shared with backups
+        // or another program; those only make the room smaller, they are not Amfora's use.
+        const [files, received] = await Promise.all([
+          prisma.file.aggregate({ _sum: { size: true } }),
+          prisma.reverseShareFile.aggregate({ _sum: { size: true } }),
+        ]);
+        const used = Number((files._sum.size ?? BigInt(0)) + (received._sum.size ?? BigInt(0)));
+        const { available } = diskInfo;
+        const total = used + available;
 
         const diskSizeGB = this._ensureNumber(total / (1024 * 1024 * 1024), 0);
         const diskUsedGB = this._ensureNumber(used / (1024 * 1024 * 1024), 0);
