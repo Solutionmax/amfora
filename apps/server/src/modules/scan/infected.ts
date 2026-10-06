@@ -25,21 +25,20 @@ const byOwner = (files: InfectedFile[]) => {
   return groups;
 };
 
-/** The lines in the log of one owner, as many as the hour still has room for. */
-async function writeLines(ownerId: string, files: InfectedFile[]) {
+/** One line in the log of the owner (which also puts it in the bell), as long as the hour has room for it. */
+export async function recordInfectedLine(file: InfectedFile): Promise<void> {
   const recent = await prisma.activityEvent.count({
-    where: { action: "file.infected", ownerId, createdAt: { gt: new Date(Date.now() - HOUR_MS) } },
+    where: { action: "file.infected", ownerId: file.ownerId, createdAt: { gt: new Date(Date.now() - HOUR_MS) } },
   });
-  for (const file of files.slice(0, Math.max(LINES_PER_OWNER_PER_HOUR - recent, 0))) {
-    await recordActivity({
-      action: "file.infected",
-      kind: "account",
-      ownerId,
-      subject: file.name,
-      subjectId: file.id,
-      detail: file.finding,
-    });
-  }
+  if (recent >= LINES_PER_OWNER_PER_HOUR) return;
+  await recordActivity({
+    action: "file.infected",
+    kind: "account",
+    ownerId: file.ownerId,
+    subject: file.name,
+    subjectId: file.id,
+    detail: file.finding,
+  });
 }
 
 async function send(to: string, files: InfectedFile[]) {
@@ -48,16 +47,15 @@ async function send(to: string, files: InfectedFile[]) {
 }
 
 /**
- * What one run of the scan found: lines in the log of each owner (which also puts them in the bell,
- * at most 20 per owner per hour) and, when sending mail is on, one mail per owner and one mail for
- * every active administrator, each with a count and the first names. An owner who is an
- * administrator gets only the administrator mail. Never throws.
+ * The mail about what one run of the scan found, when sending mail is on: one mail per owner and one
+ * mail for every active administrator, each with a count and the first names. An owner who is an
+ * administrator gets only the administrator mail. The lines in the log are written by
+ * recordInfectedLine, right when a file is settled. Never throws.
  */
 export async function announceInfected(files: InfectedFile[]): Promise<void> {
   if (files.length === 0) return;
   try {
     const groups = byOwner(files);
-    for (const [ownerId, owned] of groups) await writeLines(ownerId, owned);
     const people = await prisma.user.findMany({
       where: { isActive: true, OR: [{ id: { in: [...groups.keys()] } }, { isAdmin: true }] },
       select: { id: true, email: true, isAdmin: true },

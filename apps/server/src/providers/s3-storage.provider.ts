@@ -16,6 +16,9 @@ import { bucketName, createPublicS3Client, s3Client } from "../config/storage.co
 import { StorageProvider } from "../types/storage";
 import { getContentType } from "../utils/mime-types";
 
+/** A HEAD that takes longer than this is treated as storage not answering. */
+const HEAD_TIMEOUT_MS = 5000;
+
 export class S3StorageProvider implements StorageProvider {
   private ensureClient() {
     if (!s3Client) {
@@ -140,15 +143,19 @@ export class S3StorageProvider implements StorageProvider {
   }
 
   async getObjectSize(objectName: string): Promise<number> {
-    const response = await this.ensureClient().send(new HeadObjectCommand({ Bucket: bucketName, Key: objectName }));
+    const response = await this.ensureClient().send(new HeadObjectCommand({ Bucket: bucketName, Key: objectName }), {
+      abortSignal: AbortSignal.timeout(HEAD_TIMEOUT_MS),
+    });
     if (response.ContentLength === undefined) throw new Error("Stored file size unavailable");
     return response.ContentLength;
   }
 
-  async getObjectEtag(objectName: string): Promise<string> {
-    const response = await this.ensureClient().send(new HeadObjectCommand({ Bucket: bucketName, Key: objectName }));
-    if (!response.ETag) throw new Error("Stored file ETag unavailable");
-    return response.ETag;
+  /** The ETag, or null when this storage gives none. */
+  async getObjectEtag(objectName: string): Promise<string | null> {
+    const response = await this.ensureClient().send(new HeadObjectCommand({ Bucket: bucketName, Key: objectName }), {
+      abortSignal: AbortSignal.timeout(HEAD_TIMEOUT_MS),
+    });
+    return response.ETag ?? null;
   }
 
   async copyObject(source: string, destination: string): Promise<void> {

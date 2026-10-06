@@ -1465,10 +1465,10 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Deux corrections de sécurité : enregistrer un envoi demande désormais un nom d'objet qui vous appartient, et seuls vos propres fichiers et dossiers peuvent être ajoutés à un partage. Ces deux failles existaient dans les versions précédentes, mettez donc à jour rapidement.",
+      "security": "Trois corrections de sécurité : enregistrer un envoi demande désormais un nom d'objet qui vous appartient, seuls vos propres fichiers et dossiers peuvent être ajoutés à un partage, et le serveur mesure lui-même la taille d'un envoi. Ces trois failles existaient dans les versions précédentes, mettez donc à jour rapidement.",
       "trash": "Supprimer un fichier ou un dossier le place dans la nouvelle page Corbeille, où il reste 30 jours (modifiable dans les Paramètres). Restaurez-le ou supprimez-le définitivement. Les Paramètres peuvent aussi retirer d'eux-mêmes les partages terminés et les liens de réception vides ; les fichiers ne sont jamais retirés ainsi.",
       "twoFactor": "Les Paramètres peuvent demander aux administrateurs ou à tout le monde de configurer la connexion en deux étapes, et un administrateur peut la réinitialiser pour quelqu'un qui a perdu son téléphone. Vous pouvez aussi vous connecter avec une clé d'accès (empreinte, visage ou clé de sécurité) sans mot de passe.",
-      "groups": "Les administrateurs peuvent créer des groupes sur la page Utilisateurs. Un partage peut être limité aux membres d'un groupe et apparaît alors sous Partagé avec moi sur la page Partages.",
+      "groups": "Les administrateurs peuvent créer des groupes sur la page Utilisateurs. Un partage peut être limité aux membres d'un groupe et apparaît alors sous Partagés avec moi sur la page Partages.",
       "notifications": "Une cloche dans le menu montre ce qui est nouveau : un téléchargement, des fichiers sur un lien de réception, un secret ouvert, un lien qui se termine bientôt ou un stockage presque plein.",
       "virusScan": "Une analyse antivirus facultative avec ClamAV, désactivée tant que vous ne définissez pas CLAMAV_HOST. Un fichier en cours de vérification ou infecté ne peut pas être téléchargé.",
       "monitoring": "Des chiffres de supervision au format Prometheus sur /api/v1/metrics, pour la clé API d'un administrateur.",

@@ -41,6 +41,7 @@ import { isObjectRegistered, isOwnObjectName } from "./object-name";
 import { FileService } from "./service";
 import { folderAndAncestorIds } from "./share-access";
 import { shareGrantSubject } from "./share-download-grant";
+import { storedSizeOf } from "./stored-size";
 
 export class FileController {
   private fileService = new FileService();
@@ -144,6 +145,16 @@ export class FileController {
     }
   }
 
+  /**
+   * A refused registration leaves an object with no row behind: remove it, unless a row took the
+   * name meanwhile. Not awaited: a storage that hangs must not hold the refusal back.
+   */
+  private dropRefusedObject(objectName: string) {
+    void isObjectRegistered(objectName)
+      .then((taken) => (taken ? undefined : this.fileService.deleteObject(objectName)))
+      .catch(() => undefined);
+  }
+
   async registerFile(request: FastifyRequest, reply: FastifyReply) {
     try {
       await request.jwtVerify();
@@ -159,16 +170,19 @@ export class FileController {
       }
 
       // Storage knows the size, the client only says. A missing object is not a file.
-      let size: bigint;
-      try {
-        size = BigInt(await this.fileService.getObjectSize(input.objectName));
-      } catch {
+      const stored = await storedSizeOf(this.fileService, input.objectName);
+      if (stored.state === "unavailable") {
+        return reply.status(503).send({ error: "Storage did not answer. Please try again in a moment." });
+      }
+      if (stored.state === "missing") {
         return reply.status(400).send({ error: "The file was not found in storage. Upload it first." });
       }
+      const size = stored.size;
 
       const maxFileSize = BigInt(await this.configService.getValue("maxFileSize"));
       if (size > maxFileSize) {
         const maxSizeMB = Number(maxFileSize) / (1024 * 1024);
+        this.dropRefusedObject(input.objectName);
         return reply.status(400).send({
           error: `File size exceeds the maximum allowed size of ${maxSizeMB}MB`,
         });
@@ -185,6 +199,7 @@ export class FileController {
 
       if (currentStorage + size > maxTotalStorage) {
         const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
+        this.dropRefusedObject(input.objectName);
         return reply.status(400).send({
           error: `Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`,
         });

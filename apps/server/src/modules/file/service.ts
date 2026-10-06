@@ -30,7 +30,7 @@ export class FileService {
     return this.storageProvider.getObjectSize(objectName);
   }
 
-  async getObjectEtag(objectName: string): Promise<string> {
+  async getObjectEtag(objectName: string): Promise<string | null> {
     return this.storageProvider.getObjectEtag(objectName);
   }
 

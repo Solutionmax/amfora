@@ -1465,7 +1465,7 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Dos correcciones de seguridad: registrar una subida ahora exige un nombre de objeto que sea tuyo, y solo tus propios archivos y carpetas se pueden añadir a una compartición. Ambos fallos existían en versiones anteriores, así que actualiza pronto.",
+      "security": "Tres correcciones de seguridad: registrar una subida ahora exige un nombre de objeto que sea tuyo, solo tus propios archivos y carpetas se pueden añadir a una compartición, y el servidor mide por sí mismo el tamaño de una subida. Los tres fallos existían en versiones anteriores, así que actualiza pronto.",
       "trash": "Eliminar un archivo o una carpeta lo mueve a la nueva página Papelera, donde se queda 30 días (se puede cambiar en Configuración). Restáuralo o elimínalo definitivamente. La Configuración también puede quitar por sí sola las comparticiones terminadas y los enlaces de recepción vacíos; los archivos nunca se quitan así.",
       "twoFactor": "La Configuración puede pedir a los administradores o a todos que configuren el inicio de sesión en dos pasos, y un administrador puede restablecerlo para quien perdió el teléfono. También puedes iniciar sesión con una clave de acceso (huella, cara o llave de seguridad) sin contraseña.",
       "groups": "Los administradores pueden crear grupos en la página Usuarios. Una compartición puede limitarse a los miembros de un grupo y aparece en Compartido conmigo en la página Comparticiones.",

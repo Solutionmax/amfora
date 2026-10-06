@@ -1465,7 +1465,7 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Zwei Sicherheitskorrekturen: Eine Datei als Upload zu registrieren erfordert jetzt einen Objektnamen, der dir gehört, und nur eigene Dateien und Ordner können zu einer Freigabe hinzugefügt werden. Beide Lücken gab es auch in früheren Versionen, also aktualisiere bald.",
+      "security": "Drei Sicherheitskorrekturen: Eine Datei als Upload zu registrieren erfordert jetzt einen Objektnamen, der dir gehört, nur eigene Dateien und Ordner können zu einer Freigabe hinzugefügt werden, und der Server misst die Größe eines Uploads selbst. Alle drei Lücken gab es auch in früheren Versionen, also aktualisiere bald.",
       "trash": "Eine Datei oder einen Ordner zu löschen verschiebt sie in den neuen Papierkorb, wo sie 30 Tage bleiben (in den Einstellungen änderbar). Stelle sie wieder her oder lösche sie endgültig. Die Einstellungen können auch abgelaufene Freigaben und leere Empfangslinks von selbst entfernen; Dateien werden so nie entfernt.",
       "twoFactor": "Die Einstellungen können Administratoren oder alle auffordern, die Anmeldung in zwei Schritten einzurichten, und ein Administrator kann sie für jemanden zurücksetzen, der das Handy verloren hat. Du kannst dich auch mit einem Passkey (Fingerabdruck, Gesicht oder Sicherheitsschlüssel) ohne Passwort anmelden.",
       "groups": "Administratoren können auf der Seite Benutzer Gruppen anlegen. Eine Freigabe kann auf die Mitglieder einer Gruppe beschränkt werden und erscheint dann auf der Seite Freigaben unter Mit mir geteilt.",

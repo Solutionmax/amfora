@@ -237,6 +237,9 @@ export function usePublicShare() {
         throw new Error("Share data not available");
       }
 
+      // Files the page itself leaves out because the virus scan blocks them are counted too
+      let blockedCount = 0;
+
       // Get all files in this folder and subfolders with their paths
       const getFolderFilesWithPath = (
         targetFolderId: string,
@@ -245,9 +248,10 @@ export function usePublicShare() {
         const filesWithPath: Array<{ file: any; path: string }> = [];
 
         // Get direct files in this folder
-        const directFiles = share.files?.filter((f) => f.folderId === targetFolderId && !isScanBlocked(f)) || [];
+        const directFiles = share.files?.filter((f) => f.folderId === targetFolderId) || [];
         directFiles.forEach((file) => {
-          filesWithPath.push({ file, path: currentPath });
+          if (isScanBlocked(file)) blockedCount += 1;
+          else filesWithPath.push({ file, path: currentPath });
         });
 
         // Get subfolders and process them recursively
@@ -263,7 +267,11 @@ export function usePublicShare() {
       const folderFilesWithPath = getFolderFilesWithPath(folderId);
 
       if (folderFilesWithPath.length === 0) {
-        toast.error(t("shareManager.noFilesToDownload"));
+        toast.error(
+          blockedCount > 0
+            ? t("share.messages.filesLeftOut", { count: blockedCount })
+            : t("shareManager.noFilesToDownload")
+        );
         return;
       }
 
@@ -287,10 +295,12 @@ export function usePublicShare() {
           })
         );
         const downloadItems = results.filter((item) => item !== null);
-        const leftOut = results.length - downloadItems.length;
+        const leftOut = results.length - downloadItems.length + blockedCount;
         if (downloadItems.length === 0) {
           toast.dismiss(loadingToast);
-          toast.error(t("shareManager.noFilesToDownload"));
+          toast.error(
+            leftOut > 0 ? t("share.messages.filesLeftOut", { count: leftOut }) : t("shareManager.noFilesToDownload")
+          );
           return;
         }
 

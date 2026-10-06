@@ -1,12 +1,15 @@
 # Amfora 2.4.0
 
 A trash, groups, passkeys, notifications, an optional virus scan, release notes in the app in your
-own language, and two security repairs.
+own language, and three security repairs.
 
 ## New
 
+- **Three more languages.** Italian, Portuguese of Brazil and Polish join English, Dutch,
+  German, French and Spanish in the language picker, eight in all. Italian, Portuguese and
+  Polish were translated without review by a native speaker; corrections are welcome.
 - **Release notes in Settings.** The line with the version now tells what the version you run
-  brought, in the language you use (English, Dutch, German, French and Spanish). When an update
+  brought, in the language you use. When an update
   is waiting, what it brings is shown next to the Install button, read from the signed release,
   in English, with a link to the full notes.
 - **A notice when an update is available.** Administrators see it at the bottom of the menu,
@@ -88,8 +91,7 @@ own language, and two security repairs.
   of the activity log that belongs to you and was not done by yourself, so it lives as long as the
   log keeps that line, and clearing the log clears the bell. Two new line types appear in the
   Activity page as well: a link that ends soon (written once per link and end date, whether or not
-  the reminder mail is on) and storage almost full. The new column `notificationsSeenAt` on the
-  user is the only database change. API: `GET /notifications`, `GET /notifications/count`,
+  the reminder mail is on) and storage almost full. API: `GET /notifications`, `GET /notifications/count`,
   `POST /notifications/seen`, each only for your own.
 - **Groups.** Administrators make groups on the Users page (the new Groups tab): create, rename,
   delete, add and remove members. A share can be limited to one group under "Who can open it",
@@ -174,7 +176,8 @@ release soon.
 - **The server measures an upload itself.** Before, the size of a file was whatever the browser
   said when it registered the upload, so a signed in user could store more than the storage limit
   allows by naming a smaller size. The size now comes from storage, and an upload that was
-  registered but never arrived is refused.
+  registered but never arrived is refused. The size is measured when the upload is registered, and
+  the upload address stays usable until it expires (default one hour).
 
 ## Removed
 
@@ -185,10 +188,18 @@ release soon.
 
 ## Upgrading
 
-The first start adds what is new to the database: an optional `deletedAt` column on files and
-folders (the trash), two tables for passkeys and their short lived challenges, two tables for groups
-and their members, an optional group on shares (shares stay open to anyone with the link until
-somebody limits them) and an optional `notificationsSeenAt` on users. It also removes the setting of
+The first start adds what is new to the database, all of it optional or with a default:
+
+- Users: `storageLimitBytes` (the limit per user), `storageAlertAt` and `notificationsSeenAt`.
+- Files and folders: an optional `deletedAt` (the trash), with an index on it.
+- Files: the scan columns `scanStatus`, `scanDetail`, `scannedAt` and `scanEtag`, with an index on
+  `scanStatus`. Received files (`reverse_share_files`) get the same columns except `scanEtag`,
+  with an index on `scanStatus`.
+- Two tables for passkeys and their short lived challenges, and two tables for groups and their
+  members.
+- Shares: an optional group (shares stay open to anyone with the link until somebody limits them).
+
+The first start also removes the setting of
 the switch for playing video and audio, the sign-in providers that were never set up, and the old
 default font. Your data stays in place.
 

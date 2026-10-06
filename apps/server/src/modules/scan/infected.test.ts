@@ -9,6 +9,7 @@ const database = useTestDatabase();
 
 let prisma: typeof import("../../shared/prisma").prisma;
 let announceInfected: typeof import("./infected").announceInfected;
+let recordInfectedLine: typeof import("./infected").recordInfectedLine;
 const original = EmailService.prototype.sendNotice;
 const mails: Array<{ to: string; subject: string; text: string; rows: string[] }> = [];
 
@@ -18,7 +19,7 @@ before(async () => {
     return true;
   };
   ({ prisma } = await import("../../shared/prisma"));
-  ({ announceInfected } = await import("./infected"));
+  ({ announceInfected, recordInfectedLine } = await import("./infected"));
   for (const [id, isAdmin] of [
     ["a", false],
     ["b", false],
@@ -87,23 +88,27 @@ test("an owner who is an administrator gets only the one mail", async () => {
 });
 
 test("at most 20 lines per owner per hour in the log, the rest only counted in the mail", async () => {
-  await announceInfected(found("a", 30));
+  for (const file of found("a", 30)) await recordInfectedLine(file);
   assert.equal(await lines("a"), 20);
-  await announceInfected(found("a", 5, 100));
+  for (const file of found("a", 5, 100)) await recordInfectedLine(file);
   assert.equal(await lines("a"), 20);
   assert.equal(await lines("b"), 0);
   await prisma.activityEvent.updateMany({ data: { createdAt: new Date(Date.now() - 2 * 3600_000) } });
-  await announceInfected(found("a", 3, 200));
+  for (const file of found("a", 3, 200)) await recordInfectedLine(file);
   assert.equal(await lines("a"), 23);
 });
 
-test("a slow mail server does not hold up the caller beyond its own work, and a failing one is survived", async () => {
+test("announcing writes no lines: the lines are written when the file is settled", async () => {
+  await announceInfected(found("a", 2));
+  assert.equal(await lines("a"), 0);
+});
+
+test("a failing mail server is survived", async () => {
   EmailService.prototype.sendNotice = async () => {
     throw new Error("smtp down");
   };
   try {
     await announceInfected(found("a", 2));
-    assert.equal(await lines("a"), 2);
   } finally {
     EmailService.prototype.sendNotice = async (to, notice) => {
       mails.push({ to, subject: notice.subject, text: notice.text, rows: [] });

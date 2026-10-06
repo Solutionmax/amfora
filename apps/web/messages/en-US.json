@@ -1465,7 +1465,7 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Two security repairs: registering an upload now needs an object name that is yours, and only your own files and folders can be added to a share. Both gaps existed in earlier versions, so update soon.",
+      "security": "Three security repairs: registering an upload now needs an object name that is yours, only your own files and folders can be added to a share, and the server measures the size of an upload itself. All three gaps existed in earlier versions, so update soon.",
       "trash": "Deleting a file or folder moves it to the new Trash page, where it stays for 30 days (changeable in Settings). Restore it or delete it for good. Settings can also remove ended shares and empty receive links by themselves; files are never removed that way.",
       "twoFactor": "Settings can ask administrators or everyone to set up two step sign in, and an administrator can reset it for someone who lost their phone. You can also sign in with a passkey (fingerprint, face or security key) without a password.",
       "groups": "Administrators can make groups on the Users page. A share can be limited to the members of a group, and it shows under Shared with me on the Shares page.",

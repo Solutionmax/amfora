@@ -1,5 +1,5 @@
 /**
- * Languages shipped with Amfora. Kept to the five most used; the other translations
+ * Languages shipped with Amfora. Eight languages; the other translations
  * from upstream were dropped in 2.3.0 and can be restored from git history if needed.
  */
 export const LANGUAGES = {
@@ -8,6 +8,9 @@ export const LANGUAGES = {
   "de-DE": "Deutsch",
   "fr-FR": "Français",
   "es-ES": "Español",
+  "it-IT": "Italiano",
+  "pt-BR": "Português (Brasil)",
+  "pl-PL": "Polski",
 } as const;
 
 export type Locale = keyof typeof LANGUAGES;

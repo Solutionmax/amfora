@@ -378,7 +378,8 @@ export function useUppyUpload(options: UseUppyUploadOptions) {
       } catch (error: any) {
         console.error("[Upload] Registration failed:", error);
         // Handle registration error
-        const errorMessage = error.message || "Failed to register file";
+        // What the server said (no room left, storage did not answer) beats the bare status line.
+        const errorMessage = error.response?.data?.error || error.message || "Failed to register file";
         setFileUploads((prev) =>
           prev.map((f) => (f.id === file.id ? { ...f, status: "error", error: errorMessage } : f))
         );

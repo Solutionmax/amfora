@@ -15,11 +15,12 @@ let prisma: typeof import("../../shared/prisma").prisma;
 let env: typeof import("../../env").env;
 let createScanQueue: typeof import("./queue").createScanQueue;
 let requeueUnavailable: typeof import("./queue").requeueUnavailable;
-let announceInfected: typeof import("./infected").announceInfected;
+let recordInfectedLine: typeof import("./infected").recordInfectedLine;
 let clamd: FakeClamd;
 
 const objects = new Map<string, string>();
 const announced: InfectedFile[] = [];
+const recorded: InfectedFile[] = [];
 let opening = 0;
 let mostAtOnce = 0;
 
@@ -34,6 +35,7 @@ const depsOf = (): ScanQueueDeps => ({
   scan: (source, settings) => scanWithClamd(source, { host: settings.host, port: settings.port, timeoutMs: 1500 }),
   announce: async (files) => void announced.push(...files),
   etagOf: async (name) => `etag-of-${name}`,
+  recordLine: async (file) => void recorded.push(file),
 });
 const queue = () => createScanQueue(depsOf());
 
@@ -41,7 +43,7 @@ before(async () => {
   ({ prisma } = await import("../../shared/prisma"));
   ({ env } = await import("../../env"));
   ({ createScanQueue, requeueUnavailable } = await import("./queue"));
-  ({ announceInfected } = await import("./infected"));
+  ({ recordInfectedLine } = await import("./infected"));
   clamd = await startFakeClamd();
   for (const [id, isAdmin] of [
     ["owner", false],
@@ -66,6 +68,7 @@ beforeEach(async () => {
   env.CLAMAV_MAX_SIZE_MB = "100";
   clamd.mode = "scan";
   announced.length = 0;
+  recorded.length = 0;
   mostAtOnce = 0;
   objects.clear();
   await prisma.file.deleteMany();
@@ -106,6 +109,45 @@ test("a clean file becomes clean, an infected one infected with the name, and th
   assert.deepEqual(announced, [
     { id: bad.id, name: bad.name, finding: "Eicar-Test-Signature", ownerId: "owner", where: "your files" },
   ]);
+});
+
+test("the activity line is written as soon as the file is settled infected, before the run is over", async () => {
+  const bad = await addFile(`x ${EICAR} y`);
+  let seenWhileRunning = 0;
+  await createScanQueue({
+    ...depsOf(),
+    announce: async () => undefined,
+    recordLine: async (file) => void (seenWhileRunning = recorded.push(file)),
+  }).kick();
+  assert.equal(seenWhileRunning, 1);
+  assert.equal(recorded[0].id, bad.id);
+});
+
+test("flush sends what was found so far at once, and the run does not send it a second time", async () => {
+  await addFile(`x ${EICAR} y`);
+  await addFile("fine");
+  const calls: InfectedFile[][] = [];
+  let q!: ReturnType<typeof createScanQueue>;
+  let scans = 0;
+  q = createScanQueue({
+    ...depsOf(),
+    announce: async (files) => void calls.push(files),
+    scan: async (source, settings) => {
+      if (++scans === 2) await q.flush(); // the process is told to stop while the second file is scanned
+      return scanWithClamd(source, { host: settings.host, port: settings.port, timeoutMs: 1500 });
+    },
+  });
+  await q.kick();
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].length, 1);
+});
+
+test("a provider that gives no ETag still gets its file scanned, without the overwrite check", async () => {
+  const file = await addFile("just text");
+  await createScanQueue({ ...depsOf(), etagOf: async () => null }).kick();
+  const row = await status(file.id);
+  assert.equal(row.scanStatus, "clean");
+  assert.equal(row.scanEtag, null);
 });
 
 test("a scanned file keeps the ETag of the object that was read", async () => {
@@ -247,9 +289,9 @@ test("at start the files that failed for lack of a scanner go back to pending, a
   await prisma.file.update({ where: { id: readError.id }, data: { scanDetail: "Could not be read" } });
   assert.equal(await requeueUnavailable(1), 1);
   assert.equal(await prisma.file.count({ where: { scanStatus: "pending" } }), 1);
-  assert.equal(await requeueUnavailable(500), 1);
-  assert.equal(await prisma.file.count({ where: { scanStatus: "pending" } }), 2);
-  assert.equal((await status(readError.id)).scanStatus, "error");
+  assert.equal(await requeueUnavailable(500), 2);
+  assert.equal(await prisma.file.count({ where: { scanStatus: "pending" } }), 3);
+  assert.equal((await status(readError.id)).scanStatus, "pending");
 });
 
 test("a failing database write after a verdict does not stop the queue, and that file is tried again later", async () => {
@@ -321,12 +363,33 @@ test("while scanning is on the queue kicks itself on a timer", async () => {
   }
 });
 
-test("a file that cannot be read from storage gives status error", async () => {
+test("a file that cannot be read from storage is tried again like an unreachable scanner, then gives status error", async () => {
   const file = await addFile("data");
   objects.delete(`o/${file.id}`);
-  await queue().kick();
+  let clock = 0;
+  const q = createScanQueue({ ...depsOf(), retryDelaysMs: [10, 10, 10], now: () => clock });
+  for (let i = 0; i < 3; i++) {
+    await q.kick();
+    assert.equal((await status(file.id)).scanStatus, "pending", `after try ${i + 1}`);
+    clock += 11;
+  }
+  await q.kick();
   assert.equal((await status(file.id)).scanStatus, "error");
   assert.equal((await status(file.id)).scanDetail, "Could not be read");
+});
+
+test("storage that comes back lets the file be scanned", async () => {
+  const file = await addFile("data");
+  const content = objects.get(`o/${file.id}`)!;
+  objects.delete(`o/${file.id}`);
+  let clock = 0;
+  const q = createScanQueue({ ...depsOf(), retryDelaysMs: [10, 10, 10], now: () => clock });
+  await q.kick();
+  assert.equal((await status(file.id)).scanStatus, "pending");
+  objects.set(`o/${file.id}`, content);
+  clock += 11;
+  await q.kick();
+  assert.equal((await status(file.id)).scanStatus, "clean");
 });
 
 test("a file over the size limit is skipped with the reason and never sent to the scanner", async () => {
@@ -362,13 +425,14 @@ test("a file deleted while it waits does not stop the queue", async () => {
     scan: (source, settings) => scanWithClamd(source, { host: settings.host, port: settings.port, timeoutMs: 1500 }),
     announce: async () => undefined,
     etagOf: async () => "e",
+    recordLine: async () => undefined,
   });
   await q.kick();
   assert.equal((await status(stays.id)).scanStatus, "clean");
 });
 
 test("an infected file writes a line in the log of its owner, which shows as a notification", async () => {
-  await announceInfected([{ id: "x1", name: "bad.exe", finding: "Win.Test", ownerId: "owner", where: "your files" }]);
+  await recordInfectedLine({ id: "x1", name: "bad.exe", finding: "Win.Test", ownerId: "owner", where: "your files" });
   const line = await prisma.activityEvent.findFirstOrThrow({ where: { action: "file.infected" } });
   assert.equal(line.ownerId, "owner");
   assert.equal(line.subject, "bad.exe");

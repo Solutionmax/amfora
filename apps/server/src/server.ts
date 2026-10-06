@@ -5,7 +5,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { buildApp } from "./app";
 import { directoriesConfig } from "./config/directories.config";
 import { startActivityJobs } from "./modules/activity/jobs";
-import { startScanning } from "./modules/scan/queue";
+import { flushScanAnnouncements, startScanning } from "./modules/scan/queue";
 import { startTrashJobs } from "./modules/trash/jobs";
 import { requirementFromServer } from "./modules/two-factor/second-step";
 import { registerRoutes } from "./routes";
@@ -78,8 +78,9 @@ async function startServer() {
   await startScanning(); // picks up what was still pending; does nothing without CLAMAV_HOST
 
   // Cleanup on shutdown
-  process.on("SIGINT", () => process.exit(0));
-  process.on("SIGTERM", () => process.exit(0));
+  const shutDown = () => void flushScanAnnouncements().finally(() => process.exit(0));
+  process.on("SIGINT", shutDown);
+  process.on("SIGTERM", shutDown);
 }
 
 startServer().catch((err) => {

@@ -50,7 +50,13 @@ file is checked against the ETag of the object that was scanned each time it is 
 previewed, embedded or put in a folder download (one `HEAD` request to storage). When the object
 was overwritten, the file goes back to `pending`, is scanned again and answers `423` meanwhile.
 Files that were scanned before this check existed have no remembered ETag and are not checked.
-In a shared folder download, blocked files are left out and the page says how many.
+The same goes for files from before the scan was switched on, and for a received file that you copy
+to your own files: they are trusted without the overwrite check. When an overwrite is found, the
+size of the new object is taken from storage into the file and counts towards the storage limit.
+The size of an upload is measured when the upload is registered, and the upload address stays
+usable until it expires (default one hour).
+In a shared folder download, blocked files are left out and the page says how many, also when every
+file in the folder is blocked.
 
 ## Set it up
 
@@ -102,7 +108,9 @@ The same snippet is in `docker-compose.yaml`, commented out.
 - **Retry.** When the scanner cannot be reached or does not answer, the file stays `pending` and
   is tried again after 30 seconds, 2 minutes and 10 minutes, then it becomes `error`
   ("Scanner unavailable"). An answer of clamd that says no (for example the size limit) is `error`
-  at once. At every start, files that gave up for lack of a scanner (at most 500) go back to
+  at once. A file that cannot be read from storage is tried again the same way and then becomes
+  `error` ("Could not be read"). At every start, files that gave up for lack of a scanner or
+  because storage could not be read (at most 500) go back to
   `pending`, and the log says plainly when the scanner cannot be reached. While scanning is on
   the queue also looks again every minute.
 - **Switching it off.** Remove `CLAMAV_HOST` and restart. Files that were still pending are open

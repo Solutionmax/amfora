@@ -18,11 +18,19 @@ let prisma: typeof import("../../shared/prisma").prisma;
 let env: typeof import("../../env").env;
 const stored = new Map<string, number>();
 const originalSize = FileService.prototype.getObjectSize;
+const originalDelete = FileService.prototype.deleteObject;
+const deleted: string[] = [];
+let failure: Error | null = null;
+let lateFor = 0;
 
 before(async () => {
+  FileService.prototype.deleteObject = async (objectName: string) => {
+    deleted.push(objectName);
+  };
   FileService.prototype.getObjectSize = async (objectName: string) => {
     const size = stored.get(objectName);
-    if (size === undefined) throw new Error("NotFound");
+    if (failure) throw failure;
+    if (size === undefined || lateFor-- > 0) throw Object.assign(new Error("NotFound"), { name: "NotFound" });
     return size;
   };
   ({ prisma } = await import("../../shared/prisma"));
@@ -43,6 +51,7 @@ before(async () => {
 
 after(async () => {
   FileService.prototype.getObjectSize = originalSize;
+  FileService.prototype.deleteObject = originalDelete;
   await app?.close();
   await prisma?.$disconnect();
   database.cleanup();
@@ -50,6 +59,9 @@ after(async () => {
 
 beforeEach(async () => {
   stored.clear();
+  deleted.length = 0;
+  failure = null;
+  lateFor = 0;
   await prisma.file.deleteMany();
 });
 
@@ -78,6 +90,66 @@ test("an object that is not in storage is refused and writes no row", async () =
   const res = await register("alice/missing", 5);
   assert.equal(res.statusCode, 400);
   assert.equal(await prisma.file.count(), 0);
+});
+
+test("storage that does not answer is a 503 to try again, not a missing file", async () => {
+  stored.set("alice/slow", 5);
+  failure = Object.assign(new Error("timed out"), { name: "TimeoutError" });
+  const res = await register("alice/slow", 5);
+  assert.equal(res.statusCode, 503);
+  assert.match(res.json().error, /try again/i);
+  assert.equal(await prisma.file.count(), 0);
+});
+
+test("an object that shows up late in storage is found by looking again", async () => {
+  stored.set("alice/late", 7);
+  lateFor = 2;
+  const res = await register("alice/late", 7);
+  assert.equal(res.statusCode, 201, res.body);
+});
+
+test("an object over the file size limit or the storage limit is deleted from storage", async () => {
+  const row = await prisma.appConfig.findUniqueOrThrow({ where: { key: "maxFileSize" } });
+  await prisma.appConfig.update({ where: { key: "maxFileSize" }, data: { value: String(MB) } });
+  stored.set("alice/too-big", 2 * MB);
+  try {
+    assert.equal((await register("alice/too-big", 1)).statusCode, 400);
+  } finally {
+    await prisma.appConfig.update({ where: { key: "maxFileSize" }, data: { value: row.value } });
+  }
+  assert.deepEqual(deleted, ["alice/too-big"]);
+
+  const limit = await prisma.appConfig.findUniqueOrThrow({ where: { key: "maxTotalStoragePerUser" } });
+  await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: String(MB) } });
+  stored.set("alice/no-room", 2 * MB);
+  try {
+    assert.equal((await register("alice/no-room", 1)).statusCode, 400);
+  } finally {
+    await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: limit.value } });
+  }
+  assert.deepEqual(deleted, ["alice/too-big", "alice/no-room"]);
+});
+
+test("a refusal keeps the object when another registration took the name meanwhile", async () => {
+  const limit = await prisma.appConfig.findUniqueOrThrow({ where: { key: "maxTotalStoragePerUser" } });
+  await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: String(MB) } });
+  stored.set("alice/raced", 2 * MB);
+  const size = FileService.prototype.getObjectSize;
+  // The request that wins the race writes its row while this one is still asking storage.
+  FileService.prototype.getObjectSize = async function (this: FileService, objectName: string) {
+    await prisma.file.create({
+      data: { name: "won.bin", extension: "bin", size: BigInt(1), objectName, userId: "alice" },
+    });
+    return size.call(this, objectName);
+  };
+  try {
+    assert.equal((await register("alice/raced", 1)).statusCode, 400);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  } finally {
+    FileService.prototype.getObjectSize = size;
+    await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: limit.value } });
+  }
+  assert.deepEqual(deleted, [], "the object of the row that was written is not removed");
 });
 
 test("an object over the storage limit is refused even when the client declares a small size", async () => {

@@ -1465,7 +1465,7 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Twee beveiligingsreparaties: een upload registreren vraagt nu een objectnaam die van jou is, en alleen je eigen bestanden en mappen kunnen aan een deling worden toegevoegd. Beide gaten zaten ook in eerdere versies, dus werk snel bij.",
+      "security": "Drie beveiligingsreparaties: een upload registreren vraagt nu een objectnaam die van jou is, alleen je eigen bestanden en mappen kunnen aan een deling worden toegevoegd, en de server meet zelf hoe groot een upload is. Alle drie de gaten zaten ook in eerdere versies, dus werk snel bij.",
       "trash": "Een bestand of map verwijderen zet het op de nieuwe pagina Prullenbak, waar het 30 dagen blijft staan (aan te passen in Instellingen). Zet het terug of verwijder het definitief. Instellingen kan ook verlopen delingen en lege ontvangstlinks zelf opruimen; bestanden worden zo nooit verwijderd.",
       "twoFactor": "Instellingen kan beheerders of iedereen vragen inloggen in twee stappen in te stellen, en een beheerder kan het resetten voor iemand die de telefoon kwijt is. Je kunt ook inloggen met een passkey (vingerafdruk, gezicht of beveiligingssleutel) zonder wachtwoord.",
       "groups": "Beheerders kunnen groepen maken op de pagina Gebruikers. Een deling kan beperkt worden tot de leden van een groep en staat dan onder Met mij gedeeld op de pagina Delingen.",

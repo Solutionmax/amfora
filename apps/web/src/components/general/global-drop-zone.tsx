@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useUppyUpload } from "@/hooks/useUppyUpload";
 import { checkFile, getFilePresignedUrl, registerFile } from "@/http/endpoints";
+import { retryWhenUnavailable } from "@/lib/retry-unavailable";
 import { getFileIcon } from "@/utils/file-icons";
 import { generateSafeFileName } from "@/utils/file-utils";
 import { formatFileSize } from "@/utils/format-file-size";
@@ -75,13 +76,15 @@ export function GlobalDropZone({ onSuccess, children, currentFolderId }: GlobalD
       const fileName = file.name;
       const extension = fileName.split(".").pop() || "";
 
-      await registerFile({
-        name: fileName,
-        objectName,
-        size: file.size,
-        extension,
-        folderId: currentFolderId,
-      });
+      await retryWhenUnavailable(() =>
+        registerFile({
+          name: fileName,
+          objectName,
+          size: file.size,
+          extension,
+          folderId: currentFolderId,
+        })
+      );
     },
   });
 
