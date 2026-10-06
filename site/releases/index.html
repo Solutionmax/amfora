@@ -58,13 +58,13 @@
             <p class="eyebrow">
               <span class="status-dot" aria-hidden="true"></span> LATEST RELEASE
             </p>
-            <h2 id="latest-title">Amfora 2.3.1</h2>
+            <h2 id="latest-title">Amfora 2.4.0</h2>
             <p class="release-date">
-              Released <time datetime="2026-10-05">5 October 2026</time>
+              Released <time datetime="2026-10-06">6 October 2026</time>
             </p>
             <p>
-              A fix release: deleting several shares at once works again, and
-              select all on the Shares page.
+              A trash, groups, passkeys, notifications and an optional virus
+              scan. It also closes three security gaps: please update soon.
             </p>
             <div class="release-actions">
               <a class="button primary" href="/docs/#getting-started"
@@ -72,7 +72,7 @@
               >
               <a
                 class="button release-secondary"
-                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.3.1.zip"
+                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.4.0.zip"
                 >Download source ZIP ↓</a
               >
             </div>
@@ -110,12 +110,12 @@
             <p class="eyebrow">02 / DOCKER IMAGE</p>
             <h2>Use a published version.</h2>
             <p>
-              Pull version 2.3.1. No account and no login needed. Docker selects
+              Pull version 2.4.0. No account and no login needed. Docker selects
               the image for your processor.
             </p>
             <pre
               class="install-command"
-            ><code>docker pull ghcr.io/solutionmax/amfora:2.3.1</code></pre>
+            ><code>docker pull ghcr.io/solutionmax/amfora:2.4.0</code></pre>
             <p class="release-detail">
               Version 1.0.0 remains under <code>ghcr.io/raym0nz82/amfora</code>.
               Keep the repository's Compose settings for storage and persistent
@@ -123,7 +123,7 @@
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/blob/v2.3.1/docker-compose.yaml"
+              href="https://github.com/Solutionmax/amfora/blob/v2.4.0/docker-compose.yaml"
               >View the Compose configuration ↗</a
             >
           </article>
@@ -131,12 +131,12 @@
             <p class="eyebrow">03 / SOURCE CODE</p>
             <h2>Build a specific release.</h2>
             <p>
-              Download the version 2.3.1 source archive or check out its tag to
+              Download the version 2.4.0 source archive or check out its tag to
               build this release yourself.
             </p>
             <pre
               class="install-command"
-            ><code>git clone --branch v2.3.1 --depth 1 https://github.com/Solutionmax/amfora.git
+            ><code>git clone --branch v2.4.0 --depth 1 https://github.com/Solutionmax/amfora.git
 cd amfora
 bash infra/build-docker.sh local</code></pre>
             <p class="release-detail">
@@ -145,7 +145,7 @@ bash infra/build-docker.sh local</code></pre>
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/tree/v2.3.1"
+              href="https://github.com/Solutionmax/amfora/tree/v2.4.0"
               >Browse the release source ↗</a
             >
           </article>
@@ -156,6 +156,10 @@ bash infra/build-docker.sh local</code></pre>
           <aside class="release-index">
             <p class="eyebrow">RELEASE HISTORY</p>
             <nav aria-label="Release versions">
+              <a href="#v2-4-0"
+                ><strong>2.4.0</strong
+                ><time datetime="2026-10-06">6 Oct 2026</time></a
+              >
               <a href="#v2-3-1"
                 ><strong>2.3.1</strong
                 ><time datetime="2026-10-05">5 Oct 2026</time></a
@@ -200,10 +204,56 @@ bash infra/build-docker.sh local</code></pre>
             >
           </aside>
           <div class="release-entries">
-            <article class="release-entry" id="v2-3-1">
+            <article class="release-entry" id="v2-4-0">
               <div class="release-entry-heading">
                 <div>
                   <p class="eyebrow">LATEST RELEASE</p>
+                  <h2>Amfora 2.4.0</h2>
+                </div>
+                <time datetime="2026-10-06">6 October 2026</time>
+              </div>
+              <p>A trash, groups, passkeys, notifications and an optional virus scan.</p>
+              <h3>Security: please update</h3>
+              <p>Three gaps exist in every earlier version, 2.3.1 included. Install 2.4.0 soon.</p>
+              <ul>
+                <li>A signed in user who knew the object name of somebody else's file could register it as their own and read it. A file is now only registered under a name that starts with your own user id.</li>
+                <li>A signed in user who knew the id of somebody else's file could add it to their own share and read it. Only your own files and folders can be added to a share now.</li>
+                <li>The size of an upload came from the browser, so a user could store more than the limit allows. The server now measures the upload itself.</li>
+              </ul>
+              <h3>New</h3>
+              <ul>
+                <li>Trash: deleting moves files and folders to a Trash page. Restore them, or delete for good. They leave by themselves after 30 days.</li>
+                <li>Groups: make a group on the Users page and limit a share to its members. A new tab, Shared with me, lists what others shared with your groups.</li>
+                <li>Sign in security: ask administrators or everyone for two step sign in, reset it for someone who lost their device, and sign in with a passkey.</li>
+                <li>Notifications: a bell in the menu for downloads, files received, opened secrets, links that end soon and a nearly full storage.</li>
+                <li>Limits: a storage limit per user, and a default and maximum lifetime for links. Ended links can clean themselves up.</li>
+                <li>Optional virus scan with ClamAV. A file that is being checked or is infected cannot be downloaded.</li>
+                <li>Figures for monitoring at <code>/api/v1/metrics</code>, in the Prometheus format, with examples for Prometheus and Zabbix.</li>
+                <li>Italian, Portuguese (Brazil) and Polish join the five languages, eight in all.</li>
+                <li>Also: release notes in Settings in your language, one calm layout with the logo for every email, and a Clear log button for administrators on the Activity page.</li>
+              </ul>
+              <h3>Changed</h3>
+              <ul>
+                <li>The storage meter in the menu is a ring, with what is used and what is free.</li>
+                <li>The preview under Customization is the real download page, with tabs for Download, Sign in and Receive.</li>
+                <li>External sign in starts with Authentik, GitHub and Google. Providers that were never set up leave the list; any other OpenID Connect or OAuth 2.0 service is still added with Add provider.</li>
+                <li>An API update without <code>expiration</code> no longer clears the end date. Send <code>null</code> to clear it.</li>
+                <li>The switch to play video and audio on download pages is gone. They download; images, PDFs and text keep their preview.</li>
+              </ul>
+              <h3>Fixed</h3>
+              <ul>
+                <li>A font chosen under Customization is applied again.</li>
+                <li>The selection bar on the Shares page only acts on shares you can see.</li>
+                <li>Deleting many files at once no longer stops halfway.</li>
+                <li>Email switches follow the administrator's settings, and the Activity filter counts follow your search.</li>
+              </ul>
+              <h3>Upgrading</h3>
+              <p>The first start adds new tables and columns to the database, all optional or with a default; your data stays in place. To go back to an older version you need the database backup from before the update.</p>
+            </article>
+            <article class="release-entry" id="v2-3-1">
+              <div class="release-entry-heading">
+                <div>
+                  <p class="eyebrow">RELEASE</p>
                   <h2>Amfora 2.3.1</h2>
                 </div>
                 <time datetime="2026-10-05">5 October 2026</time>
@@ -681,7 +731,7 @@ docker compose up -d --no-build amfora</code></pre>
         </div>
       </section>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.3.1 &middot; released 5 Oct 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.4.0 &middot; released 6 Oct 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://ostia.solutionmax.net/">Ostia</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>

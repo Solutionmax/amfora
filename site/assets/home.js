@@ -1,7 +1,7 @@
 (() => {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const IMG = {"download-stage": "/assets/screenshots/2.3/download-stage.webp?v=2.3h3", "download-workbench": "/assets/screenshots/2.3/download-workbench.webp?v=2.3h3", "download-seal": "/assets/screenshots/2.3/download-seal.webp?v=2.3h3", "upload-stage": "/assets/screenshots/2.3/upload-stage.webp?v=2.3h3", "upload-workbench": "/assets/screenshots/2.3/upload-workbench.webp?v=2.3h3", "upload-seal": "/assets/screenshots/2.3/upload-seal.webp?v=2.3h3", "login-stage": "/assets/screenshots/2.3/login-stage.webp?v=2.3h3", "login-workbench": "/assets/screenshots/2.3/login-workbench.webp?v=2.3h3", "login-seal": "/assets/screenshots/2.3/login-seal.webp?v=2.3h3"};
+  const IMG = {"download-stage": "/assets/screenshots/2.4/download-stage.webp?v=2.4h1", "download-workbench": "/assets/screenshots/2.4/download-workbench.webp?v=2.4h1", "download-seal": "/assets/screenshots/2.4/download-seal.webp?v=2.4h1", "upload-stage": "/assets/screenshots/2.4/upload-stage.webp?v=2.4h1", "upload-workbench": "/assets/screenshots/2.4/upload-workbench.webp?v=2.4h1", "upload-seal": "/assets/screenshots/2.4/upload-seal.webp?v=2.4h1", "login-stage": "/assets/screenshots/2.4/login-stage.webp?v=2.4h1", "login-workbench": "/assets/screenshots/2.4/login-workbench.webp?v=2.4h1", "login-seal": "/assets/screenshots/2.4/login-seal.webp?v=2.4h1"};
 
   // menu on small screens
   const menu = $(".menu-toggle"), nav = $("#navigation");
@@ -47,7 +47,7 @@
 
   // workspace tabs with a dark switch where a dark screen exists
   const tabs = $$("#tabs .tab"), show = $("#show"), mode = $("#mode"), label = $("#showlabel"); let ti = 0, hold = false, tt;
-  const PATH = { dashboard: "dashboard", files: "files", shares: "shares", receive: "reverse-shares", customization: "customization", settings: "settings" };
+  const PATH = { dashboard: "dashboard", files: "files", shares: "shares", receive: "reverse-shares", trash: "trash", customization: "customization", settings: "settings" };
   const pick = (i) => { ti = i; const k = tabs[i].dataset.k; tabs.forEach((t, j) => t.setAttribute("aria-selected", j === i)); $$("img", show).forEach((im) => im.classList.toggle("on", im.dataset.k === k));
     mode.hidden = !tabs[i].dataset.dark; if (mode.hidden) { show.classList.remove("is-dark"); mode.setAttribute("aria-pressed", false); } label.textContent = "share.solutionmax.net/" + PATH[k]; };
   const loop = () => { clearTimeout(tt); tt = setTimeout(() => { if (!hold && !document.hidden && !reduce) pick((ti + 1) % tabs.length); loop(); }, 4200); };

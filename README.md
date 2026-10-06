@@ -30,7 +30,7 @@ to storage you control, turn them into a guarded share, or give someone a
 browser link where they can send files back without creating an account.
 
 <p align="center">
-  <img src="site/assets/screenshots/2.3/dashboard.webp" alt="Amfora workspace dashboard" width="100%" />
+  <img src="site/assets/screenshots/2.4/dashboard.webp" alt="Amfora workspace dashboard" width="100%" />
 </p>
 
 ## The workflow
@@ -89,45 +89,62 @@ infected by the virus scan. Administrators can clear the log.
 
 The screenshots show the English interface with demonstration data.
 
-![Amfora shares](site/assets/screenshots/2.3/share-detail.webp)
+![Amfora shares](site/assets/screenshots/2.4/share-detail.webp)
 
 Shares are a list on the left and the one you picked on the right: its link,
 its files, and the password, end date and view limit you can change at any time.
 
-![Amfora download page](site/assets/screenshots/2.3/download-stage.webp)
+![A share limited to a group](site/assets/screenshots/2.4/share-group.webp)
+
+Under "Who can open it" a share can be limited to a group. Only its members,
+once signed in, can open it.
+
+![Amfora download page](site/assets/screenshots/2.4/download-stage.webp)
 
 A download page says who shared it and what is in it, with one button to
 download it all. This is the Stage theme; Workbench and Seal are the other two.
 
-![Amfora receive page](site/assets/screenshots/2.3/upload-stage.webp)
+![Amfora receive page](site/assets/screenshots/2.4/upload-stage.webp)
 
 A receive link gives outside collaborators a simple upload form with the limits
 set by its owner.
 
-![Amfora secrets](site/assets/screenshots/2.3/secrets.webp)
+![Amfora secrets](site/assets/screenshots/2.4/secrets.webp)
 
 Secrets keep a record of every link you made: waiting, used up or expired, and
 how often it was opened. The text itself is never in the list.
 
-![Opening a secret](site/assets/screenshots/2.3/secret-open-stage.webp)
+![Opening a secret](site/assets/screenshots/2.4/secret-open-stage.webp)
 
 The reader presses one button to see the secret. Loading the page costs
 nothing, so a chat app that fetches the link for a preview cannot use it up.
 
-![Amfora activity](site/assets/screenshots/2.3/activity.webp)
+![Amfora activity](site/assets/screenshots/2.4/activity.webp)
 
 Activity groups what happened per day. A user sees their own links, an
 administrator sees everyone. The address of a visitor is never stored, only the
 place it points to.
 
-![Amfora sign in](site/assets/screenshots/2.3/login-workbench.webp)
+![The Trash page](site/assets/screenshots/2.4/trash.webp)
+
+Deleted files and folders wait in the Trash with the days they have left. Restore
+them, or delete them for good.
+
+![Notifications](site/assets/screenshots/2.4/notifications.webp)
+
+The bell in the menu lists what is new for you, such as a download or a link
+that ends soon.
+
+![Amfora sign in](site/assets/screenshots/2.4/login-workbench.webp)
 
 The sign in screen supports password authentication, password recovery, and
 two factor authentication when it is enabled for the account. Users can also
 sign in with a passkey.
 
-The screenshots are of version 2.3. They do not show what 2.4.0 added: the
-Trash page, groups, the bell for notifications and passkeys.
+![Passkeys on the profile page](site/assets/screenshots/2.4/passkeys.webp)
+
+Passkeys and two step sign in are set up on the profile page. An administrator
+can ask for them from everyone.
 
 ## What is in the box
 
