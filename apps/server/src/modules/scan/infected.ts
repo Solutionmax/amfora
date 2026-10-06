@@ -1,10 +1,14 @@
 import { getCanonicalOrigin } from "../../shared/canonical-origin";
 import { prisma } from "../../shared/prisma";
 import { recordActivity } from "../activity/activity";
-import { infectedFileNotice } from "../email/messages";
+import { infectedFilesNotice } from "../email/messages";
 import { EmailService } from "../email/service";
 
 const emailService = new EmailService();
+
+/** More lines than this per owner per hour are only counted in the mail. */
+const LINES_PER_OWNER_PER_HOUR = 20;
+const HOUR_MS = 60 * 60_000;
 
 export interface InfectedFile {
   id: string;
@@ -15,34 +19,55 @@ export interface InfectedFile {
   where: "your files" | "a receive link";
 }
 
-/** Addresses of the owner and of every active administrator, each once. */
-async function recipients(ownerId: string): Promise<string[]> {
-  const people = await prisma.user.findMany({
-    where: { isActive: true, OR: [{ id: ownerId }, { isAdmin: true }] },
-    select: { email: true },
+const byOwner = (files: InfectedFile[]) => {
+  const groups = new Map<string, InfectedFile[]>();
+  for (const file of files) groups.set(file.ownerId, [...(groups.get(file.ownerId) ?? []), file]);
+  return groups;
+};
+
+/** The lines in the log of one owner, as many as the hour still has room for. */
+async function writeLines(ownerId: string, files: InfectedFile[]) {
+  const recent = await prisma.activityEvent.count({
+    where: { action: "file.infected", ownerId, createdAt: { gt: new Date(Date.now() - HOUR_MS) } },
   });
-  return [...new Set(people.map((person) => person.email))];
+  for (const file of files.slice(0, Math.max(LINES_PER_OWNER_PER_HOUR - recent, 0))) {
+    await recordActivity({
+      action: "file.infected",
+      kind: "account",
+      ownerId,
+      subject: file.name,
+      subjectId: file.id,
+      detail: file.finding,
+    });
+  }
+}
+
+async function send(to: string, files: InfectedFile[]) {
+  const notice = infectedFilesNotice(files, `${getCanonicalOrigin()}/files`);
+  await emailService.sendNotice(to, notice).catch((error) => console.error("Could not send notice:", error));
 }
 
 /**
- * A file was found to be harmful: a line in the owner's log (which also puts it in the bell) and a
- * mail to the owner and the administrators when sending mail is on. Never throws.
+ * What one run of the scan found: lines in the log of each owner (which also puts them in the bell,
+ * at most 20 per owner per hour) and, when sending mail is on, one mail per owner and one mail for
+ * every active administrator, each with a count and the first names. An owner who is an
+ * administrator gets only the administrator mail. Never throws.
  */
-export async function announceInfected(file: InfectedFile): Promise<void> {
-  await recordActivity({
-    action: "file.infected",
-    kind: "account",
-    ownerId: file.ownerId,
-    subject: file.name,
-    subjectId: file.id,
-    detail: file.finding,
-  });
+export async function announceInfected(files: InfectedFile[]): Promise<void> {
+  if (files.length === 0) return;
   try {
-    const notice = infectedFileNotice(file.name, file.finding, file.where, `${getCanonicalOrigin()}/files`);
-    for (const to of await recipients(file.ownerId)) {
-      await emailService.sendNotice(to, notice).catch((error) => console.error("Could not send notice:", error));
+    const groups = byOwner(files);
+    for (const [ownerId, owned] of groups) await writeLines(ownerId, owned);
+    const people = await prisma.user.findMany({
+      where: { isActive: true, OR: [{ id: { in: [...groups.keys()] } }, { isAdmin: true }] },
+      select: { id: true, email: true, isAdmin: true },
+    });
+    for (const person of people) {
+      const own = groups.get(person.id) ?? [];
+      if (person.isAdmin) await send(person.email, files);
+      else if (own.length > 0) await send(person.email, own);
     }
   } catch (error) {
-    console.error("Could not tell about an infected file:", error);
+    console.error("Could not tell about infected files:", error);
   }
 }

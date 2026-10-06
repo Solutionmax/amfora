@@ -145,6 +145,12 @@ export class S3StorageProvider implements StorageProvider {
     return response.ContentLength;
   }
 
+  async getObjectEtag(objectName: string): Promise<string> {
+    const response = await this.ensureClient().send(new HeadObjectCommand({ Bucket: bucketName, Key: objectName }));
+    if (!response.ETag) throw new Error("Stored file ETag unavailable");
+    return response.ETag;
+  }
+
   async copyObject(source: string, destination: string): Promise<void> {
     const client = this.ensureClient();
     const metadata = await client.send(new HeadObjectCommand({ Bucket: bucketName, Key: source }));

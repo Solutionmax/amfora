@@ -1,6 +1,7 @@
 import type { FastifyReply } from "fastify";
 
 import { isScanEnabled, scanSettings } from "./settings";
+import { isStillScannedObject, type ScannedObject } from "./still-scanned";
 
 export const SCAN_STATUSES = ["pending", "clean", "infected", "error", "skipped"] as const;
 export type ScanStatus = (typeof SCAN_STATUSES)[number];
@@ -14,8 +15,10 @@ export interface ScanFields {
   scannedAt?: Date | null;
 }
 
-const MAX_DETAIL = 200;
-const clip = (text: string) => text.slice(0, MAX_DETAIL);
+/** What an error row says. The real cause goes to the log, never to a client. */
+export const DETAIL_UNAVAILABLE = "Scanner unavailable";
+export const DETAIL_REFUSED = "Scanner could not check the file";
+export const DETAIL_UNREADABLE = "Could not be read";
 
 export const skippedBecauseLarge = (megabytes: number) => `Larger than ${megabytes} MB`;
 
@@ -33,17 +36,17 @@ export function initialScanFields(size: bigint): {
   return { scanStatus: "pending" };
 }
 
-export const scanDetailOf = (error: unknown) => clip(error instanceof Error ? error.message : String(error));
-
 /**
  * The part of a file the API shows: the status, or null for both when there is nothing to tell. With
  * scanning off only an infected file keeps its status, so people can see why it is blocked; everything
- * else shows nothing and an installation without scanning looks exactly as it did before.
+ * else shows nothing and an installation without scanning looks exactly as it did before. The detail
+ * is only for infected (what was found) and skipped (why): anything else is for the log.
  */
 export function scanFieldsOf(file: ScanFields): { scanStatus: ScanStatus | null; scanDetail: string | null } {
   const status = SCAN_STATUSES.find((known) => known === file.scanStatus) ?? null;
   if (!status || (status !== "infected" && !isScanEnabled())) return { scanStatus: null, scanDetail: null };
-  return { scanStatus: status, scanDetail: file.scanDetail ?? null };
+  const shows = status === "infected" || status === "skipped";
+  return { scanStatus: status, scanDetail: shows ? (file.scanDetail ?? null) : null };
 }
 
 /**
@@ -53,6 +56,27 @@ export function scanFieldsOf(file: ScanFields): { scanStatus: ScanStatus | null;
  */
 export function isBlockedByScan(file: ScanFields): boolean {
   return file.scanStatus === "infected" || (file.scanStatus === "pending" && isScanEnabled());
+}
+
+const HEAD_GROUP = 20;
+
+/**
+ * isBlockedByScan for a file row of the workspace, for the routes that hand out its content: a clean
+ * file must also still be the object that was scanned.
+ */
+export async function isBlockedByScanNow(file: ScanFields & ScannedObject): Promise<boolean> {
+  return isBlockedByScan(file) || !(await isStillScannedObject(file));
+}
+
+/** Those of the files that may not be handed out now, asked in small groups so storage is not flooded. */
+export async function blockedByScanNow<T extends ScanFields & ScannedObject>(files: T[]): Promise<T[]> {
+  const blocked: T[] = [];
+  for (let start = 0; start < files.length; start += HEAD_GROUP) {
+    const group = files.slice(start, start + HEAD_GROUP);
+    const verdicts = await Promise.all(group.map(isBlockedByScanNow));
+    group.forEach((file, index) => verdicts[index] && blocked.push(file));
+  }
+  return blocked;
 }
 
 /** The same answer on every route that refuses a blocked file. */

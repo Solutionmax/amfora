@@ -52,3 +52,13 @@ test("an unknown status is not shown", () => {
   env.CLAMAV_HOST = "clamav";
   assert.deepEqual(scanFieldsOf({ scanStatus: "weird" }), { scanStatus: null, scanDetail: null });
 });
+
+test("the detail of an error or a clean file is never sent, that of infected and skipped is", () => {
+  env.CLAMAV_HOST = "clamav";
+  const raw = "connect ECONNREFUSED 172.18.0.5:3310";
+  assert.equal(scanFieldsOf({ scanStatus: "error", scanDetail: raw }).scanDetail, null);
+  assert.equal(scanFieldsOf({ scanStatus: "error", scanDetail: raw }).scanStatus, "error");
+  assert.equal(scanFieldsOf({ scanStatus: "clean", scanDetail: raw }).scanDetail, null);
+  assert.equal(scanFieldsOf({ scanStatus: "skipped", scanDetail: "Larger than 1 MB" }).scanDetail, "Larger than 1 MB");
+  assert.equal(scanFieldsOf({ scanStatus: "infected", scanDetail: "Eicar" }).scanDetail, "Eicar");
+});

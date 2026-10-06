@@ -72,6 +72,7 @@ export async function folderRoutes(app: FastifyInstance) {
           200: z.object({
             files: z.array(z.any()),
             expiresIn: z.number(),
+            unavailable: z.number().describe("Files left out because the virus scan blocks them"),
           }),
           401: z.object({ error: z.string() }),
           403: GroupRefusalBodySchema,

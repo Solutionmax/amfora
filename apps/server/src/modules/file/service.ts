@@ -30,6 +30,10 @@ export class FileService {
     return this.storageProvider.getObjectSize(objectName);
   }
 
+  async getObjectEtag(objectName: string): Promise<string> {
+    return this.storageProvider.getObjectEtag(objectName);
+  }
+
   async copyObject(source: string, destination: string): Promise<void> {
     return this.storageProvider.copyObject(source, destination);
   }

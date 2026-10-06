@@ -16,7 +16,7 @@ import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
 import { callerOf, GROUP_DOWNLOAD_SECONDS, readableShares, sendGroupRefusal, type Caller } from "../group/access";
 import { kickScanQueue } from "../scan/queue";
-import { initialScanFields, isBlockedByScan, scanFieldsOf, sendFileBlocked } from "../scan/status";
+import { initialScanFields, isBlockedByScan, isBlockedByScanNow, scanFieldsOf, sendFileBlocked } from "../scan/status";
 import { storageLimitOf } from "../storage/limit";
 import { moveFileToTrash } from "../trash/service";
 import { dispositionFor } from "./disposition";
@@ -154,8 +154,20 @@ export class FileController {
 
       const input: RegisterFileInput = RegisterFileSchema.parse(request.body);
 
+      if (!isOwnObjectName(userId, input.objectName) || (await isObjectRegistered(input.objectName))) {
+        return reply.status(400).send({ error: "That object name cannot be used." });
+      }
+
+      // Storage knows the size, the client only says. A missing object is not a file.
+      let size: bigint;
+      try {
+        size = BigInt(await this.fileService.getObjectSize(input.objectName));
+      } catch {
+        return reply.status(400).send({ error: "The file was not found in storage. Upload it first." });
+      }
+
       const maxFileSize = BigInt(await this.configService.getValue("maxFileSize"));
-      if (BigInt(input.size) > maxFileSize) {
+      if (size > maxFileSize) {
         const maxSizeMB = Number(maxFileSize) / (1024 * 1024);
         return reply.status(400).send({
           error: `File size exceeds the maximum allowed size of ${maxSizeMB}MB`,
@@ -171,7 +183,7 @@ export class FileController {
 
       const currentStorage = userFiles.reduce((acc, file) => acc + file.size, BigInt(0));
 
-      if (currentStorage + BigInt(input.size) > maxTotalStorage) {
+      if (currentStorage + size > maxTotalStorage) {
         const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
         return reply.status(400).send({
           error: `Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`,
@@ -180,10 +192,6 @@ export class FileController {
 
       if (input.folderId && !(await liveFolderOf(userId, input.folderId))) {
         return reply.status(400).send({ error: "Folder not found or access denied." });
-      }
-
-      if (!isOwnObjectName(userId, input.objectName) || (await isObjectRegistered(input.objectName))) {
-        return reply.status(400).send({ error: "That object name cannot be used." });
       }
 
       // Parse the filename and generate a unique name if there's a duplicate
@@ -195,11 +203,11 @@ export class FileController {
           name: uniqueName,
           description: input.description,
           extension: input.extension,
-          size: BigInt(input.size),
+          size,
           objectName: input.objectName,
           userId,
           folderId: input.folderId,
-          ...initialScanFields(BigInt(input.size)),
+          ...initialScanFields(size),
         },
       });
       if (fileRecord.scanStatus === "pending") kickScanQueue();
@@ -339,7 +347,7 @@ export class FileController {
         return reply.status(401).send({ error: "Unauthorized access to file." });
       }
 
-      if (isBlockedByScan(fileRecord)) return sendFileBlocked(reply, fileRecord);
+      if (await isBlockedByScanNow(fileRecord)) return sendFileBlocked(reply, fileRecord);
 
       if (this.refusesPreview(fileRecord, preview, requesterId)) {
         return reply.status(403).send({ error: MEDIA_PREVIEW_REFUSED });
@@ -464,7 +472,7 @@ export class FileController {
         return reply.status(401).send({ error: "Unauthorized access to file." });
       }
 
-      if (isBlockedByScan(fileRecord)) return sendFileBlocked(reply, fileRecord);
+      if (await isBlockedByScanNow(fileRecord)) return sendFileBlocked(reply, fileRecord);
 
       if (this.refusesPreview(fileRecord, preview, requesterId)) {
         return reply.status(403).send({ error: MEDIA_PREVIEW_REFUSED });
@@ -728,7 +736,7 @@ export class FileController {
         return reply.status(404).send({ error: "File not found." });
       }
 
-      if (isBlockedByScan(fileRecord)) return sendFileBlocked(reply, fileRecord);
+      if (await isBlockedByScanNow(fileRecord)) return sendFileBlocked(reply, fileRecord);
 
       const extension = fileRecord.extension.toLowerCase();
       const imageExts = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "ico", "avif"];

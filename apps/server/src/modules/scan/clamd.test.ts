@@ -3,7 +3,7 @@ import { Readable } from "node:stream";
 import { after, test } from "node:test";
 
 import { EICAR, startFakeClamd, type FakeClamd } from "../../../test-support/fake-clamd";
-import { scanWithClamd } from "./clamd";
+import { canReachClamd, scanWithClamd } from "./clamd";
 
 const servers: FakeClamd[] = [];
 after(async () => {
@@ -96,4 +96,13 @@ test("a stream that fails halfway is an error and the socket is closed", async (
   });
   await assert.rejects(scanWithClamd(broken, options(server)), /storage went away/);
   assert.equal(await settled(server), 0);
+});
+
+test("the scanner can be probed: reachable or not", async () => {
+  const server = await fake();
+  assert.equal(await canReachClamd({ host: "127.0.0.1", port: server.port }), true);
+  const dead = await startFakeClamd();
+  const port = dead.port;
+  await dead.close();
+  assert.equal(await canReachClamd({ host: "127.0.0.1", port }), false);
 });

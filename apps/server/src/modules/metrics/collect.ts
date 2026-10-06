@@ -1,5 +1,6 @@
 import { prisma } from "../../shared/prisma";
 import { isStorageUp } from "../health/storage-check";
+import { isScannerUp } from "../scan/scanner-state";
 import { isScanEnabled } from "../scan/settings";
 import { SCAN_STATUSES } from "../scan/status";
 import { StorageService } from "../storage/service";
@@ -55,15 +56,49 @@ async function databaseFigures(now: Date): Promise<Metric[]> {
   ];
 }
 
-/** Files per scan status, workspace and received together. Only asked for when the scan is on. */
+async function oldestPending(): Promise<number> {
+  const [file, received] = await Promise.all([
+    prisma.file.findFirst({
+      where: { scanStatus: "pending" },
+      orderBy: { createdAt: "asc" },
+      select: { createdAt: true },
+    }),
+    prisma.reverseShareFile.findFirst({
+      where: { scanStatus: "pending" },
+      orderBy: { createdAt: "asc" },
+      select: { createdAt: true },
+    }),
+  ]);
+  const since = Math.min(...[file, received].flatMap((row) => (row ? [row.createdAt.getTime()] : [])));
+  return Number.isFinite(since) ? Math.max(Math.round((Date.now() - since) / 1000), 0) : 0;
+}
+
+const SCAN_FILES = "amfora_scan_files";
+const SCAN_FILES_HELP = "Files per virus scan status.";
+
+/** Files per scan status, workspace and received together. */
 async function scanFigures(): Promise<Metric[]> {
-  const [files, received] = await Promise.all([
+  const [files, received, oldest] = await Promise.all([
     prisma.file.groupBy({ by: ["scanStatus"], _count: true, where: { scanStatus: { not: null } } }),
     prisma.reverseShareFile.groupBy({ by: ["scanStatus"], _count: true, where: { scanStatus: { not: null } } }),
+    oldestPending(),
   ]);
   const counts = Object.fromEntries(SCAN_STATUSES.map((status) => [status, 0]));
   for (const row of [...files, ...received]) counts[row.scanStatus as string] += row._count;
-  return [byState("amfora_scan_files", "Files per virus scan status.", "status", counts)];
+  return [
+    byState(SCAN_FILES, SCAN_FILES_HELP, "status", counts),
+    gauge("amfora_scan_oldest_pending_seconds", "Age of the file that has waited longest for its scan.", oldest),
+    gauge("amfora_scan_scanner_up", "1 when the last attempt to reach the scanner worked.", isScannerUp() ? 1 : 0),
+  ];
+}
+
+/** With scanning off an infected file stays blocked, so it is still counted. */
+async function infectedFigures(): Promise<Metric[]> {
+  const [files, received] = await Promise.all([
+    prisma.file.count({ where: { scanStatus: "infected" } }),
+    prisma.reverseShareFile.count({ where: { scanStatus: "infected" } }),
+  ]);
+  return [byState(SCAN_FILES, SCAN_FILES_HELP, "status", { infected: files + received })];
 }
 
 async function diskFigures(): Promise<Metric[]> {
@@ -94,7 +129,7 @@ export async function collectMetrics(now = new Date()): Promise<string> {
   metrics.push(...(await diskFigures()));
   const scanOn = isScanEnabled();
   metrics.push(gauge("amfora_scan_enabled", "1 when the virus scan is on.", scanOn ? 1 : 0));
-  if (scanOn) metrics.push(...(await scanFigures().catch(() => [])));
+  metrics.push(...(await (scanOn ? scanFigures() : infectedFigures()).catch(() => [])));
   return formatMetrics(metrics);
 }
 

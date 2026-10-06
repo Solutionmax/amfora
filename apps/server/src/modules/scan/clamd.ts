@@ -9,6 +9,22 @@ export interface ClamdOptions {
   timeoutMs?: number;
 }
 
+/** The scanner could not be reached or went silent: worth another try later, unlike an answer that says no. */
+export class ClamdUnreachableError extends Error {}
+
+const UNREACHABLE_CODES = new Set([
+  "ECONNREFUSED",
+  "ECONNRESET",
+  "EPIPE",
+  "ETIMEDOUT",
+  "EHOSTUNREACH",
+  "ENOTFOUND",
+  "EAI_AGAIN",
+]);
+
+export const isScannerUnreachable = (error: unknown) =>
+  error instanceof ClamdUnreachableError || UNREACHABLE_CODES.has((error as NodeJS.ErrnoException)?.code ?? "");
+
 export type ScanVerdict = { infected: false } | { infected: true; name: string };
 
 export const DEFAULT_CONNECT_TIMEOUT_MS = 10_000;
@@ -39,6 +55,22 @@ function* frames(data: Buffer): Generator<Buffer> {
     header.writeUInt32BE(piece.length);
     yield Buffer.concat([header, piece]);
   }
+}
+
+/** Whether clamd accepts a connection. Never throws. */
+export function canReachClamd(options: ClamdOptions): Promise<boolean> {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ host: options.host, port: options.port });
+    let timer: NodeJS.Timeout | undefined;
+    const done = (isUp: boolean) => {
+      clearTimeout(timer);
+      socket.destroy();
+      resolve(isUp);
+    };
+    timer = setTimeout(() => done(false), options.connectTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS);
+    socket.on("connect", () => done(true));
+    socket.on("error", () => done(false));
+  });
 }
 
 /**
@@ -77,15 +109,20 @@ export function scanWithClamd(source: AsyncIterable<Buffer | Uint8Array | string
       }
     };
 
-    connectTimer = setTimeout(() => finish(new Error("clamd did not accept the connection in time")), connectTimeout);
-    totalTimer = setTimeout(() => finish(new Error("clamd did not answer in time")), totalTimeout);
+    connectTimer = setTimeout(
+      () => finish(new ClamdUnreachableError("clamd did not accept the connection in time")),
+      connectTimeout
+    );
+    totalTimer = setTimeout(() => finish(new ClamdUnreachableError("clamd did not answer in time")), totalTimeout);
 
     socket.on("error", (error) => finish(error));
     socket.on("data", (data) => {
       answer += data.toString("utf8");
       if (answer.includes("\0")) finishWithAnswer();
     });
-    socket.on("close", () => (answer ? finishWithAnswer() : finish(new Error("clamd closed without an answer"))));
+    socket.on("close", () =>
+      answer ? finishWithAnswer() : finish(new ClamdUnreachableError("clamd closed without an answer"))
+    );
 
     socket.on("connect", () => {
       clearTimeout(connectTimer);

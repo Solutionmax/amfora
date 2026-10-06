@@ -29,7 +29,10 @@ let blockedFolderId = "";
 const originalPresign = FileService.prototype.getPresignedGetUrl;
 const originalStream = FileService.prototype.getObjectStream;
 const originalPut = FileService.prototype.getPresignedPutUrl;
+const originalSize = FileService.prototype.getObjectSize;
+const originalEtag = FileService.prototype.getObjectEtag;
 const as = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: false }) });
+const registered = new Set<string>();
 const get = (url: string, userId?: string) =>
   app.inject({ method: "GET", url, cookies: userId ? as(userId) : undefined });
 
@@ -54,6 +57,8 @@ before(async () => {
   FileService.prototype.getPresignedGetUrl = async (objectName: string) => `https://storage.test/${objectName}`;
   FileService.prototype.getObjectStream = async () => Readable.from([Buffer.from("bytes")]);
   FileService.prototype.getPresignedPutUrl = async (objectName: string) => `https://storage.test/put/${objectName}`;
+  FileService.prototype.getObjectSize = async () => 5;
+  FileService.prototype.getObjectEtag = async () => "etag";
   clamd = await startFakeClamd();
 
   ({ prisma } = await import("../../shared/prisma"));
@@ -64,6 +69,9 @@ before(async () => {
   app = fastify({ ignoreTrailingSlash: true });
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+  app.addHook("onRoute", (route) => {
+    for (const method of [route.method].flat()) if (method !== "HEAD") registered.add(`${method} ${route.url}`);
+  });
   await app.register(fastifyCookie);
   await app.register(fastifyJwt, { secret: "test-secret", cookie: { cookieName: "token", signed: false } });
   app.decorateRequest("jwtSign", function (this: any, payload: object) {
@@ -141,6 +149,8 @@ after(async () => {
   FileService.prototype.getPresignedGetUrl = originalPresign;
   FileService.prototype.getObjectStream = originalStream;
   FileService.prototype.getPresignedPutUrl = originalPut;
+  FileService.prototype.getObjectSize = originalSize;
+  FileService.prototype.getObjectEtag = originalEtag;
   delete env.CLAMAV_HOST;
   await app?.close();
   await clamd.close();
@@ -155,6 +165,117 @@ function assertBlocked(response: { statusCode: number; json: () => any }, label:
   assert.equal(response.statusCode, 423, label);
   assert.equal(response.json().code, FILE_BLOCKED_CODE, label);
 }
+
+// Every route that can hand out a file, or the address of one, with the proof that it refuses a blocked one.
+const HANDS_OUT_CONTENT: Record<string, () => Promise<void>> = {
+  "GET /files/download-url": async () =>
+    assertBlocked(await get("/files/download-url?objectName=owner/infected.png", "owner"), "download-url"),
+  "GET /files/download": async () =>
+    assertBlocked(await get("/files/download?objectName=owner/infected.png", "owner"), "download"),
+  "GET /embed/:id": async () => assertBlocked(await get(`/embed/${ids.infected}`), "embed"),
+  "GET /reverse-shares/files/:fileId/download": async () =>
+    assertBlocked(await get(`/reverse-shares/files/${received.rInfected}/download`, "owner"), "received download"),
+  "POST /reverse-shares/files/:fileId/copy": async () =>
+    assertBlocked(
+      await app.inject({
+        method: "POST",
+        url: `/reverse-shares/files/${received.rInfected}/copy`,
+        cookies: as("owner"),
+      }),
+      "received copy"
+    ),
+  "GET /shares/:shareId/folders/:folderId/download": async () => {
+    const body = (await get(`/shares/${blockedFolderShareId}/folders/${blockedFolderId}/download`)).json();
+    assert.deepEqual(body.files, []);
+    assert.equal(body.unavailable, 1);
+  },
+};
+
+// Every other route in the same places: none of them hands out the bytes or an address to read them.
+const HANDS_OUT_NO_CONTENT = [
+  "DELETE /files/:id",
+  "DELETE /folders/:id",
+  "DELETE /reverse-shares/:id",
+  "DELETE /reverse-shares/files/:fileId",
+  "DELETE /shares/:id",
+  "DELETE /shares/:shareId/items",
+  "DELETE /shares/:shareId/recipients",
+  "DELETE /trash",
+  "DELETE /trash/:kind/:id",
+  "GET /files",
+  "GET /files/multipart/part-url",
+  "GET /files/presigned-url",
+  "GET /folders",
+  "GET /reverse-shares",
+  "GET /reverse-shares/:id",
+  "GET /reverse-shares/:id/upload",
+  "GET /reverse-shares/alias/:alias/metadata",
+  "GET /reverse-shares/alias/:alias/multipart/part-url",
+  "GET /reverse-shares/alias/:alias/upload",
+  "GET /shares/:shareId",
+  "GET /shares/:shareId/folders/:folderId/contents",
+  "GET /shares/alias/:alias",
+  "GET /shares/alias/:alias/metadata",
+  "GET /shares/me",
+  "GET /shares/shared-with-me",
+  "GET /trash",
+  "PATCH /files/:id",
+  "PATCH /folders/:id",
+  "PATCH /reverse-shares/:id/activate",
+  "PATCH /reverse-shares/:id/deactivate",
+  "PATCH /reverse-shares/:id/notifications",
+  "PATCH /shares/:id/notifications",
+  "PATCH /shares/:shareId/password",
+  "POST /files",
+  "POST /files/check",
+  "POST /files/multipart/abort",
+  "POST /files/multipart/complete",
+  "POST /files/multipart/create",
+  "POST /folders",
+  "POST /folders/check",
+  "POST /reverse-shares",
+  "POST /reverse-shares/:id/check-password",
+  "POST /reverse-shares/:id/presigned-url",
+  "POST /reverse-shares/:id/register-file",
+  "POST /reverse-shares/:reverseShareId/alias",
+  "POST /reverse-shares/alias/:alias/multipart/abort",
+  "POST /reverse-shares/alias/:alias/multipart/complete",
+  "POST /reverse-shares/alias/:alias/multipart/create",
+  "POST /reverse-shares/alias/:alias/presigned-url",
+  "POST /reverse-shares/alias/:alias/register-file",
+  "POST /shares",
+  "POST /shares/:shareId/alias",
+  "POST /shares/:shareId/items",
+  "POST /shares/:shareId/notify",
+  "POST /shares/:shareId/recipients",
+  "POST /trash/:kind/:id/restore",
+  "PUT /files/:id/move",
+  "PUT /folders/:id/move",
+  "PUT /reverse-shares",
+  "PUT /reverse-shares/:id/password",
+  "PUT /reverse-shares/files/:fileId",
+  "PUT /shares",
+];
+
+test("every registered route that can hand out a file is on a list, and each one on the first list refuses a blocked file", async () => {
+  const content = Object.keys(HANDS_OUT_CONTENT);
+  const lists = [...content, ...HANDS_OUT_NO_CONTENT];
+  assert.equal(new Set(lists).size, lists.length, "a route is on two lists");
+  const inScope = [...registered].filter((entry) =>
+    /^\S+ \/(files|folders|shares|reverse-shares|embed|trash)(\/|$)/.test(entry)
+  );
+  assert.deepEqual(
+    inScope.filter((entry) => !lists.includes(entry)),
+    [],
+    "put these routes on a list: if one hands out a file or its address it must refuse a blocked file"
+  );
+  assert.deepEqual(
+    lists.filter((entry) => !registered.has(entry)),
+    [],
+    "these listed routes no longer exist"
+  );
+  for (const entry of content) await HANDS_OUT_CONTENT[entry]();
+});
 
 test("a pending or infected file is refused on every download route, for a visitor and for its owner", async () => {
   for (const key of BLOCKED) {
@@ -189,9 +310,24 @@ test("a stranger who may not have the file still learns nothing about its scan s
   assert.equal(response.statusCode, 401);
 });
 
-test("the folder download of a share is refused when a file in it is blocked, and works when none is", async () => {
-  assertBlocked(await get(`/shares/${blockedFolderShareId}/folders/${blockedFolderId}/download`), "blocked folder");
-  assert.equal((await get(`/shares/${blockedFolderShareId}/folders/${cleanFolderId}/download`)).statusCode, 200);
+test("the folder download of a share leaves blocked files out, serves the rest and says how many it left out", async () => {
+  const blocked = (await get(`/shares/${blockedFolderShareId}/folders/${blockedFolderId}/download`)).json();
+  assert.deepEqual(blocked.files, []);
+  assert.equal(blocked.unavailable, 1);
+  const clean = (await get(`/shares/${blockedFolderShareId}/folders/${cleanFolderId}/download`)).json();
+  assert.equal(clean.files.length, 1);
+  assert.equal(clean.unavailable, 0);
+  const extra = await addFile("pendingInCleanFolder", "pending", cleanFolderId);
+  try {
+    const mixed = (await get(`/shares/${blockedFolderShareId}/folders/${cleanFolderId}/download`)).json();
+    assert.deepEqual(
+      mixed.files.map((file: any) => file.name),
+      ["inCleanFolder"]
+    );
+    assert.equal(mixed.unavailable, 1);
+  } finally {
+    await prisma.file.delete({ where: { id: extra.id } });
+  }
 });
 
 test("the folder listing of a share, and the share itself, carry the status", async () => {

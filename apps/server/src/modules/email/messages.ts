@@ -66,3 +66,26 @@ export function infectedFileNotice(
     footer: "Do not open the file on a computer you care about. Delete it from your files.",
   };
 }
+
+const NAMES_IN_NOTICE = 5;
+
+/** One notice for what a scan run found: the plain notice for one file, else a count and the first names. */
+export function infectedFilesNotice(
+  files: ReadonlyArray<{ name: string; finding: string; where: "your files" | "a receive link" }>,
+  filesUrl: string
+): Notice {
+  if (files.length === 1) return infectedFileNotice(files[0].name, files[0].finding, files[0].where, filesUrl);
+  const rows: Array<readonly [string, string]> = files
+    .slice(0, NAMES_IN_NOTICE)
+    .map((file) => ["File", `${clip(file.name)}: ${clip(file.finding)}`] as const);
+  const more = files.length - NAMES_IN_NOTICE;
+  if (more > 0) rows.push(["More", `and ${more} others`] as const);
+  return {
+    subject: `${files.length} files blocked`,
+    title: "Files were blocked",
+    text: `The virus scan found something in ${files.length} files. Nobody can download them. You can delete them.`,
+    rows,
+    button: { label: "Open your files", url: filesUrl },
+    footer: "Do not open these files on a computer you care about. Delete them from your files.",
+  };
+}

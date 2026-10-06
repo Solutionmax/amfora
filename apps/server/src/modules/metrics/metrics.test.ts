@@ -163,6 +163,7 @@ test("the route stays reachable with a key while two step sign in is required", 
 
 test("scan figures: off says 0 and shows no counts, on says 1 and counts per status", async () => {
   const { env } = await import("../../env");
+  const { setScannerUp } = await import("../scan/scanner-state");
   await prisma.file.create({
     data: {
       id: "s1",
@@ -199,16 +200,41 @@ test("scan figures: off says 0 and shows no counts, on says 1 and counts per sta
   });
   const off = (await scrape(withKey(keys["boss-read"]))).body;
   assert.ok(sample(off, "amfora_scan_enabled 0"));
-  assert.ok(!off.includes("amfora_scan_files"));
+  assert.ok(sample(off, 'amfora_scan_files{status="infected"} 2'), "infected files stay blocked, so they are counted");
+  assert.ok(!off.includes('amfora_scan_files{status="clean"}'));
+  assert.ok(!off.includes("amfora_scan_oldest_pending_seconds"));
+  assert.ok(!off.includes("amfora_scan_scanner_up"));
   env.CLAMAV_HOST = "clamav";
   try {
     resetMetricsCache();
     const on = (await scrape(withKey(keys["boss-read"]))).body;
     assert.ok(sample(on, "amfora_scan_enabled 1"));
+    assert.ok(sample(on, "amfora_scan_oldest_pending_seconds 0"), "nothing pending");
+    assert.ok(sample(on, "amfora_scan_scanner_up 1"));
     assert.ok(sample(on, 'amfora_scan_files{status="clean"} 1'));
     assert.ok(sample(on, 'amfora_scan_files{status="infected"} 2'));
     assert.ok(sample(on, 'amfora_scan_files{status="pending"} 0'));
+
+    await prisma.file.create({
+      data: {
+        id: "s3",
+        name: "s3",
+        extension: "t",
+        size: BigInt(1),
+        objectName: "s3",
+        userId: "boss",
+        scanStatus: "pending",
+        createdAt: new Date(Date.now() - 120_000),
+      },
+    });
+    setScannerUp(false);
+    resetMetricsCache();
+    const waiting = (await scrape(withKey(keys["boss-read"]))).body;
+    const oldest = /^amfora_scan_oldest_pending_seconds (\d+)$/m.exec(waiting);
+    assert.ok(oldest && Number(oldest[1]) >= 119 && Number(oldest[1]) < 200, String(oldest?.[0]));
+    assert.ok(sample(waiting, "amfora_scan_scanner_up 0"));
   } finally {
+    setScannerUp(true);
     delete env.CLAMAV_HOST;
   }
 });

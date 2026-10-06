@@ -30,21 +30,23 @@ curl -s https://files.example.com/api/v1/metrics -H "Authorization: Bearer amf_.
 
 ## What it reports
 
-| Metric                                                                        | Meaning                                                  |
-| ----------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `amfora_info{version="..."}`                                                  | Always 1. The label holds the running version.           |
-| `amfora_database_up`                                                          | 1 when the database answers, 0 when not.                 |
-| `amfora_storage_up`                                                           | 1 when the object storage answers, 0 when not.           |
-| `amfora_users{kind}`                                                          | `total`, `active` and `admin` (active administrators).   |
-| `amfora_files`, `amfora_files_bytes`                                          | Files in the workspace, trash excluded.                  |
-| `amfora_receive_files`, `..._bytes`                                           | Files received through receive links.                    |
-| `amfora_trash_files`, `..._bytes`                                             | Files in the trash.                                      |
-| `amfora_shares{state}`                                                        | `total`, `active`, `expired`.                            |
-| `amfora_receive_links{state}`                                                 | `total`, `active`.                                       |
-| `amfora_secrets{state}`                                                       | `total`, `active` (not opened up, not expired).          |
-| `amfora_disk_total_bytes`, `amfora_disk_used_bytes`, `amfora_disk_free_bytes` | The data disk. Left out when the host does not tell.     |
-| `amfora_scan_enabled`                                                         | 1 when the [virus scan](VIRUS-SCAN.md) is on, else 0.    |
-| `amfora_scan_files{status}`                                                   | Files per scan status. Only present when the scan is on. |
+| Metric                                                                        | Meaning                                                                                        |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `amfora_info{version="..."}`                                                  | Always 1. The label holds the running version.                                                 |
+| `amfora_database_up`                                                          | 1 when the database answers, 0 when not.                                                       |
+| `amfora_storage_up`                                                           | 1 when the object storage answers, 0 when not.                                                 |
+| `amfora_users{kind}`                                                          | `total`, `active` and `admin` (active administrators).                                         |
+| `amfora_files`, `amfora_files_bytes`                                          | Files in the workspace, trash excluded.                                                        |
+| `amfora_receive_files`, `..._bytes`                                           | Files received through receive links.                                                          |
+| `amfora_trash_files`, `..._bytes`                                             | Files in the trash.                                                                            |
+| `amfora_shares{state}`                                                        | `total`, `active`, `expired`.                                                                  |
+| `amfora_receive_links{state}`                                                 | `total`, `active`.                                                                             |
+| `amfora_secrets{state}`                                                       | `total`, `active` (not opened up, not expired).                                                |
+| `amfora_disk_total_bytes`, `amfora_disk_used_bytes`, `amfora_disk_free_bytes` | The data disk. Left out when the host does not tell.                                           |
+| `amfora_scan_enabled`                                                         | 1 when the [virus scan](VIRUS-SCAN.md) is on, else 0.                                          |
+| `amfora_scan_files{status}`                                                   | Files per scan status. With the scan off only `infected` is present: such files stay blocked.  |
+| `amfora_scan_oldest_pending_seconds`                                          | Age of the file that waited longest for its scan, 0 when none waits. Only when the scan is on. |
+| `amfora_scan_scanner_up`                                                      | 1 when the last attempt to reach the scanner worked, else 0. Only when the scan is on.         |
 
 If the database does not answer, the answer still comes, with `amfora_database_up 0` and without
 the figures that need it.

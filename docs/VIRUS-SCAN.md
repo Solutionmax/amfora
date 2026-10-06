@@ -13,24 +13,44 @@ Files go straight from the browser to storage, so Amfora scans **after** the upl
 3. The status becomes `clean`, `infected`, `skipped` or `error`. At every start Amfora picks up
    the files that were still pending.
 
+The size that counts is the size of the object in storage, not the size the browser says. A file
+that is not in storage cannot be registered.
+
 This holds for files in a workspace and for files received on a receive link. Copying a received
 file to your own files keeps its status.
 
-| Status     | What it means                                              | Download, preview and sharing |
-| ---------- | ---------------------------------------------------------- | ----------------------------- |
-| `pending`  | Waiting for the scan. Shown as "Being checked".            | Blocked for everybody         |
-| `infected` | clamd found something. Shown as "Blocked: name".           | Blocked for everybody         |
-| `clean`    | Nothing found. Nothing is shown.                           | Allowed                       |
-| `skipped`  | Larger than `CLAMAV_MAX_SIZE_MB`. Shown as "Not checked".  | Allowed                       |
-| `error`    | The scanner could not be reached or failed. "Not checked". | Allowed                       |
+| Status     | What it means                                             | Download, preview and sharing |
+| ---------- | --------------------------------------------------------- | ----------------------------- |
+| `pending`  | Waiting for the scan. Shown as "Being checked".           | Blocked for everybody         |
+| `infected` | clamd found something. Shown as "Blocked: name".          | Blocked for everybody         |
+| `clean`    | Nothing found. Nothing is shown.                          | Allowed                       |
+| `skipped`  | Larger than `CLAMAV_MAX_SIZE_MB`. Shown as "Not checked". | Allowed                       |
+| `error`    | The scanner failed or gave up. "Not checked".             | Allowed                       |
 
 "Blocked for everybody" includes the owner: the owner can only delete the file. The answer of the
 server is `423` with the code `FILE_BLOCKED_BY_SCAN`. A broken scanner never takes the
 installation down, which is why `error` does not block. An infected file can be moved to the
 trash and removed like any other; restoring it keeps its status.
 
-When a file is infected, Amfora writes a line in the activity log of the owner (it shows in the
-bell as well) and sends an email to the owner and to every active administrator, if email is on.
+When files are found infected, Amfora writes a line per file in the activity log of the owner (it
+shows in the bell as well; at most 20 per owner per hour, the rest is only counted) and, if email
+is on, sends one email to the owner and one to every active administrator when the queue is
+empty again: a count and the first five names, not one mail per file. The detail of an `error`
+is never sent to a browser; the cause is in the server log.
+
+## What the scan is for
+
+It is for files uploaded by accident, and for what strangers send you through receive links. It is
+not a barrier against a member who deliberately wants to spread something: a password protected
+archive cannot be read by any scanner, and a download address that was already handed out stays
+valid until it expires.
+
+A download address can be used to upload again until it expires. So when the scan is on, a clean
+file is checked against the ETag of the object that was scanned each time it is downloaded,
+previewed, embedded or put in a folder download (one `HEAD` request to storage). When the object
+was overwritten, the file goes back to `pending`, is scanned again and answers `423` meanwhile.
+Files that were scanned before this check existed have no remembered ETag and are not checked.
+In a shared folder download, blocked files are left out and the page says how many.
 
 ## Set it up
 
@@ -79,9 +99,15 @@ The same snippet is in `docker-compose.yaml`, commented out.
 - **One at a time.** Large files take a while and the ones behind them wait.
 - **Files from before.** Files uploaded before you switched the scan on have no status and
   are not scanned. There is no rescan.
-- **Retry.** A file with status `error` is not tried again. Upload it again or leave it.
+- **Retry.** When the scanner cannot be reached or does not answer, the file stays `pending` and
+  is tried again after 30 seconds, 2 minutes and 10 minutes, then it becomes `error`
+  ("Scanner unavailable"). An answer of clamd that says no (for example the size limit) is `error`
+  at once. At every start, files that gave up for lack of a scanner (at most 500) go back to
+  `pending`, and the log says plainly when the scanner cannot be reached. While scanning is on
+  the queue also looks again every minute.
 - **Switching it off.** Remove `CLAMAV_HOST` and restart. Files that were still pending are open
   again and show nothing; infected files stay blocked.
 
 The figures for [monitoring](MONITORING.md) include `amfora_scan_enabled` and the number of
-files per status.
+files per status, the age of the oldest pending file and whether the last attempt to reach the
+scanner worked.

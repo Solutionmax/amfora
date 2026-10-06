@@ -17,6 +17,7 @@ let service: typeof import("./service");
 
 const removed: string[] = [];
 let originalDelete: (typeof FileService.prototype)["deleteObject"];
+let originalSize: (typeof FileService.prototype)["getObjectSize"];
 let onDelete: (objectName: string) => Promise<void> = async () => undefined;
 
 before(async () => {
@@ -40,6 +41,7 @@ before(async () => {
     });
   }
   originalDelete = FileService.prototype.deleteObject;
+  originalSize = FileService.prototype.getObjectSize;
 });
 
 beforeEach(() => {
@@ -49,10 +51,12 @@ beforeEach(() => {
     removed.push(objectName);
     await onDelete(objectName);
   };
+  FileService.prototype.getObjectSize = async () => 5;
 });
 
 afterEach(async () => {
   FileService.prototype.deleteObject = originalDelete;
+  FileService.prototype.getObjectSize = originalSize;
   await prisma.file.deleteMany();
   await prisma.folder.deleteMany();
 });

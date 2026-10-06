@@ -271,18 +271,28 @@ export function usePublicShare() {
 
       try {
         // Get presigned URLs for all files with their relative paths
-        const downloadItems = await Promise.all(
+        // A file the virus scan blocks answers 423: it is left out and the rest still comes.
+        const results = await Promise.all(
           folderFilesWithPath.map(async ({ file, path }) => {
-            const url = await getCachedDownloadUrl(
-              file.objectName,
-              password ? { headers: { "x-share-password": password } } : undefined
-            );
-            return {
-              url,
-              name: path ? `${path}/${file.name}` : file.name,
-            };
+            try {
+              const url = await getCachedDownloadUrl(
+                file.objectName,
+                password ? { headers: { "x-share-password": password } } : undefined
+              );
+              return { url, name: path ? `${path}/${file.name}` : file.name };
+            } catch (error: any) {
+              if (error?.response?.status === 423) return null;
+              throw error;
+            }
           })
         );
+        const downloadItems = results.filter((item) => item !== null);
+        const leftOut = results.length - downloadItems.length;
+        if (downloadItems.length === 0) {
+          toast.dismiss(loadingToast);
+          toast.error(t("shareManager.noFilesToDownload"));
+          return;
+        }
 
         // Create ZIP with all files
         const { downloadFilesAsZip } = await import("@/utils/zip-download");
@@ -291,6 +301,7 @@ export function usePublicShare() {
 
         toast.dismiss(loadingToast);
         toast.success(t("shareManager.zipDownloadSuccess"));
+        if (leftOut > 0) toast.warning(t("share.messages.filesLeftOut", { count: leftOut }));
       } catch (error) {
         toast.dismiss(loadingToast);
         toast.error(t("shareManager.zipDownloadError"));

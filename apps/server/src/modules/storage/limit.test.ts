@@ -142,13 +142,17 @@ test("the message never shows a negative amount when the limit is below the usag
     data: { name: "big", extension: "bin", objectName: "big", size: BigInt(8 * MB), userId: "alice" },
   });
   await setLimit("alice", 5 * MB);
-  const payload = { name: "more", extension: "bin", size: MB, objectName: "o2" };
+  const payload = { name: "more", extension: "bin", size: MB, objectName: "alice/o2" };
+  const { FileService } = await import("../file/service");
+  const sizeOf = FileService.prototype.getObjectSize;
+  FileService.prototype.getObjectSize = async () => MB;
 
   const checked = await app.inject({ method: "POST", url: "/files/check", cookies: session("alice"), payload });
   assert.equal(checked.statusCode, 400);
   assert.match(checked.json().error, /You have 0\.00MB available/);
 
   const registered = await app.inject({ method: "POST", url: "/files", cookies: session("alice"), payload });
+  FileService.prototype.getObjectSize = sizeOf;
   assert.equal(registered.statusCode, 400);
   assert.match(registered.json().error, /You have 0\.00MB available/);
 

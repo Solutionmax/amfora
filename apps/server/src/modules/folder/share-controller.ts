@@ -9,7 +9,7 @@ import { canDownloadFromShares } from "../file/download-access";
 import { FileService } from "../file/service";
 import { shareGrantSubject } from "../file/share-download-grant";
 import { callerOf, GROUP_DOWNLOAD_SECONDS, GroupRefusal, mayReadShare, sendGroupRefusal } from "../group/access";
-import { isBlockedByScan, scanFieldsOf, sendFileBlocked } from "../scan/status";
+import { blockedByScanNow, scanFieldsOf } from "../scan/status";
 import { isFolderIncludedInShare } from "./share-access";
 
 type SharedFolder = {
@@ -173,12 +173,13 @@ export class FolderShareController {
       const descendantIds = graph.folders
         .filter((folder) => isFolderIncludedInShare(folder.id, new Set([folderId]), graph.parents))
         .map((folder) => folder.id);
-      const files = await prisma.file.findMany({
+      const allFiles = await prisma.file.findMany({
         where: { userId: share.creatorId!, folderId: { in: descendantIds }, ...notDeleted },
         orderBy: { name: "asc" },
       });
-      const blocked = files.find(isBlockedByScan);
-      if (blocked) return sendFileBlocked(reply, blocked);
+      // A blocked file is left out, the rest is served: the page says how many are not available.
+      const blocked = new Set((await blockedByScanNow(allFiles)).map((file) => file.id));
+      const files = allFiles.filter((file) => !blocked.has(file.id));
       const full = parseInt(env.PRESIGNED_URL_EXPIRATION);
       const expires = share.groupId ? Math.min(full, GROUP_DOWNLOAD_SECONDS) : full;
       const filesWithUrls = await Promise.all(
@@ -188,7 +189,7 @@ export class FolderShareController {
         }))
       );
 
-      return reply.send({ files: filesWithUrls, expiresIn: expires });
+      return reply.send({ files: filesWithUrls, expiresIn: expires, unavailable: blocked.size });
     } catch (error: any) {
       return this.sendAccessError(reply, error);
     }

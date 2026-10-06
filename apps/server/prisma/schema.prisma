@@ -72,6 +72,8 @@ model File {
   /// The name of what was found, or why the file was skipped or could not be scanned.
   scanDetail String?
   scannedAt  DateTime?
+  /// The ETag of the object that was scanned. A clean file whose object has another ETag now was overwritten.
+  scanEtag String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

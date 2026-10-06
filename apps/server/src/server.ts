@@ -5,7 +5,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { buildApp } from "./app";
 import { directoriesConfig } from "./config/directories.config";
 import { startActivityJobs } from "./modules/activity/jobs";
-import { kickScanQueue } from "./modules/scan/queue";
+import { startScanning } from "./modules/scan/queue";
 import { startTrashJobs } from "./modules/trash/jobs";
 import { requirementFromServer } from "./modules/two-factor/second-step";
 import { registerRoutes } from "./routes";
@@ -75,7 +75,7 @@ async function startServer() {
   console.log(`Amfora server running on port 3333`);
   startActivityJobs();
   startTrashJobs();
-  kickScanQueue(); // picks up what was still pending; does nothing without CLAMAV_HOST
+  await startScanning(); // picks up what was still pending; does nothing without CLAMAV_HOST
 
   // Cleanup on shutdown
   process.on("SIGINT", () => process.exit(0));
