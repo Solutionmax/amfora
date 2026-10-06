@@ -15,6 +15,7 @@ export const CreateShareSchema = z
     password: z.string().optional().describe("The share password"),
     maxViews: z.number().optional().nullable().describe("The maximum number of views"),
     recipients: z.array(z.string().email()).optional().describe("The recipient emails"),
+    groupId: z.string().nullable().optional().describe("Limit the share to the members of this group"),
   })
   .refine(
     (data) => {
@@ -36,6 +37,8 @@ export const UpdateShareSchema = z.object({
   password: z.string().optional(),
   maxViews: z.number().optional().nullable(),
   recipients: z.array(z.string().email()).optional(),
+  // Missing leaves the group alone, null makes the share open to anyone with the link again.
+  groupId: z.string().nullable().optional(),
 });
 
 export const ShareAliasResponseSchema = z.object({
@@ -55,6 +58,8 @@ export const ShareResponseSchema = z.object({
   createdAt: z.string().describe("The share creation date"),
   updatedAt: z.string().describe("The share update date"),
   creatorId: z.string().describe("The creator ID"),
+  groupId: z.string().nullable().optional().describe("The group whose members may open the share"),
+  group: z.object({ id: z.string(), name: z.string() }).nullable().optional(),
   notifyOnDownload: z.boolean().optional().describe("Email the maker when a file is downloaded"),
   remindBeforeExpiry: z.boolean().optional().describe("Email the maker three days before the end date"),
   security: z.object({

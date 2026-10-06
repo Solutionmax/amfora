@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { GroupAccessField } from "@/components/general/group-access-field";
 import { FileTree, TreeFile, TreeFolder } from "@/components/tables/files-tree";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,7 @@ const EMPTY_FORM = {
   expiresAt: "",
   isPasswordProtected: false,
   maxViews: "",
+  groupId: null as string | null,
 };
 
 type Step = "details" | "files";
@@ -123,6 +125,7 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
           ? new Date(dateValue.length === 10 ? `${dateValue}T23:59:59` : dateValue).toISOString()
           : undefined,
         maxViews: formData.maxViews ? parseInt(formData.maxViews) : undefined,
+        groupId: formData.groupId,
         files: selectedFiles,
         folders: selectedFolders,
       });
@@ -211,6 +214,12 @@ export function CreateShareModal({ isOpen, onClose, onSuccess, getAllFilesAndFol
                 />
               </Field>
             </div>
+            <GroupAccessField
+              id="create-share-group"
+              value={formData.groupId}
+              enabled={isOpen}
+              onChange={(groupId) => update({ groupId })}
+            />
             <label htmlFor="password-protection" className="flex cursor-pointer items-center gap-3.5">
               <span className="min-w-0 flex-1">
                 <span className="block font-semibold">{t("shares.calm.password")}</span>

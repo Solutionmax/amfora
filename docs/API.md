@@ -57,6 +57,12 @@ Full access keys can also call every other endpoint under `/api/v1/files`, `/api
 caller before it is sent; [SECRETS.md](SECRETS.md) has the recipe and test vectors. A request body may be at most 1 MB; uploads go to the
 upload URL the API hands out, not through the API itself.
 
+A share can be limited to the members of a group (`groupId` when creating or changing a share, `null`
+to open it to anyone with the link again). The user behind the key must be a member of that group, or an
+administrator. Reading such a share, or downloading its files, works for the user behind the key only
+when that user is a member, the maker of the share or an administrator; anything else answers 403 with
+`code` `GROUP_NOT_MEMBER`.
+
 ## Example: ask someone for files
 
 Create a receive link, give it a readable address, and send that address to the customer.

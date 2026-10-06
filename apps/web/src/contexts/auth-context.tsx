@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { fetchAppInfo } from "@/contexts/app-info-context";
+import { useNotificationStore } from "@/hooks/use-notifications";
 import { getCurrentUser } from "@/http/endpoints";
 import type { User } from "@/http/endpoints/auth/types";
 
@@ -34,6 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const logout = () => {
+    useNotificationStore.getState().clear(); // the next user never sees this one's count
     setUser(null);
     setIsAdmin(false);
     setIsAuthenticated(false);

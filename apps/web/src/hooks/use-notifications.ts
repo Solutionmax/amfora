@@ -1,56 +1,47 @@
 import { useEffect } from "react";
-import { create } from "zustand";
 
 import { countNotifications } from "@/http/endpoints/notifications";
+import { createNotificationStore } from "./notification-store";
 
 const POLL_MS = 60 * 1000;
 
-interface NotificationStore {
-  /** How many are new. Zero while unknown: a session that may not ask (a missing second step) shows nothing. */
-  count: number;
-  /** Asks the server once for everyone who asks at the same moment. */
-  load: () => Promise<void>;
-  clear: () => void;
+export const useNotificationStore = createNotificationStore(countNotifications);
+
+// One timer for every bell that is mounted (the sidebar and the mobile bar can both have one).
+let mounted = 0;
+let stop: (() => void) | null = null;
+
+function startPolling(): () => void {
+  const load = () => void useNotificationStore.getState().load();
+  const timer = window.setInterval(load, POLL_MS);
+  // The tab asks once when it becomes visible again; while hidden it does not ask at all.
+  const onVisible = () => document.visibilityState === "visible" && load();
+  document.addEventListener("visibilitychange", onVisible);
+  window.addEventListener("focus", onVisible);
+  load();
+  return () => {
+    window.clearInterval(timer);
+    document.removeEventListener("visibilitychange", onVisible);
+    window.removeEventListener("focus", onVisible);
+  };
 }
 
-let inFlight: Promise<void> | null = null;
-
-export const useNotificationStore = create<NotificationStore>((set) => ({
-  count: 0,
-  load: () => {
-    if (inFlight) return inFlight;
-
-    const request = countNotifications()
-      .then((count) => set({ count }))
-      // An answer that is not a count is no reason to show anything, or to keep the old number.
-      .catch(() => set({ count: 0 }))
-      .finally(() => {
-        if (inFlight === request) inFlight = null;
-      });
-    inFlight = request;
-
-    return request;
-  },
-  clear: () => set({ count: 0 }),
-}));
-
-/** The count of new notifications, asked for once a minute and when the tab gets focus again. */
+/** The count of new notifications, asked for once a minute and when the tab gets visible again. */
 export function useNotificationCount(): number {
   const count = useNotificationStore((store) => store.count);
-  const load = useNotificationStore((store) => store.load);
 
   useEffect(() => {
-    void load();
-    const timer = window.setInterval(() => void load(), POLL_MS);
-    const onFocus = () => document.visibilityState === "visible" && void load();
-    document.addEventListener("visibilitychange", onFocus);
-    window.addEventListener("focus", onFocus);
+    mounted += 1;
+    if (mounted === 1) stop = startPolling();
+    else void useNotificationStore.getState().load();
     return () => {
-      window.clearInterval(timer);
-      document.removeEventListener("visibilitychange", onFocus);
-      window.removeEventListener("focus", onFocus);
+      mounted -= 1;
+      if (mounted === 0) {
+        stop?.();
+        stop = null;
+      }
     };
-  }, [load]);
+  }, []);
 
   return count;
 }

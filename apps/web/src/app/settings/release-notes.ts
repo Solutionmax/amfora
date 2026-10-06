@@ -33,6 +33,7 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "An administrator can reset the two step sign in of another user from the Users page, for someone who lost the phone. It shows in the activity log.",
     "You can sign in with a passkey: a fingerprint, a face or a security key, without typing a password. Add and remove passkeys on your profile page. A passkey counts as two step sign in.",
     "A bell in the menu shows what is new: your share was downloaded, files came in on a receive link, a secret was opened, a link ends within three days, or your storage is almost full. Opening it marks everything as seen.",
+    "Administrators can make groups on the Users page. A share can be limited to the members of a group: they sign in to open it, and it shows under Shared with me on the Shares page. Removing a member takes the access away at once.",
   ],
 };
 

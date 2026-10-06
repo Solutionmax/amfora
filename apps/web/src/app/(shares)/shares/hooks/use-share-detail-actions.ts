@@ -14,6 +14,7 @@ import { folderWithContents } from "../lib/share-list";
 export function useShareDetailActions(reload: () => Promise<void>) {
   const t = useTranslations();
   const [shareForViewLimit, setShareForViewLimit] = useState<Share | null>(null);
+  const [shareForGroup, setShareForGroup] = useState<Share | null>(null);
   const [itemToRemove, setItemToRemove] = useState<{ share: Share; item: ShareItemRef } | null>(null);
 
   const removePassword = async (share: Share) => {
@@ -36,6 +37,19 @@ export function useShareDetailActions(reload: () => Promise<void>) {
     } catch (error) {
       console.error("Failed to save view limit:", error);
       toast.error(t("shares.calm.viewLimitError"));
+      return false;
+    }
+  };
+
+  const saveGroup = async (share: Share, groupId: string | null) => {
+    try {
+      await updateShare({ id: share.id, groupId });
+      toast.success(t("groups.access.saved"));
+      await reload();
+      return true;
+    } catch (error) {
+      console.error("Failed to save share group:", error);
+      toast.error(t("groups.access.error"));
       return false;
     }
   };
@@ -76,6 +90,9 @@ export function useShareDetailActions(reload: () => Promise<void>) {
   return {
     shareForViewLimit,
     setShareForViewLimit,
+    shareForGroup,
+    setShareForGroup,
+    saveGroup,
     itemToRemove,
     setItemToRemove,
     removePassword,

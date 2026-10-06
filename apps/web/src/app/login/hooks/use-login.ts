@@ -13,7 +13,7 @@ import { getAuthConfig, getCurrentUser, login } from "@/http/endpoints";
 import { getPasskeyLoginOptions, verifyPasskeyLogin } from "@/http/endpoints/auth/passkeys";
 import { completeTwoFactorLogin } from "@/http/endpoints/auth/two-factor";
 import type { LoginResponse } from "@/http/endpoints/auth/two-factor/types";
-import { landingFor } from "@/lib/two-factor-setup";
+import { landingFor, safeNext } from "@/lib/two-factor-setup";
 import { LoginFormValues } from "../schemas/schema";
 
 export const loginSchema = z.object({
@@ -27,6 +27,8 @@ export function useLogin() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
+  // Where to go after signing in, when a page sent the visitor here: only ever a path on this site.
+  const next = safeNext(searchParams.get("next"));
   const { isAuthenticated, setUser, setIsAdmin, setIsAuthenticated } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -41,9 +43,9 @@ export function useLogin() {
 
   useEffect(() => {
     if (isAuthenticated === true) {
-      router.replace("/dashboard");
+      router.replace(next);
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, next]);
 
   useEffect(() => {
     const errorParam = searchParams.get("error");
@@ -121,7 +123,7 @@ export function useLogin() {
             setUser(userData);
             setIsAdmin(isAdmin);
             setIsAuthenticated(true);
-            router.replace(landingFor(userResponse.data.user));
+            router.replace(landingFor(userResponse.data.user, next));
             return;
           }
         } catch (userErr) {
@@ -132,7 +134,7 @@ export function useLogin() {
         setUser({ ...userData, image: null });
         setIsAdmin(isAdmin);
         setIsAuthenticated(true);
-        router.replace("/dashboard");
+        router.replace(next);
       }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
@@ -163,7 +165,7 @@ export function useLogin() {
       setUser(userData);
       setIsAdmin(isAdmin);
       setIsAuthenticated(true);
-      router.replace(landingFor(data.user));
+      router.replace(landingFor(data.user, next));
     } catch (err) {
       if ((err as { name?: string })?.name !== "NotAllowedError") setError(t("passkeys.errors.signInFailed"));
     } finally {
@@ -195,7 +197,7 @@ export function useLogin() {
           setUser(userData);
           setIsAdmin(isAdmin);
           setIsAuthenticated(true);
-          router.replace(landingFor(userResponse.data.user));
+          router.replace(landingFor(userResponse.data.user, next));
           return;
         }
       } catch (userErr) {
@@ -206,7 +208,7 @@ export function useLogin() {
       setUser({ ...userData, image: userData.image ?? null });
       setIsAdmin(isAdmin);
       setIsAuthenticated(true);
-      router.replace("/dashboard");
+      router.replace(next);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
         setError(err.response.data.error);

@@ -20,6 +20,7 @@ import { SplitListHeader, SplitListItem } from "@/components/ui/split-view";
 import type { Share } from "@/http/endpoints/shares/types";
 import { cn } from "@/lib/utils";
 import { pickedAmong, selectionState, SHARE_FILTERS, toggleAll, type ShareFilter } from "../lib/share-list";
+import { ShareViewTabs, type ShareView } from "./share-view-tabs";
 
 interface SharesListProps {
   shares: Share[];
@@ -38,6 +39,7 @@ interface SharesListProps {
   onBulkDelete: (shares: Share[]) => void;
   /** Lets the share manager leave select mode after a bulk action finishes. */
   onRegisterClear?: (clear: () => void) => void;
+  onViewChange: (view: ShareView) => void;
 }
 
 function SelectableRow({
@@ -65,7 +67,11 @@ function SelectableRow({
       <span className="min-w-0 flex-1">
         <span className="block truncate text-[13.5px] font-semibold">{share.name || t("shares.calm.untitled")}</span>
         <span className="mt-1 flex flex-wrap items-center gap-1.5">
-          <LinkTags expiration={share.expiration} hasPassword={share.security?.hasPassword ?? false} />
+          <LinkTags
+            expiration={share.expiration}
+            hasPassword={share.security?.hasPassword ?? false}
+            groupName={share.group?.name}
+          />
         </span>
       </span>
       <span className="shrink-0 whitespace-nowrap text-[12.5px] text-ink-3">
@@ -151,6 +157,7 @@ export function SharesList(props: SharesListProps) {
   return (
     <>
       {header}
+      <ShareViewTabs view="mine" onChange={props.onViewChange} />
       <div
         role="group"
         aria-label={t("shares.calm.filterLabel")}
@@ -271,7 +278,13 @@ export function SharesList(props: SharesListProps) {
                 key={share.id}
                 icon={<IconShare stroke={1.8} />}
                 title={share.name || t("shares.calm.untitled")}
-                meta={<LinkTags expiration={share.expiration} hasPassword={share.security?.hasPassword ?? false} />}
+                meta={
+                  <LinkTags
+                    expiration={share.expiration}
+                    hasPassword={share.security?.hasPassword ?? false}
+                    groupName={share.group?.name}
+                  />
+                }
                 aside={t("shares.calm.fileCount", { count: share.files?.length ?? 0 })}
                 selected={share.id === props.activeId}
                 onSelect={() => props.onSelect(share.id)}

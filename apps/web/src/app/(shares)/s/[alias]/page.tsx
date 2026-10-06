@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
 import { PublicShell, type PublicStory } from "@/components/brand/public-shell";
@@ -19,6 +20,7 @@ export default function PublicSharePage() {
   const { appName } = useAppInfo();
   const t = useTranslations();
   const locale = useLocale();
+  const alias = String(useParams()?.alias ?? "");
   const {
     isLoading,
     share,
@@ -26,6 +28,7 @@ export default function PublicSharePage() {
     isPasswordModalOpen,
     isPasswordError,
     reason,
+    groupName,
     setPassword,
     handlePasswordSubmit,
     handleDownload,
@@ -80,15 +83,30 @@ export default function PublicSharePage() {
       }
     : isPasswordModalOpen
       ? { headline: t("public.state.password.title"), text: t("public.state.password.text") }
-      : {
-          headline: t(`public.state.${reason}.title`),
-          text: t(`public.state.${reason}.text`),
-          action: (
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/">{t("public.state.backHome")}</Link>
-            </Button>
-          ),
-        };
+      : reason === "groupSignIn"
+        ? {
+            headline: t("public.state.groupSignIn.title"),
+            text: t("public.state.groupSignIn.text"),
+            action: (
+              <Button asChild size="lg">
+                <Link href={`/login?next=${encodeURIComponent(`/s/${alias}`)}`}>
+                  {t("public.state.groupSignIn.action")}
+                </Link>
+              </Button>
+            ),
+          }
+        : {
+            headline: t(`public.state.${reason}.title`),
+            text:
+              reason === "groupMember"
+                ? t("public.state.groupMember.text", { group: groupName })
+                : t(`public.state.${reason}.text`),
+            action: (
+              <Button asChild size="lg" variant="secondary">
+                <Link href="/">{t("public.state.backHome")}</Link>
+              </Button>
+            ),
+          };
 
   const card = share ? (
     <ShareStage

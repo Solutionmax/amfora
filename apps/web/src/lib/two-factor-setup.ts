@@ -37,7 +37,10 @@ export function setupUrl(next: string): string {
   return `${SETUP_PAGE}?next=${encodeURIComponent(safeNext(next))}`;
 }
 
-/** Where a freshly signed in user goes first. */
-export function landingFor(user: { twoFactorSetupRequired?: boolean } | null | undefined): string {
-  return user?.twoFactorSetupRequired ? setupUrl("/dashboard") : "/dashboard";
+/** Where a freshly signed in user goes first: the page they came from when it is one of ours, else the dashboard. */
+export function landingFor(
+  user: { twoFactorSetupRequired?: boolean } | null | undefined,
+  next: string = "/dashboard"
+): string {
+  return user?.twoFactorSetupRequired ? setupUrl(next) : safeNext(next);
 }

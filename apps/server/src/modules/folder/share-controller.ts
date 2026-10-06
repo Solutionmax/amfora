@@ -8,6 +8,7 @@ import { notDeleted } from "../../shared/trash";
 import { canDownloadFromShares } from "../file/download-access";
 import { FileService } from "../file/service";
 import { shareGrantSubject } from "../file/share-download-grant";
+import { callerOf, GroupRefusal, mayReadShare, sendGroupRefusal } from "../group/access";
 import { isFolderIncludedInShare } from "./share-access";
 
 type SharedFolder = {
@@ -34,6 +35,7 @@ export class FolderShareController {
       where: { id: shareId },
       include: {
         security: true,
+        group: { select: { id: true, name: true } },
         folders: {
           select: { id: true, parentId: true, userId: true },
         },
@@ -41,6 +43,8 @@ export class FolderShareController {
     });
 
     if (!share) throw new Error("Share not found");
+    const verdict = mayReadShare(share, await callerOf(request));
+    if (!verdict.allowed) throw new GroupRefusal(verdict);
     if (share.expiration && share.expiration <= new Date()) throw new Error("Share has expired");
 
     const admitted = new Set<string>();
@@ -186,6 +190,7 @@ export class FolderShareController {
   }
 
   private sendAccessError(reply: FastifyReply, error: Error) {
+    if (error instanceof GroupRefusal) return sendGroupRefusal(reply, error.verdict);
     if (error.message === "Share not found" || error.message === "Folder not found") {
       return reply.status(404).send({ error: error.message });
     }

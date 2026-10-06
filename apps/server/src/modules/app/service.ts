@@ -162,10 +162,8 @@ export class AppService {
       throw new Error("Configuration not found");
     }
 
-    return prisma.appConfig.update({
-      where: { key },
-      data: { value },
-    });
+    const [updated] = withServerRequirement([await prisma.appConfig.update({ where: { key }, data: { value } })]);
+    return updated;
   }
 
   async bulkUpdateConfigs(updates: Array<{ key: string; value: string }>) {

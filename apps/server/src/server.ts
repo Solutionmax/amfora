@@ -6,6 +6,7 @@ import { buildApp } from "./app";
 import { directoriesConfig } from "./config/directories.config";
 import { startActivityJobs } from "./modules/activity/jobs";
 import { startTrashJobs } from "./modules/trash/jobs";
+import { requirementFromServer } from "./modules/two-factor/second-step";
 import { registerRoutes } from "./routes";
 
 if (typeof globalThis.crypto === "undefined") {
@@ -55,6 +56,7 @@ async function startServer() {
   });
 
   registerRoutes(app);
+  requirementFromServer(); // warns once at start when TWO_FACTOR_REQUIRED is set to something unusable
 
   if (isInternalStorage) {
     console.log("📦 Using internal storage (auto-configured)");

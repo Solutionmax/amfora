@@ -1,6 +1,7 @@
 import { prisma } from "../../shared/prisma";
 import { chunked, liveFolderOf, notDeleted } from "../../shared/trash";
 import { generateUniqueFileName, generateUniqueFolderName, parseFileName } from "../../utils/file-name-generator";
+import { noteStorageUsage } from "../activity/notifications";
 import { FileService } from "../file/service";
 import { MS_PER_DAY, trashRetentionDays } from "./settings";
 
@@ -338,8 +339,10 @@ async function purgeFolder(userId: string, id: string): Promise<boolean> {
 }
 
 /** Deletes an item for good; false when the caller has no such item in the trash. */
-export function purgeItem(userId: string, kind: TrashKind, id: string): Promise<boolean> {
-  return kind === "file" ? purgeFile(userId, id) : purgeFolder(userId, id);
+export async function purgeItem(userId: string, kind: TrashKind, id: string): Promise<boolean> {
+  const gone = await (kind === "file" ? purgeFile(userId, id) : purgeFolder(userId, id));
+  if (gone) await noteStorageUsage(userId); // room freed: a storage alert under 90 percent is cleared
+  return gone;
 }
 
 /** Deletes the given items for good. One that fails does not stop the others. */

@@ -77,22 +77,36 @@ export async function noteExpiringLinks(now = new Date()): Promise<void> {
   );
   await note(
     "receive.expiring",
-    await prisma.reverseShare.findMany({ where, select: { id: true, name: true, creatorId: true, expiration: true } })
+    await prisma.reverseShare.findMany({
+      where: { ...where, isActive: true },
+      select: { id: true, name: true, creatorId: true, expiration: true },
+    })
   );
 }
 
 /**
- * Call after `addedBytes` landed in a user's files. Writes "storage almost full" at the moment
- * usage crosses 90 percent of the limit. Nothing is remembered: it is a crossing when the usage
- * before was under and now is not, so it happens once until usage drops below and rises again.
+ * Call after a user's usage changed (a file registered, a file purged from the trash). Writes
+ * "storage almost full" when usage is at or over 90 percent of the limit and the user has not
+ * been told yet. The told state is stored on the user (storageAlertAt) and set with one update
+ * that only matches while it is empty, so files registered at the same moment give one line.
+ * It is cleared when usage is seen under the threshold, so a later crossing is told again.
  */
-export async function noteStorageGrowth(userId: string, addedBytes: number | bigint): Promise<void> {
+export async function noteStorageUsage(userId: string): Promise<void> {
   try {
     const limit = await storageLimitOf(userId);
-    if (limit <= 0n) return;
     const used = (await prisma.file.aggregate({ where: { userId }, _sum: { size: true } }))._sum.size ?? 0n;
-    const threshold = (limit * FULL_PERCENT) / 100n;
-    if (used < threshold || used - BigInt(addedBytes) >= threshold) return;
+    if (limit <= 0n || used < (limit * FULL_PERCENT) / 100n) {
+      await prisma.user.updateMany({
+        where: { id: userId, storageAlertAt: { not: null } },
+        data: { storageAlertAt: null },
+      });
+      return;
+    }
+    const claimed = await prisma.user.updateMany({
+      where: { id: userId, storageAlertAt: null },
+      data: { storageAlertAt: new Date() },
+    });
+    if (claimed.count === 0) return;
     await recordActivity({
       action: "account.storage_almost_full",
       ownerId: userId,
@@ -154,7 +168,11 @@ export async function notificationRoutes(app: FastifyInstance) {
         },
       });
       const notifications = rows.map((row) => ({ ...row, isNew: row.createdAt > seenAt }));
-      return reply.send({ notifications, unseen: notifications.filter((row) => row.isNew).length });
+      // All the new lines, also the ones the twenty above do not show.
+      const unseen = await prisma.activityEvent.count({
+        where: { AND: [mine(userId), { createdAt: { gt: seenAt } }] },
+      });
+      return reply.send({ notifications, unseen });
     }
   );
 
@@ -187,14 +205,22 @@ export async function notificationRoutes(app: FastifyInstance) {
         tags,
         operationId: "markNotificationsSeen",
         summary: "Mark notifications as seen",
-        description: "Everything up to now counts as seen, for you only.",
-        response: { 200: z.object({ seenAt: z.date() }), 401: ErrorSchema },
+        description:
+          "Everything up to the time you send (the newest line you were shown) counts as seen, for you only. A time in the future counts as now, an older time never moves it back.",
+        body: z.object({ upTo: z.string().datetime().describe("The createdAt of the newest line the panel showed") }),
+        response: { 200: z.object({ seenAt: z.date() }), 400: ErrorSchema, 401: ErrorSchema },
       },
     },
     async (request, reply) => {
-      const seenAt = new Date();
-      await prisma.user.update({ where: { id: userIdOf(request) }, data: { notificationsSeenAt: seenAt } });
-      return reply.send({ seenAt });
+      const userId = userIdOf(request);
+      const { upTo } = request.body as { upTo: string };
+      const target = new Date(Math.min(Date.parse(upTo), Date.now()));
+      // Only forward: a second panel that opened earlier cannot move it back.
+      await prisma.user.updateMany({
+        where: { id: userId, OR: [{ notificationsSeenAt: null }, { notificationsSeenAt: { lt: target } }] },
+        data: { notificationsSeenAt: target },
+      });
+      return reply.send({ seenAt: await seenAtOf(userId) });
     }
   );
 }

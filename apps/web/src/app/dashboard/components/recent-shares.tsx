@@ -65,13 +65,21 @@ export function RecentShares({
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     {t("dashboard.calm.shareMeta", { items, views: share.views ?? 0 })}
                     <span className="sm:hidden">
-                      <LinkTags expiration={share.expiration} hasPassword={!!share.security?.hasPassword} />
+                      <LinkTags
+                        expiration={share.expiration}
+                        hasPassword={!!share.security?.hasPassword}
+                        groupName={share.group?.name}
+                      />
                     </span>
                   </span>
                 }
               >
                 <span className="max-sm:hidden">
-                  <LinkTags expiration={share.expiration} hasPassword={!!share.security?.hasPassword} />
+                  <LinkTags
+                    expiration={share.expiration}
+                    hasPassword={!!share.security?.hasPassword}
+                    groupName={share.group?.name}
+                  />
                 </span>
                 {share.alias?.alias ? (
                   <Button

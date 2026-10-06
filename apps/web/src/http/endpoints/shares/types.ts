@@ -61,6 +61,9 @@ export interface Share {
   folders: ShareFolder[];
   recipients: ShareRecipient[];
   alias: ShareAlias;
+  /** The group whose members may open the share. Null or absent: anyone with the link. */
+  groupId?: string | null;
+  group?: { id: string; name: string } | null;
   /** Email the maker on a download. Absent on old data: off. */
   notifyOnDownload?: boolean;
   /** Email the maker before the end date. Absent on old data: off. */
@@ -141,6 +144,7 @@ export interface CreateShareBody {
   password?: string;
   maxViews?: number | null;
   recipients?: string[];
+  groupId?: string | null;
 }
 
 export interface UpdateShareBody {
@@ -152,6 +156,8 @@ export interface UpdateShareBody {
   password?: string;
   maxViews?: number | null;
   recipients?: string[];
+  /** Left out keeps the group, null makes the share open to anyone with the link. */
+  groupId?: string | null;
 }
 
 export interface UpdateSharePasswordBody {

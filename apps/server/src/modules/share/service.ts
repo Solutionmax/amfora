@@ -6,6 +6,8 @@ import { prisma } from "../../shared/prisma";
 import { notDeleted } from "../../shared/trash";
 import { EmailService } from "../email/service";
 import { FolderService } from "../folder/service";
+import { GroupRefusal, mayReadShare, type Caller } from "../group/access";
+import { GroupService } from "../group/service";
 import { UserService } from "../user/service";
 import { CreateShareInput, ShareResponseSchema, UpdateShareInput } from "./dto";
 import { IShareRepository, PrismaShareRepository } from "./repository";
@@ -16,6 +18,7 @@ export class ShareService {
   private emailService = new EmailService();
   private userService = new UserService();
   private folderService = new FolderService();
+  private groupService = new GroupService();
 
   private async formatShareResponse(share: any) {
     return {
@@ -65,9 +68,10 @@ export class ShareService {
   }
 
   async createShare(data: CreateShareInput, userId: string) {
-    const { password, maxViews, files, folders, ...shareData } = data;
+    const { password, maxViews, files, folders, groupId, ...shareData } = data;
 
     await assertLinkLifetime(shareData.expiration ? new Date(shareData.expiration) : null);
+    if (groupId) await this.groupService.assertMayPick(userId, groupId);
 
     if (files && files.length > 0) {
       const existingFiles = await prisma.file.findMany({
@@ -110,6 +114,7 @@ export class ShareService {
 
     const share = await this.shareRepository.createShare({
       ...shareData,
+      groupId: groupId || null,
       files,
       folders,
       securityId: security.id,
@@ -120,12 +125,25 @@ export class ShareService {
     return ShareResponseSchema.parse(await this.formatShareResponse(shareWithRelations));
   }
 
-  async getShare(shareId: string, password?: string, userId?: string) {
+  /** A share opened by its id: the maker is let in without the password, the others are judged by the group rule first. */
+  async getShare(shareId: string, password?: string, caller: Caller | null = null) {
+    return this.openShare(shareId, password, caller?.userId, caller);
+  }
+
+  private async openShare(
+    shareId: string,
+    password: string | undefined,
+    userId: string | undefined,
+    caller: Caller | null
+  ) {
     const share = await this.shareRepository.findShareById(shareId);
 
     if (!share) {
       throw new Error("Share not found");
     }
+
+    const verdict = mayReadShare(share, caller);
+    if (!verdict.allowed) throw new GroupRefusal(verdict);
 
     if (userId && share.creatorId === userId) {
       return ShareResponseSchema.parse(await this.formatShareResponse(share));
@@ -161,7 +179,7 @@ export class ShareService {
   }
 
   async updateShare(shareId: string, data: Omit<UpdateShareInput, "id">, userId: string) {
-    const { password, maxViews, recipients, ...shareData } = data;
+    const { password, maxViews, recipients, groupId, ...shareData } = data;
 
     const share = await this.shareRepository.findShareById(shareId);
     if (!share) {
@@ -171,6 +189,9 @@ export class ShareService {
     if (share.creatorId !== userId) {
       throw new Error("Unauthorized to update this share");
     }
+
+    // Only a changed group is judged: a maker who left the group keeps the share they already limited to it.
+    if (groupId && groupId !== share.groupId) await this.groupService.assertMayPick(userId, groupId);
 
     // Missing leaves the end date alone, null clears it. Judged before anything is written, so a
     // refused update changes nothing.
@@ -194,7 +215,11 @@ export class ShareService {
       }
     }
 
-    await this.shareRepository.updateShare(shareId, { ...shareData, expiration });
+    await this.shareRepository.updateShare(shareId, {
+      ...shareData,
+      expiration,
+      ...(groupId !== undefined ? { groupId } : {}),
+    });
     const shareWithRelations = await this.shareRepository.findShareById(shareId);
 
     return await this.formatShareResponse(shareWithRelations);
@@ -368,7 +393,7 @@ export class ShareService {
     };
   }
 
-  async getShareByAlias(alias: string, password?: string) {
+  async getShareByAlias(alias: string, password?: string, caller: Caller | null = null) {
     const shareAlias = await prisma.shareAlias.findUnique({
       where: { alias },
       include: {
@@ -386,7 +411,8 @@ export class ShareService {
       throw new Error("Share not found");
     }
 
-    return this.getShare(shareAlias.shareId, password);
+    // The maker gets no bypass here: opening by the link counts as a visit, as it always did.
+    return this.openShare(shareAlias.shareId, password, undefined, caller);
   }
 
   async notifyRecipients(shareId: string, userId: string) {
@@ -453,11 +479,26 @@ export class ShareService {
     // Check if max views reached
     const isMaxViewsReached = share.security.maxViews !== null ? share.views >= share.security.maxViews : false;
 
+    // Link previews are read by anybody, signed in or not: a group share shows nothing of itself.
+    if (share.groupId) {
+      return {
+        name: null,
+        description: null,
+        totalFiles: 0,
+        totalFolders: 0,
+        hasPassword: !!share.security.password,
+        isExpired,
+        isMaxViewsReached,
+        groupOnly: true,
+      };
+    }
+
     const totalFiles = share.files?.length || 0;
     const totalFolders = share.folders?.length || 0;
     const hasPassword = !!share.security.password;
 
     return {
+      groupOnly: false,
       name: share.name,
       description: share.description,
       totalFiles,

@@ -51,6 +51,8 @@
       "accountSignInFailed": "Anmeldung fehlgeschlagen",
       "activityCleared": "Protokoll geleert",
       "accountTwoFactorReset": "Anmeldung in zwei Schritten zurückgesetzt",
+      "accountGroupAdded": "Zu einer Gruppe hinzugefügt",
+      "accountGroupRemoved": "Aus einer Gruppe entfernt",
       "accountStorageAlmostFull": "Speicher fast voll",
       "other": "Etwas anderes ist passiert"
     },
@@ -848,6 +850,79 @@
       "qrcode": "QR-Code"
     }
   },
+  "groups": {
+    "tabs": {
+      "users": "Benutzer",
+      "groups": "Gruppen"
+    },
+    "new": "Neue Gruppe",
+    "members": "{count, plural, one {# Mitglied} other {# Mitglieder}}",
+    "shares": "{count, plural, one {# Freigabe} other {# Freigaben}}",
+    "editGroup": "{name} bearbeiten",
+    "deleteGroup": "{name} löschen",
+    "empty": {
+      "title": "Noch keine Gruppen",
+      "text": "Mit einer Gruppe beschränken Sie eine Freigabe auf einen festen Personenkreis. Legen Sie eine an und fügen Sie die Mitglieder hinzu."
+    },
+    "modal": {
+      "titleNew": "Neue Gruppe",
+      "titleEdit": "Gruppe {name}",
+      "description": "Mitglieder einer Gruppe können die Freigaben öffnen, die auf diese Gruppe beschränkt sind.",
+      "name": "Name",
+      "descriptionLabel": "Beschreibung (optional)",
+      "members": "{count, plural, one {# Mitglied} other {# Mitglieder}}",
+      "noMembers": "Noch niemand in dieser Gruppe.",
+      "removeMember": "{name} aus der Gruppe entfernen",
+      "pickUser": "Benutzer wählen",
+      "addMember": "Hinzufügen",
+      "close": "Schließen",
+      "create": "Gruppe anlegen"
+    },
+    "delete": {
+      "title": "{name} löschen?",
+      "description": "Die Gruppe und ihre Mitgliederliste werden entfernt. Sonst wird nichts gelöscht.",
+      "confirm": "Gruppe löschen",
+      "inUse": "Diese Gruppe wird von {count, plural, one {# Freigabe} other {# Freigaben}} verwendet. Setzen Sie diese zuerst auf „Jeder mit dem Link“ zurück oder verschieben Sie sie in eine andere Gruppe."
+    },
+    "messages": {
+      "created": "Gruppe angelegt",
+      "saved": "Gruppe gespeichert",
+      "deleted": "Gruppe gelöscht"
+    },
+    "errors": {
+      "loadFailed": "Die Gruppen konnten nicht geladen werden",
+      "nameTaken": "Eine Gruppe mit diesem Namen gibt es schon",
+      "saveFailed": "Die Gruppe konnte nicht gespeichert werden",
+      "memberFailed": "Die Mitglieder konnten nicht geändert werden",
+      "deleteFailed": "Die Gruppe konnte nicht gelöscht werden"
+    },
+    "access": {
+      "label": "Wer darf sie öffnen",
+      "anyone": "Jeder mit dem Link",
+      "onlyMembers": "Nur Mitglieder von {name}",
+      "hint": "Mails an Empfänger bleiben gleich, aber die Seite bittet sie zuerst, sich anzumelden.",
+      "title": "Wer darf sie öffnen",
+      "description": "Beschränken Sie diese Freigabe auf die Mitglieder einer Gruppe. Sie müssen sich anmelden, um sie zu öffnen.",
+      "change": "Ändern, wer die Freigabe öffnen darf",
+      "saved": "Gespeichert",
+      "error": "Speichern fehlgeschlagen"
+    },
+    "sharedWithMe": {
+      "tabs": "Freigaben",
+      "mine": "Meine Freigaben",
+      "tab": "Mit mir geteilt",
+      "intro": "Freigaben anderer, die auf eine Gruppe beschränkt sind, in der Sie Mitglied sind.",
+      "empty": {
+        "title": "Noch nichts mit Ihnen geteilt",
+        "text": "Wenn jemand eine Freigabe auf eine Gruppe beschränkt, in der Sie sind, erscheint sie hier."
+      },
+      "loadFailed": "Die Freigaben konnten nicht geladen werden",
+      "open": "Öffnen",
+      "from": "Von {name}",
+      "ends": "Endet am {date}",
+      "neverEnds": "Kein Enddatum"
+    }
+  },
   "home": {
     "description": "Lade hoch, teile einen Link und entscheide genau, wie lange er offen bleibt. Läuft auf deinem eigenen Server, ganz ohne Mittelsmann.",
     "documentation": "Dokumentation",
@@ -953,6 +1028,7 @@
     "empty": "Nichts Neues",
     "emptyHint": "Neuigkeiten zu deinen Freigaben, Empfangslinks, Geheimnissen und deinem Speicher erscheinen hier.",
     "new": "Neu",
+    "more": "und {count} weitere, <link>siehe Aktivität</link>",
     "items": {
       "shareDownloaded": "Deine Freigabe {subject} wurde heruntergeladen",
       "receiveFilesReceived": "{count, plural, one {# Datei ist} other {# Dateien sind}} über {subject} eingegangen",
@@ -1221,6 +1297,15 @@
       "maxViews": {
         "title": "Dieser Link ist aufgebraucht.",
         "text": "Er konnte nur eine begrenzte Anzahl von Malen geöffnet werden, und dieses Limit ist erreicht. Bitten Sie den Absender um einen neuen Link."
+      },
+      "groupSignIn": {
+        "title": "Melden Sie sich an, um dies zu öffnen.",
+        "text": "Dies ist mit einer Gruppe geteilt. Melden Sie sich mit Ihrem Konto an, um es zu sehen.",
+        "action": "Anmelden"
+      },
+      "groupMember": {
+        "title": "Sie sind kein Mitglied.",
+        "text": "Dies ist mit der Gruppe {group} geteilt und Sie sind kein Mitglied."
       }
     },
     "stage": {
@@ -3097,7 +3182,9 @@
     "signOut": "Abmelden",
     "continue": "Weiter",
     "continueHint": "Klicke hier, wenn du fertig bist.",
-    "notYet": "Richte zuerst eine Authenticator App oder einen Passkey ein."
+    "notYet": "Richte zuerst eine Authenticator App oder einen Passkey ein.",
+    "textNoPasskeys": "Diese Installation verlangt beim Anmelden einen zweiten Schritt. Nutze eine Authenticator App. Bis dahin kannst du nur diese Seite verwenden.",
+    "notYetNoPasskeys": "Richte zuerst eine Authenticator App ein."
   },
   "ui": {
     "unsavedChanges": "Nicht gespeicherte Änderungen",

@@ -90,7 +90,11 @@ export function ShareDetail({
           {share.name || t("shares.calm.untitled")}
         </h2>
         <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-ink-3">
-          <LinkTags expiration={share.expiration} hasPassword={share.security?.hasPassword ?? false} />
+          <LinkTags
+            expiration={share.expiration}
+            hasPassword={share.security?.hasPassword ?? false}
+            groupName={share.group?.name}
+          />
           <span>· {t("shares.calm.created", { date: shortDate(share.createdAt) })}</span>
           {share.expiration && (
             <span>

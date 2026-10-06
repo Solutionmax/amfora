@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { GroupRefusalBodySchema } from "../group/access";
 import { FolderController } from "./controller";
 import {
   CheckFolderSchema,
@@ -51,7 +52,7 @@ export async function folderRoutes(app: FastifyInstance) {
             files: z.array(z.any()),
           }),
           401: z.object({ error: z.string() }),
-          403: z.object({ error: z.string() }),
+          403: GroupRefusalBodySchema,
           404: z.object({ error: z.string() }),
           410: z.object({ error: z.string() }),
         },
@@ -73,7 +74,7 @@ export async function folderRoutes(app: FastifyInstance) {
             expiresIn: z.number(),
           }),
           401: z.object({ error: z.string() }),
-          403: z.object({ error: z.string() }),
+          403: GroupRefusalBodySchema,
           404: z.object({ error: z.string() }),
           410: z.object({ error: z.string() }),
         },

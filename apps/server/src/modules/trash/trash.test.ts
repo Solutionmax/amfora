@@ -488,3 +488,19 @@ test("a file without an extension keeps a clean name when it is restored next to
 
   assert.equal((await prisma.file.findUniqueOrThrow({ where: { id: old.id } })).name, "README (1)");
 });
+
+test("purging from the trash clears the storage alert once usage is under 90 percent", async () => {
+  await prisma.user.update({ where: { id: "bob" }, data: { storageLimitBytes: 1000n } });
+  const big = await addFile("bob", "big.bin", 950);
+  await prisma.user.update({ where: { id: "bob" }, data: { storageAlertAt: new Date() } });
+  await as("bob", "DELETE", `/files/${big.id}`);
+  assert.ok(
+    (await prisma.user.findUniqueOrThrow({ where: { id: "bob" } })).storageAlertAt,
+    "in the trash still counts"
+  );
+
+  assert.equal((await as("bob", "DELETE", `/trash/file/${big.id}`)).statusCode, 200);
+
+  assert.equal((await prisma.user.findUniqueOrThrow({ where: { id: "bob" } })).storageAlertAt, null);
+  await prisma.user.update({ where: { id: "bob" }, data: { storageLimitBytes: null } });
+});

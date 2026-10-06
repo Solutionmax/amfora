@@ -15,6 +15,7 @@ import { listFolders } from "@/http/endpoints/folders";
 import type { useShareDetailActions } from "../hooks/use-share-detail-actions";
 import { shareUrl } from "../lib/share-list";
 import { ConfirmDialog } from "./confirm-dialog";
+import { ShareGroupModal } from "./share-group-modal";
 import { ShareViewLimitModal } from "./share-view-limit-modal";
 
 const loadFilesAndFolders = async () => {
@@ -116,6 +117,12 @@ export function SharesModals({
         share={detailActions.shareForViewLimit}
         onClose={() => detailActions.setShareForViewLimit(null)}
         onSave={detailActions.saveViewLimit}
+      />
+
+      <ShareGroupModal
+        share={detailActions.shareForGroup}
+        onClose={() => detailActions.setShareForGroup(null)}
+        onSave={detailActions.saveGroup}
       />
 
       <ConfirmDialog

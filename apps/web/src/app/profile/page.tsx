@@ -7,6 +7,7 @@ import { FileManagerLayout } from "@/components/layout/file-manager-layout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/auth-context";
+import { usePasskeysAvailable } from "@/hooks/use-passkeys-available";
 import { ApiKeysForm } from "./components/api-keys-form";
 import { PasskeysForm } from "./components/passkeys-form";
 import { PasswordForm } from "./components/password-form";
@@ -51,6 +52,7 @@ export default function ProfilePage() {
   const t = useTranslations();
   const profile = useProfile();
   const { isAdmin } = useAuth();
+  const passkeysAvailable = usePasskeysAvailable();
   const firstName = profile.profileForm.watch("firstName");
   const lastName = profile.profileForm.watch("lastName");
 
@@ -96,7 +98,7 @@ export default function ProfilePage() {
             onToggleNewPassword={() => profile.setIsNewPasswordVisible(!profile.isNewPasswordVisible)}
           />
           <TwoFactorForm />
-          <PasskeysForm />
+          {passkeysAvailable && <PasskeysForm />}
           <ApiKeysForm />
         </div>
       </>

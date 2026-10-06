@@ -17,10 +17,28 @@ export function assertTwoFactorRequired(value: string): void {
   }
 }
 
-/** The requirement the server configuration forces, or null: TWO_FACTOR_REQUIRED=off|admins|all. Anything else is ignored. */
+const warnedValues = new Set<string>();
+
+/**
+ * The requirement the server configuration forces, or null: TWO_FACTOR_REQUIRED=off|admins|all.
+ * Case, spaces and surrounding quotes (Docker keeps them) do not matter. Anything else is ignored, with one warning per value.
+ */
 export function requirementFromServer(): TwoFactorRequirement | null {
-  const value = env.TWO_FACTOR_REQUIRED?.trim();
-  return TWO_FACTOR_REQUIRED_VALUES.includes(value as TwoFactorRequirement) ? (value as TwoFactorRequirement) : null;
+  const raw = env.TWO_FACTOR_REQUIRED;
+  if (raw === undefined || raw.trim() === "") return null;
+  const value = raw
+    .trim()
+    .replace(/^(["'])(.*)\1$/, "$2")
+    .trim()
+    .toLowerCase();
+  if (TWO_FACTOR_REQUIRED_VALUES.includes(value as TwoFactorRequirement)) return value as TwoFactorRequirement;
+  if (!warnedValues.has(raw)) {
+    warnedValues.add(raw);
+    console.warn(
+      `TWO_FACTOR_REQUIRED is set to "${raw}" and ignored: use one of ${TWO_FACTOR_REQUIRED_VALUES.join(", ")}.`
+    );
+  }
+  return null;
 }
 
 /** For the settings page: the value the server forces, and a mark, so the select can show it is not the administrator's to change. */

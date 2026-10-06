@@ -1,12 +1,22 @@
 "use client";
 
 import type { ComponentProps } from "react";
-import { IconClock, IconEye, IconFolder, IconLink, IconLock, IconMail, IconTrash } from "@tabler/icons-react";
+import {
+  IconClock,
+  IconEye,
+  IconFolder,
+  IconLink,
+  IconLock,
+  IconMail,
+  IconTrash,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 import { useFormatter, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { LineList, LineRow, SubHeading } from "@/components/ui/line-list";
 import { Switch } from "@/components/ui/switch";
+import { usePickableGroups } from "@/hooks/use-pickable-groups";
 import type { Share } from "@/http/endpoints/shares/types";
 import { cn } from "@/lib/utils";
 import { getFileIcon } from "@/utils/file-icons";
@@ -99,6 +109,9 @@ export function AccessSection({ share, actions }: SectionProps) {
   const hasPassword = share.security?.hasPassword ?? false;
   const maxViews = share.security?.maxViews ?? null;
   const alias = share.alias?.alias;
+  const { groups } = usePickableGroups();
+  // Nothing to choose from, and not limited now: the row would only be noise.
+  const showGroupRow = !!share.group || groups.length > 0;
 
   return (
     <section className="mb-[26px]">
@@ -142,6 +155,17 @@ export function AccessSection({ share, actions }: SectionProps) {
             {t("shares.calm.change")}
           </TextAction>
         </LineRow>
+        {showGroupRow && (
+          <LineRow
+            icon={<IconUsersGroup stroke={1.8} />}
+            title={t("groups.access.label")}
+            sub={share.group ? t("groups.access.onlyMembers", { name: share.group.name }) : t("groups.access.anyone")}
+          >
+            <TextAction aria-label={t("groups.access.change")} onClick={() => actions.onGroup(share)}>
+              {t("shares.calm.change")}
+            </TextAction>
+          </LineRow>
+        )}
         <LineRow
           icon={<IconLink stroke={1.8} />}
           title={t("shares.calm.customLink")}

@@ -14,6 +14,8 @@ import type { Share } from "@/http/endpoints/shares/types";
 import { ShareDetail } from "./components/share-detail";
 import { NoSharesYet, ShareDetailSkeleton, ShareNotFound } from "./components/share-detail-states";
 import type { ShareDetailActions } from "./components/share-detail-types";
+import type { ShareView } from "./components/share-view-tabs";
+import { SharedWithMeView } from "./components/shared-with-me-view";
 import { SharesList } from "./components/shares-list";
 import { SharesModals } from "./components/shares-modals";
 import { useShareDetailActions } from "./hooks/use-share-detail-actions";
@@ -43,6 +45,7 @@ function SharesView() {
   const createModal = useDisclosure();
   const shareManager = useShareManager(loadShares);
   const detailActions = useShareDetailActions(loadShares);
+  const [view, setView] = useState<ShareView>("mine");
   const [filter, setFilter] = useState<ShareFilter>("all");
   const [query, setQuery] = useState("");
 
@@ -72,6 +75,7 @@ function SharesView() {
     onRemovePassword: detailActions.removePassword,
     onExpiration: shareManager.setShareToManageExpiration,
     onViewLimit: detailActions.setShareForViewLimit,
+    onGroup: detailActions.setShareForGroup,
     onLink: shareManager.setShareToGenerateLink,
     onRemoveItem: (share, item) => detailActions.setItemToRemove({ share, item }),
     onNotifications: detailActions.saveNotifications,
@@ -86,6 +90,14 @@ function SharesView() {
   ) : shownShare ? (
     <ShareDetail share={shownShare} smtpEnabled={smtpEnabled === "true"} actions={actions} />
   ) : null;
+
+  if (view === "shared") {
+    return (
+      <FileManagerLayout title={t("shares.pageTitle")} variant="bare">
+        <SharedWithMeView onViewChange={setView} />
+      </FileManagerLayout>
+    );
+  }
 
   return (
     <FileManagerLayout title={t("shares.pageTitle")} variant="bare">
@@ -110,6 +122,7 @@ function SharesView() {
             onBulkDownload={shareManager.handleBulkDownload}
             onBulkDelete={shareManager.handleBulkDelete}
             onRegisterClear={shareManager.setClearSelectionCallback}
+            onViewChange={setView}
           />
         }
         detail={detail}

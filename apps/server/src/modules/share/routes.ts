@@ -361,6 +361,7 @@ export async function shareRoutes(app: FastifyInstance) {
             hasPassword: z.boolean(),
             isExpired: z.boolean(),
             isMaxViewsReached: z.boolean(),
+            groupOnly: z.boolean().describe("The share is limited to a group: nothing of it is shown"),
           }),
           404: z.object({ error: z.string() }),
         },

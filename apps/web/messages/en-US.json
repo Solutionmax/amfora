@@ -51,6 +51,8 @@
       "accountSignInFailed": "Sign in failed",
       "activityCleared": "Cleared the log",
       "accountTwoFactorReset": "Reset two step sign in",
+      "accountGroupAdded": "Added to a group",
+      "accountGroupRemoved": "Removed from a group",
       "accountStorageAlmostFull": "Storage almost full",
       "other": "Something else happened"
     },
@@ -848,6 +850,79 @@
       "qrcode": "QR Code"
     }
   },
+  "groups": {
+    "tabs": {
+      "users": "Users",
+      "groups": "Groups"
+    },
+    "new": "New group",
+    "members": "{count, plural, one {# member} other {# members}}",
+    "shares": "{count, plural, one {# share} other {# shares}}",
+    "editGroup": "Edit {name}",
+    "deleteGroup": "Delete {name}",
+    "empty": {
+      "title": "No groups yet",
+      "text": "A group lets you limit a share to a set of people. Make one and add its members."
+    },
+    "modal": {
+      "titleNew": "New group",
+      "titleEdit": "Group {name}",
+      "description": "Members of a group can open the shares that are limited to it.",
+      "name": "Name",
+      "descriptionLabel": "Description (optional)",
+      "members": "{count, plural, one {# member} other {# members}}",
+      "noMembers": "Nobody in this group yet.",
+      "removeMember": "Remove {name} from the group",
+      "pickUser": "Choose a user",
+      "addMember": "Add",
+      "close": "Close",
+      "create": "Create group"
+    },
+    "delete": {
+      "title": "Delete {name}?",
+      "description": "The group and its list of members are removed. Nothing else is deleted.",
+      "confirm": "Delete group",
+      "inUse": "This group is used by {count, plural, one {# share} other {# shares}}. Set those shares back to anyone with the link, or move them to another group, first."
+    },
+    "messages": {
+      "created": "Group created",
+      "saved": "Group saved",
+      "deleted": "Group deleted"
+    },
+    "errors": {
+      "loadFailed": "Could not load the groups",
+      "nameTaken": "A group with this name already exists",
+      "saveFailed": "Could not save the group",
+      "memberFailed": "Could not change the members",
+      "deleteFailed": "Could not delete the group"
+    },
+    "access": {
+      "label": "Who can open it",
+      "anyone": "Anyone with the link",
+      "onlyMembers": "Only members of {name}",
+      "hint": "Mails to recipients stay the same, but the page asks them to sign in first.",
+      "title": "Who can open it",
+      "description": "Limit this share to the members of a group. They have to sign in to open it.",
+      "change": "Change who can open the share",
+      "saved": "Saved",
+      "error": "Could not save"
+    },
+    "sharedWithMe": {
+      "tabs": "Shares",
+      "mine": "My shares",
+      "tab": "Shared with me",
+      "intro": "Shares of other people that are limited to a group you are in.",
+      "empty": {
+        "title": "Nothing shared with you yet",
+        "text": "When someone limits a share to a group you are in, it shows up here."
+      },
+      "loadFailed": "Could not load the shares",
+      "open": "Open",
+      "from": "From {name}",
+      "ends": "Ends {date}",
+      "neverEnds": "No end date"
+    }
+  },
   "home": {
     "description": "Upload, share one link, and decide exactly how long it stays open. Runs on your own server, with nobody in between.",
     "documentation": "Documentation",
@@ -953,6 +1028,7 @@
     "empty": "Nothing new",
     "emptyHint": "News about your shares, receive links, secrets and storage shows up here.",
     "new": "New",
+    "more": "and {count} more, <link>see Activity</link>",
     "items": {
       "shareDownloaded": "Your share {subject} was downloaded",
       "receiveFilesReceived": "{count, plural, one {# file} other {# files}} came in on {subject}",
@@ -1221,6 +1297,15 @@
       "maxViews": {
         "title": "This link is used up.",
         "text": "It could be opened a limited number of times and that limit has been reached. Ask the sender for a new link."
+      },
+      "groupSignIn": {
+        "title": "Sign in to open this.",
+        "text": "This is shared with a group. Sign in with your account to see it.",
+        "action": "Sign in"
+      },
+      "groupMember": {
+        "title": "You are not a member.",
+        "text": "This is shared with the group {group} and you are not a member."
       }
     },
     "stage": {
@@ -3097,7 +3182,9 @@
     "signOut": "Sign out",
     "continue": "Continue",
     "continueHint": "Press this when you are done.",
-    "notYet": "Set up an authenticator app or a passkey first."
+    "notYet": "Set up an authenticator app or a passkey first.",
+    "textNoPasskeys": "This installation asks for a second step when you sign in. Use an authenticator app. Until then you can only use this page.",
+    "notYetNoPasskeys": "Set up an authenticator app first."
   },
   "ui": {
     "unsavedChanges": "Unsaved changes",

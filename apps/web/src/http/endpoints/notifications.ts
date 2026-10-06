@@ -19,6 +19,7 @@ export const listNotifications = async (): Promise<{ notifications: Notification
 export const countNotifications = async (): Promise<number> =>
   (await apiInstance.get<{ count: number }>("/api/notifications/count")).data.count;
 
-export const markNotificationsSeen = async (): Promise<void> => {
-  await apiInstance.post("/api/notifications/seen", {});
+/** Everything up to `upTo` (the createdAt of the newest line the panel showed) counts as seen. */
+export const markNotificationsSeen = async (upTo: string): Promise<void> => {
+  await apiInstance.post("/api/notifications/seen", { upTo });
 };

@@ -51,6 +51,8 @@
       "accountSignInFailed": "Connexion échouée",
       "activityCleared": "Journal vidé",
       "accountTwoFactorReset": "Connexion en deux étapes réinitialisée",
+      "accountGroupAdded": "Ajouté à un groupe",
+      "accountGroupRemoved": "Retiré d'un groupe",
       "accountStorageAlmostFull": "Stockage presque plein",
       "other": "Autre chose s'est produit"
     },
@@ -848,6 +850,79 @@
       "qrcode": "QR Code"
     }
   },
+  "groups": {
+    "tabs": {
+      "users": "Utilisateurs",
+      "groups": "Groupes"
+    },
+    "new": "Nouveau groupe",
+    "members": "{count, plural, one {# membre} other {# membres}}",
+    "shares": "{count, plural, one {# partage} other {# partages}}",
+    "editGroup": "Modifier {name}",
+    "deleteGroup": "Supprimer {name}",
+    "empty": {
+      "title": "Aucun groupe pour le moment",
+      "text": "Un groupe permet de limiter un partage à un cercle de personnes. Créez-en un et ajoutez ses membres."
+    },
+    "modal": {
+      "titleNew": "Nouveau groupe",
+      "titleEdit": "Groupe {name}",
+      "description": "Les membres d'un groupe peuvent ouvrir les partages qui lui sont réservés.",
+      "name": "Nom",
+      "descriptionLabel": "Description (facultatif)",
+      "members": "{count, plural, one {# membre} other {# membres}}",
+      "noMembers": "Personne dans ce groupe pour le moment.",
+      "removeMember": "Retirer {name} du groupe",
+      "pickUser": "Choisir un utilisateur",
+      "addMember": "Ajouter",
+      "close": "Fermer",
+      "create": "Créer le groupe"
+    },
+    "delete": {
+      "title": "Supprimer {name} ?",
+      "description": "Le groupe et sa liste de membres sont supprimés. Rien d'autre n'est supprimé.",
+      "confirm": "Supprimer le groupe",
+      "inUse": "Ce groupe est utilisé par {count, plural, one {# partage} other {# partages}}. Remettez d'abord ces partages sur « Toute personne avec le lien » ou déplacez-les vers un autre groupe."
+    },
+    "messages": {
+      "created": "Groupe créé",
+      "saved": "Groupe enregistré",
+      "deleted": "Groupe supprimé"
+    },
+    "errors": {
+      "loadFailed": "Impossible de charger les groupes",
+      "nameTaken": "Un groupe portant ce nom existe déjà",
+      "saveFailed": "Impossible d'enregistrer le groupe",
+      "memberFailed": "Impossible de modifier les membres",
+      "deleteFailed": "Impossible de supprimer le groupe"
+    },
+    "access": {
+      "label": "Qui peut l'ouvrir",
+      "anyone": "Toute personne avec le lien",
+      "onlyMembers": "Uniquement les membres de {name}",
+      "hint": "Les mails aux destinataires restent identiques, mais la page leur demande d'abord de se connecter.",
+      "title": "Qui peut l'ouvrir",
+      "description": "Limitez ce partage aux membres d'un groupe. Ils doivent se connecter pour l'ouvrir.",
+      "change": "Modifier qui peut ouvrir le partage",
+      "saved": "Enregistré",
+      "error": "Échec de l'enregistrement"
+    },
+    "sharedWithMe": {
+      "tabs": "Partages",
+      "mine": "Mes partages",
+      "tab": "Partagés avec moi",
+      "intro": "Partages d'autres personnes réservés à un groupe dont vous faites partie.",
+      "empty": {
+        "title": "Rien n'est partagé avec vous pour le moment",
+        "text": "Quand quelqu'un réserve un partage à un groupe dont vous faites partie, il apparaît ici."
+      },
+      "loadFailed": "Impossible de charger les partages",
+      "open": "Ouvrir",
+      "from": "De {name}",
+      "ends": "Se termine le {date}",
+      "neverEnds": "Pas de date de fin"
+    }
+  },
   "home": {
     "description": "Téléversez, partagez un lien unique et décidez exactement combien de temps il reste ouvert. Fonctionne sur votre propre serveur, sans aucun intermédiaire.",
     "documentation": "Documentation",
@@ -953,6 +1028,7 @@
     "empty": "Rien de nouveau",
     "emptyHint": "Les nouvelles de vos partages, liens de réception, secrets et de votre stockage apparaissent ici.",
     "new": "Nouveau",
+    "more": "et {count} de plus, <link>voir l'activité</link>",
     "items": {
       "shareDownloaded": "Votre partage {subject} a été téléchargé",
       "receiveFilesReceived": "{count, plural, one {# fichier est arrivé} other {# fichiers sont arrivés}} sur {subject}",
@@ -1221,6 +1297,15 @@
       "maxViews": {
         "title": "Ce lien est épuisé.",
         "text": "Il ne pouvait être ouvert qu'un nombre limité de fois et cette limite est atteinte. Demandez un nouveau lien à l'expéditeur."
+      },
+      "groupSignIn": {
+        "title": "Connectez-vous pour ouvrir ceci.",
+        "text": "Ceci est partagé avec un groupe. Connectez-vous avec votre compte pour le voir.",
+        "action": "Se connecter"
+      },
+      "groupMember": {
+        "title": "Vous n'êtes pas membre.",
+        "text": "Ceci est partagé avec le groupe {group} et vous n'en êtes pas membre."
       }
     },
     "stage": {
@@ -3097,7 +3182,9 @@
     "signOut": "Se déconnecter",
     "continue": "Continuer",
     "continueHint": "Appuyez ici quand vous avez terminé.",
-    "notYet": "Configurez d'abord une application d'authentification ou une clé d'accès."
+    "notYet": "Configurez d'abord une application d'authentification ou une clé d'accès.",
+    "textNoPasskeys": "Cette installation demande une seconde étape à la connexion. Utilisez une application d'authentification. D'ici là, vous ne pouvez utiliser que cette page.",
+    "notYetNoPasskeys": "Configurez d'abord une application d'authentification."
   },
   "ui": {
     "unsavedChanges": "Modifications non enregistrées",

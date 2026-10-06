@@ -93,6 +93,22 @@ providers.
   the reminder mail is on) and storage almost full. The new column `notificationsSeenAt` on the
   user is the only database change. API: `GET /notifications`, `GET /notifications/count`,
   `POST /notifications/seen`, each only for your own.
+- **Groups.** Administrators make groups on the Users page (the new Groups tab): create, rename,
+  delete, add and remove members. A share can be limited to one group under "Who can open it",
+  in the dialogs that make a share and in the share detail, and it shows as a small tag in the
+  list. A user can pick the groups they are a member of; an administrator can pick any. Such a
+  share opens only for a signed in member, its maker and administrators, on every route: the
+  share page, downloads, previews, folders, the embed route and the API (`/api/v1`, with the
+  user behind the key). A visitor who is not signed in is asked to sign in and comes back to the
+  share afterwards. Somebody who is signed in but not a member only learns the name of the group.
+  The link preview of such a share shows no name or text. A password still applies on top. The
+  new "Shared with me" tab on the Shares page lists the shares of other people that are limited
+  to your groups. Removing a user from a group takes the access away at once, also for a person
+  who opened the share a minute ago. A group that shares still use cannot be deleted: Amfora says
+  how many shares use it, and a share never falls back to "anyone with the link". Adding and
+  removing a member writes a line in that person's activity log; a member who opens or downloads
+  from a group share shows by name. Mails to recipients are unchanged, but the page asks them to
+  sign in first.
 
 ## Changed
 
@@ -142,7 +158,7 @@ providers.
 
 ## Upgrading
 
-Files and folders get an optional `deletedAt` column, and two new tables hold passkeys and their short lived challenges, all added by the first start. The first start also removes the setting of the switch, the
+Files and folders get an optional `deletedAt` column, and two new tables hold passkeys and their short lived challenges, all added by the first start. Two more tables hold groups and their members, and shares get an optional group; shares stay open to anyone with the link until somebody limits them. The first start also removes the setting of the switch, the
 sign-in providers that were never set up, and the old default font.
 
 With over the air updates, install 2.4.0 from the admin area. Otherwise set the version in your

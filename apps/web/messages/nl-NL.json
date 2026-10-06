@@ -42,7 +42,7 @@
       "receiveCreated": "Ontvangstlink gemaakt",
       "receiveDeleted": "Ontvangstlink verwijderd",
       "receiveFilesReceived": "{count, plural, one {# bestand} other {# bestanden}} gestuurd",
-      "receiveExpiring": "Een ontvanglink loopt bijna af",
+      "receiveExpiring": "Een ontvangstlink loopt bijna af",
       "secretCreated": "Geheim gemaakt",
       "secretDeleted": "Geheim verwijderd",
       "secretOpened": "Geheim geopend",
@@ -51,6 +51,8 @@
       "accountSignInFailed": "Inloggen mislukt",
       "activityCleared": "Logboek leeggemaakt",
       "accountTwoFactorReset": "Inloggen in twee stappen gereset",
+      "accountGroupAdded": "Aan een groep toegevoegd",
+      "accountGroupRemoved": "Uit een groep gehaald",
       "accountStorageAlmostFull": "Opslag bijna vol",
       "other": "Er gebeurde iets anders"
     },
@@ -848,6 +850,79 @@
       "qrcode": "QR Code"
     }
   },
+  "groups": {
+    "tabs": {
+      "users": "Gebruikers",
+      "groups": "Groepen"
+    },
+    "new": "Nieuwe groep",
+    "members": "{count, plural, one {# lid} other {# leden}}",
+    "shares": "{count, plural, one {# deellink} other {# deellinks}}",
+    "editGroup": "{name} bewerken",
+    "deleteGroup": "{name} verwijderen",
+    "empty": {
+      "title": "Nog geen groepen",
+      "text": "Met een groep beperk je een deellink tot een vaste kring van mensen. Maak er een en voeg de leden toe."
+    },
+    "modal": {
+      "titleNew": "Nieuwe groep",
+      "titleEdit": "Groep {name}",
+      "description": "Leden van een groep kunnen de deellinks openen die tot die groep beperkt zijn.",
+      "name": "Naam",
+      "descriptionLabel": "Omschrijving (optioneel)",
+      "members": "{count, plural, one {# lid} other {# leden}}",
+      "noMembers": "Nog niemand in deze groep.",
+      "removeMember": "{name} uit de groep halen",
+      "pickUser": "Kies een gebruiker",
+      "addMember": "Toevoegen",
+      "close": "Sluiten",
+      "create": "Groep maken"
+    },
+    "delete": {
+      "title": "{name} verwijderen?",
+      "description": "De groep en de ledenlijst worden verwijderd. Er wordt verder niets verwijderd.",
+      "confirm": "Groep verwijderen",
+      "inUse": "Deze groep wordt gebruikt door {count, plural, one {# deellink} other {# deellinks}}. Zet die eerst terug op iedereen met de link, of verplaats ze naar een andere groep."
+    },
+    "messages": {
+      "created": "Groep gemaakt",
+      "saved": "Groep opgeslagen",
+      "deleted": "Groep verwijderd"
+    },
+    "errors": {
+      "loadFailed": "De groepen konden niet worden geladen",
+      "nameTaken": "Er bestaat al een groep met deze naam",
+      "saveFailed": "De groep kon niet worden opgeslagen",
+      "memberFailed": "De leden konden niet worden aangepast",
+      "deleteFailed": "De groep kon niet worden verwijderd"
+    },
+    "access": {
+      "label": "Wie kan het openen",
+      "anyone": "Iedereen met de link",
+      "onlyMembers": "Alleen leden van {name}",
+      "hint": "Mails aan ontvangers blijven hetzelfde, maar de pagina vraagt hen eerst om in te loggen.",
+      "title": "Wie kan het openen",
+      "description": "Beperk deze deellink tot de leden van een groep. Zij moeten inloggen om hem te openen.",
+      "change": "Wijzig wie de deellink kan openen",
+      "saved": "Opgeslagen",
+      "error": "Opslaan is mislukt"
+    },
+    "sharedWithMe": {
+      "tabs": "Deellinks",
+      "mine": "Mijn deellinks",
+      "tab": "Met mij gedeeld",
+      "intro": "Deellinks van anderen die beperkt zijn tot een groep waar je in zit.",
+      "empty": {
+        "title": "Nog niets met je gedeeld",
+        "text": "Als iemand een deellink beperkt tot een groep waar je in zit, verschijnt die hier."
+      },
+      "loadFailed": "De deellinks konden niet worden geladen",
+      "open": "Openen",
+      "from": "Van {name}",
+      "ends": "Eindigt op {date}",
+      "neverEnds": "Geen einddatum"
+    }
+  },
   "home": {
     "description": "Upload, deel een link en bepaal precies hoelang die open blijft. Draait op je eigen server, zonder partij ertussen.",
     "documentation": "Documentatie",
@@ -951,14 +1026,15 @@
     "loading": "Laden",
     "error": "De meldingen konden niet worden geladen.",
     "empty": "Niets nieuws",
-    "emptyHint": "Nieuws over je delingen, ontvanglinks, geheimen en opslag verschijnt hier.",
+    "emptyHint": "Nieuws over je delingen, ontvangstlinks, geheimen en opslag verschijnt hier.",
     "new": "Nieuw",
+    "more": "en nog {count}, <link>zie Activiteit</link>",
     "items": {
       "shareDownloaded": "Je deling {subject} is gedownload",
       "receiveFilesReceived": "Er {count, plural, one {is # bestand} other {zijn # bestanden}} binnengekomen via {subject}",
       "secretOpened": "Je geheim {subject} is geopend",
       "shareExpiring": "Je deling {subject} loopt af {when}",
-      "receiveExpiring": "Je ontvanglink {subject} loopt af {when}",
+      "receiveExpiring": "Je ontvangstlink {subject} loopt af {when}",
       "accountStorageAlmostFull": "Je opslag is voor {percent}% vol",
       "other": "Er is iets gebeurd"
     }
@@ -1221,6 +1297,15 @@
       "maxViews": {
         "title": "Deze link is op.",
         "text": "Hij kon een beperkt aantal keren geopend worden en die limiet is bereikt. Vraag de afzender om een nieuwe link."
+      },
+      "groupSignIn": {
+        "title": "Log in om dit te openen.",
+        "text": "Dit is gedeeld met een groep. Log in met je account om het te zien.",
+        "action": "Inloggen"
+      },
+      "groupMember": {
+        "title": "Je bent geen lid.",
+        "text": "Dit is gedeeld met de groep {group} en je bent daar geen lid van."
       }
     },
     "stage": {
@@ -2236,7 +2321,7 @@
       },
       "shareDefaultExpiryDays": {
         "title": "Standaard looptijd van links",
-        "description": "De einddatum waarmee een nieuwe deellink of ontvanglink begint. 0 betekent geen."
+        "description": "De einddatum waarmee een nieuwe deellink of ontvangstlink begint. 0 betekent geen."
       },
       "shareMaxExpiryDays": {
         "title": "Maximale looptijd van links",
@@ -2248,7 +2333,7 @@
       },
       "expiredLinkRetentionDays": {
         "title": "Verlopen links opruimen na",
-        "description": "Deellinks en lege ontvanglinks worden zoveel dagen na hun einddatum verwijderd. Bestanden worden nooit verwijderd en een ontvanglink met bestanden blijft staan. 0 betekent nooit."
+        "description": "Deellinks en lege ontvangstlinks worden zoveel dagen na hun einddatum verwijderd. Bestanden worden nooit verwijderd en een ontvangstlink met bestanden blijft staan. 0 betekent nooit."
       }
     },
     "buttons": {
@@ -2348,7 +2433,7 @@
         },
         "linkLifetime": {
           "title": "Looptijd van links",
-          "description": "Hoe lang deellinks en ontvanglinks open mogen blijven."
+          "description": "Hoe lang deellinks en ontvangstlinks open mogen blijven."
         },
         "cleanUp": {
           "title": "Opruimen",
@@ -2402,7 +2487,7 @@
         },
         "notifyExpiryEnabled": {
           "title": "Herinneringen voor verlopen",
-          "description": "Makers kunnen een bericht vragen voordat een deling of ontvanglink verloopt."
+          "description": "Makers kunnen een bericht vragen voordat een deling of ontvangstlink verloopt."
         },
         "notifySecretOpenedEnabled": {
           "title": "Geheim geopend",
@@ -3097,7 +3182,9 @@
     "signOut": "Uitloggen",
     "continue": "Doorgaan",
     "continueHint": "Druk hierop als je klaar bent.",
-    "notYet": "Stel eerst een authenticator app of een passkey in."
+    "notYet": "Stel eerst een authenticator app of een passkey in.",
+    "textNoPasskeys": "Deze installatie vraagt om een tweede stap bij het inloggen. Gebruik een authenticator app. Tot die tijd kun je alleen deze pagina gebruiken.",
+    "notYetNoPasskeys": "Stel eerst een authenticator app in."
   },
   "ui": {
     "unsavedChanges": "Niet opgeslagen wijzigingen",

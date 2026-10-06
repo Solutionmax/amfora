@@ -4,6 +4,7 @@ import { prisma } from "../../shared/prisma";
 import { getSharePassword } from "../../shared/share-password";
 import { actorOf, recordRequestActivity, recordVisitorActivity } from "../activity/activity";
 import { grantShareDownload } from "../file/share-download-grant";
+import { callerOf, GroupRefusal, sendGroupRefusal, type Caller } from "../group/access";
 import {
   CreateShareSchema,
   UpdateShareItemsSchema,
@@ -12,6 +13,11 @@ import {
   UpdateShareSchema,
 } from "./dto";
 import { ShareService } from "./service";
+
+/** The member who opened a group share is the actor of the line; a visitor of an open share stays unnamed. */
+async function groupActor(caller: Caller | null, share: { groupId?: string | null }) {
+  return caller && share.groupId ? actorOf(caller.userId) : {};
+}
 
 export class ShareController {
   private shareService = new ShareService();
@@ -76,15 +82,10 @@ export class ShareController {
       const { shareId } = request.params as { shareId: string };
       const password = getSharePassword(request);
 
-      let userId: string | undefined;
-      try {
-        await request.jwtVerify();
-        userId = (request as any).user?.userId;
-      } catch (err) {
-        console.error(err);
-      }
+      const caller = await callerOf(request);
+      const userId = caller?.userId;
 
-      const share = await this.shareService.getShare(shareId, password, userId);
+      const share = await this.shareService.getShare(shareId, password, caller);
       await grantShareDownload(reply, share.id);
       // The maker looking at their own share is not a visit.
       if (share.creatorId !== userId) {
@@ -93,10 +94,12 @@ export class ShareController {
           ownerId: share.creatorId,
           subject: share.name,
           subjectId: share.id,
+          ...(await groupActor(caller, share)),
         });
       }
       return reply.send({ share });
     } catch (error: any) {
+      if (error instanceof GroupRefusal) return sendGroupRefusal(reply, error.verdict);
       if (error.message === "Invalid password") {
         await this.recordWrongPassword(request, { id: (request.params as { shareId: string }).shareId });
       }
@@ -303,16 +306,19 @@ export class ShareController {
       const { alias } = request.params as { alias: string };
       const password = getSharePassword(request);
 
-      const share = await this.shareService.getShareByAlias(alias, password);
+      const caller = await callerOf(request);
+      const share = await this.shareService.getShareByAlias(alias, password, caller);
       await grantShareDownload(reply, share.id);
       await recordVisitorActivity(request, {
         action: "share.opened",
         ownerId: share.creatorId,
         subject: share.name,
         subjectId: share.id,
+        ...(await groupActor(caller, share)),
       });
       return reply.send({ share });
     } catch (error: any) {
+      if (error instanceof GroupRefusal) return sendGroupRefusal(reply, error.verdict);
       if (error.message === "Invalid password") {
         await this.recordWrongPassword(request, { alias: { alias: (request.params as { alias: string }).alias } });
       }

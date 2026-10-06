@@ -13,6 +13,7 @@ export interface IShareRepository {
         folders: any[];
         recipients: { email: string }[];
         alias: { alias: string } | null;
+        group: { id: string; name: string } | null;
       })
     | null
   >;
@@ -82,6 +83,7 @@ export class PrismaShareRepository implements IShareRepository {
       where: { id },
       include: {
         alias: true,
+        group: { select: { id: true, name: true } },
         security: true,
         files: { where: notDeleted },
         folders: {
@@ -133,6 +135,7 @@ export class PrismaShareRepository implements IShareRepository {
       include: {
         share: {
           include: {
+            group: { select: { id: true, name: true } },
             security: true,
             files: { where: notDeleted },
             folders: {
@@ -289,6 +292,7 @@ export class PrismaShareRepository implements IShareRepository {
         creatorId: userId,
       },
       include: {
+        group: { select: { id: true, name: true } },
         security: true,
         files: { where: notDeleted },
         folders: {

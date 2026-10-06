@@ -21,6 +21,8 @@ model User {
   storageLimitBytes   BigInt?
   // When the user last opened the notifications. Lines of the activity log newer than this are new.
   notificationsSeenAt DateTime?
+  // Set when usage crossed 90 percent of the limit and the notification was written; cleared when usage is under it again.
+  storageAlertAt      DateTime?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
@@ -42,6 +44,7 @@ model User {
   authProviders  UserAuthProvider[]
   trustedDevices TrustedDevice[]
   passkeys       Passkey[]
+  groups         GroupMembership[]
 
   @@map("users")
 }
@@ -92,6 +95,11 @@ model Share {
   remindBeforeExpiry Boolean   @default(false)
   /// The end date a reminder was sent for, so a changed end date gets its own reminder.
   expiryReminderFor  DateTime?
+
+  /// When set, only members of this group (and the maker and administrators) may open the share.
+  /// Restrict: a group that shares still use cannot be removed, not even by a cascade.
+  groupId String?
+  group   Group?  @relation(fields: [groupId], references: [id], onDelete: Restrict)
 
   securityId String        @unique
   security   ShareSecurity @relation(fields: [securityId], references: [id])
@@ -490,4 +498,31 @@ model ActivityEvent {
   @@index([subjectId, createdAt])
   @@index([createdAt])
   @@map("activity_events")
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members GroupMembership[]
+  shares  Share[]
+
+  @@map("groups")
+}
+
+model GroupMembership {
+  id        String   @id @default(cuid())
+  groupId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId])
+  @@map("group_memberships")
 }

@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { GroupRefusalBodySchema } from "../group/access";
 import { FileController } from "./controller";
 import { CheckFileSchema, ListFilesSchema, MoveFileSchema, RegisterFileSchema, UpdateFileSchema } from "./dto";
 
@@ -125,7 +126,9 @@ export async function fileRoutes(app: FastifyInstance) {
           }),
           400: z.object({ error: z.string().describe("Error message") }),
           401: z.object({ error: z.string().describe("No access to the file") }),
-          403: z.object({ error: z.string().describe("Video or audio preview is switched off for download pages") }),
+          403: GroupRefusalBodySchema.describe(
+            "A video or audio preview is refused, or the share is limited to a group"
+          ),
           404: z.object({ error: z.string().describe("Error message") }),
           500: z.object({ error: z.string().describe("Error message") }),
         },

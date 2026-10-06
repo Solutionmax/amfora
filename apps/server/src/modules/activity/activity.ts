@@ -25,6 +25,8 @@ export const ACTIVITY_ACTIONS = [
   "account.signed_in",
   "account.sign_in_failed",
   "account.two_factor_reset",
+  "account.group_added",
+  "account.group_removed",
   "account.storage_almost_full",
   "activity.cleared",
 ] as const;

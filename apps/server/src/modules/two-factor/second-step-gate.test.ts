@@ -299,6 +299,41 @@ test("a public route with optional sign in does not see a gated session as signe
   assert.match(gated.json().error, /Password required/);
 });
 
+test("a gated bearer session token is no owner on a public route either", async () => {
+  await setRequirement("off");
+  const bearer = { headers: { authorization: `Bearer ${app.jwt.sign({ userId: "member", isAdmin: false })}` } };
+  const open = await app.inject({ method: "GET", url: "/shares/locked-share", ...bearer });
+  assert.equal(open.statusCode, 200, open.body);
+  await setRequirement("all");
+  const gated = await app.inject({ method: "GET", url: "/shares/locked-share", ...bearer });
+  assert.equal(gated.statusCode, 400, gated.body);
+  assert.match(gated.json().error, /Password required/);
+});
+
+test("a gated owner gets what a visitor gets on the file download routes, not the owner's access", async () => {
+  await setRequirement("off");
+  await prisma.file.create({
+    data: { name: "mine", extension: "txt", size: 1n, objectName: "member/gate-file", userId: "member" },
+  });
+  const urls = ["/files/download-url?objectName=member%2Fgate-file", "/files/download?objectName=member%2Fgate-file"];
+  for (const url of urls) {
+    const owner = await app.inject({ method: "GET", url, ...as("member") });
+    assert.notEqual(owner.statusCode, 401, `${url} the owner is let in: ${owner.body}`);
+    assert.notEqual(owner.statusCode, 403, owner.body);
+  }
+  await setRequirement("all");
+  for (const url of urls) {
+    const gated = await app.inject({ method: "GET", url, ...as("member") });
+    assert.equal(gated.statusCode, 401, `${url} ${gated.body}`);
+    const viaBearer = await app.inject({
+      method: "GET",
+      url,
+      headers: { authorization: `Bearer ${app.jwt.sign({ userId: "member", isAdmin: false })}` },
+    });
+    assert.equal(viaBearer.statusCode, 401, `${url} bearer ${viaBearer.body}`);
+  }
+});
+
 async function withServerSetting(value: string | undefined, work: () => Promise<void>) {
   const saved = env.TWO_FACTOR_REQUIRED;
   env.TWO_FACTOR_REQUIRED = value;
@@ -328,6 +363,54 @@ test("an unknown TWO_FACTOR_REQUIRED is ignored and the stored setting counts", 
   await withServerSetting("", async () => assert.equal(await isGated("member"), true));
   await setRequirement("off");
   await withServerSetting("sometimes", async () => assert.equal(await isGated("member"), false));
+});
+
+test("TWO_FACTOR_REQUIRED is read without case, spaces or quotes, and a bad value is warned about once", async () => {
+  await setRequirement("all");
+  for (const value of ["OFF", " Off ", '"off"', "'off'", ' " OFF " ']) {
+    await withServerSetting(value, async () => assert.equal(await isGated("member"), false, value));
+  }
+  const warnings: string[] = [];
+  const warn = console.warn;
+  console.warn = (...args: unknown[]) => void warnings.push(args.join(" "));
+  try {
+    await withServerSetting("never-heard-of-it", async () => {
+      await isGated("member");
+      await isGated("member");
+    });
+    await withServerSetting("OFF", async () => void (await isGated("member")));
+  } finally {
+    console.warn = warn;
+  }
+  assert.equal(warnings.length, 1, warnings.join("|"));
+  assert.match(warnings[0], /TWO_FACTOR_REQUIRED/);
+});
+
+test("a single and a bulk update answer with the value the server forces, the same way", async () => {
+  await setRequirement("off");
+  await prisma.user.update({ where: { id: "admin" }, data: { twoFactorEnabled: true } });
+  await withServerSetting("all", async () => {
+    const single = await app.inject({
+      method: "PATCH",
+      url: "/app/configs/twoFactorRequired",
+      ...as("admin"),
+      payload: { value: "admins" },
+    });
+    assert.equal(single.statusCode, 200, single.body);
+    const bulk = await app.inject({
+      method: "PATCH",
+      url: "/app/configs",
+      ...as("admin"),
+      payload: [{ key: "twoFactorRequired", value: "admins" }],
+    });
+    assert.equal(bulk.statusCode, 200, bulk.body);
+    const [fromBulk] = bulk.json().configs;
+    assert.equal(single.json().config.value, "all");
+    assert.equal(single.json().config.lockedByServer, true);
+    assert.equal(single.json().config.value, fromBulk.value);
+    assert.equal(single.json().config.lockedByServer, fromBulk.lockedByServer);
+  });
+  await prisma.user.update({ where: { id: "admin" }, data: { twoFactorEnabled: false } });
 });
 
 test("the administrator sees which value the server forces, and /auth/me follows it", async () => {

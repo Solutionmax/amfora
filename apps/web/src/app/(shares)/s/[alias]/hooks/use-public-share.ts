@@ -73,7 +73,8 @@ export function usePublicShare() {
   const [password, setPassword] = useState("");
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
-  const [reason, setReason] = useState<"missing" | "expired" | "maxViews">("missing");
+  const [reason, setReason] = useState<"missing" | "expired" | "maxViews" | "groupSignIn" | "groupMember">("missing");
+  const [groupName, setGroupName] = useState("");
 
   const [browseState, setBrowseState] = useState<ShareBrowseState>({
     folders: [],
@@ -107,6 +108,13 @@ export function usePublicShare() {
           setShare(null);
         } else if (error.response?.data?.error === "Invalid password") {
           setIsPasswordError(true);
+        } else if (error.response?.data?.code === "GROUP_SIGN_IN_REQUIRED") {
+          setReason("groupSignIn");
+          setShare(null);
+        } else if (error.response?.data?.code === "GROUP_NOT_MEMBER") {
+          setReason("groupMember");
+          setGroupName(String(error.response.data.group?.name ?? ""));
+          setShare(null);
         } else {
           const message = String(error.response?.data?.error || "");
           setReason(/expired/i.test(message) ? "expired" : /maximum views/i.test(message) ? "maxViews" : "missing");
@@ -555,6 +563,7 @@ export function usePublicShare() {
     isPasswordModalOpen,
     isPasswordError,
     reason,
+    groupName,
     setPassword,
     handlePasswordSubmit,
     handleDownload,

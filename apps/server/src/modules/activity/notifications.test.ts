@@ -56,6 +56,13 @@ const get = (userId: string, url: string) => app.inject({ method: "GET", url, co
 const listOf = async (userId: string) =>
   (await get(userId, "/notifications")).json() as { notifications: Array<Record<string, any>>; unseen: number };
 const countOf = async (userId: string) => (await get(userId, "/notifications/count")).json().count as number;
+const markSeen = (userId: string, upTo?: string) =>
+  app.inject({
+    method: "POST",
+    url: "/notifications/seen",
+    cookies: session(userId),
+    payload: upTo === undefined ? {} : { upTo },
+  });
 const line = (ownerId: string, action: string, extra: object = {}) =>
   prisma.activityEvent.create({ data: { kind: action.split(".")[0], action, ownerId, subject: "Thing", ...extra } });
 
@@ -95,10 +102,7 @@ test("what a user did to their own link is not a notification, what somebody els
 test("opening marks everything seen for that user only, and newer lines count again", async () => {
   const first = await listOf("alice");
   assert.ok(first.notifications.every((n) => n.isNew));
-  assert.equal(
-    (await app.inject({ method: "POST", url: "/notifications/seen", cookies: session("alice") })).statusCode,
-    200
-  );
+  assert.equal((await markSeen("alice", first.notifications[0].createdAt)).statusCode, 200);
   assert.equal(await countOf("alice"), 0);
   assert.equal(await countOf("bob"), 2, "bob has not looked");
   const again = await listOf("alice");
@@ -190,7 +194,7 @@ test("storage almost full is told when usage crosses 90 percent, once until it d
         userId: "bob",
       },
     });
-    await notifications.noteStorageGrowth("bob", size);
+    await notifications.noteStorageUsage("bob");
   };
 
   await add(500);
@@ -214,9 +218,121 @@ test("storage almost full is told when usage crosses 90 percent, once until it d
 
 test("a user without a limit never gets the storage line", async () => {
   await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: "0" } });
-  await notifications.noteStorageGrowth("alice", 5);
+  await notifications.noteStorageUsage("alice");
   assert.equal(
     await prisma.activityEvent.count({ where: { action: "account.storage_almost_full", ownerId: "alice" } }),
     0
   );
+});
+
+test("seen needs the time of the newest line the panel showed", async () => {
+  assert.equal((await markSeen("alice")).statusCode, 400);
+  assert.equal((await markSeen("alice", "not a date")).statusCode, 400);
+});
+
+test("a line written after the list was read stays new", async () => {
+  await prisma.user.create({
+    data: { id: "dave", firstName: "d", lastName: "d", username: "dave", email: "dave@example.test" },
+  });
+  await line("dave", "share.downloaded", { createdAt: new Date(Date.now() - 2000) });
+  const shown = await listOf("dave");
+  assert.equal(shown.notifications.length, 1);
+  // Arrives while the panel is opening: after the list was read, before "seen" is sent.
+  await line("dave", "secret.opened", { createdAt: new Date(Date.now() - 1000) });
+  assert.equal((await markSeen("dave", shown.notifications[0].createdAt)).statusCode, 200);
+  assert.equal(await countOf("dave"), 1, "the late line is still new");
+});
+
+test("seen moves forward only, never past now", async () => {
+  const seenOf = async (id: string) =>
+    (await prisma.user.findUniqueOrThrow({ where: { id }, select: { notificationsSeenAt: true } }))
+      .notificationsSeenAt as Date;
+  const before = Date.now();
+  await markSeen("dave", new Date(before + 3_600_000).toISOString());
+  const afterFuture = await seenOf("dave");
+  assert.ok(afterFuture.getTime() <= Date.now(), "a time in the future is cut to now");
+  assert.ok(afterFuture.getTime() >= before);
+
+  await markSeen("dave", new Date(before - 3_600_000).toISOString());
+  assert.equal((await seenOf("dave")).getTime(), afterFuture.getTime(), "an older time never moves it back");
+});
+
+test("the count of new lines is all of them, also when the list shows twenty", async () => {
+  await prisma.user.create({
+    data: { id: "erin", firstName: "e", lastName: "e", username: "erin", email: "erin@example.test" },
+  });
+  await prisma.activityEvent.createMany({
+    data: Array.from({ length: 23 }, (_, i) => ({
+      kind: "share",
+      action: "share.downloaded",
+      ownerId: "erin",
+      subject: `e${i}`,
+      createdAt: new Date(Date.now() - 60_000 + i),
+    })),
+  });
+  const { notifications, unseen } = await listOf("erin");
+  assert.equal(notifications.length, 20);
+  assert.equal(unseen, 23);
+});
+
+test("a receive link that was switched off is not announced as ending", async () => {
+  const day = 86_400_000;
+  const off = await prisma.reverseShare.create({
+    data: { name: "Switched off", creatorId: "alice", isActive: false, expiration: new Date(Date.now() + day) },
+  });
+  await notifications.noteExpiringLinks();
+  assert.equal(await prisma.activityEvent.count({ where: { action: "receive.expiring", subjectId: off.id } }), 0);
+});
+
+test("an API key is refused on the notification routes", async () => {
+  for (const scope of ["read", "full"]) {
+    const created = await app.inject({
+      method: "POST",
+      url: "/api-keys",
+      cookies: session("alice"),
+      payload: { name: `k-${scope}`, scope },
+    });
+    assert.equal(created.statusCode, 201, created.body);
+    const headers = { authorization: `Bearer ${created.json().token}` };
+    for (const [method, url] of [
+      ["GET", "/notifications"],
+      ["GET", "/notifications/count"],
+      ["POST", "/notifications/seen"],
+    ] as const) {
+      const res = await app.inject({ method, url, headers, payload: method === "POST" ? {} : undefined });
+      assert.equal(res.statusCode, 403, `${scope} ${method} ${url}: ${res.body}`);
+    }
+  }
+});
+
+test("two files registered at the same moment give exactly one storage line", async () => {
+  await prisma.user.create({
+    data: {
+      id: "gina",
+      firstName: "g",
+      lastName: "g",
+      username: "gina",
+      email: "gina@example.test",
+      storageLimitBytes: 1000n,
+    },
+  });
+  for (const size of [450, 460]) {
+    await prisma.file.create({
+      data: { name: `g${size}`, extension: "txt", size: BigInt(size), objectName: `gina/${size}`, userId: "gina" },
+    });
+  }
+  await Promise.all([notifications.noteStorageUsage("gina"), notifications.noteStorageUsage("gina")]);
+  const lines = () => prisma.activityEvent.count({ where: { ownerId: "gina", action: "account.storage_almost_full" } });
+  assert.equal(await lines(), 1);
+  await notifications.noteStorageUsage("gina");
+  assert.equal(await lines(), 1, "still over: not again");
+
+  await prisma.file.deleteMany({ where: { userId: "gina", size: 460n } });
+  await notifications.noteStorageUsage("gina");
+  assert.equal((await prisma.user.findUniqueOrThrow({ where: { id: "gina" } })).storageAlertAt, null);
+  await prisma.file.create({
+    data: { name: "g500", extension: "txt", size: 500n, objectName: "gina/500", userId: "gina" },
+  });
+  await notifications.noteStorageUsage("gina");
+  assert.equal(await lines(), 2, "dropped below and crossed again");
 });

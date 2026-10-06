@@ -159,7 +159,11 @@ export function ShareDetailsModal({
               <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                 {share && (
                   <>
-                    <LinkTags expiration={share.expiration} hasPassword={share.security?.hasPassword ?? false} />
+                    <LinkTags
+                      expiration={share.expiration}
+                      hasPassword={share.security?.hasPassword ?? false}
+                      groupName={share.group?.name}
+                    />
                     <span>
                       ·{" "}
                       {t("shares.calm.created", {

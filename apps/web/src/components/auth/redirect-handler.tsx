@@ -7,7 +7,7 @@ import { isPublicPath } from "@/components/auth/paths/public-paths";
 import { unauthenticatedOnlyPaths } from "@/components/auth/paths/unahthenticated-only-paths";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useAuth } from "@/contexts/auth-context";
-import { SETUP_PAGE, setupUrl } from "@/lib/two-factor-setup";
+import { safeNext, SETUP_PAGE, setupUrl } from "@/lib/two-factor-setup";
 
 interface RedirectHandlerProps {
   children: React.ReactNode;
@@ -33,7 +33,8 @@ export function RedirectHandler({ children }: RedirectHandlerProps) {
     }
     if (isAuthenticated === true) {
       if (unauthenticatedOnlyPaths.some((path) => pathname.startsWith(path)) || homePaths.includes(pathname)) {
-        router.replace("/dashboard");
+        // A page that sent the visitor to sign in gets them back, when it is a path on this site.
+        router.replace(safeNext(new URLSearchParams(window.location.search).get("next")));
         return;
       }
     } else if (isAuthenticated === false) {

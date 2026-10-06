@@ -51,6 +51,8 @@
       "accountSignInFailed": "Inicio de sesión fallido",
       "activityCleared": "Registro vaciado",
       "accountTwoFactorReset": "Inicio de sesión en dos pasos restablecido",
+      "accountGroupAdded": "Añadido a un grupo",
+      "accountGroupRemoved": "Quitado de un grupo",
       "accountStorageAlmostFull": "Almacenamiento casi lleno",
       "other": "Pasó otra cosa"
     },
@@ -848,6 +850,79 @@
       "qrcode": "Código QR"
     }
   },
+  "groups": {
+    "tabs": {
+      "users": "Usuarios",
+      "groups": "Grupos"
+    },
+    "new": "Nuevo grupo",
+    "members": "{count, plural, one {# miembro} other {# miembros}}",
+    "shares": "{count, plural, one {# enlace compartido} other {# enlaces compartidos}}",
+    "editGroup": "Editar {name}",
+    "deleteGroup": "Eliminar {name}",
+    "empty": {
+      "title": "Todavía no hay grupos",
+      "text": "Un grupo permite limitar un enlace compartido a un círculo de personas. Crea uno y añade a sus miembros."
+    },
+    "modal": {
+      "titleNew": "Nuevo grupo",
+      "titleEdit": "Grupo {name}",
+      "description": "Los miembros de un grupo pueden abrir los enlaces compartidos limitados a ese grupo.",
+      "name": "Nombre",
+      "descriptionLabel": "Descripción (opcional)",
+      "members": "{count, plural, one {# miembro} other {# miembros}}",
+      "noMembers": "Todavía no hay nadie en este grupo.",
+      "removeMember": "Quitar a {name} del grupo",
+      "pickUser": "Elige un usuario",
+      "addMember": "Añadir",
+      "close": "Cerrar",
+      "create": "Crear grupo"
+    },
+    "delete": {
+      "title": "¿Eliminar {name}?",
+      "description": "Se eliminan el grupo y su lista de miembros. No se elimina nada más.",
+      "confirm": "Eliminar grupo",
+      "inUse": "Este grupo lo usan {count, plural, one {# enlace compartido} other {# enlaces compartidos}}. Primero vuelve a ponerlos en «Cualquiera con el enlace» o muévelos a otro grupo."
+    },
+    "messages": {
+      "created": "Grupo creado",
+      "saved": "Grupo guardado",
+      "deleted": "Grupo eliminado"
+    },
+    "errors": {
+      "loadFailed": "No se pudieron cargar los grupos",
+      "nameTaken": "Ya existe un grupo con este nombre",
+      "saveFailed": "No se pudo guardar el grupo",
+      "memberFailed": "No se pudieron cambiar los miembros",
+      "deleteFailed": "No se pudo eliminar el grupo"
+    },
+    "access": {
+      "label": "Quién puede abrirlo",
+      "anyone": "Cualquiera con el enlace",
+      "onlyMembers": "Solo los miembros de {name}",
+      "hint": "Los correos a los destinatarios no cambian, pero la página les pedirá primero que inicien sesión.",
+      "title": "Quién puede abrirlo",
+      "description": "Limita este enlace a los miembros de un grupo. Tendrán que iniciar sesión para abrirlo.",
+      "change": "Cambiar quién puede abrir el enlace",
+      "saved": "Guardado",
+      "error": "No se pudo guardar"
+    },
+    "sharedWithMe": {
+      "tabs": "Enlaces compartidos",
+      "mine": "Mis enlaces",
+      "tab": "Compartido conmigo",
+      "intro": "Enlaces de otras personas limitados a un grupo del que formas parte.",
+      "empty": {
+        "title": "Todavía no han compartido nada contigo",
+        "text": "Cuando alguien limite un enlace a un grupo del que formas parte, aparecerá aquí."
+      },
+      "loadFailed": "No se pudieron cargar los enlaces",
+      "open": "Abrir",
+      "from": "De {name}",
+      "ends": "Termina el {date}",
+      "neverEnds": "Sin fecha de fin"
+    }
+  },
   "home": {
     "description": "Sube, comparte un enlace y decide exactamente cuánto tiempo permanece abierto. Funciona en tu propio servidor, sin nadie en medio.",
     "documentation": "Documentación",
@@ -953,6 +1028,7 @@
     "empty": "Nada nuevo",
     "emptyHint": "Las novedades de tus comparticiones, enlaces de recepción, secretos y almacenamiento aparecen aquí.",
     "new": "Nuevo",
+    "more": "y {count} más, <link>ver Actividad</link>",
     "items": {
       "shareDownloaded": "Tu compartición {subject} se ha descargado",
       "receiveFilesReceived": "{count, plural, one {Ha llegado # archivo} other {Han llegado # archivos}} a {subject}",
@@ -1221,6 +1297,15 @@
       "maxViews": {
         "title": "Este enlace se ha agotado.",
         "text": "Podía abrirse un número limitado de veces y se ha alcanzado ese límite. Pide a quien lo envió un enlace nuevo."
+      },
+      "groupSignIn": {
+        "title": "Inicia sesión para abrir esto.",
+        "text": "Esto está compartido con un grupo. Inicia sesión con tu cuenta para verlo.",
+        "action": "Iniciar sesión"
+      },
+      "groupMember": {
+        "title": "No eres miembro.",
+        "text": "Esto está compartido con el grupo {group} y no eres miembro."
       }
     },
     "stage": {
@@ -3097,7 +3182,9 @@
     "signOut": "Cerrar sesión",
     "continue": "Continuar",
     "continueHint": "Pulsa aquí cuando hayas terminado.",
-    "notYet": "Configura primero una aplicación de autenticación o una clave de acceso."
+    "notYet": "Configura primero una aplicación de autenticación o una clave de acceso.",
+    "textNoPasskeys": "Esta instalación pide un segundo paso al iniciar sesión. Usa una aplicación de autenticación. Hasta entonces solo puedes usar esta página.",
+    "notYetNoPasskeys": "Configura primero una aplicación de autenticación."
   },
   "ui": {
     "unsavedChanges": "Cambios sin guardar",

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 const MAX_SHOWN_COUNT = 99;
 
-type Panel = { state: "loading" } | { state: "error" } | { state: "ready"; items: Notification[] };
+type Panel = { state: "loading" } | { state: "error" } | { state: "ready"; items: Notification[]; unseen: number };
 
 /** One sentence for a notification. The server's own words are never shown. */
 function useSentence() {
@@ -83,10 +83,11 @@ export function NotificationBell({ className }: { className?: string }) {
   const open = () => {
     setPanel({ state: "loading" });
     listNotifications()
-      .then(({ notifications }) => {
-        setPanel({ state: "ready", items: notifications });
-        // Opening is looking: everything up to now counts as seen, the new ones stay marked in this panel.
-        return markNotificationsSeen().then(clear);
+      .then(({ notifications, unseen }) => {
+        setPanel({ state: "ready", items: notifications, unseen });
+        // Opening is looking: what the panel shows counts as seen (a line that came in meanwhile stays new).
+        if (notifications.length === 0) return undefined;
+        return markNotificationsSeen(notifications[0].createdAt).then(clear);
       })
       .catch(() => setPanel((current) => (current.state === "ready" ? current : { state: "error" })));
   };
@@ -141,6 +142,18 @@ export function NotificationBell({ className }: { className?: string }) {
               </li>
             ))}
           </ul>
+        )}
+        {panel.state === "ready" && panel.unseen > panel.items.filter((item) => item.isNew).length && (
+          <p className="border-t border-line px-3.5 py-2.5 text-[12px] text-ink-3">
+            {t.rich("more", {
+              count: panel.unseen - panel.items.filter((item) => item.isNew).length,
+              link: (chunks) => (
+                <Link href="/activity" className="text-primary underline-offset-2 hover:underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

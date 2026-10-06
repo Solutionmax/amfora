@@ -39,3 +39,13 @@ test("a user who must set up lands on the set up page first", () => {
   assert.equal(landingFor({ twoFactorSetupRequired: false }), "/dashboard");
   assert.equal(landingFor(null), "/dashboard");
 });
+
+test("a user who signed in from a share lands back on it, and only ever on a path of this site", () => {
+  assert.equal(landingFor({ twoFactorSetupRequired: false }, "/s/finance-plan"), "/s/finance-plan");
+  assert.equal(landingFor(null, "https://evil.example/s/x"), "/dashboard");
+  assert.equal(landingFor(null, "//evil.example"), "/dashboard");
+  assert.equal(
+    landingFor({ twoFactorSetupRequired: true }, "/s/finance-plan"),
+    "/two-factor-setup?next=%2Fs%2Ffinance-plan"
+  );
+});

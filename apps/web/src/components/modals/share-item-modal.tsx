@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import QRCode from "react-qr-code";
 import { toast } from "sonner";
 
+import { GroupAccessField } from "@/components/general/group-access-field";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -69,6 +70,7 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
     expiresAt: "",
     isPasswordProtected: false,
     maxViews: "",
+    groupId: null as string | null,
   });
   const [alias, setAlias] = useState(() => generateCustomId());
   const [generatedLink, setGeneratedLink] = useState("");
@@ -89,6 +91,7 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
         expiresAt: "",
         isPasswordProtected: false,
         maxViews: "",
+        groupId: null,
       });
       setAlias(generateCustomId());
       setStep("create");
@@ -158,6 +161,7 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
         password: formData.isPasswordProtected ? formData.password : undefined,
         expiration: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : undefined,
         maxViews: formData.maxViews ? parseInt(formData.maxViews) : undefined,
+        groupId: formData.groupId,
         files: filesToShare,
         folders: foldersToShare,
       });
@@ -180,6 +184,7 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
       expiresAt: "",
       isPasswordProtected: false,
       maxViews: "",
+      groupId: null,
     });
   };
 
@@ -235,6 +240,7 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
         expiresAt: "",
         isPasswordProtected: false,
         maxViews: "",
+        groupId: null,
       });
     }, 300);
   };
@@ -312,6 +318,12 @@ export function ShareItemModal({ isOpen, file, folder, onClose, onSuccess }: Sha
                 />
               </Field>
             </div>
+            <GroupAccessField
+              id="share-item-group"
+              value={formData.groupId}
+              enabled={isOpen}
+              onChange={(groupId) => setFormData((prev) => ({ ...prev, groupId }))}
+            />
             <label htmlFor="share-item-password-on" className="flex cursor-pointer items-center gap-3.5">
               <span className="min-w-0 flex-1">
                 <span className="block font-semibold">{t("shares.calm.password")}</span>

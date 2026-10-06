@@ -21,6 +21,7 @@ export interface ShareDetailActions {
   onRemovePassword: (share: Share) => void;
   onExpiration: (share: Share) => void;
   onViewLimit: (share: Share) => void;
+  onGroup: (share: Share) => void;
   onLink: (share: Share) => void;
   onRemoveItem: (share: Share, item: ShareItemRef) => void;
   /** Resolves to false when the change could not be saved. */

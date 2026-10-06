@@ -10,10 +10,11 @@ import {
   parseFileName,
 } from "../../utils/file-name-generator";
 import { getContentType } from "../../utils/mime-types";
-import { recordVisitorActivity } from "../activity/activity";
-import { noteStorageGrowth } from "../activity/notifications";
+import { actorOf, recordVisitorActivity } from "../activity/activity";
+import { noteStorageUsage } from "../activity/notifications";
 import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
+import { callerOf, readableShares, sendGroupRefusal, type Caller } from "../group/access";
 import { storageLimitOf } from "../storage/limit";
 import { moveFileToTrash } from "../trash/service";
 import { dispositionFor } from "./disposition";
@@ -60,14 +61,15 @@ export class FileController {
     request: FastifyRequest,
     file: { id: string; name: string; downloads: number },
     shares: Array<{ id: string }>,
-    admitted: ReadonlySet<string>
+    admitted: ReadonlySet<string>,
+    caller: Caller | null
   ) {
     try {
       const through = shares.find((share) => admitted.has(share.id)) ?? shares[0];
       if (!through) return;
       const share = await prisma.share.findUnique({
         where: { id: through.id },
-        select: { id: true, name: true, creatorId: true, notifyOnDownload: true },
+        select: { id: true, name: true, creatorId: true, notifyOnDownload: true, groupId: true },
       });
       if (!share) return;
       const place = await recordVisitorActivity(request, {
@@ -77,6 +79,8 @@ export class FileController {
         // The file is part of what makes a download its own line: three files, three lines.
         subjectId: share.id,
         detail: file.name,
+        // A member of a group share is known by name; a visitor of an open share stays unnamed.
+        ...(caller && share.groupId ? await actorOf(caller.userId) : {}),
       });
       void afterShareDownload({
         share,
@@ -107,7 +111,7 @@ export class FileController {
             : []),
         ],
       },
-      include: { security: true },
+      include: { security: true, group: { select: { id: true, name: true } } },
     });
   }
 
@@ -196,7 +200,7 @@ export class FileController {
         },
       });
 
-      await noteStorageGrowth(userId, fileRecord.size);
+      await noteStorageUsage(userId);
 
       const fileResponse = {
         id: fileRecord.id,
@@ -302,7 +306,9 @@ export class FileController {
 
       let hasAccess = false;
 
-      const shares = await this.getSharesForFile(fileRecord);
+      const caller = await callerOf(request);
+      const { readable: shares, refusal } = readableShares(await this.getSharesForFile(fileRecord), caller);
+      if (refusal) return sendGroupRefusal(reply, refusal);
 
       const admittedViews = new Set<string>();
       for (const share of shares) {
@@ -318,11 +324,7 @@ export class FileController {
       }
       hasAccess = await canDownloadFromShares(shares, password, admittedViews);
 
-      let requesterId: string | null = null;
-      try {
-        await request.jwtVerify();
-        requesterId = (request as any).user?.userId ?? null;
-      } catch (err) {}
+      const requesterId = caller?.userId ?? null;
 
       if (!hasAccess && requesterId && fileRecord.userId === requesterId) {
         hasAccess = true;
@@ -354,7 +356,7 @@ export class FileController {
         await prisma.file
           .update({ where: { id: fileRecord.id }, data: { downloads: { increment: 1 } } })
           .catch((error) => console.error("Error counting download:", error));
-        await this.recordShareDownload(request, fileRecord, shares, admittedViews);
+        await this.recordShareDownload(request, fileRecord, shares, admittedViews, caller);
       }
 
       return reply.send({ url, expiresIn: expires });
@@ -423,7 +425,9 @@ export class FileController {
 
       let hasAccess = false;
 
-      const shares = await this.getSharesForFile(fileRecord);
+      const caller = await callerOf(request);
+      const { readable: shares, refusal } = readableShares(await this.getSharesForFile(fileRecord), caller);
+      if (refusal) return sendGroupRefusal(reply, refusal);
 
       const admittedViews = new Set<string>();
       for (const share of shares) {
@@ -439,11 +443,7 @@ export class FileController {
       }
       hasAccess = await canDownloadFromShares(shares, password, admittedViews);
 
-      let requesterId: string | null = null;
-      try {
-        await request.jwtVerify();
-        requesterId = (request as any).user?.userId ?? null;
-      } catch (err) {}
+      const requesterId = caller?.userId ?? null;
 
       if (!hasAccess && requesterId && fileRecord.userId === requesterId) {
         hasAccess = true;
@@ -468,7 +468,7 @@ export class FileController {
         await prisma.file
           .update({ where: { id: fileRecord.id }, data: { downloads: { increment: 1 } } })
           .catch((error) => console.error("Error counting download:", error));
-        await this.recordShareDownload(request, fileRecord, shares, admittedViews);
+        await this.recordShareDownload(request, fileRecord, shares, admittedViews, caller);
       }
 
       // Stream from S3/MinIO
@@ -697,6 +697,7 @@ export class FileController {
         include: {
           shares: {
             select: {
+              groupId: true,
               expiration: true,
               views: true,
               security: { select: { password: true, maxViews: true } },

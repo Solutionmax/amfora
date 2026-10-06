@@ -303,7 +303,11 @@ If the only administrator loses the authenticator while `twoFactorRequired` is o
 server with `TWO_FACTOR_REQUIRED=off` (the other values are `admins` and `all`). It wins over
 the setting in the database, and Settings then shows the select as set by the server
 configuration. Restart, sign in, repair the account (set up a new second step or reset it from the
-Users page), remove the variable and restart again. Any other value is ignored.
+Users page), remove the variable and restart again. Capitals, spaces and quotes around the value
+do not matter; any other value is ignored, and the server log says so at start.
+
+With Docker Compose, `docker compose restart` does not read the environment again: after you change
+`docker-compose.yaml` run `docker compose up -d`, which recreates the container.
 
 ### Security configuration
 

@@ -11,3 +11,4 @@ export * from "./invite";
 export * from "./api-keys";
 export * from "./secrets";
 export * from "./trash";
+export * from "./groups";

@@ -7,6 +7,7 @@
  * shared, or that sits behind a password, must stay unreachable here.
  */
 export interface EmbeddableShare {
+  groupId?: string | null;
   expiration: Date | null;
   views: number;
   security: { password: string | null; maxViews: number | null } | null;
@@ -14,6 +15,8 @@ export interface EmbeddableShare {
 
 export function isPubliclyEmbeddable(shares: EmbeddableShare[], now: Date = new Date()): boolean {
   return shares.some((share) => {
+    // The embed endpoint knows nobody, so a share limited to a group is never embedded.
+    if (share.groupId) return false;
     if (share.security?.password) return false;
     if (share.expiration && share.expiration < now) return false;
     if (share.security?.maxViews != null && share.views >= share.security.maxViews) return false;

@@ -13,6 +13,7 @@ import {
   IconShare,
   IconTrash,
   IconUpload,
+  IconUsersGroup,
   type Icon,
 } from "@tabler/icons-react";
 
@@ -38,6 +39,8 @@ const ICONS: Record<string, Icon> = {
   "account.signed_in": IconLogin2,
   "account.sign_in_failed": IconAlertTriangle,
   "account.two_factor_reset": IconLockOff,
+  "account.group_added": IconUsersGroup,
+  "account.group_removed": IconUsersGroup,
   "activity.cleared": IconEraser,
 };
 

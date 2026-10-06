@@ -13,6 +13,7 @@ import { LoadingScreen } from "@/components/layout/loading-screen";
 import { Button } from "@/components/ui/button";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { useAuth } from "@/contexts/auth-context";
+import { usePasskeysAvailable } from "@/hooks/use-passkeys-available";
 import { getCurrentUser, logout as logoutRequest } from "@/http/endpoints";
 import { safeNext } from "@/lib/two-factor-setup";
 
@@ -27,13 +28,14 @@ function SetupContent() {
   const { appName } = useAppInfo();
   const { setUser, setIsAdmin, logout } = useAuth();
   const [isChecking, setIsChecking] = useState(false);
+  const passkeysAvailable = usePasskeysAvailable();
 
   const handleContinue = async () => {
     setIsChecking(true);
     try {
       const { data } = await getCurrentUser();
       if (data?.user?.twoFactorSetupRequired) {
-        toast.error(t("twoFactorSetup.notYet"));
+        toast.error(t(passkeysAvailable ? "twoFactorSetup.notYet" : "twoFactorSetup.notYetNoPasskeys"));
         return;
       }
       if (data?.user) {
@@ -75,10 +77,12 @@ function SetupContent() {
         <h1 className="font-display text-[26px] font-bold tracking-[-0.02em] lg:text-[30px]">
           {t("twoFactorSetup.title")}
         </h1>
-        <p className="mt-2 text-ink-3">{t("twoFactorSetup.text")}</p>
+        <p className="mt-2 text-ink-3">
+          {t(passkeysAvailable ? "twoFactorSetup.text" : "twoFactorSetup.textNoPasskeys")}
+        </p>
         <div className="mt-8 [&>section:first-child]:border-t [&>section:first-child]:pt-7">
           <TwoFactorForm />
-          <PasskeysForm />
+          {passkeysAvailable && <PasskeysForm />}
         </div>
         <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-line pt-6">
           <Button onClick={() => void handleContinue()} disabled={isChecking}>

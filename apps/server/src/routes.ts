@@ -9,6 +9,7 @@ import { authProvidersRoutes } from "./modules/auth-providers/routes";
 import { authRoutes } from "./modules/auth/routes";
 import { fileRoutes } from "./modules/file/routes";
 import { folderRoutes } from "./modules/folder/routes";
+import { groupRoutes } from "./modules/group/routes";
 import { healthRoutes } from "./modules/health/routes";
 import { inviteRoutes } from "./modules/invite/routes";
 import { passkeyRoutes } from "./modules/passkey/routes";
@@ -36,6 +37,7 @@ export function registerRoutes(app: FastifyInstance) {
   app.register(userRoutes);
   app.register(folderRoutes);
   app.register(fileRoutes);
+  app.register(groupRoutes);
   app.register(shareRoutes);
   app.register(reverseShareRoutes);
   app.register(storageRoutes);
