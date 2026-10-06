@@ -34,8 +34,10 @@ export function useEventText() {
       }
       case "secret.destroyed":
         return t("details.destroyed");
+      case "account.signed_in":
+        return event.detail === "passkey" ? t("details.viaPasskey") : null;
       case "account.sign_in_failed":
-        return t("details.signInFailed");
+        return event.detail === "passkey" ? t("details.passkeyFailed") : t("details.signInFailed");
       default:
         return t.has(`actions.${actionKey(event.action)}`) ? null : event.action;
     }

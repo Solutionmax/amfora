@@ -5,6 +5,7 @@ import {
   IconEye,
   IconFlame,
   IconKey,
+  IconLockOff,
   IconLogin2,
   IconPoint,
   IconShare,
@@ -31,6 +32,7 @@ const ICONS: Record<string, Icon> = {
   "secret.destroyed": IconFlame,
   "account.signed_in": IconLogin2,
   "account.sign_in_failed": IconAlertTriangle,
+  "account.two_factor_reset": IconLockOff,
   "activity.cleared": IconEraser,
 };
 

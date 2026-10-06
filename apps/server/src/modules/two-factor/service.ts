@@ -11,6 +11,15 @@ interface BackupCode {
   used: boolean;
 }
 
+export class TwoFactorResetError extends Error {
+  constructor(
+    readonly status: 400 | 404,
+    message: string
+  ) {
+    super(message);
+  }
+}
+
 export class TwoFactorService {
   private configService = new ConfigService();
 
@@ -194,6 +203,25 @@ export class TwoFactorService {
     });
 
     return { success: true };
+  }
+
+  /**
+   * An administrator switches off the two step sign in of somebody else, for someone who lost
+   * the phone. The secret, the backup codes and the trusted devices go; passkeys stay.
+   */
+  async resetFor(targetId: string) {
+    const user = await prisma.user.findUnique({ where: { id: targetId }, select: { twoFactorEnabled: true } });
+    if (!user) throw new TwoFactorResetError(404, "User not found");
+    if (!user.twoFactorEnabled) throw new TwoFactorResetError(400, "Two step sign in is not switched on");
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: targetId },
+        data: { twoFactorEnabled: false, twoFactorSecret: null, twoFactorBackupCodes: null, twoFactorVerified: false },
+      }),
+      prisma.trustedDevice.deleteMany({ where: { userId: targetId } }),
+      prisma.loginChallenge.deleteMany({ where: { userId: targetId } }),
+    ]);
   }
 
   /**

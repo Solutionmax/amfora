@@ -14,6 +14,7 @@ const TONES: Record<string, EventTone> = {
   "secret.opened": "ok",
   "share.password_failed": "warn",
   "account.sign_in_failed": "bad",
+  "account.two_factor_reset": "warn",
   "secret.destroyed": "bad",
   "share.created": "accent",
   "secret.created": "accent",

@@ -397,6 +397,8 @@ export class AuthProvidersController {
       const jwt = await request.jwtSign({
         userId: result.user.id,
         isAdmin: result.user.isAdmin,
+        // The provider is responsible for the second step, so the requirement does not apply.
+        viaProvider: true,
       });
 
       this.setAuthCookie(reply, jwt, request.protocol === "https");

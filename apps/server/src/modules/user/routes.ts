@@ -125,6 +125,7 @@ export async function userRoutes(app: FastifyInstance) {
               image: z.string().nullable().describe("User profile image URL"),
               isAdmin: z.boolean().describe("User is admin"),
               isActive: z.boolean().describe("User is active"),
+              twoFactorEnabled: z.boolean().describe("User has two step sign in switched on"),
               storageLimitBytes: z
                 .number()
                 .nullable()
@@ -249,6 +250,28 @@ export async function userRoutes(app: FastifyInstance) {
       },
     },
     userController.activateUser.bind(userController)
+  );
+
+  app.post(
+    "/users/:id/two-factor/reset",
+    {
+      preValidation,
+      schema: {
+        tags: ["User"],
+        operationId: "resetUserTwoFactor",
+        summary: "Reset Two Step Sign In",
+        description: "Switch off the two step sign in of another user (admin only, never your own)",
+        params: z.object({ id: z.string().describe("User ID") }),
+        response: {
+          200: z.object({ success: z.boolean() }),
+          400: z.object({ error: z.string().describe("Error message") }),
+          401: z.object({ error: z.string().describe("Error message") }),
+          403: z.object({ error: z.string().describe("Error message") }),
+          404: z.object({ error: z.string().describe("Error message") }),
+        },
+      },
+    },
+    userController.resetTwoFactor.bind(userController)
   );
 
   app.patch(

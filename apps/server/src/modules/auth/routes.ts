@@ -172,6 +172,7 @@ export async function authRoutes(app: FastifyInstance) {
                 image: z.string().nullable().describe("User profile image URL"),
                 isAdmin: z.boolean().describe("User is admin"),
                 isActive: z.boolean().describe("User is active"),
+                twoFactorSetupRequired: z.boolean().describe("The user must set up a second step before anything else"),
                 createdAt: z.date().describe("User creation date"),
                 updatedAt: z.date().describe("User last update date"),
               }),
@@ -294,6 +295,7 @@ export async function authRoutes(app: FastifyInstance) {
         response: {
           200: z.object({
             passwordAuthEnabled: z.boolean().describe("Whether password authentication is enabled"),
+            passkeysAvailable: z.boolean().describe("Whether passkeys can work on this address (https or localhost)"),
           }),
           400: z.object({ error: z.string().describe("Error message") }),
         },

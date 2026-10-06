@@ -22,6 +22,7 @@ export const ACTIVITY_ACTIONS = [
   "secret.destroyed",
   "account.signed_in",
   "account.sign_in_failed",
+  "account.two_factor_reset",
   "activity.cleared",
 ] as const;
 export type ActivityAction = (typeof ACTIVITY_ACTIONS)[number];

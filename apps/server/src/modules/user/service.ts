@@ -51,7 +51,7 @@ export class UserService {
 
   async listUsers() {
     const users = await this.userRepository.listUsers();
-    return users.map((user) => UserResponseSchema.parse(user));
+    return users.map((user) => ({ ...UserResponseSchema.parse(user), twoFactorEnabled: user.twoFactorEnabled }));
   }
 
   async getUserById(id: string) {

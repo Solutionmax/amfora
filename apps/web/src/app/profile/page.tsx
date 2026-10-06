@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiKeysForm } from "./components/api-keys-form";
+import { PasskeysForm } from "./components/passkeys-form";
 import { PasswordForm } from "./components/password-form";
 import { ProfileForm } from "./components/profile-form";
 import { ProfileHead } from "./components/profile-head";
@@ -95,6 +96,7 @@ export default function ProfilePage() {
             onToggleNewPassword={() => profile.setIsNewPasswordVisible(!profile.isNewPasswordVisible)}
           />
           <TwoFactorForm />
+          <PasskeysForm />
           <ApiKeysForm />
         </div>
       </>

@@ -22,7 +22,10 @@ export const GROUP_LAYOUT: Record<string, readonly SettingsBlock[]> = {
     { id: "behaviour", rows: ["showHomePage", "firstUserAccess", "hideVersion"] },
   ],
   security: [
-    { id: "signingIn", rows: ["passwordAuthEnabled", ["passwordMinLength", "passwordResetTokenExpiration"]] },
+    {
+      id: "signingIn",
+      rows: ["passwordAuthEnabled", "twoFactorRequired", ["passwordMinLength", "passwordResetTokenExpiration"]],
+    },
     { id: "bruteForce", rows: [["maxLoginAttempts", "loginBlockDuration"]] },
     {
       id: "anonymousSecrets",
@@ -97,6 +100,9 @@ export const DAYS_FIELDS: readonly string[] = [
 
 /** How much of a visitor's place the activity log keeps. */
 export const ACTIVITY_PLACE_OPTIONS: readonly string[] = ["city", "country", "off"];
+
+/** Who has to set up a second step. The first is the installation default. */
+export const TWO_FACTOR_REQUIRED_OPTIONS: readonly string[] = ["off", "admins", "all"];
 
 /** Made by the server: shown to copy, never edited and never sent back. */
 export const READ_ONLY_FIELDS: readonly string[] = ["webhookSecret"];

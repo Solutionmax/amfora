@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { browserSupportsWebAuthn, startAuthentication } from "@simplewebauthn/browser";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -9,8 +10,10 @@ import { z } from "zod";
 
 import { useAuth } from "@/contexts/auth-context";
 import { getAuthConfig, getCurrentUser, login } from "@/http/endpoints";
+import { getPasskeyLoginOptions, verifyPasskeyLogin } from "@/http/endpoints/auth/passkeys";
 import { completeTwoFactorLogin } from "@/http/endpoints/auth/two-factor";
 import type { LoginResponse } from "@/http/endpoints/auth/two-factor/types";
+import { landingFor } from "@/lib/two-factor-setup";
 import { LoginFormValues } from "../schemas/schema";
 
 export const loginSchema = z.object({
@@ -34,6 +37,7 @@ export function useLogin() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordAuthEnabled, setPasswordAuthEnabled] = useState(true);
   const [authConfigLoading, setAuthConfigLoading] = useState(true);
+  const [passkeysAvailable, setPasskeysAvailable] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated === true) {
@@ -74,6 +78,8 @@ export function useLogin() {
       try {
         const response = await getAuthConfig();
         setPasswordAuthEnabled((response as any).data.passwordAuthEnabled);
+        // The server says whether the address allows passkeys; the browser says whether it can.
+        setPasskeysAvailable((response as any).data.passkeysAvailable === true && browserSupportsWebAuthn());
       } catch (error) {
         console.error("Failed to fetch auth config:", error);
         setPasswordAuthEnabled(true);
@@ -115,7 +121,7 @@ export function useLogin() {
             setUser(userData);
             setIsAdmin(isAdmin);
             setIsAuthenticated(true);
-            router.replace("/dashboard");
+            router.replace(landingFor(userResponse.data.user));
             return;
           }
         } catch (userErr) {
@@ -137,6 +143,29 @@ export function useLogin() {
       setIsAuthenticated(false);
       setUser(null);
       setIsAdmin(false);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  /** A passkey is a whole sign in: no password and no code. A cancelled prompt says nothing. */
+  const onPasskeySignIn = async () => {
+    setError(undefined);
+    setIsSubmitting(true);
+
+    try {
+      const options = await getPasskeyLoginOptions();
+      const answer = await startAuthentication({ optionsJSON: options });
+      await verifyPasskeyLogin(answer);
+      const { data } = await getCurrentUser();
+      if (!data?.user) throw new Error("No user after passkey sign in");
+      const { isAdmin, ...userData } = data.user;
+      setUser(userData);
+      setIsAdmin(isAdmin);
+      setIsAuthenticated(true);
+      router.replace(landingFor(data.user));
+    } catch (err) {
+      if ((err as { name?: string })?.name !== "NotAllowedError") setError(t("passkeys.errors.signInFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -166,7 +195,7 @@ export function useLogin() {
           setUser(userData);
           setIsAdmin(isAdmin);
           setIsAuthenticated(true);
-          router.replace("/dashboard");
+          router.replace(landingFor(userResponse.data.user));
           return;
         }
       } catch (userErr) {
@@ -202,5 +231,7 @@ export function useLogin() {
     isSubmitting,
     passwordAuthEnabled,
     authConfigLoading,
+    passkeysAvailable,
+    onPasskeySignIn,
   };
 }

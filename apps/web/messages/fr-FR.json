@@ -48,12 +48,15 @@
       "accountSignedIn": "Connexion",
       "accountSignInFailed": "Connexion échouée",
       "activityCleared": "Journal vidé",
+      "accountTwoFactorReset": "Connexion en deux étapes réinitialisée",
       "other": "Autre chose s'est produit"
     },
     "details": {
       "opening": "{opening} sur {max}",
       "destroyed": "après trois phrases secrètes erronées",
-      "signInFailed": "nom ou mot de passe refusé"
+      "signInFailed": "nom ou mot de passe refusé",
+      "viaPasskey": "avec une clé d'accès",
+      "passkeyFailed": "clé d'accès refusée"
     },
     "untitled": {
       "share": "Partage sans titre",
@@ -653,12 +656,12 @@
     "downloadError": "Échec du téléchargement du fichier",
     "updateSuccess": "Fichier mis à jour avec succès",
     "updateError": "Échec de la mise à jour du fichier",
-    "deleteSuccess": "Fichier supprimé avec succès",
+    "deleteSuccess": "Déplacé dans la corbeille",
     "deleteError": "Échec de la suppression du fichier",
     "bulkDownloadSuccess": "Téléchargement des fichiers démarré avec succès",
     "bulkDownloadError": "Erreur lors de la création du fichier ZIP",
     "bulkDownloadFileError": "Erreur lors du téléchargement du fichier {fileName}",
-    "bulkDeleteSuccess": "{count, plural, =1 {1 fichier supprimé avec succès} other {# fichiers supprimés avec succès}}",
+    "bulkDeleteSuccess": "{count, plural, =1 {1 élément déplacé} other {# éléments déplacés}} dans la corbeille",
     "bulkDeleteError": "Erreur lors de la suppression des fichiers sélectionnés",
     "bulkDeletePartial": "{failed} sur {total, plural, =1 {1 élément} other {# éléments}} n'ont pas pu être supprimés",
     "bulkDeleteTitle": "Supprimer les Fichiers Sélectionnés",
@@ -798,7 +801,7 @@
     "folderCreated": "Dossier créé avec succès",
     "folderRenamed": "Dossier renommé avec succès",
     "folderMoved": "Dossier déplacé avec succès",
-    "folderDeleted": "Dossier supprimé avec succès",
+    "folderDeleted": "Dossier déplacé dans la corbeille",
     "folderShared": "Dossier partagé avec succès",
     "createFolderError": "Erreur lors de la création du dossier",
     "renameFolderError": "Erreur lors du renommage du dossier",
@@ -960,6 +963,32 @@
     "label": "Pagination",
     "previous": "Précédent",
     "next": "Suivant"
+  },
+  "passkeys": {
+    "title": "Clés d'accès",
+    "hint": "Connectez-vous avec une empreinte, un visage ou une clé de sécurité au lieu d'un mot de passe. Une clé d'accès compte aussi comme connexion en deux étapes.",
+    "empty": "Aucune clé d'accès pour le moment.",
+    "add": "Ajouter une clé d'accès",
+    "addTitle": "Ajouter une clé d'accès",
+    "addDescription": "Donnez-lui un nom que vous reconnaîtrez et saisissez votre mot de passe. Votre appareil vous demandera ensuite de confirmer.",
+    "name": "Nom",
+    "nameHint": "Par exemple l'appareil sur lequel elle se trouve.",
+    "password": "Mot de passe",
+    "addButton": "Ajouter la clé",
+    "addedOn": "ajoutée le {date}",
+    "added": "Clé d'accès ajoutée",
+    "removed": "Clé d'accès supprimée",
+    "removeTitle": "Supprimer {name} ?",
+    "removeDescription": "Vous ne pourrez plus vous connecter avec elle. Saisissez votre mot de passe pour confirmer.",
+    "removeButton": "Supprimer",
+    "loadFailed": "Impossible de charger vos clés d'accès.",
+    "signIn": "Se connecter avec une clé d'accès",
+    "errors": {
+      "wrongPassword": "Ce mot de passe n'est pas correct.",
+      "addFailed": "La clé d'accès n'a pas pu être ajoutée.",
+      "removeFailed": "La clé d'accès n'a pas pu être supprimée.",
+      "signInFailed": "La connexion avec la clé d'accès a échoué. Réessayez ou utilisez votre mot de passe."
+    }
   },
   "profile": {
     "password": {
@@ -2384,6 +2413,15 @@
         },
         "webhookSecretOpened": {
           "title": "Secret ouvert"
+        },
+        "twoFactorRequired": {
+          "title": "Demander la connexion en deux étapes",
+          "description": "Qui doit configurer une application d'authentification ou une clé d'accès. L'activer ne déconnecte personne : cela s'applique à la prochaine action. Les clés API et les fournisseurs de connexion externes ne sont pas concernés.",
+          "options": {
+            "off": "Non obligatoire",
+            "admins": "Administrateurs",
+            "all": "Tout le monde"
+          }
         }
       }
     }
@@ -2866,6 +2904,9 @@
     "purged": "{count, plural, =1 {1 élément supprimé définitivement} other {# éléments supprimés définitivement}}",
     "purgePartial": "{failed} sur {total, plural, =1 {1 élément} other {# éléments}} n'ont pas pu être supprimés",
     "purgeError": "La corbeille n'a pas pu être vidée.",
+    "emptying": "La corbeille est en cours de vidage",
+    "emptied": "La corbeille a été vidée",
+    "emptyPartial": "{failed, plural, =1 {1 élément n'a pas pu être supprimé et reste} other {# éléments n'ont pas pu être supprimés et restent}} dans la corbeille",
     "purgeTitle": "Supprimer {name} définitivement ?",
     "purgeBulkTitle": "Supprimer {count} éléments définitivement ?",
     "purgeHint": "Il est retiré du stockage et ne peut plus être restauré.",
@@ -3025,6 +3066,15 @@
         }
       }
     }
+  },
+  "twoFactorSetup": {
+    "pageTitle": "Configurer la connexion en deux étapes",
+    "title": "Configurez la connexion en deux étapes avant de continuer",
+    "text": "Cette installation demande une seconde étape à la connexion. Utilisez une application d'authentification ou ajoutez une clé d'accès. D'ici là, vous ne pouvez utiliser que cette page.",
+    "signOut": "Se déconnecter",
+    "continue": "Continuer",
+    "continueHint": "Appuyez ici quand vous avez terminé.",
+    "notYet": "Configurez d'abord une application d'authentification ou une clé d'accès."
   },
   "ui": {
     "unsavedChanges": "Modifications non enregistrées",
@@ -3274,6 +3324,14 @@
       },
       "storage": "Stockage",
       "storageDefault": "Par défaut"
+    },
+    "twoFactorReset": {
+      "action": "Réinitialiser la connexion en deux étapes",
+      "title": "Réinitialiser la connexion en deux étapes de {name} ?",
+      "text": "Le code de l'application d'authentification, les codes de secours et les appareils de confiance sont supprimés. Les clés d'accès restent. Si la connexion en deux étapes est obligatoire, la personne la configure à nouveau à la prochaine connexion.",
+      "confirm": "Réinitialiser",
+      "done": "Connexion en deux étapes réinitialisée",
+      "failed": "Impossible de réinitialiser la connexion en deux étapes."
     }
   },
   "validation": {

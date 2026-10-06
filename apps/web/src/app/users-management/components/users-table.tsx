@@ -12,7 +12,15 @@ const ROW_ACTIONS =
   "md:opacity-0 md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:has-[[aria-expanded=true]]:opacity-100";
 
 /** Hairline table: avatar, name, email, role, created, ⋯. On a phone: avatar, name with meta, ⋯. */
-export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatus, onToggleAdmin }: UsersTableProps) {
+export function UsersTable({
+  users,
+  currentUser,
+  onEdit,
+  onDelete,
+  onToggleStatus,
+  onToggleAdmin,
+  onResetTwoFactor,
+}: UsersTableProps) {
   const t = useTranslations();
   const format = useFormatter();
 
@@ -90,6 +98,7 @@ export function UsersTable({ users, currentUser, onEdit, onDelete, onToggleStatu
                     onEdit={onEdit}
                     onToggleStatus={onToggleStatus}
                     onToggleAdmin={onToggleAdmin}
+                    onResetTwoFactor={onResetTwoFactor}
                   />
                 </div>
               </TableCell>

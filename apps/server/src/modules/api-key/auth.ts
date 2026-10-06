@@ -43,6 +43,6 @@ export function registerApiKeyAuth(app: FastifyInstance) {
     delete request.headers.cookie;
     request.cookies = {};
     delete request.headers["x-api-key"];
-    request.headers.authorization = `Bearer ${app.jwt.sign({ userId: key.userId, isAdmin: false }, { expiresIn: "1m" })}`;
+    request.headers.authorization = `Bearer ${app.jwt.sign({ userId: key.userId, isAdmin: false, viaApiKey: true }, { expiresIn: "1m" })}`;
   });
 }

@@ -46,6 +46,10 @@ providers.
   when its folder is restored. Deleted items do not show anywhere else: not in lists, search or
   the dashboard, not in a share (the share itself stays) and not through the API. The trash
   counts toward the storage limit. Everybody sees only their own trash.
+  Empty trash answers at once and runs on the server, the page shows that it is emptying and says
+  how many items storage refused (they stay). A file is only registered under a name that starts
+  with your own user id, as the upload routes hand it out, and never under a name that is already
+  in use; nothing can be put into a folder that has a folder in the trash above it.
 - **The trash empties itself.** Once a day, items that have been in the trash longer than the
   setting `trashRetentionDays` (Settings, Storage, default 30 days, at least 1) are deleted for
   good.
@@ -55,6 +59,21 @@ providers.
   security: the files and folders it pointed to stay in the workspace. An ended receive link goes
   only when it holds no files; one with files stays. Each removal writes the usual line in the
   activity log, saying it was cleaned up automatically.
+- **Two step sign in can be asked for.** The setting `twoFactorRequired` (Settings, Security: Not
+  required, Administrators or Everyone, default Not required) makes the chosen users set up two
+  step sign in or a passkey. Turning it on signs nobody out. A user who has neither can still sign
+  in, but the server answers every route except the set up path with 403 and the code
+  `TWO_FACTOR_SETUP_REQUIRED`, and the web app takes them to a set up page and back to where they
+  were going. API keys are not affected, and neither are users who sign in through an external
+  provider: that provider is responsible for the second step.
+- **Reset the two step sign in of somebody else.** On the Users page an administrator can switch
+  off the two step sign in of another user (secret, backup codes and trusted devices go, passkeys
+  stay). It is not possible for yourself. The activity log shows who did it and for whom.
+- **Passkeys.** Sign in with a passkey from the sign in page: no password and no code. Add and
+  remove passkeys on the profile page; both ask for the password. Passkeys need an https address
+  or `localhost` (`APP_URL`); elsewhere the buttons are not shown. A passkey counts as two step
+  sign in for the setting above. Failed passkey sign ins count towards the same limit as wrong
+  passwords and show in the activity log.
 
 ## Changed
 
@@ -104,7 +123,7 @@ providers.
 
 ## Upgrading
 
-Files and folders get an optional `deletedAt` column, added by the first start. The first start also removes the setting of the switch, the
+Files and folders get an optional `deletedAt` column, and two new tables hold passkeys and their short lived challenges, all added by the first start. The first start also removes the setting of the switch, the
 sign-in providers that were never set up, and the old default font.
 
 With over the air updates, install 2.4.0 from the admin area. Otherwise set the version in your

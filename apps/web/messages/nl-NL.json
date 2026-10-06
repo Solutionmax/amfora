@@ -48,12 +48,15 @@
       "accountSignedIn": "Ingelogd",
       "accountSignInFailed": "Inloggen mislukt",
       "activityCleared": "Logboek leeggemaakt",
+      "accountTwoFactorReset": "Inloggen in twee stappen gereset",
       "other": "Er gebeurde iets anders"
     },
     "details": {
       "opening": "{opening} van {max}",
       "destroyed": "na drie foute wachtzinnen",
-      "signInFailed": "naam of wachtwoord niet geaccepteerd"
+      "signInFailed": "naam of wachtwoord niet geaccepteerd",
+      "viaPasskey": "met een passkey",
+      "passkeyFailed": "passkey niet geaccepteerd"
     },
     "untitled": {
       "share": "Deling zonder titel",
@@ -653,12 +656,12 @@
     "downloadError": "Fout bij het downloaden van bestand",
     "updateSuccess": "Bestand succesvol bijgewerkt",
     "updateError": "Fout bij het bijwerken van bestand",
-    "deleteSuccess": "Bestand succesvol verwijderd",
+    "deleteSuccess": "Naar de prullenbak verplaatst",
     "deleteError": "Fout bij het verwijderen van bestand",
     "bulkDownloadSuccess": "Bestanden download succesvol gestart",
     "bulkDownloadError": "Fout bij het maken van ZIP-bestand",
     "bulkDownloadFileError": "Fout bij het downloaden van bestand {fileName}",
-    "bulkDeleteSuccess": "{count, plural, =1 {1 bestand succesvol verwijderd} other {# bestanden succesvol verwijderd}}",
+    "bulkDeleteSuccess": "{count, plural, =1 {1 item} other {# items}} naar de prullenbak verplaatst",
     "bulkDeleteError": "Fout bij het verwijderen van geselecteerde bestanden",
     "bulkDeletePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} konden niet worden verwijderd",
     "viewMode": {
@@ -798,7 +801,7 @@
     "folderCreated": "Map succesvol aangemaakt",
     "folderRenamed": "Map succesvol hernoemd",
     "folderMoved": "Map succesvol verplaatst",
-    "folderDeleted": "Map succesvol verwijderd",
+    "folderDeleted": "Map naar de prullenbak verplaatst",
     "folderShared": "Map succesvol gedeeld",
     "createFolderError": "Fout bij maken van map",
     "renameFolderError": "Fout bij hernoemen van map",
@@ -960,6 +963,32 @@
     "label": "Paginanavigatie",
     "previous": "Vorige",
     "next": "Volgende"
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "hint": "Log in met een vingerafdruk, gezicht of beveiligingssleutel in plaats van een wachtwoord. Een passkey telt ook als inloggen in twee stappen.",
+    "empty": "Nog geen passkeys.",
+    "add": "Passkey toevoegen",
+    "addTitle": "Passkey toevoegen",
+    "addDescription": "Geef hem een naam die je herkent en vul je wachtwoord in. Je apparaat vraagt daarna om bevestiging.",
+    "name": "Naam",
+    "nameHint": "Bijvoorbeeld het apparaat waarop hij staat.",
+    "password": "Wachtwoord",
+    "addButton": "Passkey toevoegen",
+    "addedOn": "toegevoegd op {date}",
+    "added": "Passkey toegevoegd",
+    "removed": "Passkey verwijderd",
+    "removeTitle": "{name} verwijderen?",
+    "removeDescription": "Je kunt er daarna niet meer mee inloggen. Vul je wachtwoord in om te bevestigen.",
+    "removeButton": "Verwijderen",
+    "loadFailed": "Je passkeys konden niet worden geladen.",
+    "signIn": "Inloggen met een passkey",
+    "errors": {
+      "wrongPassword": "Dat wachtwoord klopt niet.",
+      "addFailed": "De passkey kon niet worden toegevoegd.",
+      "removeFailed": "De passkey kon niet worden verwijderd.",
+      "signInFailed": "Inloggen met een passkey is niet gelukt. Probeer het opnieuw of gebruik je wachtwoord."
+    }
   },
   "profile": {
     "password": {
@@ -2384,6 +2413,15 @@
         },
         "webhookSecretOpened": {
           "title": "Geheim geopend"
+        },
+        "twoFactorRequired": {
+          "title": "Inloggen in twee stappen vragen",
+          "description": "Wie een authenticator app of een passkey moet instellen. Aanzetten logt niemand uit: het geldt bij wat iemand hierna doet. API sleutels en externe inlogproviders blijven buiten schot.",
+          "options": {
+            "off": "Niet verplicht",
+            "admins": "Beheerders",
+            "all": "Iedereen"
+          }
         }
       }
     }
@@ -2866,6 +2904,9 @@
     "purged": "{count, plural, =1 {1 item definitief verwijderd} other {# items definitief verwijderd}}",
     "purgePartial": "{failed} van {total, plural, =1 {1 item} other {# items}} kon niet worden verwijderd",
     "purgeError": "De prullenbak kon niet worden geleegd.",
+    "emptying": "De prullenbak wordt geleegd",
+    "emptied": "De prullenbak is geleegd",
+    "emptyPartial": "{failed, plural, =1 {1 item kon} other {# items konden}} niet worden verwijderd en blijven in de prullenbak",
     "purgeTitle": "{name} definitief verwijderen?",
     "purgeBulkTitle": "{count} items definitief verwijderen?",
     "purgeHint": "Het wordt uit de opslag gehaald en kan niet meer worden teruggezet.",
@@ -3025,6 +3066,15 @@
         }
       }
     }
+  },
+  "twoFactorSetup": {
+    "pageTitle": "Inloggen in twee stappen instellen",
+    "title": "Stel inloggen in twee stappen in voordat je verdergaat",
+    "text": "Deze installatie vraagt om een tweede stap bij het inloggen. Gebruik een authenticator app of voeg een passkey toe. Tot die tijd kun je alleen deze pagina gebruiken.",
+    "signOut": "Uitloggen",
+    "continue": "Doorgaan",
+    "continueHint": "Druk hierop als je klaar bent.",
+    "notYet": "Stel eerst een authenticator app of een passkey in."
   },
   "ui": {
     "unsavedChanges": "Niet opgeslagen wijzigingen",
@@ -3274,6 +3324,14 @@
       },
       "storage": "Opslag",
       "storageDefault": "Standaard"
+    },
+    "twoFactorReset": {
+      "action": "Inloggen in twee stappen resetten",
+      "title": "Inloggen in twee stappen resetten voor {name}?",
+      "text": "De authenticatorcode, de reservecodes en de vertrouwde apparaten worden verwijderd. Passkeys blijven staan. Is inloggen in twee stappen verplicht, dan stelt die persoon het opnieuw in bij de volgende keer inloggen.",
+      "confirm": "Resetten",
+      "done": "Inloggen in twee stappen is gereset",
+      "failed": "Inloggen in twee stappen kon niet worden gereset."
     }
   },
   "validation": {

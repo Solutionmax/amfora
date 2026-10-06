@@ -9,6 +9,7 @@ import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ShareSecretLink } from "@/components/secrets/share-secret-link";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { LoginForm } from "./components/login-form";
+import { PasskeySignIn } from "./components/passkey-sign-in";
 import { RegisterForm } from "./components/register-form";
 import { TwoFactorVerification } from "./components/two-factor-verification";
 import { useLogin } from "./hooks/use-login";
@@ -62,6 +63,9 @@ export default function LoginPage() {
         passwordAuthEnabled={login.passwordAuthEnabled}
         authConfigLoading={login.authConfigLoading}
       />
+      {!login.authConfigLoading && login.passkeysAvailable && (
+        <PasskeySignIn onSignIn={login.onPasskeySignIn} isBusy={login.isSubmitting} />
+      )}
       <ShareSecretLink />
     </PublicCard>
   );

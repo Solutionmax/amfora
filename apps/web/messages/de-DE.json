@@ -48,12 +48,15 @@
       "accountSignedIn": "Angemeldet",
       "accountSignInFailed": "Anmeldung fehlgeschlagen",
       "activityCleared": "Protokoll geleert",
+      "accountTwoFactorReset": "Anmeldung in zwei Schritten zurückgesetzt",
       "other": "Etwas anderes ist passiert"
     },
     "details": {
       "opening": "{opening} von {max}",
       "destroyed": "nach drei falschen Passphrasen",
-      "signInFailed": "Name oder Passwort nicht akzeptiert"
+      "signInFailed": "Name oder Passwort nicht akzeptiert",
+      "viaPasskey": "mit einem Passkey",
+      "passkeyFailed": "Passkey nicht akzeptiert"
     },
     "untitled": {
       "share": "Unbenannte Freigabe",
@@ -653,12 +656,12 @@
     "downloadError": "Fehler beim Herunterladen der Datei",
     "updateSuccess": "Datei erfolgreich aktualisiert",
     "updateError": "Fehler beim Aktualisieren der Datei",
-    "deleteSuccess": "Datei erfolgreich gelöscht",
+    "deleteSuccess": "In den Papierkorb verschoben",
     "deleteError": "Fehler beim Löschen der Datei",
     "bulkDownloadSuccess": "Datei-Download erfolgreich gestartet",
     "bulkDownloadError": "Fehler beim Erstellen der ZIP-Datei",
     "bulkDownloadFileError": "Fehler beim Herunterladen der Datei {fileName}",
-    "bulkDeleteSuccess": "{count, plural, =1 {1 Datei erfolgreich gelöscht} other {# Dateien erfolgreich gelöscht}}",
+    "bulkDeleteSuccess": "{count, plural, =1 {1 Element} other {# Elemente}} in den Papierkorb verschoben",
     "bulkDeleteError": "Fehler beim Löschen der ausgewählten Dateien",
     "bulkDeletePartial": "Löschen fehlgeschlagen: {failed} von {total, plural, =1 {1 Element} other {# Elementen}}",
     "bulkDeleteTitle": "Ausgewählte Dateien Löschen",
@@ -798,7 +801,7 @@
     "folderCreated": "Ordner erfolgreich erstellt",
     "folderRenamed": "Ordner erfolgreich umbenannt",
     "folderMoved": "Ordner erfolgreich verschoben",
-    "folderDeleted": "Ordner erfolgreich gelöscht",
+    "folderDeleted": "Ordner in den Papierkorb verschoben",
     "folderShared": "Ordner erfolgreich geteilt",
     "createFolderError": "Fehler beim Erstellen des Ordners",
     "renameFolderError": "Fehler beim Umbenennen des Ordners",
@@ -960,6 +963,32 @@
     "label": "Seitennavigation",
     "previous": "Vorherige",
     "next": "Nächste"
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "hint": "Melde dich mit Fingerabdruck, Gesicht oder Sicherheitsschlüssel statt mit einem Passwort an. Ein Passkey zählt auch als Anmeldung in zwei Schritten.",
+    "empty": "Noch keine Passkeys.",
+    "add": "Passkey hinzufügen",
+    "addTitle": "Passkey hinzufügen",
+    "addDescription": "Gib ihm einen Namen, den du wiedererkennst, und gib dein Passwort ein. Danach bittet dich dein Gerät um Bestätigung.",
+    "name": "Name",
+    "nameHint": "Zum Beispiel das Gerät, auf dem er liegt.",
+    "password": "Passwort",
+    "addButton": "Passkey hinzufügen",
+    "addedOn": "hinzugefügt am {date}",
+    "added": "Passkey hinzugefügt",
+    "removed": "Passkey entfernt",
+    "removeTitle": "{name} entfernen?",
+    "removeDescription": "Du kannst dich damit nicht mehr anmelden. Gib zur Bestätigung dein Passwort ein.",
+    "removeButton": "Entfernen",
+    "loadFailed": "Deine Passkeys konnten nicht geladen werden.",
+    "signIn": "Mit einem Passkey anmelden",
+    "errors": {
+      "wrongPassword": "Dieses Passwort stimmt nicht.",
+      "addFailed": "Der Passkey konnte nicht hinzugefügt werden.",
+      "removeFailed": "Der Passkey konnte nicht entfernt werden.",
+      "signInFailed": "Die Anmeldung mit dem Passkey hat nicht geklappt. Versuche es erneut oder nutze dein Passwort."
+    }
   },
   "profile": {
     "password": {
@@ -2384,6 +2413,15 @@
         },
         "webhookSecretOpened": {
           "title": "Geheimnis geöffnet"
+        },
+        "twoFactorRequired": {
+          "title": "Anmeldung in zwei Schritten verlangen",
+          "description": "Wer eine Authenticator App oder einen Passkey einrichten muss. Das Einschalten meldet niemanden ab: es gilt für das, was man als Nächstes tut. API Schlüssel und externe Anmeldeanbieter sind nicht betroffen.",
+          "options": {
+            "off": "Nicht verlangt",
+            "admins": "Administratoren",
+            "all": "Alle"
+          }
         }
       }
     }
@@ -2866,6 +2904,9 @@
     "purged": "{count, plural, =1 {1 Element endgültig gelöscht} other {# Elemente endgültig gelöscht}}",
     "purgePartial": "{failed} von {total, plural, =1 {1 Element} other {# Elementen}} konnten nicht gelöscht werden",
     "purgeError": "Der Papierkorb konnte nicht geleert werden.",
+    "emptying": "Der Papierkorb wird geleert",
+    "emptied": "Der Papierkorb wurde geleert",
+    "emptyPartial": "{failed, plural, =1 {1 Element konnte} other {# Elemente konnten}} nicht entfernt werden und bleiben im Papierkorb",
     "purgeTitle": "{name} endgültig löschen?",
     "purgeBulkTitle": "{count} Elemente endgültig löschen?",
     "purgeHint": "Es wird aus dem Speicher entfernt und kann nicht wiederhergestellt werden.",
@@ -3025,6 +3066,15 @@
         }
       }
     }
+  },
+  "twoFactorSetup": {
+    "pageTitle": "Anmeldung in zwei Schritten einrichten",
+    "title": "Richte die Anmeldung in zwei Schritten ein, bevor du weitermachst",
+    "text": "Diese Installation verlangt beim Anmelden einen zweiten Schritt. Nutze eine Authenticator App oder füge einen Passkey hinzu. Bis dahin kannst du nur diese Seite verwenden.",
+    "signOut": "Abmelden",
+    "continue": "Weiter",
+    "continueHint": "Klicke hier, wenn du fertig bist.",
+    "notYet": "Richte zuerst eine Authenticator App oder einen Passkey ein."
   },
   "ui": {
     "unsavedChanges": "Nicht gespeicherte Änderungen",
@@ -3274,6 +3324,14 @@
       },
       "storage": "Speicher",
       "storageDefault": "Standard"
+    },
+    "twoFactorReset": {
+      "action": "Anmeldung in zwei Schritten zurücksetzen",
+      "title": "Anmeldung in zwei Schritten für {name} zurücksetzen?",
+      "text": "Der Authenticator Code, die Backup Codes und die vertrauenswürdigen Geräte werden entfernt. Passkeys bleiben bestehen. Ist die Anmeldung in zwei Schritten Pflicht, richtet die Person sie bei der nächsten Anmeldung neu ein.",
+      "confirm": "Zurücksetzen",
+      "done": "Anmeldung in zwei Schritten zurückgesetzt",
+      "failed": "Die Anmeldung in zwei Schritten konnte nicht zurückgesetzt werden."
     }
   },
   "validation": {

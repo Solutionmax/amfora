@@ -9,7 +9,15 @@ import { z } from "zod";
 
 import { useAuth } from "@/contexts/auth-context";
 import { useDisclosure } from "@/hooks/use-disclosure";
-import { activateUser, deactivateUser, deleteUser, listUsers, registerUser, updateUser } from "@/http/endpoints";
+import {
+  activateUser,
+  deactivateUser,
+  deleteUser,
+  listUsers,
+  registerUser,
+  resetUserTwoFactor,
+  updateUser,
+} from "@/http/endpoints";
 import { User } from "@/http/endpoints/auth/types";
 
 const createSchemas = (t: (key: string) => string) => ({
@@ -43,11 +51,13 @@ export function useUserManagement() {
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [deleteModalUser, setDeleteModalUser] = useState<User | null>(null);
   const [statusModalUser, setStatusModalUser] = useState<User | null>(null);
+  const [resetModalUser, setResetModalUser] = useState<User | null>(null);
 
   const { user: currentUser } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isDeleteModalOpen, onOpen: onDeleteModalOpen, onClose: onDeleteModalClose } = useDisclosure();
   const { isOpen: isStatusModalOpen, onOpen: onStatusModalOpen, onClose: onStatusModalClose } = useDisclosure();
+  const { isOpen: isResetModalOpen, onOpen: onResetModalOpen, onClose: onResetModalClose } = useDisclosure();
 
   const formMethods = useForm<UserFormData>({
     resolver: zodResolver(userSchema) as Resolver<UserFormData>,
@@ -168,6 +178,20 @@ export function useUserManagement() {
     }
   };
 
+  /** An administrator switches off the two step sign in of somebody who lost the phone. */
+  const handleResetTwoFactor = async () => {
+    if (!resetModalUser) return;
+
+    try {
+      await resetUserTwoFactor(resetModalUser.id);
+      toast.success(t("users.twoFactorReset.done"));
+      loadUsers();
+      onResetModalClose();
+    } catch {
+      toast.error(t("users.twoFactorReset.failed"));
+    }
+  };
+
   return {
     users,
     isLoading,
@@ -177,6 +201,7 @@ export function useUserManagement() {
     selectedUser,
     deleteModalUser,
     statusModalUser,
+    resetModalUser,
     modals: {
       isOpen,
       onOpen,
@@ -190,12 +215,17 @@ export function useUserManagement() {
       onStatusModalClose,
       setDeleteModalUser,
       setStatusModalUser,
+      isResetModalOpen,
+      onResetModalOpen,
+      onResetModalClose,
+      setResetModalUser,
     },
     handleCreateUser,
     handleEditUser,
     handleDeleteUser,
     handleToggleUserStatus,
     handleToggleAdmin,
+    handleResetTwoFactor,
     onSubmit,
     formMethods,
   };

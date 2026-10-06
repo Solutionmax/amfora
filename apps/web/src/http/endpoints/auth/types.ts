@@ -16,6 +16,10 @@ export interface User extends BaseUser {
   image: string | null;
   /** Own storage limit in bytes, set by an administrator. Null: the installation default. */
   storageLimitBytes?: number | null;
+  /** Users list only: two step sign in is switched on. */
+  twoFactorEnabled?: boolean;
+  /** Own profile only: a second step must be set up before anything else works. */
+  twoFactorSetupRequired?: boolean;
 }
 
 export type LoginUser = BaseUser;

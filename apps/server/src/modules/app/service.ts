@@ -2,6 +2,7 @@ import { assertLifetimeSettings } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
 import { assertCleanUpSettings } from "../trash/settings";
+import { assertTwoFactorRequired } from "../two-factor/second-step";
 import { resolvePaidAppearance } from "./appearance";
 import { backgroundImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { verifyBrandpack } from "./brandpack";
@@ -115,6 +116,8 @@ export class AppService {
       // Where webhooks go and how they are signed is for administrators only.
       "webhookUrl",
       "webhookSecret",
+      // Who is asked for a second step is nobody's business before signing in.
+      "twoFactorRequired",
     ];
 
     return prisma.appConfig.findMany({
@@ -134,6 +137,7 @@ export class AppService {
       throw new Error("JWT Secret cannot be updated through this endpoint");
     }
     if (key === "appPublicTheme") assertPublicTheme(value);
+    if (key === "twoFactorRequired") assertTwoFactorRequired(value);
     await assertLifetimeSettings([{ key, value }]);
     assertCleanUpSettings([{ key, value }]);
 
@@ -167,6 +171,9 @@ export class AppService {
       throw new Error("JWT Secret cannot be updated through this endpoint");
     }
     updates.filter((update) => update.key === "appPublicTheme").forEach((update) => assertPublicTheme(update.value));
+    updates
+      .filter((update) => update.key === "twoFactorRequired")
+      .forEach((update) => assertTwoFactorRequired(update.value));
     await assertLifetimeSettings(updates);
     assertCleanUpSettings(updates);
     const passwordAuthUpdate = updates.find((update) => update.key === "passwordAuthEnabled");

@@ -10,12 +10,14 @@ import { fileRoutes } from "./modules/file/routes";
 import { folderRoutes } from "./modules/folder/routes";
 import { healthRoutes } from "./modules/health/routes";
 import { inviteRoutes } from "./modules/invite/routes";
+import { passkeyRoutes } from "./modules/passkey/routes";
 import { reverseShareRoutes } from "./modules/reverse-share/routes";
 import { secretRoutes } from "./modules/secret/routes";
 import { shareRoutes } from "./modules/share/routes";
 import { storageRoutes } from "./modules/storage/routes";
 import { trashRoutes } from "./modules/trash/routes";
 import { twoFactorRoutes } from "./modules/two-factor/routes";
+import { registerSecondStepGate } from "./modules/two-factor/second-step";
 import { updateRoutes } from "./modules/update/routes";
 import { userRoutes } from "./modules/user/routes";
 
@@ -23,10 +25,12 @@ import { userRoutes } from "./modules/user/routes";
 export function registerRoutes(app: FastifyInstance) {
   // Before the routes: a hook only reaches the route plugins registered after it.
   registerApiKeyAuth(app);
+  registerSecondStepGate(app);
 
   app.register(authRoutes);
   app.register(authProvidersRoutes, { prefix: "/auth" });
   app.register(twoFactorRoutes, { prefix: "/auth" });
+  app.register(passkeyRoutes, { prefix: "/auth" });
   app.register(inviteRoutes);
   app.register(userRoutes);
   app.register(folderRoutes);

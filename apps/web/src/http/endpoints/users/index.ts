@@ -125,3 +125,14 @@ export const uploadAvatar = <TData = UploadAvatarResult>(
 export const removeAvatar = <TData = RemoveAvatarResult>(options?: AxiosRequestConfig): Promise<TData> => {
   return apiInstance.delete(`/api/users/avatar/remove`, options);
 };
+
+/**
+ * Switch off the two step sign in of another user (admin only, never your own)
+ * @summary Reset Two Step Sign In
+ */
+export const resetUserTwoFactor = <TData = { data: { success: boolean } }>(
+  id: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return apiInstance.post(`/api/users/reset-two-factor/${id}`, {}, options);
+};

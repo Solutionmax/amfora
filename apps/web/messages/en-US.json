@@ -48,12 +48,15 @@
       "accountSignedIn": "Signed in",
       "accountSignInFailed": "Sign in failed",
       "activityCleared": "Cleared the log",
+      "accountTwoFactorReset": "Reset two step sign in",
       "other": "Something else happened"
     },
     "details": {
       "opening": "{opening} of {max}",
       "destroyed": "after three wrong passphrases",
-      "signInFailed": "name or password not accepted"
+      "signInFailed": "name or password not accepted",
+      "viaPasskey": "with a passkey",
+      "passkeyFailed": "passkey not accepted"
     },
     "untitled": {
       "share": "Untitled share",
@@ -653,12 +656,12 @@
     "downloadError": "Failed to download file",
     "updateSuccess": "File updated successfully",
     "updateError": "Failed to update file",
-    "deleteSuccess": "File deleted successfully",
+    "deleteSuccess": "Moved to the trash",
     "deleteError": "Failed to delete file",
     "bulkDownloadSuccess": "Files download started successfully",
     "bulkDownloadError": "Error creating ZIP file",
     "bulkDownloadFileError": "Error downloading file {fileName}",
-    "bulkDeleteSuccess": "{count, plural, =1 {1 item deleted successfully} other {# items deleted successfully}}",
+    "bulkDeleteSuccess": "{count, plural, =1 {1 item moved to the trash} other {# items moved to the trash}}",
     "bulkDeleteError": "Error deleting selected items",
     "bulkDeletePartial": "{failed} of {total, plural, =1 {1 item} other {# items}} could not be deleted",
     "bulkDeleteTitle": "Delete Selected Items",
@@ -798,7 +801,7 @@
     "folderCreated": "Folder created successfully",
     "folderRenamed": "Folder renamed successfully",
     "folderMoved": "Folder moved successfully",
-    "folderDeleted": "Folder deleted successfully",
+    "folderDeleted": "Folder moved to the trash",
     "folderShared": "Folder shared successfully",
     "createFolderError": "Error creating folder",
     "renameFolderError": "Error renaming folder",
@@ -960,6 +963,32 @@
     "label": "Pagination",
     "previous": "Previous",
     "next": "Next"
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "hint": "Sign in with a fingerprint, a face or a security key instead of a password. A passkey also counts as two step sign in.",
+    "empty": "No passkeys yet.",
+    "add": "Add a passkey",
+    "addTitle": "Add a passkey",
+    "addDescription": "Give it a name you will recognise, and enter your password. Your device then asks you to confirm.",
+    "name": "Name",
+    "nameHint": "For example the device it lives on.",
+    "password": "Password",
+    "addButton": "Add passkey",
+    "addedOn": "added {date}",
+    "added": "Passkey added",
+    "removed": "Passkey removed",
+    "removeTitle": "Remove {name}?",
+    "removeDescription": "You can no longer sign in with it. Enter your password to confirm.",
+    "removeButton": "Remove",
+    "loadFailed": "Could not load your passkeys.",
+    "signIn": "Sign in with a passkey",
+    "errors": {
+      "wrongPassword": "That password is not right.",
+      "addFailed": "The passkey could not be added.",
+      "removeFailed": "The passkey could not be removed.",
+      "signInFailed": "Passkey sign in did not work. Try again or use your password."
+    }
   },
   "profile": {
     "password": {
@@ -2384,6 +2413,15 @@
         },
         "webhookSecretOpened": {
           "title": "Secret opened"
+        },
+        "twoFactorRequired": {
+          "title": "Ask for two step sign in",
+          "description": "Who has to set up an authenticator app or a passkey. Turning it on signs nobody out: it applies to what they do next. API keys and external sign in providers are not affected.",
+          "options": {
+            "off": "Not required",
+            "admins": "Administrators",
+            "all": "Everyone"
+          }
         }
       }
     }
@@ -2866,6 +2904,9 @@
     "purged": "{count, plural, =1 {1 item deleted for good} other {# items deleted for good}}",
     "purgePartial": "{failed} of {total, plural, =1 {1 item} other {# items}} could not be deleted",
     "purgeError": "The trash could not be emptied.",
+    "emptying": "The trash is being emptied",
+    "emptied": "The trash was emptied",
+    "emptyPartial": "{failed, plural, =1 {1 item} other {# items}} could not be removed and stay in the trash",
     "purgeTitle": "Delete {name} for good?",
     "purgeBulkTitle": "Delete {count} items for good?",
     "purgeHint": "It is removed from storage and cannot be restored.",
@@ -3025,6 +3066,15 @@
         "android": " on Android"
       }
     }
+  },
+  "twoFactorSetup": {
+    "pageTitle": "Set up two step sign in",
+    "title": "Set up two step sign in before you continue",
+    "text": "This installation asks for a second step when you sign in. Use an authenticator app or add a passkey. Until then you can only use this page.",
+    "signOut": "Sign out",
+    "continue": "Continue",
+    "continueHint": "Press this when you are done.",
+    "notYet": "Set up an authenticator app or a passkey first."
   },
   "ui": {
     "unsavedChanges": "Unsaved changes",
@@ -3274,6 +3324,14 @@
       },
       "storage": "Storage",
       "storageDefault": "Default"
+    },
+    "twoFactorReset": {
+      "action": "Reset two step sign in",
+      "title": "Reset two step sign in for {name}?",
+      "text": "Their authenticator code, backup codes and trusted devices are removed. Passkeys stay. If two step sign in is required, they set it up again at the next sign in.",
+      "confirm": "Reset",
+      "done": "Two step sign in reset",
+      "failed": "Could not reset two step sign in."
     }
   },
   "validation": {

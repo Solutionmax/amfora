@@ -7,7 +7,8 @@ import { toast } from "sonner";
 import { getTrustedDevices, removeAllTrustedDevices, removeTrustedDevice } from "@/http/endpoints";
 import type { TrustedDevice } from "@/http/endpoints/auth/trusted-devices/types";
 
-export function useTrustedDevices() {
+/** Devices are only asked for once two step sign in is on: before that there are none, and the set up page may not read them. */
+export function useTrustedDevices(enabled = true) {
   const t = useTranslations();
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -122,8 +123,8 @@ export function useTrustedDevices() {
   }, []);
 
   useEffect(() => {
-    loadDevices();
-  }, [loadDevices]);
+    if (enabled) loadDevices();
+  }, [enabled, loadDevices]);
 
   return {
     isLoading,

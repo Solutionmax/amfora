@@ -137,6 +137,13 @@ const defaultConfigs = [
     group: "security",
   },
   {
+    // off, admins or all: who must have a second step (an authenticator code or a passkey)
+    key: "twoFactorRequired",
+    value: "off",
+    type: "string",
+    group: "security",
+  },
+  {
     key: "maxLoginAttempts",
     value: "5",
     type: "number",

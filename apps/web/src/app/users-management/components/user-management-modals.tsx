@@ -1,6 +1,7 @@
 import { UserManagementModalsProps } from "../types";
 import { UserDeleteModal } from "./user-delete-modal";
 import { UserFormModal } from "./user-form-modal";
+import { UserResetTwoFactorModal } from "./user-reset-two-factor-modal";
 import { UserStatusModal } from "./user-status-modal";
 
 export function UserManagementModals({
@@ -8,6 +9,8 @@ export function UserManagementModals({
   selectedUser,
   deleteModalUser,
   statusModalUser,
+  resetModalUser,
+  onResetTwoFactor,
   onSubmit,
   onDelete,
   onToggleStatus,
@@ -36,6 +39,13 @@ export function UserManagementModals({
         user={statusModalUser}
         onClose={modals.onStatusModalClose}
         onConfirm={onToggleStatus}
+      />
+
+      <UserResetTwoFactorModal
+        isOpen={modals.isResetModalOpen}
+        user={resetModalUser}
+        onClose={modals.onResetModalClose}
+        onConfirm={onResetTwoFactor}
       />
     </>
   );

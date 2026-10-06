@@ -1,5 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { prisma } from "../../shared/prisma";
+import { actorOf, recordRequestActivity } from "../activity/activity";
+import { TwoFactorResetError, TwoFactorService } from "../two-factor/service";
 import { AvatarService } from "./avatar.service";
 import { createRegisterUserSchema, UpdateUserSchema } from "./dto";
 import { UserService } from "./service";
@@ -65,6 +68,28 @@ export class UserController {
       const user = await this.userService.deactivateUser(id);
       return reply.send(user);
     } catch (error: any) {
+      return reply.status(400).send({ error: error.message });
+    }
+  }
+
+  /** The caller is an administrator (the route guard), and may not reset themselves. */
+  async resetTwoFactor(request: FastifyRequest, reply: FastifyReply) {
+    const { id } = request.params as { id: string };
+    const adminId = (request.user as { userId: string }).userId;
+    if (id === adminId) return reply.status(400).send({ error: "You cannot reset your own two step sign in" });
+    try {
+      const target = await prisma.user.findUnique({ where: { id }, select: { firstName: true, lastName: true } });
+      await new TwoFactorService().resetFor(id);
+      await recordRequestActivity(request, {
+        action: "account.two_factor_reset",
+        ownerId: id,
+        subject: target ? `${target.firstName} ${target.lastName}`.trim() : null,
+        subjectId: id,
+        ...(await actorOf(adminId)),
+      });
+      return reply.send({ success: true });
+    } catch (error: any) {
+      if (error instanceof TwoFactorResetError) return reply.status(error.status).send({ error: error.message });
       return reply.status(400).send({ error: error.message });
     }
   }

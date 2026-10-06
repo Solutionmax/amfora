@@ -1,6 +1,7 @@
 import {
   IconDots,
   IconEdit,
+  IconLockOff,
   IconPlayerPause,
   IconPlayerPlay,
   IconShield,
@@ -27,6 +28,7 @@ export function UserActionsDropdown({
   onDelete,
   onToggleStatus,
   onToggleAdmin,
+  onResetTwoFactor,
 }: UserActionsDropdownProps) {
   const t = useTranslations();
 
@@ -50,6 +52,12 @@ export function UserActionsDropdown({
           <DropdownMenuItem onSelect={() => onToggleAdmin(user)}>
             {user.isAdmin ? <IconUser aria-hidden="true" /> : <IconShield aria-hidden="true" />}
             {user.isAdmin ? t("users.calm.makeUser") : t("users.calm.makeAdmin")}
+          </DropdownMenuItem>
+        )}
+        {user.twoFactorEnabled && (
+          <DropdownMenuItem onSelect={() => onResetTwoFactor(user)}>
+            <IconLockOff aria-hidden="true" />
+            {t("users.twoFactorReset.action")}
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator className="bg-line" />

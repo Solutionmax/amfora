@@ -10,6 +10,7 @@ export interface UserActionsDropdownProps {
   onDelete: (user: User) => void;
   onToggleStatus: (user: User) => void;
   onToggleAdmin: (user: User) => void;
+  onResetTwoFactor: (user: User) => void;
 }
 
 export interface UserDeleteModalProps {
@@ -37,10 +38,14 @@ export interface UserManagementModalsProps {
     onDeleteModalClose: () => void;
     isStatusModalOpen: boolean;
     onStatusModalClose: () => void;
+    isResetModalOpen: boolean;
+    onResetModalClose: () => void;
   };
   selectedUser: User | null;
   deleteModalUser: User | null;
   statusModalUser: User | null;
+  resetModalUser: User | null;
+  onResetTwoFactor: () => Promise<void>;
   onSubmit: (data: UserFormData) => Promise<void>;
   onDelete: () => Promise<void>;
   onToggleStatus: () => Promise<void>;
@@ -48,6 +53,13 @@ export interface UserManagementModalsProps {
 }
 
 export interface UserStatusModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  user: User | null;
+  onConfirm: () => Promise<void>;
+}
+
+export interface UserResetTwoFactorModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: User | null;
@@ -75,4 +87,5 @@ export interface UsersTableProps {
   onDelete: (user: User) => void;
   onToggleStatus: (user: User) => void;
   onToggleAdmin: (user: User) => void;
+  onResetTwoFactor: (user: User) => void;
 }

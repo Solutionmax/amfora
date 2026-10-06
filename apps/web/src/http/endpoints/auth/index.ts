@@ -100,7 +100,7 @@ export const updateProvidersOrder = <TData = UpdateProvidersOrderResult>(
   return apiInstance.put(`/api/auth/providers/order`, updateProvidersOrderBody, options);
 };
 
-export const getAuthConfig = <TData = { passwordAuthEnabled: boolean }>(
+export const getAuthConfig = <TData = { passwordAuthEnabled: boolean; passkeysAvailable?: boolean }>(
   options?: AxiosRequestConfig
 ): Promise<TData> => {
   return apiInstance.get(`/api/auth/config`, options);

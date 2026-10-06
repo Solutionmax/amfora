@@ -39,6 +39,7 @@ model User {
   secrets        Secret[]
   authProviders  UserAuthProvider[]
   trustedDevices TrustedDevice[]
+  passkeys       Passkey[]
 
   @@map("users")
 }
@@ -375,6 +376,40 @@ model LoginChallenge {
 
   @@index([expiresAt])
   @@map("login_challenges")
+}
+
+/// A passkey (WebAuthn credential) a user signs in with. Only the public key is stored.
+model Passkey {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// The credential id the browser presents, base64url. Unique across all users.
+  credentialId String    @unique
+  publicKey    Bytes
+  /// Signature counter of the authenticator; it may only go up.
+  counter      BigInt    @default(0)
+  /// JSON array of transports, or null.
+  transports   String?
+  name         String
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
+
+  @@index([userId])
+  @@map("passkeys")
+}
+
+/// A single use challenge for a passkey ceremony, tied to the purpose it was made for.
+model PasskeyChallenge {
+  /// The challenge itself, base64url.
+  id        String   @id
+  /// "register" or "login".
+  purpose   String
+  /// Whom a registration is for; null for a sign in.
+  userId    String?
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("passkey_challenges")
 }
 
 /// A long lived credential for other tools. Only the SHA-256 of the key is stored.

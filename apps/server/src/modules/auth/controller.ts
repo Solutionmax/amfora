@@ -4,6 +4,8 @@ import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { recordRequestActivity, recordVisitorActivity } from "../activity/activity";
 import { ConfigService } from "../config/service";
+import { relyingParty } from "../passkey/relying-party";
+import { mustSetUpSecondStep } from "../two-factor/second-step";
 import {
   CompleteTwoFactorLoginSchema,
   createResetPasswordSchema,
@@ -175,7 +177,11 @@ export class AuthController {
         return reply.send({ user: null });
       }
 
-      return reply.send({ user });
+      const claims = (request as any).user as { viaProvider?: boolean; viaApiKey?: boolean };
+      const exempt = claims.viaProvider === true || claims.viaApiKey === true;
+      // Only the caller's own answer: the setting itself is not public.
+      const twoFactorSetupRequired = !exempt && (await mustSetUpSecondStep(userId));
+      return reply.send({ user: { ...user, twoFactorSetupRequired } });
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });
     }
@@ -229,6 +235,7 @@ export class AuthController {
       const passwordAuthEnabled = await this.configService.getValue("passwordAuthEnabled");
       return reply.send({
         passwordAuthEnabled: passwordAuthEnabled === "true",
+        passkeysAvailable: relyingParty() !== null,
       });
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });

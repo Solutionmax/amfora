@@ -28,8 +28,8 @@ function StatusTitle({ on, children }: { on: boolean; children: ReactNode }) {
 export function TwoFactorForm() {
   const t = useTranslations();
   const twoFactor = useTwoFactor();
-  const trusted = useTrustedDevices();
   const { status, isLoading } = twoFactor;
+  const trusted = useTrustedDevices(twoFactor.statusLoaded && status.enabled);
 
   const body = (() => {
     if (!twoFactor.statusLoaded && twoFactor.statusError) {

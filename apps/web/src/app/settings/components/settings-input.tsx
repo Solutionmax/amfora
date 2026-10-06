@@ -18,6 +18,7 @@ import {
   fieldTitle,
   READ_ONLY_FIELDS,
   SECONDS_FIELDS,
+  TWO_FACTOR_REQUIRED_OPTIONS,
 } from "../constants";
 import { Config } from "../types";
 import { FileSizeInput } from "./file-size-input";
@@ -85,7 +86,12 @@ function SettingControl({ config, form, disabled }: SettingProps) {
     return <CopyField value={config.value} label={fieldTitle(t, config.key)} />;
   }
 
-  if (config.key === "smtpSecure" || config.key === "appPublicTheme" || config.key === "activityPlace") {
+  if (
+    config.key === "smtpSecure" ||
+    config.key === "appPublicTheme" ||
+    config.key === "activityPlace" ||
+    config.key === "twoFactorRequired"
+  ) {
     const options =
       config.key === "smtpSecure"
         ? ["auto", "ssl", "tls", "none"].map((option) => ({
@@ -97,7 +103,12 @@ function SettingControl({ config, form, disabled }: SettingProps) {
               value: option,
               label: t(`settings.calm.fields.activityPlace.options.${option}`),
             }))
-          : PUBLIC_THEMES.map((theme) => ({ value: theme, label: t(`customization.v2.theme.${theme}`) }));
+          : config.key === "twoFactorRequired"
+            ? TWO_FACTOR_REQUIRED_OPTIONS.map((option) => ({
+                value: option,
+                label: t(`settings.calm.fields.twoFactorRequired.options.${option}`),
+              }))
+            : PUBLIC_THEMES.map((theme) => ({ value: theme, label: t(`customization.v2.theme.${theme}`) }));
 
     return (
       <Select value={value || options[0].value} onValueChange={set} disabled={disabled}>

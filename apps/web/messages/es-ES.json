@@ -48,12 +48,15 @@
       "accountSignedIn": "Sesión iniciada",
       "accountSignInFailed": "Inicio de sesión fallido",
       "activityCleared": "Registro vaciado",
+      "accountTwoFactorReset": "Inicio de sesión en dos pasos restablecido",
       "other": "Pasó otra cosa"
     },
     "details": {
       "opening": "{opening} de {max}",
       "destroyed": "tras tres frases de acceso incorrectas",
-      "signInFailed": "nombre o contraseña no aceptados"
+      "signInFailed": "nombre o contraseña no aceptados",
+      "viaPasskey": "con una clave de acceso",
+      "passkeyFailed": "clave de acceso rechazada"
     },
     "untitled": {
       "share": "Compartición sin título",
@@ -653,12 +656,12 @@
     "downloadError": "Error al descargar archivo",
     "updateSuccess": "Archivo actualizado exitosamente",
     "updateError": "Error al actualizar archivo",
-    "deleteSuccess": "Archivo eliminado exitosamente",
+    "deleteSuccess": "Movido a la papelera",
     "deleteError": "Error al eliminar archivo",
     "bulkDownloadSuccess": "Descarga de archivos iniciada exitosamente",
     "bulkDownloadError": "Error al crear archivo ZIP",
     "bulkDownloadFileError": "Error al descargar archivo {fileName}",
-    "bulkDeleteSuccess": "{count, plural, =1 {1 archivo eliminado exitosamente} other {# archivos eliminados exitosamente}}",
+    "bulkDeleteSuccess": "{count, plural, =1 {1 elemento movido} other {# elementos movidos}} a la papelera",
     "bulkDeleteError": "Error al eliminar archivos seleccionados",
     "bulkDeletePartial": "{failed} de {total, plural, =1 {1 elemento} other {# elementos}} no se pudieron eliminar",
     "bulkDeleteTitle": "Eliminar Archivos Seleccionados",
@@ -798,7 +801,7 @@
     "folderCreated": "Carpeta creada exitosamente",
     "folderRenamed": "Carpeta renombrada exitosamente",
     "folderMoved": "Carpeta movida exitosamente",
-    "folderDeleted": "Carpeta eliminada exitosamente",
+    "folderDeleted": "Carpeta movida a la papelera",
     "folderShared": "Carpeta compartida exitosamente",
     "createFolderError": "Error al crear carpeta",
     "renameFolderError": "Error al renombrar carpeta",
@@ -960,6 +963,32 @@
     "label": "Paginación",
     "previous": "Anterior",
     "next": "Siguiente"
+  },
+  "passkeys": {
+    "title": "Claves de acceso",
+    "hint": "Inicia sesión con una huella, un rostro o una llave de seguridad en lugar de una contraseña. Una clave de acceso también cuenta como inicio de sesión en dos pasos.",
+    "empty": "Aún no hay claves de acceso.",
+    "add": "Añadir una clave de acceso",
+    "addTitle": "Añadir una clave de acceso",
+    "addDescription": "Ponle un nombre que reconozcas e introduce tu contraseña. Después tu dispositivo te pedirá confirmar.",
+    "name": "Nombre",
+    "nameHint": "Por ejemplo, el dispositivo en el que está.",
+    "password": "Contraseña",
+    "addButton": "Añadir clave",
+    "addedOn": "añadida el {date}",
+    "added": "Clave de acceso añadida",
+    "removed": "Clave de acceso eliminada",
+    "removeTitle": "¿Eliminar {name}?",
+    "removeDescription": "Ya no podrás iniciar sesión con ella. Introduce tu contraseña para confirmar.",
+    "removeButton": "Eliminar",
+    "loadFailed": "No se pudieron cargar tus claves de acceso.",
+    "signIn": "Iniciar sesión con una clave de acceso",
+    "errors": {
+      "wrongPassword": "Esa contraseña no es correcta.",
+      "addFailed": "No se pudo añadir la clave de acceso.",
+      "removeFailed": "No se pudo eliminar la clave de acceso.",
+      "signInFailed": "No funcionó el inicio de sesión con la clave de acceso. Inténtalo de nuevo o usa tu contraseña."
+    }
   },
   "profile": {
     "password": {
@@ -2384,6 +2413,15 @@
         },
         "webhookSecretOpened": {
           "title": "Secreto abierto"
+        },
+        "twoFactorRequired": {
+          "title": "Pedir el inicio de sesión en dos pasos",
+          "description": "Quién debe configurar una aplicación de autenticación o una clave de acceso. Activarlo no cierra la sesión de nadie: se aplica a lo que hagan a continuación. Las claves API y los proveedores de inicio de sesión externos no se ven afectados.",
+          "options": {
+            "off": "No obligatorio",
+            "admins": "Administradores",
+            "all": "Todos"
+          }
         }
       }
     }
@@ -2866,6 +2904,9 @@
     "purged": "{count, plural, =1 {1 elemento eliminado definitivamente} other {# elementos eliminados definitivamente}}",
     "purgePartial": "{failed} de {total, plural, =1 {1 elemento} other {# elementos}} no se pudieron eliminar",
     "purgeError": "No se pudo vaciar la papelera.",
+    "emptying": "Se está vaciando la papelera",
+    "emptied": "Se vació la papelera",
+    "emptyPartial": "{failed, plural, =1 {1 elemento no se pudo eliminar y sigue} other {# elementos no se pudieron eliminar y siguen}} en la papelera",
     "purgeTitle": "¿Eliminar {name} definitivamente?",
     "purgeBulkTitle": "¿Eliminar {count} elementos definitivamente?",
     "purgeHint": "Se quita del almacenamiento y no se puede restaurar.",
@@ -3025,6 +3066,15 @@
         }
       }
     }
+  },
+  "twoFactorSetup": {
+    "pageTitle": "Configurar el inicio de sesión en dos pasos",
+    "title": "Configura el inicio de sesión en dos pasos antes de continuar",
+    "text": "Esta instalación pide un segundo paso al iniciar sesión. Usa una aplicación de autenticación o añade una clave de acceso. Hasta entonces solo puedes usar esta página.",
+    "signOut": "Cerrar sesión",
+    "continue": "Continuar",
+    "continueHint": "Pulsa aquí cuando hayas terminado.",
+    "notYet": "Configura primero una aplicación de autenticación o una clave de acceso."
   },
   "ui": {
     "unsavedChanges": "Cambios sin guardar",
@@ -3274,6 +3324,14 @@
       },
       "storage": "Almacenamiento",
       "storageDefault": "Predeterminado"
+    },
+    "twoFactorReset": {
+      "action": "Restablecer el inicio de sesión en dos pasos",
+      "title": "¿Restablecer el inicio de sesión en dos pasos de {name}?",
+      "text": "Se eliminan el código de la aplicación de autenticación, los códigos de respaldo y los dispositivos de confianza. Las claves de acceso se quedan. Si el inicio de sesión en dos pasos es obligatorio, la persona lo configura de nuevo en el próximo inicio de sesión.",
+      "confirm": "Restablecer",
+      "done": "Inicio de sesión en dos pasos restablecido",
+      "failed": "No se pudo restablecer el inicio de sesión en dos pasos."
     }
   },
   "validation": {

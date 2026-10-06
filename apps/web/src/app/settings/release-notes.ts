@@ -27,8 +27,11 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "Every email now has the same calm layout and a plain text version.",
     "Administrators can give a user their own storage limit on the Users page. The ring in that person's menu follows it.",
     "Settings has a default and a maximum lifetime for shares and receive links. New links start with the default end date and cannot run past the maximum.",
-    "Deleting a file or folder moves it to the new Trash page, where it stays for 30 days (changeable in Settings). Restore it, or delete it for good. The trash counts toward your storage.",
+    "Deleting a file or folder moves it to the new Trash page, where it stays for 30 days (changeable in Settings). Restore it, or delete it for good. The trash counts toward your storage. Empty trash runs in the background and the page shows its progress.",
     "Settings can remove ended shares and empty receive links by themselves after a number of days. Files are never removed, and a receive link that holds files stays.",
+    "Settings can ask administrators or everyone to set up two step sign in. Until they do, they can only reach the set up page. API keys and external sign in providers are not affected.",
+    "An administrator can reset the two step sign in of another user from the Users page, for someone who lost the phone. It shows in the activity log.",
+    "You can sign in with a passkey: a fingerprint, a face or a security key, without typing a password. Add and remove passkeys on your profile page. A passkey counts as two step sign in.",
   ],
 };
 

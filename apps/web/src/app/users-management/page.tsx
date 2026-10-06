@@ -57,6 +57,10 @@ function UsersContent() {
               modals.onStatusModalOpen();
             }}
             onToggleAdmin={management.handleToggleAdmin}
+            onResetTwoFactor={(user) => {
+              modals.setResetModalUser(user);
+              modals.onResetModalOpen();
+            }}
           />
         ) : (
           <EmptyState
@@ -92,6 +96,8 @@ function UsersContent() {
         modals={modals}
         selectedUser={management.selectedUser}
         statusModalUser={management.statusModalUser}
+        resetModalUser={management.resetModalUser}
+        onResetTwoFactor={management.handleResetTwoFactor}
         onDelete={management.handleDeleteUser}
         onSubmit={management.onSubmit}
         onToggleStatus={management.handleToggleUserStatus}

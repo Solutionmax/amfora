@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { SHARE_PASSWORD_HEADER } from "@/lib/share-password";
+import { isSetupRequiredError, SETUP_PAGE, setupUrl } from "@/lib/two-factor-setup";
 
 const apiInstance = axios.create({
   headers: {
@@ -27,6 +28,20 @@ apiInstance.interceptors.request.use((config) => {
   }
 
   return config;
+});
+
+// The server answers every route but the set up path with a coded 403 while a second step is
+// required and missing. One place sends the user to the set up page, wherever the call came from.
+apiInstance.interceptors.response.use(undefined, (error) => {
+  if (
+    typeof window !== "undefined" &&
+    isSetupRequiredError(error) &&
+    !window.location.pathname.startsWith(SETUP_PAGE)
+  ) {
+    window.location.assign(setupUrl(window.location.pathname + window.location.search));
+  }
+
+  return Promise.reject(error);
 });
 
 export default apiInstance;
