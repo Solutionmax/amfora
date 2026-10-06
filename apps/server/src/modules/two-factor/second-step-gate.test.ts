@@ -7,7 +7,8 @@ import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 import { useTestDatabase } from "../../../test-support/test-db";
-import { SETUP_PATH } from "./second-step";
+import { env } from "../../env";
+import { PUBLIC_PATH, SETUP_PATH } from "./second-step";
 
 const database = useTestDatabase();
 
@@ -235,4 +236,114 @@ test("the set up path holds no route that reads or changes files, shares, secret
     /^(GET|POST|PUT|PATCH|DELETE) \/(files|folders|shares|reverse-shares|secrets|users|api-keys|activity|trash|storage)/;
   for (const entry of SETUP_PATH) assert.ok(!sensitive.test(entry), entry);
   assert.ok(!SETUP_PATH.has("GET /app/configs") && !SETUP_PATH.has("PATCH /app/configs"));
+});
+
+const codeOf = (res: { json: () => { code?: unknown } | null }): unknown => {
+  try {
+    return res.json()?.code;
+  } catch {
+    return undefined;
+  }
+};
+const urlOf = (pattern: string) => pattern.replace(/:[A-Za-z]+/g, "x");
+
+test("every registered route is gated for a session that must set up, unless it is on the set up path or public", async () => {
+  await setRequirement("all");
+  const open: string[] = [];
+  for (const entry of registered) {
+    if (SETUP_PATH.has(entry) || PUBLIC_PATH.has(entry)) continue;
+    const [method, pattern] = entry.split(" ");
+    if (method === "HEAD" || method === "OPTIONS") continue;
+    const res = await call(method, urlOf(pattern), as("member"));
+    if (res.statusCode !== 403 || codeOf(res) !== "TWO_FACTOR_SETUP_REQUIRED")
+      open.push(`${entry} answered ${res.statusCode}`);
+  }
+  assert.deepEqual(open, []);
+});
+
+test("every entry on the public list is a real route, not on the set up path, and a gated cookie does not stop it", async () => {
+  await setRequirement("all");
+  assert.ok(PUBLIC_PATH.size > 10);
+  for (const entry of PUBLIC_PATH) {
+    assert.ok(registered.has(entry), `${entry} is not a registered route`);
+    assert.ok(!SETUP_PATH.has(entry), `${entry} is on both lists`);
+    const [method, pattern] = entry.split(" ");
+    const res = await call(method, urlOf(pattern), as("member"));
+    assert.notEqual(codeOf(res), "TWO_FACTOR_SETUP_REQUIRED", `${entry} answered ${res.statusCode}`);
+  }
+});
+
+test("the public list holds nothing that reads or changes a user's own data", () => {
+  const sensitive = /^(GET|POST|PUT|PATCH|DELETE) \/(folders|users|api-keys|activity|trash|notifications|auth)/;
+  for (const entry of PUBLIC_PATH) assert.ok(!sensitive.test(entry), entry);
+  assert.ok(!PUBLIC_PATH.has("GET /files") && !PUBLIC_PATH.has("GET /shares/me"));
+});
+
+test("a public route with optional sign in does not see a gated session as signed in", async () => {
+  await setRequirement("off");
+  const share = await prisma.share.create({
+    data: {
+      id: "locked-share",
+      name: "Locked",
+      creator: { connect: { id: "member" } },
+      security: { create: { password: "not-a-real-hash" } },
+    },
+  });
+  // Not gated: the owner is let in without the password.
+  const owner = await app.inject({ method: "GET", url: `/shares/${share.id}`, ...as("member") });
+  assert.equal(owner.statusCode, 200, owner.body);
+  // Gated: the same cookie is a stranger to this route, so the password is asked for.
+  await setRequirement("all");
+  const gated = await app.inject({ method: "GET", url: `/shares/${share.id}`, ...as("member") });
+  assert.equal(gated.statusCode, 400, gated.body);
+  assert.match(gated.json().error, /Password required/);
+});
+
+async function withServerSetting(value: string | undefined, work: () => Promise<void>) {
+  const saved = env.TWO_FACTOR_REQUIRED;
+  env.TWO_FACTOR_REQUIRED = value;
+  try {
+    await work();
+  } finally {
+    env.TWO_FACTOR_REQUIRED = saved;
+  }
+}
+const isGated = async (userId: string) =>
+  (await call("GET", "/files", as(userId))).json()?.code === "TWO_FACTOR_SETUP_REQUIRED";
+
+test("TWO_FACTOR_REQUIRED from the server wins over the stored setting, in both directions", async () => {
+  await setRequirement("all");
+  await withServerSetting("off", async () => assert.equal(await isGated("member"), false));
+  await setRequirement("off");
+  await withServerSetting("all", async () => assert.equal(await isGated("member"), true));
+  await withServerSetting("admins", async () => {
+    assert.equal(await isGated("member"), false);
+    assert.equal(await isGated("admin"), true);
+  });
+});
+
+test("an unknown TWO_FACTOR_REQUIRED is ignored and the stored setting counts", async () => {
+  await setRequirement("all");
+  await withServerSetting("sometimes", async () => assert.equal(await isGated("member"), true));
+  await withServerSetting("", async () => assert.equal(await isGated("member"), true));
+  await setRequirement("off");
+  await withServerSetting("sometimes", async () => assert.equal(await isGated("member"), false));
+});
+
+test("the administrator sees which value the server forces, and /auth/me follows it", async () => {
+  await setRequirement("off");
+  await prisma.user.update({ where: { id: "admin" }, data: { twoFactorEnabled: true } });
+  await withServerSetting("all", async () => {
+    const list = await app.inject({ method: "GET", url: "/app/configs", ...as("admin") });
+    assert.equal(list.statusCode, 200, list.body);
+    const row = list.json().configs.find((c: { key: string }) => c.key === "twoFactorRequired");
+    assert.equal(row.value, "all");
+    assert.equal(row.lockedByServer, true);
+    assert.equal((await call("GET", "/auth/me", as("member"))).json().user.twoFactorSetupRequired, true);
+  });
+  const list = await app.inject({ method: "GET", url: "/app/configs", ...as("admin") });
+  await prisma.user.update({ where: { id: "admin" }, data: { twoFactorEnabled: false } });
+  const row = list.json().configs.find((c: { key: string }) => c.key === "twoFactorRequired");
+  assert.equal(row.value, "off");
+  assert.ok(!row.lockedByServer);
 });

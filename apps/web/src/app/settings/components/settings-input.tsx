@@ -168,17 +168,23 @@ export function SettingField({ config, form, disabled }: SettingProps) {
   const error = form.formState.errors.configs as Record<string, { message?: string }> | undefined;
   // The logo control carries its own title row.
   const isLogo = config.key === "appLogo";
+  const locked = config.lockedByServer === true;
 
   if (isLogo) return <SettingControl config={config} form={form} disabled={disabled} />;
+
+  const description = fieldDescription(t, config.key, config.description);
+  const hint = locked
+    ? [description, t(`settings.calm.fields.${config.key}.lockedByServer`)].filter(Boolean).join(" ")
+    : description;
 
   return (
     <Field
       label={fieldTitle(t, config.key)}
       htmlFor={READ_ONLY_FIELDS.includes(config.key) ? undefined : config.key}
-      hint={fieldDescription(t, config.key, config.description)}
+      hint={hint}
       error={error?.[config.key]?.message}
     >
-      <SettingControl config={config} form={form} disabled={disabled} />
+      <SettingControl config={config} form={form} disabled={disabled || locked} />
     </Field>
   );
 }

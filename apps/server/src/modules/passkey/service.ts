@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import type { z } from "zod";
 
 import { prisma } from "../../shared/prisma";
+import { BLOCKED_MESSAGE, countFailure, isBlocked } from "../auth/login-attempts";
 import { ConfigService } from "../config/service";
 import { UserResponseSchema } from "../user/dto";
 import { challengeOf, consumeChallenge, createChallenge } from "./challenge";
@@ -19,7 +20,9 @@ export class PasskeyError extends Error {
     readonly status: 400 | 404,
     message: string,
     /** The user the failed attempt was aimed at, when the credential is known. */
-    readonly userId: string | null = null
+    readonly userId: string | null = null,
+    /** False when the refusal came from a block that is already running: it must not renew it. */
+    readonly countsAsFailure = true
   ) {
     super(message);
   }
@@ -38,12 +41,25 @@ function requireRelyingParty() {
   return party;
 }
 
-/** The same fresh proof switching two step sign in off asks for: the password. */
+/**
+ * The same fresh proof switching two step sign in off asks for: the password. It is a way to
+ * guess the password with a stolen session, so it uses the sign in's failure counter and block.
+ * A right password does not clear the counter: only a real sign in does.
+ */
 async function requirePassword(userId: string, password: string) {
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { password: true, isActive: true } });
   if (!user?.isActive) throw new PasskeyError(404, "User not found");
   if (!user.password) throw new PasskeyError(400, "Password verification required");
-  if (!(await bcrypt.compare(password, user.password))) throw new PasskeyError(400, "Invalid password");
+  if (await isBlocked(userId)) throw new PasskeyError(400, BLOCKED_MESSAGE);
+  if (!(await bcrypt.compare(password, user.password))) {
+    await countFailure(userId);
+    throw new PasskeyError(400, "Invalid password");
+  }
+}
+
+/** Passkeys belong to local accounts: with password sign in switched off they are refused, with the generic answer. */
+async function requirePasswordSignIn() {
+  if ((await configService.getValue("passwordAuthEnabled")) === "false") throw new PasskeyError(400, SIGN_IN_FAILED);
 }
 
 export async function registrationOptions(userId: string, password: string) {
@@ -126,6 +142,7 @@ export async function removePasskey(userId: string, id: string, password: string
 /** Options for a sign in without a user name: the authenticator offers the keys it holds for this site. */
 export async function loginOptions() {
   const party = requireRelyingParty();
+  await requirePasswordSignIn();
   const challenge = await createChallenge("login", null);
   return generateAuthenticationOptions({
     rpID: party.rpID,
@@ -134,30 +151,10 @@ export async function loginOptions() {
   });
 }
 
-/** Is this user locked out by too many failures? The same rule the password sign in uses. */
-async function isBlocked(userId: string): Promise<boolean> {
-  const attempt = await prisma.loginAttempt.findUnique({ where: { userId } });
-  if (!attempt) return false;
-  const max = Number(await configService.getValue("maxLoginAttempts"));
-  const blockMs = Number(await configService.getValue("loginBlockDuration")) * 1000;
-  return attempt.attempts >= max && Date.now() - attempt.lastAttempt.getTime() < blockMs;
-}
-
-/** A failed attempt counts like a wrong password. */
-async function countFailure(userId: string) {
-  const blockMs = Number(await configService.getValue("loginBlockDuration")) * 1000;
-  const attempt = await prisma.loginAttempt.findUnique({ where: { userId } });
-  const expired = attempt && Date.now() - attempt.lastAttempt.getTime() >= blockMs;
-  await prisma.loginAttempt.upsert({
-    where: { userId },
-    create: { userId, attempts: 1, lastAttempt: new Date() },
-    update: { attempts: expired ? 1 : { increment: 1 }, lastAttempt: new Date() },
-  });
-}
-
 /** Signs in with a passkey. Every refusal is the same sentence; the caller counts and logs it. */
 export async function verifyLogin(response: z.infer<typeof AuthenticationResponseSchema>) {
   const party = requireRelyingParty();
+  await requirePasswordSignIn();
   const challenge = challengeOf(response.response.clientDataJSON);
   if (!challenge || !(await consumeChallenge(challenge, "login", null))) throw new PasskeyError(400, SIGN_IN_FAILED);
 
@@ -166,7 +163,8 @@ export async function verifyLogin(response: z.infer<typeof AuthenticationRespons
   const { user } = passkey;
   const fail = () => new PasskeyError(400, SIGN_IN_FAILED, user.id);
 
-  if (!user.isActive || (await isBlocked(user.id))) throw fail();
+  if (!user.isActive) throw fail();
+  if (await isBlocked(user.id)) throw new PasskeyError(400, SIGN_IN_FAILED, user.id, false);
   const handle = response.response.userHandle;
   if (handle && Buffer.from(handle, "base64url").toString("utf8") !== user.id) throw fail();
 
@@ -195,5 +193,3 @@ export async function verifyLogin(response: z.infer<typeof AuthenticationRespons
   await prisma.loginAttempt.deleteMany({ where: { userId: user.id } });
   return UserResponseSchema.parse(user);
 }
-
-export { countFailure };

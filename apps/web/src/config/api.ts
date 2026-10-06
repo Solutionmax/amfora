@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import { isPublicPath } from "@/components/auth/paths/public-paths";
 import { SHARE_PASSWORD_HEADER } from "@/lib/share-password";
 import { isSetupRequiredError, SETUP_PAGE, setupUrl } from "@/lib/two-factor-setup";
 
@@ -36,7 +37,8 @@ apiInstance.interceptors.response.use(undefined, (error) => {
   if (
     typeof window !== "undefined" &&
     isSetupRequiredError(error) &&
-    !window.location.pathname.startsWith(SETUP_PAGE)
+    !window.location.pathname.startsWith(SETUP_PAGE) &&
+    !isPublicPath(window.location.pathname)
   ) {
     window.location.assign(setupUrl(window.location.pathname + window.location.search));
   }

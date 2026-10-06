@@ -9,9 +9,25 @@ export function isSetupRequiredError(error: unknown): boolean {
   return response?.status === 403 && response.data?.code === SETUP_REQUIRED_CODE;
 }
 
+function decodeOnce(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function isLocalPath(value: string): boolean {
+  if (!value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return false;
+  // Tab, line feed and carriage return are dropped by URL parsers: "/<TAB>/x" would become "//x".
+  if (/[\u0000-\u001f\u007f\s]/.test(value)) return false;
+  const origin = "http://amfora.invalid";
+  return new URL(value, origin).origin === origin;
+}
+
 /** Only a path on this site, never the set up page itself or the sign in page: no open redirect, no loop. */
 export function safeNext(value: string | null | undefined, fallback = "/dashboard"): string {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return fallback;
+  if (!value || !isLocalPath(value) || !isLocalPath(decodeOnce(value).replace(/ /g, "+"))) return fallback;
   if (value.startsWith(SETUP_PAGE) || value.startsWith("/login")) return fallback;
   return value;
 }

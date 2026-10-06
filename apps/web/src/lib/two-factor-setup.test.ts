@@ -16,6 +16,15 @@ test("the way back is a path on this site and nothing else", () => {
   for (const bad of ["https://evil.example", "//evil.example", "/\\evil", "javascript:alert(1)", "", null, undefined]) {
     assert.equal(safeNext(bad), "/dashboard", String(bad));
   }
+  for (const bad of [
+    "/\t/evil.example",
+    "/\n/evil.example",
+    "/\r/evil.example",
+    "/ /evil.example",
+    "/%09/evil.example",
+  ]) {
+    assert.equal(safeNext(bad), "/dashboard", JSON.stringify(bad));
+  }
   assert.equal(safeNext("/two-factor-setup?next=/files"), "/dashboard");
   assert.equal(safeNext("/login"), "/dashboard");
 });

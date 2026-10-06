@@ -1,9 +1,13 @@
 import type { FastifyInstance } from "fastify";
 
+import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 
 export const TWO_FACTOR_REQUIRED_VALUES = ["off", "admins", "all"] as const;
 export type TwoFactorRequirement = (typeof TWO_FACTOR_REQUIRED_VALUES)[number];
+
+/** The cookie the session travels in (see the jwt registration in app.ts). */
+const SESSION_COOKIE = "token";
 
 export const SETUP_REQUIRED_CODE = "TWO_FACTOR_SETUP_REQUIRED";
 
@@ -13,8 +17,25 @@ export function assertTwoFactorRequired(value: string): void {
   }
 }
 
-/** An unknown or missing value (an install from before the setting existed) means off. */
+/** The requirement the server configuration forces, or null: TWO_FACTOR_REQUIRED=off|admins|all. Anything else is ignored. */
+export function requirementFromServer(): TwoFactorRequirement | null {
+  const value = env.TWO_FACTOR_REQUIRED?.trim();
+  return TWO_FACTOR_REQUIRED_VALUES.includes(value as TwoFactorRequirement) ? (value as TwoFactorRequirement) : null;
+}
+
+/** For the settings page: the value the server forces, and a mark, so the select can show it is not the administrator's to change. */
+export function withServerRequirement<T extends { key: string; value: string }>(
+  configs: T[]
+): Array<T & { lockedByServer?: boolean }> {
+  const forced = requirementFromServer();
+  if (!forced) return configs;
+  return configs.map((c) => (c.key === "twoFactorRequired" ? { ...c, value: forced, lockedByServer: true } : c));
+}
+
+/** The server configuration wins; else the stored value. An unknown or missing value (an install from before the setting existed) means off. */
 async function requirement(): Promise<TwoFactorRequirement> {
+  const forced = requirementFromServer();
+  if (forced) return forced;
   const row = await prisma.appConfig.findUnique({ where: { key: "twoFactorRequired" } });
   return TWO_FACTOR_REQUIRED_VALUES.includes(row?.value as TwoFactorRequirement)
     ? (row?.value as TwoFactorRequirement)
@@ -65,8 +86,54 @@ export const SETUP_PATH: ReadonlySet<string> = new Set([
   "POST /register-with-invite",
 ]);
 
+/**
+ * Routes that need no session at all, or treat a missing one as a normal visitor (a download page,
+ * a receive link, a secret, the branding images). A session that still has to set up a second step
+ * is NOT refused here, and is not seen as signed in either: see registerSecondStepGate. A route
+ * that is not on this list or on SETUP_PATH is refused for such a session, so a new route is safe
+ * by default. Matched on the route pattern, like SETUP_PATH.
+ */
+export const PUBLIC_PATH: ReadonlySet<string> = new Set([
+  "GET /app/system-info",
+  "GET /app/background",
+  "GET /app/share-cover",
+  "GET /app/share-cover/og",
+  "GET /app/link-preview",
+  "GET /app/link-preview/og",
+  "GET /embed/:id",
+  "GET /files/download-url", // optional sign in: the owner may fetch their own file
+  "GET /files/download", // optional sign in: the owner may fetch their own file
+  "GET /shares/:shareId", // optional sign in: the owner is let in without the password
+  "GET /shares/alias/:alias",
+  "GET /shares/alias/:alias/metadata",
+  "GET /shares/:shareId/folders/:folderId/contents",
+  "GET /shares/:shareId/folders/:folderId/download",
+  "GET /reverse-shares/:id/upload",
+  "GET /reverse-shares/alias/:alias/upload",
+  "GET /reverse-shares/alias/:alias/metadata",
+  "GET /reverse-shares/alias/:alias/multipart/part-url",
+  "POST /reverse-shares/:id/presigned-url",
+  "POST /reverse-shares/:id/register-file",
+  "POST /reverse-shares/:id/check-password",
+  "POST /reverse-shares/alias/:alias/presigned-url",
+  "POST /reverse-shares/alias/:alias/register-file",
+  "POST /reverse-shares/alias/:alias/multipart/create",
+  "POST /reverse-shares/alias/:alias/multipart/complete",
+  "POST /reverse-shares/alias/:alias/multipart/abort",
+  "GET /secrets/limits",
+  "GET /secrets/:id/status",
+  "POST /secrets/anonymous",
+  "POST /secrets/:id/open",
+]);
+
+const key = (method: string, route: string) => `${method === "HEAD" ? "GET" : method} ${route}`;
+
 export function isOnSetupPath(method: string, route: string | undefined): boolean {
-  return !!route && SETUP_PATH.has(`${method === "HEAD" ? "GET" : method} ${route}`);
+  return !!route && SETUP_PATH.has(key(method, route));
+}
+
+export function isPublic(method: string, route: string | undefined): boolean {
+  return !!route && PUBLIC_PATH.has(key(method, route));
 }
 
 interface SessionClaims {
@@ -93,6 +160,13 @@ export function registerSecondStepGate(app: FastifyInstance) {
     // A key is its own secret; an external provider is responsible for its own second step.
     if (claims.viaApiKey || claims.viaProvider || typeof claims.userId !== "string") return;
     if (await mustSetUpSecondStep(claims.userId)) {
+      if (isPublic(request.method, route)) {
+        // A visitor like any other: the route must not see this session, now or through its own jwtVerify.
+        delete request.cookies[SESSION_COOKIE];
+        delete request.headers.authorization;
+        request.user = null as unknown as typeof request.user;
+        return;
+      }
       // A string, so a route's own 403 response schema cannot strip the code.
       return reply
         .status(403)

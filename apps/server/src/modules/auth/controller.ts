@@ -235,7 +235,7 @@ export class AuthController {
       const passwordAuthEnabled = await this.configService.getValue("passwordAuthEnabled");
       return reply.send({
         passwordAuthEnabled: passwordAuthEnabled === "true",
-        passkeysAvailable: relyingParty() !== null,
+        passkeysAvailable: relyingParty() !== null && passwordAuthEnabled !== "false",
       });
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });

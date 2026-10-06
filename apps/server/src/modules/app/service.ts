@@ -2,7 +2,7 @@ import { assertLifetimeSettings } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { ConfigService } from "../config/service";
 import { assertCleanUpSettings } from "../trash/settings";
-import { assertTwoFactorRequired } from "../two-factor/second-step";
+import { assertTwoFactorRequired, withServerRequirement } from "../two-factor/second-step";
 import { resolvePaidAppearance } from "./appearance";
 import { backgroundImage, linkPreviewImage, shareCoverImage } from "./branding-image";
 import { verifyBrandpack } from "./brandpack";
@@ -91,16 +91,18 @@ export class AppService {
   }
 
   async getAllConfigs() {
-    return prisma.appConfig.findMany({
-      where: {
-        key: {
-          not: "jwtSecret",
+    return withServerRequirement(
+      await prisma.appConfig.findMany({
+        where: {
+          key: {
+            not: "jwtSecret",
+          },
         },
-      },
-      orderBy: {
-        group: "asc",
-      },
-    });
+        orderBy: {
+          group: "asc",
+        },
+      })
+    );
   }
 
   async getPublicConfigs() {
@@ -197,12 +199,14 @@ export class AppService {
       throw new Error(`Configurations not found: ${missingKeys.join(", ")}`);
     }
 
-    return prisma.$transaction(
-      updates.map((update) =>
-        prisma.appConfig.update({
-          where: { key: update.key },
-          data: { value: update.value },
-        })
+    return withServerRequirement(
+      await prisma.$transaction(
+        updates.map((update) =>
+          prisma.appConfig.update({
+            where: { key: update.key },
+            data: { value: update.value },
+          })
+        )
       )
     );
   }

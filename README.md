@@ -297,6 +297,14 @@ information.
 Built and maintained by [SolutionMAX](https://solutionmax.net/).
 If Amfora helps your team, you can [support the work](https://buymeacoffee.com/solutionmax).
 
+### Locked out of two step sign in
+
+If the only administrator loses the authenticator while `twoFactorRequired` is on, start the
+server with `TWO_FACTOR_REQUIRED=off` (the other values are `admins` and `all`). It wins over
+the setting in the database, and Settings then shows the select as set by the server
+configuration. Restart, sign in, repair the account (set up a new second step or reset it from the
+Users page), remove the variable and restart again. Any other value is ignored.
+
 ### Security configuration
 
 Set `APP_URL` to the canonical browser origin (for example `https://files.example.com`)

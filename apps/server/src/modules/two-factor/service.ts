@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import speakeasy from "speakeasy";
 
 import { prisma } from "../../shared/prisma";
+import { BLOCKED_MESSAGE, countFailure, isBlocked } from "../auth/login-attempts";
 import { ConfigService } from "../config/service";
 
 interface BackupCode {
@@ -181,6 +182,9 @@ export class TwoFactorService {
       throw new Error("Password verification required");
     }
 
+    // Guessing the password with a stolen session must hit the same lockout as the sign in.
+    if (await isBlocked(userId)) throw new Error(BLOCKED_MESSAGE);
+
     let isValidPassword = false;
     try {
       isValidPassword = await bcrypt.compare(password, user.password);
@@ -189,6 +193,7 @@ export class TwoFactorService {
       throw new Error("Password verification failed");
     }
     if (!isValidPassword) {
+      await countFailure(userId);
       throw new Error("Invalid password");
     }
 

@@ -6,6 +6,7 @@ export interface ConfigItem {
   type: string;
   group: string;
   updatedAt: string;
+  lockedByServer?: boolean;
 }
 
 export interface ConfigUpdateItem {

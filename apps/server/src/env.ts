@@ -25,6 +25,8 @@ const envSchema = z.object({
   STORAGE_URL: z.string().optional(), // Storage URL for internal storage presigned URLs (required when ENABLE_S3=false, e.g., https://syrg.amfora.com or http://192.168.1.100:9379)
   DATABASE_URL: z.string().optional().default("file:/app/server/prisma/amfora.db"),
   CUSTOM_PATH: z.string().optional(),
+  // The way out of a lockout: off, admins or all wins over the setting in the database. Any other value is ignored.
+  TWO_FACTOR_REQUIRED: z.string().optional(),
 
   // Update checking. An empty AMFORA_UPDATE_URL switches the check off entirely, which is
   // the escape hatch for an installation that must not talk to the outside world.

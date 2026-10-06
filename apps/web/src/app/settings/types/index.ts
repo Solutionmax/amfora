@@ -27,4 +27,6 @@ export type Config = {
   group: string;
   description?: string;
   type: ConfigType;
+  /** The server configuration forces this value (an environment variable): shown, not editable. */
+  lockedByServer?: boolean;
 };

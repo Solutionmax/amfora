@@ -404,3 +404,80 @@ test("garbage in the answer is a clean 400, not a crash", async () => {
   answer.response.clientDataJSON = "!!!";
   assert.equal((await login(answer)).statusCode, 400);
 });
+
+const attemptsOf = async (userId: string) =>
+  (await prisma.loginAttempt.findUnique({ where: { userId } }))?.attempts ?? 0;
+const maxAttempts = async () =>
+  Number((await prisma.appConfig.findUniqueOrThrow({ where: { key: "maxLoginAttempts" } })).value);
+
+test("a wrong password for adding or removing a passkey counts as a failed sign in", async () => {
+  await prisma.loginAttempt.deleteMany({});
+  const wrong = await post("/auth/passkeys/register/options", { password: "nope nope nope" }, as("ann"));
+  assert.equal(wrong.statusCode, 400);
+  assert.equal(await attemptsOf("ann"), 1);
+  const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
+  await register("ann", key);
+  const stored = await prisma.passkey.findFirstOrThrow({ where: { credentialId: key.id } });
+  await post(`/auth/passkeys/${stored.id}/remove`, { password: "nope nope nope" }, as("ann"));
+  assert.equal(await attemptsOf("ann"), 2);
+  await prisma.passkey.deleteMany({ where: { userId: "ann" } });
+});
+
+test("a stolen session cannot guess the password past the lockout, and the right one is refused while blocked", async () => {
+  await prisma.loginAttempt.deleteMany({});
+  const max = await maxAttempts();
+  for (let i = 0; i < max; i++) {
+    await post("/auth/passkeys/register/options", { password: "nope nope nope" }, as("ann"));
+  }
+  assert.equal(await attemptsOf("ann"), max);
+  const before = await prisma.passkeyChallenge.count();
+  const blocked = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"));
+  assert.equal(blocked.statusCode, 400);
+  assert.equal(await prisma.passkeyChallenge.count(), before);
+  // A refused attempt while blocked neither counts nor renews the block.
+  assert.equal(await attemptsOf("ann"), max);
+  await prisma.loginAttempt.deleteMany({});
+});
+
+test("a right password does not wipe the failures: only a real sign in does", async () => {
+  await prisma.loginAttempt.deleteMany({});
+  await prisma.loginAttempt.create({ data: { userId: "ann", attempts: 2, lastAttempt: new Date() } });
+  assert.equal((await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"))).statusCode, 200);
+  assert.equal(await attemptsOf("ann"), 2);
+  await prisma.loginAttempt.deleteMany({});
+});
+
+test("a blocked account's failed passkey sign in does not count again or renew the block", async () => {
+  const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
+  await register("ann", key);
+  const max = await maxAttempts();
+  const long = new Date(Date.now() - 60_000);
+  await prisma.loginAttempt.deleteMany({});
+  await prisma.loginAttempt.create({ data: { userId: "ann", attempts: max, lastAttempt: long } });
+  assert.equal((await login(key.assert(await loginChallenge()))).statusCode, 400);
+  const after = await prisma.loginAttempt.findUniqueOrThrow({ where: { userId: "ann" } });
+  assert.equal(after.attempts, max);
+  assert.equal(after.lastAttempt.getTime(), long.getTime());
+  await prisma.loginAttempt.deleteMany({});
+  await prisma.passkey.deleteMany({ where: { userId: "ann" } });
+});
+
+test("with password sign in switched off passkeys are refused with the generic answer and reported unavailable", async () => {
+  const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
+  await register("ann", key);
+  await prisma.appConfig.update({ where: { key: "passwordAuthEnabled" }, data: { value: "false" } });
+  try {
+    const config = await app.inject({ method: "GET", url: "/auth/config" });
+    assert.equal(config.json().passkeysAvailable, false);
+    const options = await post("/auth/passkeys/login/options", {});
+    assert.equal(options.statusCode, 400);
+    const res = await post("/auth/passkeys/login/verify", { response: key.assert("x") });
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.cookies.length, 0);
+  } finally {
+    await prisma.appConfig.update({ where: { key: "passwordAuthEnabled" }, data: { value: "true" } });
+  }
+  assert.equal((await app.inject({ method: "GET", url: "/auth/config" })).json().passkeysAvailable, true);
+  assert.equal((await login(key.assert(await loginChallenge()))).statusCode, 200);
+  await prisma.passkey.deleteMany({ where: { userId: "ann" } });
+});

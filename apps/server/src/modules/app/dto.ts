@@ -18,4 +18,5 @@ export const ConfigResponseSchema = z.object({
   type: z.string().describe("The config type"),
   group: z.string().describe("The config group"),
   updatedAt: z.date().describe("The config update date"),
+  lockedByServer: z.boolean().optional().describe("The server configuration forces this value"),
 });

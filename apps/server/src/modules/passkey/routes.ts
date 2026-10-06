@@ -5,6 +5,7 @@ import { credentialRateLimit } from "../../config/rate-limit.config";
 import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { actorOf, recordRequestActivity, recordVisitorActivity } from "../activity/activity";
+import { countFailure } from "../auth/login-attempts";
 import { UserResponseSchema } from "../user/dto";
 import { LoginVerifySchema, PasswordProofSchema, RegisterVerifySchema } from "./dto";
 import * as passkeys from "./service";
@@ -39,7 +40,7 @@ async function recordFailure(request: FastifyRequest, error: PasskeyError) {
   const owner = error.userId
     ? await prisma.user.findUnique({ where: { id: error.userId }, select: { firstName: true, lastName: true } })
     : null;
-  if (error.userId) await passkeys.countFailure(error.userId);
+  if (error.userId && error.countsAsFailure) await countFailure(error.userId);
   await recordVisitorActivity(request, {
     action: "account.sign_in_failed",
     ownerId: error.userId,
