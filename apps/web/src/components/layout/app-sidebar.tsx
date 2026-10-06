@@ -251,14 +251,19 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
           </Link>
         )}
 
-        <div className="flex items-center gap-1 px-1 [&_button]:size-[30px] [&_button]:text-ink-icon [&_button:hover]:text-ink">
+        {/* No gaps: four tools and a version such as v2.4.0-beta.4 have to fit on one line. */}
+        <div className="flex items-center [&_button]:size-[30px] [&_button]:shrink-0 [&_button]:text-ink-icon [&_button:hover]:text-ink">
           <LanguageSwitcher />
           <ModeToggle />
           {!onNavigate && <NotificationBell />}
           <Button variant="ghost" size="icon" onClick={handleLogout} aria-label={t("navbar.logout")}>
             <IconLogout className="size-[17px]" />
           </Button>
-          {hideVersion !== "true" && <span className="mono ml-auto pr-1.5 text-[11px] text-ink-3">v{version}</span>}
+          {hideVersion !== "true" && (
+            <span className="mono ml-auto min-w-0 truncate pl-1 pr-0.5 text-[11px] text-ink-3" title={`v${version}`}>
+              v{version}
+            </span>
+          )}
         </div>
       </div>
     </div>

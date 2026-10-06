@@ -46,7 +46,8 @@ services:
       #
       # Virus scan, off unless CLAMAV_HOST is set. Add the clamav service below, then see docs/VIRUS-SCAN.md.
       # CLAMAV_HOST: "clamav"
-      # CLAMAV_MAX_SIZE_MB: "100"
+      # CLAMAV_PORT: "3310"              # the TCP port of clamd
+      # CLAMAV_MAX_SIZE_MB: "100"        # larger files are not scanned and show as "Not checked"
       #
       # Required for internal storage: the URL the browser uses to reach storage.
       APP_URL: "http://localhost:5487" # replace with your actual HTTPS app origin in production

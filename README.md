@@ -39,7 +39,9 @@ browser link where they can send files back without creating an account.
 
 Open **My Files** to upload files, create folders, and see what is stored. The
 workspace tracks uploads and makes the same files available when you create a
-share.
+share. Deleting a file or folder moves it to the **Trash**, where it stays for
+30 days (an administrator can change that) and can be restored. Only deleting
+it there, or emptying the trash, removes it from storage.
 
 ### 2. Send a controlled link
 
@@ -48,12 +50,16 @@ the restrictions that fit the handoff:
 
 - password protection;
 - expiration date;
-- maximum views; and
-- recipient email notifications.
+- maximum views;
+- recipient email notifications; and
+- a group, so that only its members can open the link.
 
 Amfora creates an `/s/<alias>` link. Recipients open it in a browser and do not
-need an Amfora account. The owner can later edit the share, its files, and its
-restrictions.
+need an Amfora account, unless the share is limited to a group: then they sign
+in first. Members see such shares under **Shared with me**. The owner can later
+edit the share, its files, and its restrictions. An administrator can set a
+default and a maximum lifetime for links, and can have ended links removed
+automatically.
 
 ### 3. Receive files from outside
 
@@ -75,6 +81,9 @@ After the last opening the text is destroyed.
 **Activity** lists what happened to your links: opened, downloaded, a wrong
 password, files received, a secret opened, and where the visitor was. You can
 ask for an email when a share is downloaded or a reminder before a link ends.
+The bell in the menu shows what is new for you: a download, files received, a
+secret opened, a link that ends soon, storage almost full, or a file found
+infected by the virus scan. Administrators can clear the log.
 
 ## Product tour
 
@@ -114,22 +123,33 @@ place it points to.
 ![Amfora sign in](site/assets/screenshots/2.3/login-workbench.webp)
 
 The sign in screen supports password authentication, password recovery, and
-two factor authentication when it is enabled for the account.
+two factor authentication when it is enabled for the account. Users can also
+sign in with a passkey.
+
+The screenshots are of version 2.3. They do not show what 2.4.0 added: the
+Trash page, groups, the bell for notifications and passkeys.
 
 ## What is in the box
 
 | | |
 |---|---|
 | **Workspace** | Files, folders, downloads and shares, with a dashboard for recent activity and storage usage. |
+| **Trash** | Deleted files and folders wait in a trash for 30 days by default, then go for good. Restore puts them back where they were. |
 | **Send files** | Download links with optional passwords, expiry dates, view limits, recipient email notifications and QR codes. |
 | **Collect files** | Upload requests with optional password, expiry, file count, size and type limits. Senders do not need an account. |
+| **Limits and lifetime** | A storage limit for the installation and one per user. A default and a maximum lifetime for links. Ended links can be removed by themselves after a number of days. |
+| **Groups** | Administrators make groups of users. A share can be limited to one group, and members find such shares under "Shared with me". |
 | **Secrets** | Passwords and keys behind a link that destroys itself. Encrypted in the browser, opened a set number of times, optional passphrase. Optionally open to visitors without an account. See [docs/SECRETS.md](docs/SECRETS.md). |
-| **Activity** | A log per user of what happened to links and accounts, with the place of a visitor, a CSV export, emails to the maker and signed webhooks. See [docs/ACTIVITY.md](docs/ACTIVITY.md). |
+| **Activity** | A log per user of what happened to links and accounts, with the place of a visitor, a CSV export, emails to the maker and signed webhooks. Administrators can clear it. See [docs/ACTIVITY.md](docs/ACTIVITY.md). |
+| **Notifications** | A bell in the app shows downloads, received files, opened secrets, links that end soon, storage almost full and infected files. It reads from the activity log. |
+| **Virus scan** | Optional. Every uploaded file is checked with ClamAV, and a file that is infected or still being checked cannot be downloaded. Off unless you set `CLAMAV_HOST`. See [docs/VIRUS-SCAN.md](docs/VIRUS-SCAN.md). |
 | **API** | API keys with read or full access for other tools. See [docs/API.md](docs/API.md). |
 | **Monitoring** | Figures in the Prometheus format for Prometheus and Zabbix, readable with the API key of an administrator. See [docs/MONITORING.md](docs/MONITORING.md). |
 | **Storage** | Bundled MinIO or an external S3 compatible provider, on infrastructure you control. |
-| **Branding** | Application name, description, logo, accent colour, font, corner radius and default language, all stored on the server. A [brandpack](https://amfora.solutionmax.net/brandpack/) removes the "Powered by Amfora" credit and unlocks a background image and custom CSS. |
+| **Branding** | Application name, description, logo, accent colour, font, corner radius and default language, all stored on the server. The preview shows the real download, sign in and receive pages, and emails carry your logo. A [brandpack](https://amfora.solutionmax.net/brandpack/) removes the "Powered by Amfora" credit and unlocks a background image and custom CSS. |
 | **Access** | User invitations, roles, deactivation, trusted devices and TOTP two factor authentication with backup codes. Optional OAuth2/OIDC sign in. |
+| **Sign in security** | Passkeys, an optional requirement that administrators or everyone set up two step sign in or a passkey, and a reset of the two step sign in of another user. |
+| **Languages** | English, Dutch, German, French, Spanish, Italian, Portuguese of Brazil and Polish. Italian, Portuguese and Polish were translated without review by a native speaker. |
 
 ## Make it yours
 
@@ -219,10 +239,21 @@ on the private container network, and set `SECURE_SITE=true` for secure cookies.
 Configure HSTS at the HTTPS reverse proxy.
 
 The seeded workspace defaults to a 1 GiB maximum file size and 10 GiB maximum
-storage per user; an administrator can change those limits in Settings. See
+storage per user; an administrator can change those limits in Settings, and set
+a different limit for one user. The trash counts toward that limit. See
 [`docker-compose.yaml`](docker-compose.yaml) and
 [`apps/server/.env.example`](apps/server/.env.example) for the complete
 configuration, including S3, proxy, CORS, and rate limit settings.
+
+### Optional virus scan
+
+Set `CLAMAV_HOST` to a [ClamAV](https://www.clamav.net/) scanner (clamd) and
+Amfora checks every uploaded file, also the ones received on a receive link,
+after the upload. A file that is being checked or is infected cannot be
+downloaded, previewed or shared. `CLAMAV_PORT` (3310) and `CLAMAV_MAX_SIZE_MB`
+(100) are optional. `docker-compose.yaml` has a commented `clamav` service; it
+needs about 1.2 GB of memory. Without `CLAMAV_HOST` nothing changes. See
+[docs/VIRUS-SCAN.md](docs/VIRUS-SCAN.md).
 
 Amfora does not promise application level encryption at rest or end to end
 encryption. Protect the host or S3 account with the controls appropriate to the
@@ -236,9 +267,36 @@ limits, customize the application, configure email, and enable authentication
 providers. A new installation offers Authentik, GitHub, and Google; any other
 compatible OIDC or OAuth 2.0 provider can be added.
 
-Each user can enable TOTP two factor authentication, download backup codes, and
-remove trusted devices. Password reset requires password authentication and a
-working SMTP configuration. Invite links are one time registration links.
+**Storage and links.** Under Settings, Storage, an administrator sets the
+maximum file size, the default storage per user, the default and maximum
+lifetime of links in days (0 means none), how long the trash keeps items
+(`trashRetentionDays`, 30 by default) and after how many days an ended link is
+removed (`expiredLinkRetentionDays`, 0 by default, which means never). Only the
+link goes: the files it pointed to stay. A limit for one user is set in the
+user form on the Users page; empty means the default.
+
+**Users and groups.** The Users page has a Groups tab to make groups and add or
+remove members. An administrator can also switch off the two step sign in of
+another user there, for example after a lost phone. Passkeys stay.
+
+**Two step sign in.** Each user can enable TOTP two factor authentication,
+download backup codes, remove trusted devices and add passkeys on the profile
+page. Under Settings, Security, an administrator can require two step sign in or
+a passkey from administrators or from everyone (`twoFactorRequired`, off by
+default). Turning it on signs nobody out. API keys and external providers are not
+affected. If it locks you out, see [Locked out of two step sign in](#locked-out-of-two-step-sign-in).
+Passkeys need an https address or `localhost`.
+
+Password reset requires password authentication and a working SMTP
+configuration. Invite links are one time registration links.
+
+**Monitoring.** `GET /api/v1/metrics` gives figures in the Prometheus format,
+readable with the API key of an administrator. See
+[docs/MONITORING.md](docs/MONITORING.md).
+
+**Release notes and updates.** Settings shows what the version you run brought,
+in your language. Administrators also see a notice in the menu when an update
+is available.
 
 ## Backups and upgrades
 
@@ -247,6 +305,16 @@ For bundled storage, back up the persistent `/app/server` directory, including
 external S3, back up the SQLite database and the S3 bucket according to the
 provider’s procedure. Keep the persistent volume when replacing the image;
 startup applies schema changes and seeds missing configuration/provider data.
+
+Upgrading to 2.4.0 adds its tables and columns by itself at the first start:
+the trash, scan status, passkeys, groups and the limit per user. Nothing is
+asked and your data stays in place. A share stays open to anyone with the link
+until somebody limits it to a group. Going back to an older version needs the
+database backup from before the upgrade: take a copy of `prisma/amfora.db`
+(with the rest of `/app/server` for bundled storage) first, and put it back
+when you return to an older version. Whatever was done in 2.4.0 is lost with it. The full list is in the
+[2.4.0 release notes](docs/RELEASE-2.4.0.md), which also name three security
+repairs: install this release soon.
 
 Installations created under Palmr are migrated from `prisma/palmr.db` to
 `prisma/amfora.db`, while an existing internal bucket is preserved when no
@@ -260,6 +328,44 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app && ./reset-password.sh'
 ```
 
 Use `--list` to list users. This tool bypasses normal account flows.
+
+## Security
+
+### Locked out of two step sign in
+
+If the only administrator loses the authenticator while `twoFactorRequired` is on, start the
+server with `TWO_FACTOR_REQUIRED=off` (the other values are `admins` and `all`). It wins over
+the setting in the database, and Settings then shows the select as set by the server
+configuration. Restart, sign in, repair the account (set up a new second step or reset it from the
+Users page), remove the variable and restart again. Capitals, spaces and quotes around the value
+do not matter; any other value is ignored, and the server log says so at start.
+
+With Docker Compose, `docker compose restart` does not read the environment again: after you change
+`docker-compose.yaml` run `docker compose up -d`, which recreates the container.
+
+### Security configuration
+
+Set `APP_URL` to the canonical browser origin (for example `https://files.example.com`)
+before enabling password reset email. Public deployments must use HTTPS for both app
+and storage and `SECURE_SITE=true`. The API binds to loopback inside the container by
+default; publish only the web and storage services through your TLS ingress.
+
+Client supplied IP headers are ignored by default. Only behind an ingress that replaces
+incoming forwarding headers and blocks direct web access, set
+`TRUST_CLIENT_IP_HEADERS=true` for the web process and `TRUST_PROXY=127.0.0.1,::1`
+for the API's known proxy hops. Never configure blanket trust of arbitrary proxies.
+Behind Cloudflare the visitor named in `CF-Connecting-IP` is then used for rate limits
+and for the place shown in Activity.
+Without this opt in, request rate limits conservatively share the proxy address;
+password failures are additionally limited per account.
+
+Public upload clients must request a server generated temporary key with filename,
+extension and byte size, then register that same authorized upload. Registration
+needs an object name that starts with your own user id and is not in use, and the
+object must already be in storage: its size is measured there, not taken from the
+client. Old clients that choose arbitrary object keys must be updated. Two factor login now requires the `challengeId` returned by the
+password step; it expires after five minutes and is single use. Existing remembered
+devices must complete 2FA again to receive a secure random device cookie.
 
 ## Development
 
@@ -297,38 +403,3 @@ information.
 
 Built and maintained by [SolutionMAX](https://solutionmax.net/).
 If Amfora helps your team, you can [support the work](https://buymeacoffee.com/solutionmax).
-
-### Locked out of two step sign in
-
-If the only administrator loses the authenticator while `twoFactorRequired` is on, start the
-server with `TWO_FACTOR_REQUIRED=off` (the other values are `admins` and `all`). It wins over
-the setting in the database, and Settings then shows the select as set by the server
-configuration. Restart, sign in, repair the account (set up a new second step or reset it from the
-Users page), remove the variable and restart again. Capitals, spaces and quotes around the value
-do not matter; any other value is ignored, and the server log says so at start.
-
-With Docker Compose, `docker compose restart` does not read the environment again: after you change
-`docker-compose.yaml` run `docker compose up -d`, which recreates the container.
-
-### Security configuration
-
-Set `APP_URL` to the canonical browser origin (for example `https://files.example.com`)
-before enabling password reset email. Public deployments must use HTTPS for both app
-and storage and `SECURE_SITE=true`. The API binds to loopback inside the container by
-default; publish only the web and storage services through your TLS ingress.
-
-Client supplied IP headers are ignored by default. Only behind an ingress that replaces
-incoming forwarding headers and blocks direct web access, set
-`TRUST_CLIENT_IP_HEADERS=true` for the web process and `TRUST_PROXY=127.0.0.1,::1`
-for the API's known proxy hops. Never configure blanket trust of arbitrary proxies.
-Behind Cloudflare the visitor named in `CF-Connecting-IP` is then used for rate limits
-and for the place shown in Activity.
-Without this opt in, request rate limits conservatively share the proxy address;
-password failures are additionally limited per account.
-
-Public upload clients must request a server generated temporary key with filename,
-extension and byte size, then register that same authorized upload. Registration
-checks storage and commits a private copy; old clients that choose arbitrary object
-keys must be updated. Two factor login now requires the `challengeId` returned by the
-password step; it expires after five minutes and is single use. Existing remembered
-devices must complete 2FA again to receive a secure random device cookie.

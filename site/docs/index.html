@@ -58,9 +58,10 @@
           ><a href="#storage"><span>04</span>Storage & limits</a
           ><a href="#sharing"><span>05</span>Send, receive & secrets</a
           ><a href="#admin"><span>06</span>Administration</a
-          ><a href="#operations"><span>07</span>Backups & upgrades</a
-          ><a href="#troubleshooting"><span>08</span>Troubleshooting</a
-          ><a href="#about"><span>09</span>About Amfora</a>
+          ><a href="#more"><span>07</span>Trash, groups & scanning</a
+          ><a href="#operations"><span>08</span>Backups & upgrades</a
+          ><a href="#troubleshooting"><span>09</span>Troubleshooting</a
+          ><a href="#about"><span>10</span>About Amfora</a>
         </nav>
         <div class="docs-sidebar-bottom">
           <span class="badge">Self hosted installation</span>
@@ -273,7 +274,8 @@ S3_FORCE_PATH_STYLE=false</code></pre>
             <p>
               A new installation seeds a 1 GiB maximum file size and 10 GiB
               maximum storage per user. Administrators can adjust those values
-              in Settings. <code>PRESIGNED_URL_EXPIRATION</code> controls the
+              in Settings, and set a different storage limit for one user in the user
+              form on the Users page. <code>PRESIGNED_URL_EXPIRATION</code> controls the
               default generated storage URL lifetime in seconds and defaults to
               <code>3600</code>.
             </p>
@@ -437,7 +439,10 @@ S3_FORCE_PATH_STYLE=false</code></pre>
               Each user can enable TOTP in their profile, verify setup with an
               authenticator, save backup codes, and remove trusted devices. A
               2FA login verifies the password first and then accepts a TOTP or
-              unused backup code.
+              unused backup code. Users can also add passkeys on their profile
+              and sign in with them. See
+              <a href="#signin-security">Sign in security</a> for requiring a
+              second step.
             </p>
             <h3>OAuth2 and OIDC</h3>
             <p>
@@ -472,8 +477,154 @@ docker compose exec amfora sh -lc 'cd /app/amfora-app &amp;&amp; ./reset-passwor
               preview.
             </p>
           </section>
+          <section class="docs-section" id="more">
+            <p class="section-kicker">07 / Version 2.4</p>
+            <h2>Trash, groups, scanning and monitoring</h2>
+            <p>
+              The settings and options an administrator meets in Amfora 2.4.
+              Everything here is optional or has a default that changes nothing
+              for an existing installation.
+            </p>
+            <h3 id="trash">Trash and clean up</h3>
+            <p>
+              Deleting a file or folder in the workspace moves it, with
+              everything in it, to the <strong>Trash</strong> page. Restore puts
+              it back where it was. Delete for good and Empty trash are the only
+              places where files leave storage. Deleted items show nowhere else
+              and count toward the storage limit. Everybody sees only their own
+              trash.
+            </p>
+            <p>Under <strong>Settings</strong>, <strong>Storage</strong>:</p>
+            <ul>
+              <li>
+                <strong>Trash retention</strong> (<code>trashRetentionDays</code>):
+                days an item stays in the trash before it is deleted for good.
+                Once a day the server cleans up. Default 30, at least 1.
+              </li>
+              <li>
+                <strong>Remove ended links</strong>
+                (<code>expiredLinkRetentionDays</code>): days after which a share
+                or receive link that has ended is removed. Default 0, which means
+                never. Only the link goes: its files stay in the workspace. A
+                receive link that holds files stays. Each removal is written to
+                the activity log.
+              </li>
+              <li>
+                <strong>Default and maximum lifetime of links</strong>, in whole
+                days, 0 for none. New shares and receive links start with the
+                default end date and cannot go beyond the maximum. The server
+                refuses a longer date, also for API keys.
+              </li>
+            </ul>
+            <h3 id="signin-security">Sign in security</h3>
+            <p>
+              Under <strong>Settings</strong>, <strong>Security</strong>, choose
+              whether administrators, everyone or nobody must set up two step
+              sign in or a passkey. Turning it on signs nobody out. A user who
+              has neither is taken to a set up page and cannot use anything else
+              until it is done. API keys and users who sign in through an external
+              provider are not affected.
+            </p>
+            <p>
+              An administrator can switch off the two step sign in of another
+              user on the Users page (passkeys stay). Passkeys need an https
+              address or <code>localhost</code>.
+            </p>
+            <p>
+              If the only administrator loses the authenticator while the
+              requirement is on, start the server once with
+              <code>TWO_FACTOR_REQUIRED=off</code>. It wins over the setting, so
+              you can sign in and repair the account. Remove the variable and
+              recreate the container afterwards with
+              <code>docker compose up -d</code>.
+            </p>
+            <h3 id="groups">Groups</h3>
+            <p>
+              On the Users page, the <strong>Groups</strong> tab lets an
+              administrator create, rename and delete groups and add or remove
+              members. A share can be limited to one group under &ldquo;Who can
+              open it&rdquo;. It then opens only for a signed in member, its
+              maker and administrators. Members find such shares under
+              <strong>Shared with me</strong> on the Shares page. Removing
+              somebody from a group takes the access away at once. A group that
+              shares still use cannot be deleted.
+            </p>
+            <h3 id="monitoring">Monitoring</h3>
+            <p>
+              <code>GET /api/v1/metrics</code> answers in the Prometheus text
+              format: version, database and storage up, users, files and bytes,
+              the trash, shares, receive links, secrets, the data disk and the
+              virus scan. Only the API key of an administrator opens it. The
+              answer is cached for 30 seconds, so scrape every 30 to 60 seconds.
+            </p>
+            <pre><code>curl -s https://files.example.com/api/v1/metrics \
+  -H "Authorization: Bearer amf_..."</code></pre>
+            <p>
+              Examples for Prometheus and Zabbix are in
+              <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/MONITORING.md">MONITORING.md</a>.
+            </p>
+            <h3 id="virus-scan">Virus scan</h3>
+            <p>
+              Set <code>CLAMAV_HOST</code> to the address of a
+              <a href="https://www.clamav.net/">ClamAV</a> scanner (clamd) and
+              Amfora checks every uploaded file after the upload, one at a time,
+              also files received on a receive link. While a file is being
+              checked or is infected nobody can download, preview or share it;
+              its owner can only delete it. An infected file is written to the
+              owner&rsquo;s activity log, shown in the bell and mailed to the
+              owner and the administrators. Without <code>CLAMAV_HOST</code>
+              nothing changes. ClamAV needs about 1.2 GB of memory.
+            </p>
+            <pre><code>services:
+  amfora:
+    environment:
+      CLAMAV_HOST: "clamav"
+  clamav:
+    image: clamav/clamav:stable
+    environment:
+      CLAMD_CONF_StreamMaxLength: "100M"
+    volumes:
+      - clamav_data:/var/lib/clamav
+    mem_limit: 2g
+volumes:
+  clamav_data:</code></pre>
+            <p>
+              The full recipe, the retry times and what each status means are in
+              <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/VIRUS-SCAN.md">VIRUS-SCAN.md</a>.
+            </p>
+            <h3 id="languages">Languages</h3>
+            <p>
+              Amfora comes in English, Dutch, German, French, Spanish, Italian,
+              Portuguese (Brazil) and Polish. Users pick their language in the
+              language picker; the default is set under Settings. Italian,
+              Portuguese and Polish were translated without review by a native
+              speaker.
+            </p>
+            <h3 id="env-240">Environment variables added in 2.4</h3>
+            <ul>
+              <li>
+                <code>TWO_FACTOR_REQUIRED</code>: <code>off</code>,
+                <code>admins</code> or <code>all</code>. Wins over the setting
+                in Settings. Use it to get back in after a lockout, then remove
+                it.
+              </li>
+              <li>
+                <code>CLAMAV_HOST</code>: address of clamd. Unset means no
+                virus scan.
+              </li>
+              <li>
+                <code>CLAMAV_PORT</code>: the TCP port of clamd, default
+                <code>3310</code>.
+              </li>
+              <li>
+                <code>CLAMAV_MAX_SIZE_MB</code>: files above this size are not
+                scanned and show as &ldquo;Not checked&rdquo;. Default
+                <code>100</code>.
+              </li>
+            </ul>
+          </section>
           <section class="docs-section" id="operations">
-            <p class="section-kicker">07 / Operate</p>
+            <p class="section-kicker">08 / Operate</p>
             <h2>Back up before you upgrade</h2>
             <h3>Bundled storage backups</h3>
             <p>
@@ -506,6 +657,12 @@ docker compose up -d</code></pre>
               previous image until the new one runs so you can switch back.
             </p>
             <p>
+              The first start of 2.4.0 adds the tables and columns for the
+              trash, scan status, passkeys, groups and the storage limit per
+              user, by itself. Going back to an older version needs the database
+              backup from before the upgrade.
+            </p>
+            <p>
               The admin area shows when a newer release is out. To let the host
               install signed releases for you with one click, set up
               <a href="https://github.com/Solutionmax/amfora/blob/amfora/docs/OTA.md">over the air updates</a>
@@ -513,7 +670,7 @@ docker compose up -d</code></pre>
             </p>
           </section>
           <section class="docs-section" id="troubleshooting">
-            <p class="section-kicker">08 / Troubleshooting</p>
+            <p class="section-kicker">09 / Troubleshooting</p>
             <h2>Check the boundary where the request stops</h2>
             <dl class="docs-faq">
               <dt>The page loads but uploads fail.</dt>
@@ -550,7 +707,7 @@ docker compose up -d</code></pre>
             </dl>
           </section>
           <section id="about">
-            <p class="section-kicker">09 / About Amfora</p>
+            <p class="section-kicker">10 / About Amfora</p>
             <h2>A self hosted workspace for the handoff.</h2>
             <p>
               Amfora is a self hosted file workspace for sending files,
