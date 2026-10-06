@@ -19,6 +19,8 @@ export interface TrashList {
   items: TrashItem[];
   totalBytes: number;
   retentionDays: number;
+  /** Emptying runs on the server; `failed` of the last run stays in the trash. */
+  emptying: { running: boolean; removed: number; failed: number };
 }
 
 export const listTrash = async (): Promise<TrashList> => (await apiInstance.get("/api/trash")).data;
@@ -27,6 +29,6 @@ export const restoreFromTrash = (kind: TrashKind, id: string) => apiInstance.pos
 
 export const deleteFromTrash = (kind: TrashKind, id: string) => apiInstance.delete(`/api/trash/${kind}/${id}`);
 
-/** `failed` counts the items storage refused; they stay in the trash. */
-export const emptyTrash = async (): Promise<{ removed: number; failed: number }> =>
+/** Starts emptying and answers at once; follow it through `emptying` of the list. */
+export const emptyTrash = async (): Promise<{ status: "started" | "running" }> =>
   (await apiInstance.delete("/api/trash")).data;

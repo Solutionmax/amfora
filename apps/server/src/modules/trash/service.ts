@@ -1,5 +1,5 @@
 import { prisma } from "../../shared/prisma";
-import { notDeleted } from "../../shared/trash";
+import { chunked, liveFolderOf, notDeleted } from "../../shared/trash";
 import { generateUniqueFileName, generateUniqueFolderName, parseFileName } from "../../utils/file-name-generator";
 import { FileService } from "../file/service";
 import { MS_PER_DAY, trashRetentionDays } from "./settings";
@@ -25,6 +25,8 @@ function treeIds(rootId: string, folders: ReadonlyArray<{ id: string; parentId: 
   return ids;
 }
 
+const TRANSACTION_MS = 30_000;
+
 const removeObject = (objectName: string) => new FileService().deleteObject(objectName);
 
 /** Deleting in the workspace: the file stays where storage keeps it, marked with the moment. */
@@ -37,15 +39,20 @@ export async function moveFileToTrash(fileId: string, now: Date): Promise<void> 
  * trashed on its own earlier keeps its own, which is how a restore tells them apart.
  */
 export async function moveFolderToTrash(folderId: string, userId: string, now: Date): Promise<void> {
-  const folders = await prisma.folder.findMany({
-    where: { userId, ...notDeleted },
-    select: { id: true, parentId: true },
-  });
-  const ids = treeIds(folderId, folders);
-  await prisma.$transaction([
-    prisma.file.updateMany({ where: { userId, folderId: { in: ids }, ...notDeleted }, data: { deletedAt: now } }),
-    prisma.folder.updateMany({ where: { userId, id: { in: ids }, ...notDeleted }, data: { deletedAt: now } }),
-  ]);
+  // One transaction: what is created under the folder meanwhile cannot stay live under it.
+  await prisma.$transaction(
+    async (tx) => {
+      const folders = await tx.folder.findMany({
+        where: { userId, ...notDeleted },
+        select: { id: true, parentId: true },
+      });
+      for (const ids of chunked(treeIds(folderId, folders))) {
+        await tx.file.updateMany({ where: { userId, folderId: { in: ids }, ...notDeleted }, data: { deletedAt: now } });
+        await tx.folder.updateMany({ where: { userId, id: { in: ids }, ...notDeleted }, data: { deletedAt: now } });
+      }
+    },
+    { timeout: TRANSACTION_MS }
+  );
 }
 
 export interface TrashItem {
@@ -125,19 +132,22 @@ async function trashRoots(userId: string, retentionDays: number, now: Date) {
   return { items, totalBytes };
 }
 
+/** Per user: the run that is going on, and what the last one did. Only one run per user at a time. */
+const emptyRuns = new Map<string, { running: boolean; removed: number; failed: number }>();
+
+export function emptyingState(userId: string) {
+  return emptyRuns.get(userId) ?? { running: false, removed: 0, failed: 0 };
+}
+
 export async function listTrash(userId: string, now: Date) {
   const retentionDays = await trashRetentionDays();
-  return { ...(await trashRoots(userId, retentionDays, now)), retentionDays };
+  return { ...(await trashRoots(userId, retentionDays, now)), retentionDays, emptying: emptyingState(userId) };
 }
 
 /** Where a restored item goes: back to its folder when that is still in the workspace, else the top. */
 async function placeToRestore(userId: string, parentId: string | null): Promise<string | null> {
   if (!parentId) return null;
-  const parent = await prisma.folder.findFirst({
-    where: { id: parentId, userId, ...notDeleted },
-    select: { id: true },
-  });
-  return parent?.id ?? null;
+  return (await liveFolderOf(userId, parentId))?.id ?? null;
 }
 
 async function restoreFile(userId: string, id: string): Promise<boolean> {
@@ -159,15 +169,18 @@ async function restoreFolder(userId: string, id: string): Promise<boolean> {
     where: { userId },
     select: { id: true, parentId: true, deletedAt: true },
   });
+  const deletedAtOf = new Map(folders.map((candidate) => [candidate.id, candidate.deletedAt]));
   const together = treeIds(id, folders).filter((member) =>
-    sameMoment(folders.find((candidate) => candidate.id === member)?.deletedAt ?? null, folder.deletedAt)
+    sameMoment(deletedAtOf.get(member) ?? null, folder.deletedAt)
   );
   await prisma.$transaction([
-    prisma.file.updateMany({
-      where: { userId, folderId: { in: together }, deletedAt: folder.deletedAt },
-      data: { deletedAt: null },
-    }),
-    prisma.folder.updateMany({ where: { userId, id: { in: together } }, data: { deletedAt: null } }),
+    ...chunked(together).flatMap((ids) => [
+      prisma.file.updateMany({
+        where: { userId, folderId: { in: ids }, deletedAt: folder.deletedAt },
+        data: { deletedAt: null },
+      }),
+      prisma.folder.updateMany({ where: { userId, id: { in: ids } }, data: { deletedAt: null } }),
+    ]),
     prisma.folder.update({ where: { id }, data: { parentId, name } }),
   ]);
   return true;
@@ -178,40 +191,150 @@ export function restoreItem(userId: string, kind: TrashKind, id: string): Promis
   return kind === "file" ? restoreFile(userId, id) : restoreFolder(userId, id);
 }
 
+type PurgeFile = { id: string; userId: string };
+
+/** Whether another row, a file or a folder, still points to the object. */
+async function isObjectInUse(objectName: string, exceptFileId: string | null, exceptFolderIds: string[]) {
+  const [files, folders] = await Promise.all([
+    prisma.file.count({ where: { objectName, ...(exceptFileId ? { id: { not: exceptFileId } } : {}) } }),
+    prisma.folder.count({ where: { objectName, id: { notIn: exceptFolderIds } } }),
+  ]);
+  return files + folders > 0;
+}
+
+/** Puts a claimed row back as it was, shares included; at the top level when its folder is gone. */
+async function restoreClaimedRow(row: FileWithShares, storageError: unknown): Promise<never> {
+  const { shares, ...data } = row;
+  const connect = shares.map((share) => ({ id: share.id }));
+  try {
+    await prisma.file.create({ data: { ...data, shares: { connect } } });
+  } catch {
+    try {
+      await prisma.file.create({ data: { ...data, folderId: null, shares: { connect } } });
+    } catch (error) {
+      console.error(`Could not put back ${row.id} (${row.objectName}) after storage refused:`, error, row);
+    }
+  }
+  throw storageError;
+}
+
+type FileWithShares = NonNullable<Awaited<ReturnType<typeof findTrashedRow>>>;
+
+const findTrashedRow = (file: PurgeFile) =>
+  prisma.file.findFirst({
+    where: { id: file.id, userId: file.userId, deletedAt: { not: null } },
+    include: { shares: { select: { id: true } } },
+  });
+
 /**
- * The only place where objects leave storage. An object goes first and then its row, so when
- * storage refuses, what is left is still in the trash to try again.
+ * Removes one file that is in the trash. The row goes first, with one conditional delete: only
+ * when it removed the row is the file still in the trash, so a restore that came in between can
+ * never lose its object. When storage refuses, the row is put back as it was (still in the
+ * trash, in its shares), so what is left can be tried again. A crash between the two leaves an
+ * unused object and no lost file. An object that another row still uses stays.
  */
-async function purgeFile(userId: string, id: string): Promise<boolean> {
-  const file = await prisma.file.findFirst({ where: { id, userId, deletedAt: { not: null } } });
-  if (!file) return false;
-  await removeObject(file.objectName);
-  await prisma.file.delete({ where: { id } });
+async function purgeFileRow(file: PurgeFile): Promise<boolean> {
+  const row = await findTrashedRow(file);
+  if (!row) return false;
+  const claimed = await prisma.file.deleteMany({ where: { id: row.id, userId: row.userId, deletedAt: { not: null } } });
+  if (claimed.count === 0) return false;
+  try {
+    if (!(await isObjectInUse(row.objectName, null, []))) await removeObject(row.objectName);
+  } catch (error) {
+    return restoreClaimedRow(row, error);
+  }
   return true;
 }
 
+const purgeFile = (userId: string, id: string) => purgeFileRow({ id, userId });
+
+type FolderRow = { id: string; objectName: string; parentId: string | null; deletedAt: Date | null };
+
+/** The folders that die with the root: trashed ones reached through trashed ones; a live one stops the walk. */
+function doomedFolders(rootId: string, folders: ReadonlyArray<FolderRow>) {
+  const children = new Map<string, FolderRow[]>();
+  for (const folder of folders) {
+    if (folder.parentId) children.set(folder.parentId, [...(children.get(folder.parentId) ?? []), folder]);
+  }
+  const doomed: string[] = [];
+  const rescued: string[] = [];
+  const queue = [rootId];
+  for (let id = queue.shift(); id !== undefined; id = queue.shift()) {
+    doomed.push(id);
+    for (const child of children.get(id) ?? []) (child.deletedAt ? queue : rescued).push(child.id);
+  }
+  return { doomed, rescued };
+}
+
+async function trashedFilesIn(userId: string, folderIds: string[]): Promise<PurgeFile[]> {
+  const found: PurgeFile[] = [];
+  for (const ids of chunked(folderIds)) {
+    found.push(
+      ...(await prisma.file.findMany({
+        where: { userId, folderId: { in: ids }, deletedAt: { not: null } },
+        select: { id: true, userId: true },
+      }))
+    );
+  }
+  return found;
+}
+
+const PURGE_ROUNDS = 3;
+
+/** Files were still arriving in the folder after the rounds: nothing was removed, try again later. */
+export class PurgeIncompleteError extends Error {
+  constructor() {
+    super("Some files in this folder could not be removed yet.");
+  }
+}
+
+/**
+ * Removes a trashed folder with what is trashed under it. Whatever is live under it (it can get
+ * there through a restore from another tab) is moved to the top level and kept, and a folder that
+ * is restored meanwhile is not removed at all. Folders have no object in storage, so only the
+ * files' objects are removed. False when the folder is no longer in the trash; throws when files
+ * are left after the rounds.
+ */
 async function purgeFolder(userId: string, id: string): Promise<boolean> {
-  const folder = await prisma.folder.findFirst({ where: { id, userId, deletedAt: { not: null } } });
-  if (!folder) return false;
-  const folders = await prisma.folder.findMany({
-    where: { userId },
-    select: { id: true, objectName: true, parentId: true },
-  });
-  const ids = treeIds(id, folders);
-  const files = await prisma.file.findMany({
-    where: { userId, folderId: { in: ids } },
-    select: { id: true, objectName: true },
-  });
-  for (const file of files) {
-    await removeObject(file.objectName);
-    await prisma.file.delete({ where: { id: file.id } });
+  const root = await prisma.folder.findFirst({ where: { id, userId, deletedAt: { not: null } } });
+  if (!root) return false;
+  const tree = () =>
+    prisma.folder.findMany({
+      where: { userId },
+      select: { id: true, objectName: true, parentId: true, deletedAt: true },
+    });
+
+  for (let round = 0; round < PURGE_ROUNDS; round++) {
+    const files = await trashedFilesIn(userId, doomedFolders(id, await tree()).doomed);
+    if (files.length === 0) break;
+    for (const file of files) await purgeFileRow(file);
   }
-  const inTree = new Set(ids);
-  for (const member of folders.filter((candidate) => inTree.has(candidate.id))) {
-    await removeObject(member.objectName);
-  }
-  await prisma.folder.delete({ where: { id } });
-  return true;
+
+  const gone = await prisma.$transaction(
+    async (tx) => {
+      const folders = await tx.folder.findMany({
+        where: { userId },
+        select: { id: true, objectName: true, parentId: true, deletedAt: true },
+      });
+      if (!folders.find((folder) => folder.id === id)?.deletedAt) return null;
+      const { doomed, rescued } = doomedFolders(id, folders);
+      for (const ids of chunked(doomed)) {
+        if ((await tx.file.count({ where: { userId, folderId: { in: ids }, deletedAt: { not: null } } })) > 0)
+          return "left" as const;
+      }
+      for (const ids of chunked(doomed)) {
+        await tx.file.updateMany({ where: { userId, folderId: { in: ids } }, data: { folderId: null } });
+      }
+      for (const ids of chunked(rescued))
+        await tx.folder.updateMany({ where: { id: { in: ids } }, data: { parentId: null } });
+      for (const ids of chunked(doomed))
+        await tx.folder.deleteMany({ where: { id: { in: ids }, deletedAt: { not: null } } });
+      return "gone" as const;
+    },
+    { timeout: TRANSACTION_MS }
+  );
+  if (gone === "left") throw new PurgeIncompleteError();
+  return gone !== null;
 }
 
 /** Deletes an item for good; false when the caller has no such item in the trash. */
@@ -240,6 +363,19 @@ export async function purgeItems(
 export async function emptyTrash(userId: string, now: Date) {
   const { items } = await trashRoots(userId, await trashRetentionDays(), now);
   return purgeItems(userId, items);
+}
+
+/** Starts emptying in the background, so the request does not wait for storage. */
+export function startEmptyTrash(userId: string, now: Date): "started" | "running" {
+  if (emptyingState(userId).running) return "running";
+  emptyRuns.set(userId, { running: true, removed: 0, failed: 0 });
+  emptyTrash(userId, now)
+    .then((result) => emptyRuns.set(userId, { running: false, ...result }))
+    .catch((error) => {
+      console.error("Emptying the trash failed:", error);
+      emptyRuns.set(userId, { running: false, removed: 0, failed: 0 });
+    });
+  return "started";
 }
 
 /** The items of every user that have been in the trash longer than the setting. */

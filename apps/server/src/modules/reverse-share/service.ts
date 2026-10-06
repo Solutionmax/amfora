@@ -6,6 +6,7 @@ import { prisma } from "../../shared/prisma";
 import { recordActivity } from "../activity/activity";
 import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
+import { copiedObjectName } from "../file/object-name";
 import { FileService } from "../file/service";
 import { storageLimitOf } from "../storage/limit";
 import { UserService } from "../user/service";
@@ -660,7 +661,7 @@ export class ReverseShareService {
       throw new Error(`Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`);
     }
 
-    const newObjectName = `${creatorId}/${Date.now()}-${file.name}`;
+    const newObjectName = copiedObjectName(creatorId, file.name);
 
     // Copy file using S3 presigned URLs
     const fileSizeMB = Number(file.size) / (1024 * 1024);

@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { emptyTrash, listTrash, purgeItem, restoreItem } from "./service";
+import { listTrash, PurgeIncompleteError, purgeItem, restoreItem, startEmptyTrash } from "./service";
 
 const ErrorSchema = z.object({ error: z.string() });
 const ItemParams = z.object({ kind: z.enum(["file", "folder"]), id: z.string().min(1).max(64) });
@@ -43,6 +43,9 @@ export async function trashRoutes(app: FastifyInstance) {
             ),
             totalBytes: z.number().describe("Everything in the trash. It counts toward your storage limit."),
             retentionDays: z.number(),
+            emptying: z
+              .object({ running: z.boolean(), removed: z.number(), failed: z.number() })
+              .describe("Emptying the trash: running now, and what the last run did. `failed` stays in the trash."),
           }),
           401: ErrorSchema,
         },
@@ -81,7 +84,13 @@ export async function trashRoutes(app: FastifyInstance) {
         summary: "Delete for good",
         description: "Removes a file, or a folder with everything in it, from storage. This cannot be undone.",
         params: ItemParams,
-        response: { 200: z.object({ message: z.string() }), 401: ErrorSchema, 404: ErrorSchema, 500: ErrorSchema },
+        response: {
+          200: z.object({ message: z.string() }),
+          401: ErrorSchema,
+          404: ErrorSchema,
+          409: ErrorSchema,
+          500: ErrorSchema,
+        },
       },
     },
     async (request, reply) => {
@@ -90,6 +99,7 @@ export async function trashRoutes(app: FastifyInstance) {
         if (!(await purgeItem(userIdOf(request), kind, id))) return reply.status(404).send({ error: NOT_FOUND });
         return reply.send({ message: "Deleted for good." });
       } catch (error) {
+        if (error instanceof PurgeIncompleteError) return reply.status(409).send({ error: error.message });
         console.error("Error deleting from the trash:", error);
         return reply.status(500).send({ error: "Internal server error." });
       }
@@ -104,10 +114,11 @@ export async function trashRoutes(app: FastifyInstance) {
         tags: ["Trash"],
         operationId: "emptyTrash",
         summary: "Empty the trash",
-        description: "Deletes everything in your trash for good. `failed` counts items storage refused.",
-        response: { 200: z.object({ removed: z.number(), failed: z.number() }), 401: ErrorSchema },
+        description:
+          "Starts deleting everything in your trash for good and answers at once. Follow it in `emptying` of the list. A second call while it runs answers `running`.",
+        response: { 202: z.object({ status: z.enum(["started", "running"]) }), 401: ErrorSchema },
       },
     },
-    async (request, reply) => reply.send(await emptyTrash(userIdOf(request), new Date()))
+    async (request, reply) => reply.status(202).send({ status: startEmptyTrash(userIdOf(request), new Date()) })
   );
 }

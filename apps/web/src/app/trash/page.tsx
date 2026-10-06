@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { IconTrash } from "@tabler/icons-react";
+import { IconLoader2, IconTrash } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
@@ -49,7 +49,7 @@ function TrashView() {
     setPending(null);
     clearSelection();
     if (action?.kind === "purge") await trash.purge(action.items);
-    if (action?.kind === "empty") await trash.empty(items.length);
+    if (action?.kind === "empty") await trash.empty();
   };
 
   const renderBody = () => {
@@ -79,17 +79,23 @@ function TrashView() {
     <FileManagerLayout
       title={t("pageTitle")}
       subline={
-        trash.list
-          ? t(items.length > 0 ? "subline" : "sublineEmpty", {
-              days: trash.list.retentionDays,
-              size: formatFileSize(heldBytes),
-            })
-          : undefined
+        trash.isEmptying
+          ? t("emptying")
+          : trash.list
+            ? t(items.length > 0 ? "subline" : "sublineEmpty", {
+                days: trash.list.retentionDays,
+                size: formatFileSize(heldBytes),
+              })
+            : undefined
       }
       actions={
-        <Button variant="outline" disabled={items.length === 0} onClick={() => setPending({ kind: "empty" })}>
-          <IconTrash />
-          {t("emptyTrash")}
+        <Button
+          variant="outline"
+          disabled={items.length === 0 || trash.isEmptying}
+          onClick={() => setPending({ kind: "empty" })}
+        >
+          {trash.isEmptying ? <IconLoader2 className="animate-spin" aria-hidden /> : <IconTrash />}
+          {trash.isEmptying ? t("emptying") : t("emptyTrash")}
         </Button>
       }
     >

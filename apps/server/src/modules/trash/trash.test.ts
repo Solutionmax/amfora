@@ -84,6 +84,14 @@ const addFile = (userId: string, name: string, size = 100, folderId: string | nu
 const addFolder = (userId: string, name: string, parentId: string | null = null) =>
   prisma.folder.create({ data: { name, objectName: `${userId}/folder-${++counter}`, userId, parentId } });
 
+const untilIdle = async (userId: string) => {
+  for (let tries = 0; tries < 200; tries++) {
+    if (!(await as(userId, "GET", "/trash")).json().emptying.running) return;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  throw new Error("still emptying");
+};
+
 const trashItems = async (userId: string) =>
   (await as(userId, "GET", "/trash")).json().items as Array<{
     kind: string;
@@ -240,7 +248,8 @@ test("somebody else cannot list, restore or purge what is in my trash", async ()
   assert.equal((await as("bob", "POST", `/trash/folder/${folder.id}/restore`)).statusCode, 404);
   assert.equal((await as("bob", "DELETE", `/trash/file/${file.id}`)).statusCode, 404);
   assert.equal((await as("bob", "DELETE", `/trash/folder/${folder.id}`)).statusCode, 404);
-  assert.equal((await as("bob", "DELETE", "/trash")).statusCode, 200);
+  assert.equal((await as("bob", "DELETE", "/trash")).statusCode, 202);
+  await untilIdle("bob");
 
   assert.deepEqual(removed, []);
   assert.equal(await prisma.file.count({ where: { deletedAt: { not: null } } }), 1);
@@ -325,8 +334,9 @@ test("emptying the trash removes all of mine and none of anybody else's", async 
   await as("bob", "DELETE", `/files/${theirs.id}`);
 
   const reply = await as("alice", "DELETE", "/trash");
+  await untilIdle("alice");
 
-  assert.equal(reply.statusCode, 200);
+  assert.equal(reply.statusCode, 202);
   for (const file of [mine, inFolder]) assert.equal(removed.filter((name) => name === file.objectName).length, 1);
   assert.ok(!removed.some((name) => name.startsWith("bob/")), "nothing of somebody else's");
   assert.deepEqual(await trashItems("alice"), []);

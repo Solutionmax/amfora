@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -13,6 +13,8 @@ import {
   type TrashList,
 } from "@/http/endpoints/trash";
 import { ignoreNotFound, runInTurn } from "@/lib/run-in-turn";
+
+const EMPTYING_POLL_MS = 2000;
 
 /** The trash of the signed-in user, and the three things that can be done with it. */
 export function useTrash() {
@@ -37,6 +39,22 @@ export function useTrash() {
     void load();
   }, [load]);
 
+  // Emptying runs on the server: look again every couple of seconds, and say how it ended.
+  const wasEmptying = useRef(false);
+  const isEmptying = list?.emptying.running ?? false;
+  useEffect(() => {
+    if (isEmptying) {
+      wasEmptying.current = true;
+      const timer = setTimeout(() => void load(), EMPTYING_POLL_MS);
+      return () => clearTimeout(timer);
+    }
+    if (wasEmptying.current && list) {
+      wasEmptying.current = false;
+      if (list.emptying.failed > 0) toast.error(t("emptyPartial", { failed: list.emptying.failed }));
+      else toast.success(t("emptied"));
+    }
+  }, [isEmptying, list, load, t]);
+
   const report = async (total: number, failed: number, done: string, partial: string) => {
     if (failed > 0) toast.error(t(partial, { failed, total }));
     else toast.success(t(done, { count: total }));
@@ -53,16 +71,17 @@ export function useTrash() {
     await report(items.length, failed, "purged", "purgePartial");
   };
 
-  const empty = async (count: number) => {
+  const empty = async () => {
     try {
-      const { failed } = await emptyTrash();
-      await report(count, failed, "purged", "purgePartial");
+      wasEmptying.current = true;
+      await emptyTrash();
     } catch (error) {
+      wasEmptying.current = false;
       console.error("Failed to empty the trash:", error);
       toast.error(t("purgeError"));
-      await load();
     }
+    await load();
   };
 
-  return { list, isLoading, hasLoadError, load, restore, purge, empty };
+  return { list, isLoading, hasLoadError, isEmptying, load, restore, purge, empty };
 }

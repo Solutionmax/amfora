@@ -3,7 +3,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { env } from "../../env";
 import { verifyCapability } from "../../shared/capability";
 import { prisma } from "../../shared/prisma";
-import { notDeleted } from "../../shared/trash";
+import { liveFolderOf, notDeleted } from "../../shared/trash";
 import {
   generateUniqueFileName,
   generateUniqueFileNameForRename,
@@ -33,6 +33,7 @@ import {
 import { isPubliclyEmbeddable } from "./embed-access";
 import { MEDIA_PREVIEW_REFUSED, refusesMediaPreview } from "./media-preview";
 import { isOwnedMultipartObject } from "./multipart-access";
+import { isObjectRegistered, isOwnObjectName } from "./object-name";
 import { FileService } from "./service";
 import { folderAndAncestorIds } from "./share-access";
 import { shareGrantSubject } from "./share-download-grant";
@@ -170,13 +171,12 @@ export class FileController {
         });
       }
 
-      if (input.folderId) {
-        const folder = await prisma.folder.findFirst({
-          where: { id: input.folderId, userId, ...notDeleted },
-        });
-        if (!folder) {
-          return reply.status(400).send({ error: "Folder not found or access denied." });
-        }
+      if (input.folderId && !(await liveFolderOf(userId, input.folderId))) {
+        return reply.status(400).send({ error: "Folder not found or access denied." });
+      }
+
+      if (!isOwnObjectName(userId, input.objectName) || (await isObjectRegistered(input.objectName))) {
+        return reply.status(400).send({ error: "That object name cannot be used." });
       }
 
       // Parse the filename and generate a unique name if there's a duplicate
@@ -649,13 +649,8 @@ export class FileController {
         return reply.status(404).send({ error: "File not found." });
       }
 
-      if (input.folderId) {
-        const targetFolder = await prisma.folder.findFirst({
-          where: { id: input.folderId, userId, ...notDeleted },
-        });
-        if (!targetFolder) {
-          return reply.status(400).send({ error: "Target folder not found." });
-        }
+      if (input.folderId && !(await liveFolderOf(userId, input.folderId))) {
+        return reply.status(400).send({ error: "Target folder not found." });
       }
 
       const updatedFile = await prisma.file.update({

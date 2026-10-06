@@ -2,8 +2,9 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
-import { liveFolderCounts, notDeleted } from "../../shared/trash";
+import { liveFolderCounts, liveFolderOf, notDeleted } from "../../shared/trash";
 import { ConfigService } from "../config/service";
+import { isObjectRegistered } from "../file/object-name";
 import { moveFolderToTrash } from "../trash/service";
 import {
   CheckFolderSchema,
@@ -28,13 +29,12 @@ export class FolderController {
 
       const input = RegisterFolderSchema.parse(request.body);
 
-      if (input.parentId) {
-        const parentFolder = await prisma.folder.findFirst({
-          where: { id: input.parentId, userId, ...notDeleted },
-        });
-        if (!parentFolder) {
-          return reply.status(400).send({ error: "Parent folder not found or access denied" });
-        }
+      if (input.parentId && !(await liveFolderOf(userId, input.parentId))) {
+        return reply.status(400).send({ error: "Parent folder not found or access denied" });
+      }
+
+      if (await isObjectRegistered(input.objectName)) {
+        return reply.status(400).send({ error: "That object name cannot be used." });
       }
 
       // Check for duplicates and auto-rename if necessary
@@ -275,10 +275,7 @@ export class FolderController {
       }
 
       if (validatedInput.parentId) {
-        const parentFolder = await prisma.folder.findFirst({
-          where: { id: validatedInput.parentId, userId, ...notDeleted },
-        });
-        if (!parentFolder) {
+        if (!(await liveFolderOf(userId, validatedInput.parentId))) {
           return reply.status(400).send({ error: "Parent folder not found or access denied" });
         }
 
