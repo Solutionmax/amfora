@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { BrandMark } from "@/components/brand/brand-mark";
 import { AppSidebar } from "@/components/layout/app-sidebar";
+import { NotificationBell } from "@/components/layout/notification-bell";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -49,6 +50,7 @@ export function FileManagerLayout({ children, title, subline, actions, variant =
           <span className="min-w-0 flex-1 truncate font-display text-[17px] font-bold tracking-[-0.01em]">
             {appName}
           </span>
+          <NotificationBell className="size-9 text-ink-icon hover:text-ink" />
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label={t("ui.menu")}>

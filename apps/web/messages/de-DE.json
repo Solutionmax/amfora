@@ -38,9 +38,11 @@
       "shareOpened": "Freigabe geöffnet",
       "shareDownloaded": "Heruntergeladen",
       "sharePasswordFailed": "Falsches Passwort",
+      "shareExpiring": "Eine Freigabe endet bald",
       "receiveCreated": "Empfangslink erstellt",
       "receiveDeleted": "Empfangslink gelöscht",
       "receiveFilesReceived": "{count, plural, one {# Datei} other {# Dateien}} gesendet",
+      "receiveExpiring": "Ein Empfangslink endet bald",
       "secretCreated": "Geheimnis erstellt",
       "secretDeleted": "Geheimnis gelöscht",
       "secretOpened": "Geheimnis geöffnet",
@@ -49,6 +51,7 @@
       "accountSignInFailed": "Anmeldung fehlgeschlagen",
       "activityCleared": "Protokoll geleert",
       "accountTwoFactorReset": "Anmeldung in zwei Schritten zurückgesetzt",
+      "accountStorageAlmostFull": "Speicher fast voll",
       "other": "Etwas anderes ist passiert"
     },
     "details": {
@@ -940,6 +943,25 @@
   },
   "navigation": {
     "dashboard": "Übersicht"
+  },
+  "notificationBell": {
+    "title": "Benachrichtigungen",
+    "open": "Benachrichtigungen",
+    "openWithCount": "Benachrichtigungen, {count} neu",
+    "loading": "Wird geladen",
+    "error": "Die Benachrichtigungen konnten nicht geladen werden.",
+    "empty": "Nichts Neues",
+    "emptyHint": "Neuigkeiten zu deinen Freigaben, Empfangslinks, Geheimnissen und deinem Speicher erscheinen hier.",
+    "new": "Neu",
+    "items": {
+      "shareDownloaded": "Deine Freigabe {subject} wurde heruntergeladen",
+      "receiveFilesReceived": "{count, plural, one {# Datei ist} other {# Dateien sind}} über {subject} eingegangen",
+      "secretOpened": "Dein Geheimnis {subject} wurde geöffnet",
+      "shareExpiring": "Deine Freigabe {subject} endet {when}",
+      "receiveExpiring": "Dein Empfangslink {subject} endet {when}",
+      "accountStorageAlmostFull": "Dein Speicher ist zu {percent}% voll",
+      "other": "Etwas ist passiert"
+    }
   },
   "notifications": {
     "permissionGranted": "Download-Benachrichtigungen aktiviert",
@@ -2421,7 +2443,8 @@
             "off": "Nicht verlangt",
             "admins": "Administratoren",
             "all": "Alle"
-          }
+          },
+          "lockedByServer": "Von der Serverkonfiguration festgelegt"
         }
       }
     }

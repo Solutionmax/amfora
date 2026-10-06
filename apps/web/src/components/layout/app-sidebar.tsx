@@ -24,6 +24,7 @@ import { formatStorageSize } from "@/app/dashboard/utils/format-storage-size";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
+import { NotificationBell } from "@/components/layout/notification-bell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -253,6 +254,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
         <div className="flex items-center gap-1 px-1 [&_button]:size-[30px] [&_button]:text-ink-icon [&_button:hover]:text-ink">
           <LanguageSwitcher />
           <ModeToggle />
+          {!onNavigate && <NotificationBell />}
           <Button variant="ghost" size="icon" onClick={handleLogout} aria-label={t("navbar.logout")}>
             <IconLogout className="size-[17px]" />
           </Button>

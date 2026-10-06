@@ -4,6 +4,7 @@ import { env } from "../../env";
 import { assertLinkLifetime } from "../../shared/link-lifetime";
 import { prisma } from "../../shared/prisma";
 import { recordActivity } from "../activity/activity";
+import { noteStorageGrowth } from "../activity/notifications";
 import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
 import { copiedObjectName } from "../file/object-name";
@@ -729,6 +730,8 @@ export class ReverseShareService {
         userId: creatorId,
       },
     });
+
+    await noteStorageGrowth(creatorId, newFileRecord.size);
 
     return {
       id: newFileRecord.id,

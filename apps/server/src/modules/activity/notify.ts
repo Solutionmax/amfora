@@ -3,6 +3,7 @@ import { prisma } from "../../shared/prisma";
 import { notDeleted } from "../../shared/trash";
 import type { Notice } from "../email/notice";
 import { EmailService } from "../email/service";
+import { noteExpiringLinks } from "./notifications";
 import { QuietPeriod } from "./quiet";
 import { sendWebhook } from "./webhook";
 
@@ -138,6 +139,8 @@ export async function afterSecretOpened(input: {
  * reminder. Remembers the end date it reminded for, so a moved end date is reminded again.
  */
 export async function sendExpiryReminders(now = new Date()): Promise<number> {
+  // The line in the notification bell does not depend on the mail switches.
+  await noteExpiringLinks(now).catch((error) => console.error("Expiry notifications failed:", error));
   if (!(await switchedOn("notifyExpiryEnabled"))) return 0;
   const soon = new Date(now.getTime() + REMINDER_DAYS * MS_PER_DAY);
   const due = { remindBeforeExpiry: true, expiration: { gt: now, lte: soon } } as const;

@@ -38,9 +38,11 @@
       "shareOpened": "Compartición abierta",
       "shareDownloaded": "Descargado",
       "sharePasswordFailed": "Contraseña incorrecta",
+      "shareExpiring": "Una compartición termina pronto",
       "receiveCreated": "Enlace de recepción creado",
       "receiveDeleted": "Enlace de recepción eliminado",
       "receiveFilesReceived": "{count, plural, one {# archivo enviado} other {# archivos enviados}}",
+      "receiveExpiring": "Un enlace de recepción termina pronto",
       "secretCreated": "Secreto creado",
       "secretDeleted": "Secreto eliminado",
       "secretOpened": "Secreto abierto",
@@ -49,6 +51,7 @@
       "accountSignInFailed": "Inicio de sesión fallido",
       "activityCleared": "Registro vaciado",
       "accountTwoFactorReset": "Inicio de sesión en dos pasos restablecido",
+      "accountStorageAlmostFull": "Almacenamiento casi lleno",
       "other": "Pasó otra cosa"
     },
     "details": {
@@ -940,6 +943,25 @@
   },
   "navigation": {
     "dashboard": "Panel de control"
+  },
+  "notificationBell": {
+    "title": "Notificaciones",
+    "open": "Notificaciones",
+    "openWithCount": "Notificaciones, {count} nuevas",
+    "loading": "Cargando",
+    "error": "No se pudieron cargar las notificaciones.",
+    "empty": "Nada nuevo",
+    "emptyHint": "Las novedades de tus comparticiones, enlaces de recepción, secretos y almacenamiento aparecen aquí.",
+    "new": "Nuevo",
+    "items": {
+      "shareDownloaded": "Tu compartición {subject} se ha descargado",
+      "receiveFilesReceived": "{count, plural, one {Ha llegado # archivo} other {Han llegado # archivos}} a {subject}",
+      "secretOpened": "Tu secreto {subject} se ha abierto",
+      "shareExpiring": "Tu compartición {subject} termina {when}",
+      "receiveExpiring": "Tu enlace de recepción {subject} termina {when}",
+      "accountStorageAlmostFull": "Tu almacenamiento está lleno al {percent}%",
+      "other": "Ha pasado algo"
+    }
   },
   "notifications": {
     "permissionGranted": "Notificaciones de descarga habilitadas",
@@ -2421,7 +2443,8 @@
             "off": "No obligatorio",
             "admins": "Administradores",
             "all": "Todos"
-          }
+          },
+          "lockedByServer": "Definido por la configuración del servidor"
         }
       }
     }

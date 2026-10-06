@@ -13,9 +13,11 @@ export const ACTIVITY_ACTIONS = [
   "share.opened",
   "share.downloaded",
   "share.password_failed",
+  "share.expiring",
   "receive.created",
   "receive.deleted",
   "receive.files_received",
+  "receive.expiring",
   "secret.created",
   "secret.deleted",
   "secret.opened",
@@ -23,9 +25,23 @@ export const ACTIVITY_ACTIONS = [
   "account.signed_in",
   "account.sign_in_failed",
   "account.two_factor_reset",
+  "account.storage_almost_full",
   "activity.cleared",
 ] as const;
 export type ActivityAction = (typeof ACTIVITY_ACTIONS)[number];
+
+/**
+ * The actions that show in the notification bell when they happen to you. Adding one here is all
+ * the server needs; the interface needs its words.
+ */
+export const NOTIFICATION_ACTIONS: readonly ActivityAction[] = [
+  "share.downloaded",
+  "receive.files_received",
+  "secret.opened",
+  "share.expiring",
+  "receive.expiring",
+  "account.storage_almost_full",
+];
 
 export interface ActivityInput {
   action: ActivityAction;

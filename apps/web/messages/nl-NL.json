@@ -38,9 +38,11 @@
       "shareOpened": "Deling geopend",
       "shareDownloaded": "Gedownload",
       "sharePasswordFailed": "Verkeerd wachtwoord",
+      "shareExpiring": "Een deling loopt bijna af",
       "receiveCreated": "Ontvangstlink gemaakt",
       "receiveDeleted": "Ontvangstlink verwijderd",
       "receiveFilesReceived": "{count, plural, one {# bestand} other {# bestanden}} gestuurd",
+      "receiveExpiring": "Een ontvanglink loopt bijna af",
       "secretCreated": "Geheim gemaakt",
       "secretDeleted": "Geheim verwijderd",
       "secretOpened": "Geheim geopend",
@@ -49,6 +51,7 @@
       "accountSignInFailed": "Inloggen mislukt",
       "activityCleared": "Logboek leeggemaakt",
       "accountTwoFactorReset": "Inloggen in twee stappen gereset",
+      "accountStorageAlmostFull": "Opslag bijna vol",
       "other": "Er gebeurde iets anders"
     },
     "details": {
@@ -940,6 +943,25 @@
   },
   "navigation": {
     "dashboard": "Controlepaneel"
+  },
+  "notificationBell": {
+    "title": "Meldingen",
+    "open": "Meldingen",
+    "openWithCount": "Meldingen, {count} nieuw",
+    "loading": "Laden",
+    "error": "De meldingen konden niet worden geladen.",
+    "empty": "Niets nieuws",
+    "emptyHint": "Nieuws over je delingen, ontvanglinks, geheimen en opslag verschijnt hier.",
+    "new": "Nieuw",
+    "items": {
+      "shareDownloaded": "Je deling {subject} is gedownload",
+      "receiveFilesReceived": "Er {count, plural, one {is # bestand} other {zijn # bestanden}} binnengekomen via {subject}",
+      "secretOpened": "Je geheim {subject} is geopend",
+      "shareExpiring": "Je deling {subject} loopt af {when}",
+      "receiveExpiring": "Je ontvanglink {subject} loopt af {when}",
+      "accountStorageAlmostFull": "Je opslag is voor {percent}% vol",
+      "other": "Er is iets gebeurd"
+    }
   },
   "notifications": {
     "permissionGranted": "Download meldingen ingeschakeld",
@@ -2421,7 +2443,8 @@
             "off": "Niet verplicht",
             "admins": "Beheerders",
             "all": "Iedereen"
-          }
+          },
+          "lockedByServer": "Ingesteld door de serverconfiguratie"
         }
       }
     }

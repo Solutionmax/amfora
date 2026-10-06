@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 
+import { notificationRoutes } from "./modules/activity/notifications";
 import { activityRoutes } from "./modules/activity/routes";
 import { registerApiKeyAuth } from "./modules/api-key/auth";
 import { apiKeyRoutes } from "./modules/api-key/routes";
@@ -44,5 +45,6 @@ export function registerRoutes(app: FastifyInstance) {
   app.register(apiKeyRoutes);
   app.register(secretRoutes);
   app.register(activityRoutes);
+  app.register(notificationRoutes);
   app.register(trashRoutes);
 }

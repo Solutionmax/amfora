@@ -32,6 +32,7 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "Settings can ask administrators or everyone to set up two step sign in. Until they do, they can only reach the set up page. API keys and external sign in providers are not affected.",
     "An administrator can reset the two step sign in of another user from the Users page, for someone who lost the phone. It shows in the activity log.",
     "You can sign in with a passkey: a fingerprint, a face or a security key, without typing a password. Add and remove passkeys on your profile page. A passkey counts as two step sign in.",
+    "A bell in the menu shows what is new: your share was downloaded, files came in on a receive link, a secret was opened, a link ends within three days, or your storage is almost full. Opening it marks everything as seen.",
   ],
 };
 

@@ -65,7 +65,13 @@ providers.
   in, but the server answers every route except the set up path with 403 and the code
   `TWO_FACTOR_SETUP_REQUIRED`, and the web app takes them to a set up page and back to where they
   were going. API keys are not affected, and neither are users who sign in through an external
-  provider: that provider is responsible for the second step.
+  provider: that provider is responsible for the second step. Public pages (a share link, a
+  receive link, a secret) keep working for such a user and treat them as a visitor. Locked out (the
+  only administrator lost the authenticator)? Start the server with `TWO_FACTOR_REQUIRED=off`: it
+  wins over the setting, Settings shows it as set by the server configuration; sign in, repair,
+  remove the variable. One accepted limit: somebody who has only the password can set up their
+  own second step while the requirement applies and the owner has none yet, as with any "set up at
+  next sign in" rule.
 - **Reset the two step sign in of somebody else.** On the Users page an administrator can switch
   off the two step sign in of another user (secret, backup codes and trusted devices go, passkeys
   stay). It is not possible for yourself. The activity log shows who did it and for whom.
@@ -73,7 +79,20 @@ providers.
   remove passkeys on the profile page; both ask for the password. Passkeys need an https address
   or `localhost` (`APP_URL`); elsewhere the buttons are not shown. A passkey counts as two step
   sign in for the setting above. Failed passkey sign ins count towards the same limit as wrong
-  passwords and show in the activity log.
+  passwords and show in the activity log, and so does a wrong password when adding or removing a
+  passkey or switching two step sign in off. With password sign in switched off passkeys are not
+  offered.
+- **Notifications in the app.** A grey bell in the menu (and in the top bar on a phone) shows a
+  small count when something is new. Opening it lists the latest 20: your share was downloaded,
+  files came in on your receive link, your secret was opened, a share or receive link ends within
+  three days, and your storage reached 90 percent of your limit (once, until it drops below again).
+  Opening the panel marks everything as seen. There is no separate store: a notification is a line
+  of the activity log that belongs to you and was not done by yourself, so it lives as long as the
+  log keeps that line, and clearing the log clears the bell. Two new line types appear in the
+  Activity page as well: a link that ends soon (written once per link and end date, whether or not
+  the reminder mail is on) and storage almost full. The new column `notificationsSeenAt` on the
+  user is the only database change. API: `GET /notifications`, `GET /notifications/count`,
+  `POST /notifications/seen`, each only for your own.
 
 ## Changed
 

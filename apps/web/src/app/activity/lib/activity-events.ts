@@ -13,6 +13,9 @@ const TONES: Record<string, EventTone> = {
   "receive.files_received": "ok",
   "secret.opened": "ok",
   "share.password_failed": "warn",
+  "share.expiring": "warn",
+  "receive.expiring": "warn",
+  "account.storage_almost_full": "warn",
   "account.sign_in_failed": "bad",
   "account.two_factor_reset": "warn",
   "secret.destroyed": "bad",
@@ -42,6 +45,11 @@ export function eventLink(event: Pick<ActivityEvent, "kind" | "action" | "subjec
   const page = PAGES[event.kind];
   if (!page || !event.subjectId || GONE_ACTIONS.includes(event.action)) return null;
   return `${page}?id=${encodeURIComponent(event.subjectId)}`;
+}
+
+/** Where a notification leads: the thing it is about, or the files page for the storage. */
+export function notificationLink(event: Pick<ActivityEvent, "kind" | "action" | "subjectId">): string | null {
+  return event.action === "account.storage_almost_full" ? "/files" : eventLink(event);
 }
 
 export function initials(name: string): string {

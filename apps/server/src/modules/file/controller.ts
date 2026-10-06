@@ -11,6 +11,7 @@ import {
 } from "../../utils/file-name-generator";
 import { getContentType } from "../../utils/mime-types";
 import { recordVisitorActivity } from "../activity/activity";
+import { noteStorageGrowth } from "../activity/notifications";
 import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
 import { storageLimitOf } from "../storage/limit";
@@ -194,6 +195,8 @@ export class FileController {
           folderId: input.folderId,
         },
       });
+
+      await noteStorageGrowth(userId, fileRecord.size);
 
       const fileResponse = {
         id: fileRecord.id,

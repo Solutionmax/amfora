@@ -1,5 +1,7 @@
 import {
   IconAlertTriangle,
+  IconClockHour4,
+  IconDatabase,
   IconDownload,
   IconEraser,
   IconEye,
@@ -23,6 +25,9 @@ const ICONS: Record<string, Icon> = {
   "share.opened": IconEye,
   "share.downloaded": IconDownload,
   "share.password_failed": IconAlertTriangle,
+  "share.expiring": IconClockHour4,
+  "receive.expiring": IconClockHour4,
+  "account.storage_almost_full": IconDatabase,
   "receive.created": IconUpload,
   "receive.deleted": IconTrash,
   "receive.files_received": IconUpload,

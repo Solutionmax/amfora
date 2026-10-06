@@ -8,6 +8,7 @@ import {
   groupByDay,
   initials,
   kindOf,
+  notificationLink,
   parseOpening,
   weekChange,
 } from "./activity-events";
@@ -95,4 +96,15 @@ test("a deleted receive link has no page to link to, a made one has", () => {
   assert.equal(eventLink({ kind: "receive", action: "receive.deleted", subjectId: "r1" }), null);
   assert.equal(eventLink({ kind: "receive", action: "receive.created", subjectId: "r1" }), "/reverse-shares?id=r1");
   assert.equal(eventTone("receive.created"), "accent");
+});
+
+test("a notification leads to its share, receive link or secret, and the storage one to the files", () => {
+  assert.equal(notificationLink({ kind: "share", action: "share.expiring", subjectId: "a b" }), "/shares?id=a%20b");
+  assert.equal(
+    notificationLink({ kind: "receive", action: "receive.files_received", subjectId: "r1" }),
+    "/reverse-shares?id=r1"
+  );
+  assert.equal(notificationLink({ kind: "secret", action: "secret.opened", subjectId: "s1" }), "/secrets?id=s1");
+  assert.equal(notificationLink({ kind: "account", action: "account.storage_almost_full", subjectId: null }), "/files");
+  assert.equal(notificationLink({ kind: "share", action: "share.downloaded", subjectId: null }), null);
 });

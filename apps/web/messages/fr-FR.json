@@ -38,9 +38,11 @@
       "shareOpened": "Partage ouvert",
       "shareDownloaded": "Téléchargé",
       "sharePasswordFailed": "Mot de passe erroné",
+      "shareExpiring": "Un partage se termine bientôt",
       "receiveCreated": "Lien de réception créé",
       "receiveDeleted": "Lien de réception supprimé",
       "receiveFilesReceived": "{count, plural, one {# fichier envoyé} other {# fichiers envoyés}}",
+      "receiveExpiring": "Un lien de réception se termine bientôt",
       "secretCreated": "Secret créé",
       "secretDeleted": "Secret supprimé",
       "secretOpened": "Secret ouvert",
@@ -49,6 +51,7 @@
       "accountSignInFailed": "Connexion échouée",
       "activityCleared": "Journal vidé",
       "accountTwoFactorReset": "Connexion en deux étapes réinitialisée",
+      "accountStorageAlmostFull": "Stockage presque plein",
       "other": "Autre chose s'est produit"
     },
     "details": {
@@ -940,6 +943,25 @@
   },
   "navigation": {
     "dashboard": "Tableau de bord"
+  },
+  "notificationBell": {
+    "title": "Notifications",
+    "open": "Notifications",
+    "openWithCount": "Notifications, {count} nouvelles",
+    "loading": "Chargement",
+    "error": "Impossible de charger les notifications.",
+    "empty": "Rien de nouveau",
+    "emptyHint": "Les nouvelles de vos partages, liens de réception, secrets et de votre stockage apparaissent ici.",
+    "new": "Nouveau",
+    "items": {
+      "shareDownloaded": "Votre partage {subject} a été téléchargé",
+      "receiveFilesReceived": "{count, plural, one {# fichier est arrivé} other {# fichiers sont arrivés}} sur {subject}",
+      "secretOpened": "Votre secret {subject} a été ouvert",
+      "shareExpiring": "Votre partage {subject} se termine {when}",
+      "receiveExpiring": "Votre lien de réception {subject} se termine {when}",
+      "accountStorageAlmostFull": "Votre stockage est plein à {percent}%",
+      "other": "Il s'est passé quelque chose"
+    }
   },
   "notifications": {
     "permissionGranted": "Notifications de téléchargement activées",
@@ -2421,7 +2443,8 @@
             "off": "Non obligatoire",
             "admins": "Administrateurs",
             "all": "Tout le monde"
-          }
+          },
+          "lockedByServer": "Défini par la configuration du serveur"
         }
       }
     }

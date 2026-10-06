@@ -38,9 +38,11 @@
       "shareOpened": "Opened the share",
       "shareDownloaded": "Downloaded",
       "sharePasswordFailed": "Wrong password",
+      "shareExpiring": "A share ends soon",
       "receiveCreated": "Made a receive link",
       "receiveDeleted": "Deleted a receive link",
       "receiveFilesReceived": "Sent {count, plural, one {# file} other {# files}}",
+      "receiveExpiring": "A receive link ends soon",
       "secretCreated": "Made a secret",
       "secretDeleted": "Deleted a secret",
       "secretOpened": "Opened a secret",
@@ -49,6 +51,7 @@
       "accountSignInFailed": "Sign in failed",
       "activityCleared": "Cleared the log",
       "accountTwoFactorReset": "Reset two step sign in",
+      "accountStorageAlmostFull": "Storage almost full",
       "other": "Something else happened"
     },
     "details": {
@@ -940,6 +943,25 @@
   },
   "navigation": {
     "dashboard": "Dashboard"
+  },
+  "notificationBell": {
+    "title": "Notifications",
+    "open": "Notifications",
+    "openWithCount": "Notifications, {count} new",
+    "loading": "Loading",
+    "error": "Could not load the notifications.",
+    "empty": "Nothing new",
+    "emptyHint": "News about your shares, receive links, secrets and storage shows up here.",
+    "new": "New",
+    "items": {
+      "shareDownloaded": "Your share {subject} was downloaded",
+      "receiveFilesReceived": "{count, plural, one {# file} other {# files}} came in on {subject}",
+      "secretOpened": "Your secret {subject} was opened",
+      "shareExpiring": "Your share {subject} ends {when}",
+      "receiveExpiring": "Your receive link {subject} ends {when}",
+      "accountStorageAlmostFull": "Your storage is {percent}% full",
+      "other": "Something happened"
+    }
   },
   "notifications": {
     "permissionGranted": "Download notifications enabled",
@@ -2421,7 +2443,8 @@
             "off": "Not required",
             "admins": "Administrators",
             "all": "Everyone"
-          }
+          },
+          "lockedByServer": "Set by the server configuration"
         }
       }
     }
