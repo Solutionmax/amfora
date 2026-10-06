@@ -415,7 +415,21 @@
       },
       "preview": {
         "title": "Vista previa",
-        "page": "Página de descarga"
+        "tabsLabel": "Página de la vista previa",
+        "tabs": {
+          "download": "Descarga",
+          "signIn": "Inicio de sesión",
+          "receive": "Recepción"
+        },
+        "pages": {
+          "download": "Página de descarga",
+          "signIn": "Página de inicio de sesión",
+          "receive": "Página de recepción"
+        },
+        "sample": {
+          "receiveName": "Fotos para el catálogo de primavera",
+          "receiveDescription": "Suelta tus fotos aquí. El nombre y el correo son opcionales."
+        }
       }
     },
     "calm": {
@@ -1447,6 +1461,24 @@
     "pageTitle": "Crear Cuenta",
     "calm": {
       "unusableTitle": "Esta invitación no se puede usar"
+    }
+  },
+  "releaseNotes": {
+    "items": {
+      "security": "Dos correcciones de seguridad: registrar una subida ahora exige un nombre de objeto que sea tuyo, y solo tus propios archivos y carpetas se pueden añadir a una compartición. Ambos fallos existían en versiones anteriores, así que actualiza pronto.",
+      "trash": "Eliminar un archivo o una carpeta lo mueve a la nueva página Papelera, donde se queda 30 días (se puede cambiar en Configuración). Restáuralo o elimínalo definitivamente. La Configuración también puede quitar por sí sola las comparticiones terminadas y los enlaces de recepción vacíos; los archivos nunca se quitan así.",
+      "twoFactor": "La Configuración puede pedir a los administradores o a todos que configuren el inicio de sesión en dos pasos, y un administrador puede restablecerlo para quien perdió el teléfono. También puedes iniciar sesión con una clave de acceso (huella, cara o llave de seguridad) sin contraseña.",
+      "groups": "Los administradores pueden crear grupos en la página Usuarios. Una compartición puede limitarse a los miembros de un grupo y aparece en Compartido conmigo en la página Comparticiones.",
+      "notifications": "Una campana en el menú muestra lo nuevo: una descarga, archivos en un enlace de recepción, un secreto abierto, un enlace que termina pronto o un almacenamiento casi lleno.",
+      "virusScan": "Un análisis antivirus opcional con ClamAV, desactivado mientras no definas CLAMAV_HOST. Un archivo que se está comprobando o está infectado no se puede descargar.",
+      "monitoring": "Cifras de monitorización en formato Prometheus en /api/v1/metrics, para la clave API de un administrador.",
+      "settingsNotes": "La Configuración muestra lo que trajo la versión que usas, en tu idioma, y los administradores ven un aviso en el menú cuando hay una actualización esperando.",
+      "storage": "El indicador de almacenamiento del menú es un anillo. Los administradores pueden dar a un usuario su propio límite de almacenamiento, y la Configuración tiene una duración predeterminada y una máxima para las comparticiones y los enlaces de recepción.",
+      "emails": "Los correos llevan el logotipo de la instalación y comparten un mismo diseño sereno, con también una versión en texto plano.",
+      "activity": "Los administradores pueden vaciar el registro de actividad, y crear o eliminar un enlace de recepción ahora aparece en él. Los números de los filtros siguen la búsqueda.",
+      "customization": "La vista previa en Personalización muestra las páginas reales de Descarga, Inicio de sesión y Recepción en el tema elegido. Una fuente elegida allí vuelve a aplicarse.",
+      "externalSignIn": "El inicio de sesión externo empieza con Authentik, GitHub y Google, y cualquier otro servicio se sigue añadiendo con Añadir proveedor. El formulario de un proveedor se abre mucho más rápido.",
+      "repairs": "Pequeñas correcciones: las páginas de descarga ya no reproducen vídeo ni audio, eliminar muchos elementos a la vez ya no se detiene a medias, la barra de selección de Comparticiones solo actúa sobre las comparticiones que ves, y los interruptores de correo que el administrador desactivó aparecen desactivados."
     }
   },
   "resetPassword": {
@@ -2551,7 +2583,8 @@
       "downloadFailed": "Error al descargar el archivo"
     },
     "messages": {
-      "downloadStarted": "Descarga iniciada"
+      "downloadStarted": "Descarga iniciada",
+      "filesLeftOut": "{count, plural, one {# archivo no está disponible y se dejó fuera} other {# archivos no están disponibles y se dejaron fuera}}"
     },
     "password": {
       "title": "Compartición protegida por contraseña",

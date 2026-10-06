@@ -4,16 +4,16 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 import { PublicCard } from "@/components/auth/public-card";
-import { PublicShell, type PublicStory } from "@/components/brand/public-shell";
+import { PublicShell } from "@/components/brand/public-shell";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ShareSecretLink } from "@/components/secrets/share-secret-link";
 import { useAppInfo } from "@/contexts/app-info-context";
 import { LoginForm } from "./components/login-form";
 import { PasskeySignIn } from "./components/passkey-sign-in";
 import { RegisterForm } from "./components/register-form";
+import { SignInCard, signInStory } from "./components/sign-in-view";
 import { TwoFactorVerification } from "./components/two-factor-verification";
 import { useLogin } from "./hooks/use-login";
-import { LOGIN_TRUST } from "./trust";
 
 export default function LoginPage() {
   const t = useTranslations();
@@ -29,17 +29,7 @@ export default function LoginPage() {
     return <LoadingScreen />;
   }
 
-  const story: PublicStory = {
-    headline: firstAccess
-      ? `${t("public.login.firstTitle")} ${t("public.login.firstAccent")}`
-      : `${t("public.login.title")} ${t("public.login.accent")}`,
-    text: appDescription || undefined,
-    trust: LOGIN_TRUST.map(({ key, icon }) => ({
-      icon,
-      title: t(`public.login.trust.${key}.title`),
-      text: t(`public.login.trust.${key}.text`),
-    })),
-  };
+  const story = signInStory(t, { firstAccess: !!firstAccess, text: appDescription || undefined });
 
   const card = firstAccess ? (
     <PublicCard title={t("register.buttons.createAdmin")} description={t("public.login.firstSub")}>
@@ -54,7 +44,7 @@ export default function LoginPage() {
       isSubmitting={login.isSubmitting}
     />
   ) : (
-    <PublicCard title={t("login.signIn")} description={t("public.login.sub", { app: appName })}>
+    <SignInCard appName={appName}>
       <LoginForm
         error={login.error}
         isVisible={login.isVisible}
@@ -67,7 +57,7 @@ export default function LoginPage() {
         <PasskeySignIn onSignIn={login.onPasskeySignIn} isBusy={login.isSubmitting} />
       )}
       <ShareSecretLink />
-    </PublicCard>
+    </SignInCard>
   );
 
   return <PublicShell story={story} card={card} />;

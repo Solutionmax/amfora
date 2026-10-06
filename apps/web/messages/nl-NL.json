@@ -415,7 +415,21 @@
       },
       "preview": {
         "title": "Voorbeeld",
-        "page": "Downloadpagina"
+        "tabsLabel": "Pagina om te bekijken",
+        "tabs": {
+          "download": "Downloaden",
+          "signIn": "Inloggen",
+          "receive": "Ontvangen"
+        },
+        "pages": {
+          "download": "Downloadpagina",
+          "signIn": "Inlogpagina",
+          "receive": "Ontvangstpagina"
+        },
+        "sample": {
+          "receiveName": "Foto's voor de voorjaarscatalogus",
+          "receiveDescription": "Zet je foto's hier neer. Naam en e-mailadres zijn optioneel."
+        }
       }
     },
     "calm": {
@@ -1447,6 +1461,24 @@
     "pageTitle": "Account Aanmaken",
     "calm": {
       "unusableTitle": "Deze uitnodiging kan niet worden gebruikt"
+    }
+  },
+  "releaseNotes": {
+    "items": {
+      "security": "Twee beveiligingsreparaties: een upload registreren vraagt nu een objectnaam die van jou is, en alleen je eigen bestanden en mappen kunnen aan een deling worden toegevoegd. Beide gaten zaten ook in eerdere versies, dus werk snel bij.",
+      "trash": "Een bestand of map verwijderen zet het op de nieuwe pagina Prullenbak, waar het 30 dagen blijft staan (aan te passen in Instellingen). Zet het terug of verwijder het definitief. Instellingen kan ook verlopen delingen en lege ontvangstlinks zelf opruimen; bestanden worden zo nooit verwijderd.",
+      "twoFactor": "Instellingen kan beheerders of iedereen vragen inloggen in twee stappen in te stellen, en een beheerder kan het resetten voor iemand die de telefoon kwijt is. Je kunt ook inloggen met een passkey (vingerafdruk, gezicht of beveiligingssleutel) zonder wachtwoord.",
+      "groups": "Beheerders kunnen groepen maken op de pagina Gebruikers. Een deling kan beperkt worden tot de leden van een groep en staat dan onder Met mij gedeeld op de pagina Delingen.",
+      "notifications": "Een bel in het menu laat zien wat er nieuw is: een download, bestanden op een ontvangstlink, een geopend geheim, een link die bijna afloopt of opslag die bijna vol is.",
+      "virusScan": "Een optionele virusscan met ClamAV, uit tenzij je CLAMAV_HOST instelt. Een bestand dat wordt gecontroleerd of besmet is, kan niet worden gedownload.",
+      "monitoring": "Cijfers voor monitoring in het Prometheus formaat op /api/v1/metrics, voor de API sleutel van een beheerder.",
+      "settingsNotes": "Instellingen laat zien wat de versie die je draait bracht, in jouw taal, en beheerders krijgen een melding in het menu als er een update klaarstaat.",
+      "storage": "De opslagmeter in het menu is een ring. Beheerders kunnen een gebruiker een eigen opslaglimiet geven, en Instellingen heeft een standaard en een maximale looptijd voor delingen en ontvangstlinks.",
+      "emails": "E-mails dragen het logo van de installatie en hebben één rustige opmaak, met ook een versie in platte tekst.",
+      "activity": "Beheerders kunnen het activiteitenlogboek wissen, en een ontvangstlink maken of verwijderen staat nu in het logboek. De aantallen bij de filters volgen de zoekopdracht.",
+      "customization": "De voorvertoning onder Aanpassing toont de echte pagina's Downloaden, Inloggen en Ontvangen in het thema dat je kiest. Een daar gekozen lettertype wordt weer toegepast.",
+      "externalSignIn": "Extern inloggen begint met Authentik, GitHub en Google, en elke andere dienst voeg je nog steeds toe met Provider toevoegen. Het formulier van een provider opent veel sneller.",
+      "repairs": "Kleine reparaties: downloadpagina's spelen geen video en audio meer af, veel items tegelijk verwijderen stopt niet meer halverwege, de selectiebalk bij Delingen werkt alleen op de delingen die je ziet, en e-mailschakelaars die de beheerder heeft uitgezet staan uit."
     }
   },
   "resetPassword": {
@@ -2551,7 +2583,8 @@
       "downloadFailed": "Fout bij het downloaden van bestand"
     },
     "messages": {
-      "downloadStarted": "Download gestart"
+      "downloadStarted": "Download gestart",
+      "filesLeftOut": "{count, plural, one {# bestand is niet beschikbaar en is weggelaten} other {# bestanden zijn niet beschikbaar en zijn weggelaten}}"
     },
     "password": {
       "title": "Wachtwoord Beveiligd Delen",

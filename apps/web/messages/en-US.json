@@ -415,7 +415,21 @@
       },
       "preview": {
         "title": "Preview",
-        "page": "Download page"
+        "tabsLabel": "Page to preview",
+        "tabs": {
+          "download": "Download",
+          "signIn": "Sign in",
+          "receive": "Receive"
+        },
+        "pages": {
+          "download": "Download page",
+          "signIn": "Sign in page",
+          "receive": "Receive page"
+        },
+        "sample": {
+          "receiveName": "Photos for the spring catalogue",
+          "receiveDescription": "Drop your photos here. Name and email are optional."
+        }
       }
     },
     "calm": {
@@ -1447,6 +1461,24 @@
     "pageTitle": "Create Account",
     "calm": {
       "unusableTitle": "This invitation cannot be used"
+    }
+  },
+  "releaseNotes": {
+    "items": {
+      "security": "Two security repairs: registering an upload now needs an object name that is yours, and only your own files and folders can be added to a share. Both gaps existed in earlier versions, so update soon.",
+      "trash": "Deleting a file or folder moves it to the new Trash page, where it stays for 30 days (changeable in Settings). Restore it or delete it for good. Settings can also remove ended shares and empty receive links by themselves; files are never removed that way.",
+      "twoFactor": "Settings can ask administrators or everyone to set up two step sign in, and an administrator can reset it for someone who lost their phone. You can also sign in with a passkey (fingerprint, face or security key) without a password.",
+      "groups": "Administrators can make groups on the Users page. A share can be limited to the members of a group, and it shows under Shared with me on the Shares page.",
+      "notifications": "A bell in the menu shows what is new: a download, files on a receive link, an opened secret, a link that ends soon, or storage that is almost full.",
+      "virusScan": "An optional virus scan with ClamAV, off unless you set CLAMAV_HOST. A file that is being checked or is infected cannot be downloaded.",
+      "monitoring": "Monitoring figures in the Prometheus format at /api/v1/metrics, for the API key of an administrator.",
+      "settingsNotes": "Settings shows what the version you run brought, in your language, and administrators get a notice in the menu when an update is waiting.",
+      "storage": "The storage meter in the menu is a ring. Administrators can give a user their own storage limit, and Settings has a default and a maximum lifetime for shares and receive links.",
+      "emails": "Emails carry the logo of the installation and share one calm layout, with a plain text version.",
+      "activity": "Administrators can clear the activity log, and making or deleting a receive link now shows in it. The numbers on the filters follow the search.",
+      "customization": "The preview under Customization shows the real Download, Sign in and Receive pages in the theme you pick. A font chosen there is applied again.",
+      "externalSignIn": "External sign-in starts with Authentik, GitHub and Google, and any other service is still added with Add provider. The provider form opens much faster.",
+      "repairs": "Small repairs: download pages no longer play video and audio, deleting many items at once no longer stops halfway, the selection bar on Shares only acts on the shares you can see, and email switches turned off by the administrator show as off."
     }
   },
   "resetPassword": {
@@ -2551,7 +2583,8 @@
       "downloadFailed": "Failed to download file"
     },
     "messages": {
-      "downloadStarted": "Download started"
+      "downloadStarted": "Download started",
+      "filesLeftOut": "{count, plural, one {# file is not available and was left out} other {# files are not available and were left out}}"
     },
     "password": {
       "title": "Password Protected Share",

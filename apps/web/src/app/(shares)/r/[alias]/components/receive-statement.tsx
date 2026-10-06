@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
+import { usePublicPreview } from "@/components/brand/public-preview";
 import type { PublicStory } from "@/components/brand/public-shell";
 import type { StageFact } from "@/components/brand/stage-shell";
 import { useAppInfo } from "@/contexts/app-info-context";
@@ -11,7 +12,9 @@ import type { ReverseShareInfo } from "../types";
 /** What a receive link says: who is asking, what for, and the limits. */
 export function useReceiveStory(reverseShare: ReverseShareInfo | null): PublicStory {
   const t = useTranslations();
-  const { appName } = useAppInfo();
+  const { appName: storedName } = useAppInfo();
+  // The preview under Customization shows the name that is being typed, not the saved one.
+  const appName = usePublicPreview()?.name ?? storedName;
 
   const facts: StageFact[] = reverseShare
     ? [

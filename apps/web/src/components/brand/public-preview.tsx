@@ -12,6 +12,8 @@ import type { PublicTheme } from "@/components/brand/public-theme";
 export interface PublicPreview {
   theme: PublicTheme;
   name: string;
+  /** The line under the headline of the sign in page. */
+  description?: string;
   showCredit: boolean;
 }
 

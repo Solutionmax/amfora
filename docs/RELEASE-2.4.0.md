@@ -1,17 +1,17 @@
 # Amfora 2.4.0
 
-Release notes inside the app, a notice when an update waits, and a shorter list of sign-in
-providers.
+A trash, groups, passkeys, notifications, an optional virus scan, release notes in the app in your
+own language, and two security repairs.
 
 ## New
 
 - **Release notes in Settings.** The line with the version now tells what the version you run
-  brought. When an update is waiting, what it brings is shown next to the Install button, read
-  from the signed release, with a link to the full notes.
+  brought, in the language you use (English, Dutch, German, French and Spanish). When an update
+  is waiting, what it brings is shown next to the Install button, read from the signed release,
+  in English, with a link to the full notes.
 - **A notice when an update is available.** Administrators see it at the bottom of the menu,
   under the storage meter and their name. It leads to Settings. Other users never see it and
   their browser never asks for it.
-
 - **Clear the activity log.** Administrators get a Clear log button on the Activity page, with a
   confirmation. Every line goes; one line stays, saying who cleared the log and when. Only
   administrators see that line.
@@ -25,7 +25,6 @@ providers.
   activity emails now share one calm layout, and every email also has a plain text version.
   Under the card is one quiet line "Powered by Amfora", which replaces the old "Powered by
   SolutionMAX" of two of these emails. A brandpack that hides the credit hides it here too.
-
 - **A storage limit per user.** Administrators can set a limit for one user in the user form on
   the Users page (a number with MB, GB or TB). Empty means the default of the installation, which
   is shown in the field. Uploads, files taken from a receive link, and the ring in the menu all
@@ -36,7 +35,6 @@ providers.
   date while a maximum is set, also for API keys. A link that already runs longer keeps its end
   date and can still be renamed. A default longer than the maximum is refused in Settings. Secrets
   keep their own bounds.
-
 - **A trash for files and folders.** Deleting in the workspace no longer removes anything: the
   file or folder (with everything in it) moves to the new Trash page under Files. The page lists
   what you deleted, with where it was, when, how many days are left and its size. Restore puts it
@@ -47,9 +45,8 @@ providers.
   the dashboard, not in a share (the share itself stays) and not through the API. The trash
   counts toward the storage limit. Everybody sees only their own trash.
   Empty trash answers at once and runs on the server, the page shows that it is emptying and says
-  how many items storage refused (they stay). A file is only registered under a name that starts
-  with your own user id, as the upload routes hand it out, and never under a name that is already
-  in use; nothing can be put into a folder that has a folder in the trash above it.
+  how many items storage refused (they stay). Nothing can be put into a folder that has a folder
+  in the trash above it.
 - **The trash empties itself.** Once a day, items that have been in the trash longer than the
   setting `trashRetentionDays` (Settings, Storage, default 30 days, at least 1) are deleted for
   good.
@@ -85,7 +82,8 @@ providers.
 - **Notifications in the app.** A grey bell in the menu (and in the top bar on a phone) shows a
   small count when something is new. Opening it lists the latest 20: your share was downloaded,
   files came in on your receive link, your secret was opened, a share or receive link ends within
-  three days, and your storage reached 90 percent of your limit (once, until it drops below again).
+  three days, your storage reached 90 percent of your limit (once, until it drops below again),
+  and a file of yours was found infected by the virus scan.
   Opening the panel marks everything as seen. There is no separate store: a notification is a line
   of the activity log that belongs to you and was not done by yourself, so it lives as long as the
   log keeps that line, and clearing the log clears the bell. Two new line types appear in the
@@ -134,11 +132,11 @@ providers.
   OpenID Connect or OAuth 2.0 service is still added with Add provider.
 - **Opening a sign-in provider no longer downloads every icon set.** The form pulled in about
   13 MB of script for the icon picker. It now loads when you press the icon field.
-
 - **The preview under Customization is the real download page.** It used to be a drawing of
   one theme. It now shows the page a visitor gets, scaled down, in the theme you pick, with the
   name, colour, corners and font of what you are editing, before you save. Press it to see it
-  large.
+  large. Three plain tabs above it, Download, Sign in and Receive, show each of the three public
+  pages the same way, and the large view follows the tab.
 - **An API update that does not send `expiration` no longer clears the end date.** Send
   `null` to clear it. This holds for shares and for receive links.
 
@@ -148,7 +146,6 @@ providers.
   kept the default font. Versions before 2.3 stored a default font that is no longer included;
   it showed in the list under its internal name. It now shows as Default, and the first start
   of 2.4.0 clears that old value.
-
 - **The selection bar on the Shares page only acts on shares you can see.** Shares ticked
   before you changed the filter or typed a search stayed in the selection and were still
   deleted or downloaded. The bar now counts, deletes and downloads only the ticked shares that
@@ -162,6 +159,23 @@ providers.
 - **The numbers on the Activity filters follow the search term.** They used to count every
   event whatever you searched for.
 
+## Security
+
+These repairs close gaps that exist in every earlier version, 2.3.1 included. Install this
+release soon.
+
+- **Registering an upload needs an object name that is yours.** Before, a signed in user who knew
+  the object name of somebody else's file could register it as an own file and then read it. A file
+  is now only registered under a name that starts with your own user id, as the upload routes hand
+  it out, and never under a name that is already in use.
+- **Only your own files and folders can be added to a share.** Before, a signed in user who knew
+  the id of somebody else's file could add it to an own share and so read it. Adding to a share
+  now only accepts your own files and folders.
+- **The server measures an upload itself.** Before, the size of a file was whatever the browser
+  said when it registered the upload, so a signed in user could store more than the storage limit
+  allows by naming a smaller size. The size now comes from storage, and an upload that was
+  registered but never arrived is refused.
+
 ## Removed
 
 - **The switch "Play video and audio on download pages".** It is gone from Settings and from
@@ -171,10 +185,14 @@ providers.
 
 ## Upgrading
 
-Files and folders get an optional `deletedAt` column, and two new tables hold passkeys and their short lived challenges, all added by the first start. Two more tables hold groups and their members, and shares get an optional group; shares stay open to anyone with the link until somebody limits them. The first start also removes the setting of the switch, the
-sign-in providers that were never set up, and the old default font.
+The first start adds what is new to the database: an optional `deletedAt` column on files and
+folders (the trash), two tables for passkeys and their short lived challenges, two tables for groups
+and their members, an optional group on shares (shares stay open to anyone with the link until
+somebody limits them) and an optional `notificationsSeenAt` on users. It also removes the setting of
+the switch for playing video and audio, the sign-in providers that were never set up, and the old
+default font. Your data stays in place.
 
 With over the air updates, install 2.4.0 from the admin area. Otherwise set the version in your
-compose file and run `docker compose pull && docker compose up -d`. Your data stays in place.
+compose file and run `docker compose pull && docker compose up -d`.
 
 Image: `ghcr.io/solutionmax/amfora:2.4.0` (linux/amd64, linux/arm64).

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -13,30 +13,29 @@ import { getEnabledProviders } from "@/http/endpoints";
 import { createLoginSchema, type LoginFormValues } from "../schemas/schema";
 import { MultiProviderButtons } from "./multi-provider-buttons";
 
-interface LoginFormProps {
+interface PasswordLoginFormProps {
   error?: string;
   isVisible: boolean;
   onToggleVisibility: () => void;
   onSubmit: (data: LoginFormValues) => Promise<void>;
   passwordAuthEnabled: boolean;
-  authConfigLoading: boolean;
+  /** The external sign-in buttons: they ask the server who is set up, so the preview leaves them out. */
+  providers?: ReactNode;
 }
 
-export function LoginForm({
+/** The sign-in fields and button, with nothing that asks the server before you press them. */
+export function PasswordLoginForm({
   error,
   isVisible,
   onToggleVisibility,
   onSubmit,
   passwordAuthEnabled,
-  authConfigLoading,
-}: LoginFormProps) {
+  providers,
+}: PasswordLoginFormProps) {
   const t = useTranslations();
-  const [hasEnabledProviders, setHasEnabledProviders] = useState(false);
-  const [providersLoading, setProvidersLoading] = useState(true);
-
-  const loginSchema = createLoginSchema(t, passwordAuthEnabled);
+  const message = error ? error.replace("errors.", "") : null;
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(createLoginSchema(t, passwordAuthEnabled)),
     defaultValues: {
       emailOrUsername: "",
       password: passwordAuthEnabled ? "" : undefined,
@@ -48,50 +47,9 @@ export function LoginForm({
     formState: { errors, isSubmitting },
   } = form;
 
-  useEffect(() => {
-    const checkProviders = async () => {
-      try {
-        const response = await getEnabledProviders();
-        const data = response.data as any;
-        setHasEnabledProviders(data.success && data.data && data.data.length > 0);
-      } catch (error) {
-        console.error("Error checking providers:", error);
-        setHasEnabledProviders(false);
-      } finally {
-        setProvidersLoading(false);
-      }
-    };
-
-    checkProviders();
-  }, []);
-
-  const message = error ? error.replace("errors.", "") : null;
-
-  if (authConfigLoading || providersLoading) {
-    return <PublicFormSkeleton />;
-  }
-
-  if (!passwordAuthEnabled && hasEnabledProviders) {
-    return (
-      <>
-        <FormError>{message}</FormError>
-        <MultiProviderButtons showSeparator={false} />
-      </>
-    );
-  }
-
-  if (!passwordAuthEnabled && !hasEnabledProviders) {
-    return (
-      <>
-        <FormError>{message}</FormError>
-        <p className="text-[13px] text-ink-3">{t("login.noAuthMethodsAvailable")}</p>
-      </>
-    );
-  }
-
   return (
     <>
-      <MultiProviderButtons />
+      {providers}
       <FormError>{message}</FormError>
       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4" noValidate>
         <Field
@@ -139,5 +97,79 @@ export function LoginForm({
         </PublicCardFoot>
       )}
     </>
+  );
+}
+
+interface LoginFormProps {
+  error?: string;
+  isVisible: boolean;
+  onToggleVisibility: () => void;
+  onSubmit: (data: LoginFormValues) => Promise<void>;
+  passwordAuthEnabled: boolean;
+  authConfigLoading: boolean;
+}
+
+export function LoginForm({
+  error,
+  isVisible,
+  onToggleVisibility,
+  onSubmit,
+  passwordAuthEnabled,
+  authConfigLoading,
+}: LoginFormProps) {
+  const t = useTranslations();
+  const [hasEnabledProviders, setHasEnabledProviders] = useState(false);
+  const [providersLoading, setProvidersLoading] = useState(true);
+
+  useEffect(() => {
+    const checkProviders = async () => {
+      try {
+        const response = await getEnabledProviders();
+        const data = response.data as any;
+        setHasEnabledProviders(data.success && data.data && data.data.length > 0);
+      } catch (error) {
+        console.error("Error checking providers:", error);
+        setHasEnabledProviders(false);
+      } finally {
+        setProvidersLoading(false);
+      }
+    };
+
+    checkProviders();
+  }, []);
+
+  const message = error ? error.replace("errors.", "") : null;
+
+  if (authConfigLoading || providersLoading) {
+    return <PublicFormSkeleton />;
+  }
+
+  if (!passwordAuthEnabled && hasEnabledProviders) {
+    return (
+      <>
+        <FormError>{message}</FormError>
+        <MultiProviderButtons showSeparator={false} />
+      </>
+    );
+  }
+
+  if (!passwordAuthEnabled && !hasEnabledProviders) {
+    return (
+      <>
+        <FormError>{message}</FormError>
+        <p className="text-[13px] text-ink-3">{t("login.noAuthMethodsAvailable")}</p>
+      </>
+    );
+  }
+
+  return (
+    <PasswordLoginForm
+      error={error}
+      isVisible={isVisible}
+      onSubmit={onSubmit}
+      onToggleVisibility={onToggleVisibility}
+      passwordAuthEnabled={passwordAuthEnabled}
+      providers={<MultiProviderButtons />}
+    />
   );
 }

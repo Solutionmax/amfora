@@ -415,7 +415,21 @@
       },
       "preview": {
         "title": "Vorschau",
-        "page": "Download-Seite"
+        "tabsLabel": "Seite für die Vorschau",
+        "tabs": {
+          "download": "Download",
+          "signIn": "Anmelden",
+          "receive": "Empfangen"
+        },
+        "pages": {
+          "download": "Download-Seite",
+          "signIn": "Anmeldeseite",
+          "receive": "Empfangsseite"
+        },
+        "sample": {
+          "receiveName": "Fotos für den Frühjahrskatalog",
+          "receiveDescription": "Lege deine Fotos hier ab. Name und E-Mail sind optional."
+        }
       }
     },
     "calm": {
@@ -1447,6 +1461,24 @@
     "pageTitle": "Konto erstellen",
     "calm": {
       "unusableTitle": "Diese Einladung kann nicht verwendet werden"
+    }
+  },
+  "releaseNotes": {
+    "items": {
+      "security": "Zwei Sicherheitskorrekturen: Eine Datei als Upload zu registrieren erfordert jetzt einen Objektnamen, der dir gehört, und nur eigene Dateien und Ordner können zu einer Freigabe hinzugefügt werden. Beide Lücken gab es auch in früheren Versionen, also aktualisiere bald.",
+      "trash": "Eine Datei oder einen Ordner zu löschen verschiebt sie in den neuen Papierkorb, wo sie 30 Tage bleiben (in den Einstellungen änderbar). Stelle sie wieder her oder lösche sie endgültig. Die Einstellungen können auch abgelaufene Freigaben und leere Empfangslinks von selbst entfernen; Dateien werden so nie entfernt.",
+      "twoFactor": "Die Einstellungen können Administratoren oder alle auffordern, die Anmeldung in zwei Schritten einzurichten, und ein Administrator kann sie für jemanden zurücksetzen, der das Handy verloren hat. Du kannst dich auch mit einem Passkey (Fingerabdruck, Gesicht oder Sicherheitsschlüssel) ohne Passwort anmelden.",
+      "groups": "Administratoren können auf der Seite Benutzer Gruppen anlegen. Eine Freigabe kann auf die Mitglieder einer Gruppe beschränkt werden und erscheint dann auf der Seite Freigaben unter Mit mir geteilt.",
+      "notifications": "Eine Glocke im Menü zeigt, was neu ist: ein Download, Dateien auf einem Empfangslink, ein geöffnetes Geheimnis, ein Link, der bald endet, oder fast voller Speicher.",
+      "virusScan": "Ein optionaler Virenscan mit ClamAV, aus, solange du CLAMAV_HOST nicht setzt. Eine Datei, die geprüft wird oder infiziert ist, kann nicht heruntergeladen werden.",
+      "monitoring": "Kennzahlen für das Monitoring im Prometheus-Format unter /api/v1/metrics, für den API-Schlüssel eines Administrators.",
+      "settingsNotes": "Die Einstellungen zeigen, was die laufende Version gebracht hat, in deiner Sprache, und Administratoren erhalten im Menü einen Hinweis, wenn ein Update bereitsteht.",
+      "storage": "Die Speicheranzeige im Menü ist ein Ring. Administratoren können einem Benutzer ein eigenes Speicherlimit geben, und die Einstellungen haben eine Standard- und eine Höchstlaufzeit für Freigaben und Empfangslinks.",
+      "emails": "E-Mails tragen das Logo der Installation und haben ein ruhiges, einheitliches Layout, auch als reine Textversion.",
+      "activity": "Administratoren können das Aktivitätsprotokoll leeren, und das Anlegen oder Löschen eines Empfangslinks steht jetzt im Protokoll. Die Zahlen an den Filtern folgen der Suche.",
+      "customization": "Die Vorschau unter Anpassung zeigt die echten Seiten Download, Anmelden und Empfangen im gewählten Theme. Eine dort gewählte Schriftart wird wieder angewendet.",
+      "externalSignIn": "Die externe Anmeldung beginnt mit Authentik, GitHub und Google, und jeden anderen Dienst fügst du weiterhin mit Anbieter hinzufügen hinzu. Das Formular eines Anbieters öffnet sich viel schneller.",
+      "repairs": "Kleine Korrekturen: Download-Seiten spielen kein Video und Audio mehr ab, viele Elemente auf einmal zu löschen bricht nicht mehr in der Mitte ab, die Auswahlleiste bei Freigaben wirkt nur auf die Freigaben, die du siehst, und E-Mail-Schalter, die der Administrator ausgeschaltet hat, stehen auf aus."
     }
   },
   "resetPassword": {
@@ -2551,7 +2583,8 @@
       "downloadFailed": "Fehler beim Herunterladen der Datei"
     },
     "messages": {
-      "downloadStarted": "Download gestartet"
+      "downloadStarted": "Download gestartet",
+      "filesLeftOut": "{count, plural, one {# Datei ist nicht verfügbar und wurde weggelassen} other {# Dateien sind nicht verfügbar und wurden weggelassen}}"
     },
     "password": {
       "title": "Passwortgeschützte Freigabe",

@@ -65,6 +65,7 @@ function CustomizationForm() {
       <div className="lg:sticky lg:top-10">
         <PreviewPanel
           name={form.draft.name}
+          description={form.draft.description}
           theme={normalizePublicTheme(form.draft.theme)}
           showCredit={form.draft.showCredit}
         />

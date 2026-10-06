@@ -415,7 +415,21 @@
       },
       "preview": {
         "title": "Aperçu",
-        "page": "Page de téléchargement"
+        "tabsLabel": "Page à afficher",
+        "tabs": {
+          "download": "Téléchargement",
+          "signIn": "Connexion",
+          "receive": "Réception"
+        },
+        "pages": {
+          "download": "Page de téléchargement",
+          "signIn": "Page de connexion",
+          "receive": "Page de réception"
+        },
+        "sample": {
+          "receiveName": "Photos pour le catalogue de printemps",
+          "receiveDescription": "Déposez vos photos ici. Le nom et l'e-mail sont facultatifs."
+        }
       }
     },
     "calm": {
@@ -1447,6 +1461,24 @@
     "pageTitle": "Créer un Compte",
     "calm": {
       "unusableTitle": "Cette invitation ne peut pas être utilisée"
+    }
+  },
+  "releaseNotes": {
+    "items": {
+      "security": "Deux corrections de sécurité : enregistrer un envoi demande désormais un nom d'objet qui vous appartient, et seuls vos propres fichiers et dossiers peuvent être ajoutés à un partage. Ces deux failles existaient dans les versions précédentes, mettez donc à jour rapidement.",
+      "trash": "Supprimer un fichier ou un dossier le place dans la nouvelle page Corbeille, où il reste 30 jours (modifiable dans les Paramètres). Restaurez-le ou supprimez-le définitivement. Les Paramètres peuvent aussi retirer d'eux-mêmes les partages terminés et les liens de réception vides ; les fichiers ne sont jamais retirés ainsi.",
+      "twoFactor": "Les Paramètres peuvent demander aux administrateurs ou à tout le monde de configurer la connexion en deux étapes, et un administrateur peut la réinitialiser pour quelqu'un qui a perdu son téléphone. Vous pouvez aussi vous connecter avec une clé d'accès (empreinte, visage ou clé de sécurité) sans mot de passe.",
+      "groups": "Les administrateurs peuvent créer des groupes sur la page Utilisateurs. Un partage peut être limité aux membres d'un groupe et apparaît alors sous Partagé avec moi sur la page Partages.",
+      "notifications": "Une cloche dans le menu montre ce qui est nouveau : un téléchargement, des fichiers sur un lien de réception, un secret ouvert, un lien qui se termine bientôt ou un stockage presque plein.",
+      "virusScan": "Une analyse antivirus facultative avec ClamAV, désactivée tant que vous ne définissez pas CLAMAV_HOST. Un fichier en cours de vérification ou infecté ne peut pas être téléchargé.",
+      "monitoring": "Des chiffres de supervision au format Prometheus sur /api/v1/metrics, pour la clé API d'un administrateur.",
+      "settingsNotes": "Les Paramètres montrent ce qu'a apporté la version que vous utilisez, dans votre langue, et les administrateurs voient un avis dans le menu quand une mise à jour attend.",
+      "storage": "L'indicateur de stockage du menu est un anneau. Les administrateurs peuvent donner à un utilisateur sa propre limite de stockage, et les Paramètres ont une durée par défaut et une durée maximale pour les partages et les liens de réception.",
+      "emails": "Les e-mails portent le logo de l'installation et partagent une même mise en page sobre, avec aussi une version en texte brut.",
+      "activity": "Les administrateurs peuvent vider le journal d'activité, et créer ou supprimer un lien de réception y figure désormais. Les nombres des filtres suivent la recherche.",
+      "customization": "L'aperçu sous Personnalisation montre les vraies pages Téléchargement, Connexion et Réception dans le thème choisi. Une police choisie là est de nouveau appliquée.",
+      "externalSignIn": "La connexion externe commence par Authentik, GitHub et Google, et tout autre service s'ajoute toujours avec Ajouter un fournisseur. Le formulaire d'un fournisseur s'ouvre bien plus vite.",
+      "repairs": "Petites corrections : les pages de téléchargement ne lisent plus la vidéo et l'audio, supprimer beaucoup d'éléments à la fois ne s'arrête plus à mi-chemin, la barre de sélection des Partages n'agit que sur les partages que vous voyez, et les interrupteurs d'e-mail désactivés par l'administrateur s'affichent désactivés."
     }
   },
   "resetPassword": {
@@ -2551,7 +2583,8 @@
       "downloadFailed": "Échec du téléchargement du fichier"
     },
     "messages": {
-      "downloadStarted": "Téléchargement commencé"
+      "downloadStarted": "Téléchargement commencé",
+      "filesLeftOut": "{count, plural, one {# fichier n'est pas disponible et a été laissé de côté} other {# fichiers ne sont pas disponibles et ont été laissés de côté}}"
     },
     "password": {
       "title": "Partage Protégé par Mot de Passe",

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import enUS from "../../../messages/en-US.json";
 import packageJson from "../../../package.json";
 import { bundledNotesFor, noteLines, RELEASE_NOTES, releaseNotesUrl } from "./release-notes";
 
@@ -14,14 +15,14 @@ test("the notes that ship with the app are never older than the app itself", () 
     firstDifference >= 0,
     `release-notes.ts describes ${RELEASE_NOTES.version}, the app is ${packageJson.version}`
   );
-  assert.ok(RELEASE_NOTES.items.length > 0);
+  assert.ok(RELEASE_NOTES.order.length > 0);
 });
 
 test("the shipped notes show for their own release and its betas, not for another version", () => {
-  const { version, items } = RELEASE_NOTES;
+  const { version, order } = RELEASE_NOTES;
 
-  assert.deepEqual(bundledNotesFor(version), items);
-  assert.deepEqual(bundledNotesFor(`${version}-beta.1`), items);
+  assert.deepEqual(bundledNotesFor(version), order);
+  assert.deepEqual(bundledNotesFor(`${version}-beta.1`), order);
   assert.equal(bundledNotesFor("1.0.0"), null);
   assert.equal(bundledNotesFor(null), null);
   assert.equal(bundledNotesFor("not a version"), null);
@@ -42,4 +43,25 @@ test("the link to the full notes points at the release on the website", () => {
   assert.equal(releaseNotesUrl("2.4.0"), "https://amfora.solutionmax.net/releases/#v2-4-0");
   assert.equal(releaseNotesUrl("2.4.0-beta.1"), "https://amfora.solutionmax.net/releases/#v2-4-0");
   assert.equal(releaseNotesUrl(null), "https://amfora.solutionmax.net/releases/");
+});
+
+test("every key in the order list has a text, and every text is in the order list", () => {
+  const texts = (enUS as { releaseNotes?: { items?: Record<string, unknown> } }).releaseNotes?.items ?? {};
+  const keys = Object.keys(texts);
+
+  assert.equal(new Set(RELEASE_NOTES.order).size, RELEASE_NOTES.order.length, "a key is listed twice");
+  assert.deepEqual(
+    RELEASE_NOTES.order.filter((key) => typeof texts[key] !== "string" || texts[key] === ""),
+    [],
+    "keys without a text in en-US"
+  );
+  assert.deepEqual(
+    keys.filter((key) => !(RELEASE_NOTES.order as readonly string[]).includes(key)),
+    [],
+    "texts in en-US that are not in the order list"
+  );
+});
+
+test("the notes are short: at most 14 lines", () => {
+  assert.ok(RELEASE_NOTES.order.length <= 14);
 });

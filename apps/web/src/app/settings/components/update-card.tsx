@@ -132,7 +132,8 @@ export function UpdateCard() {
 
   // A waiting update tells what it brings in its signed manifest; the running version in the notes it shipped with.
   const waitingNotes = status?.updateAvailable ? noteLines(status.notes) : [];
-  const runningNotes = bundledNotesFor(status?.currentVersion);
+  const runningKeys = bundledNotesFor(status?.currentVersion);
+  const runningNotes = runningKeys?.map((key) => t(`releaseNotes.items.${key}`));
   const releasedAt = status?.releasedAt ? new Date(status.releasedAt) : null;
   const released =
     releasedAt && !Number.isNaN(releasedAt.getTime())

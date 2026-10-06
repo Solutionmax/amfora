@@ -16,19 +16,25 @@ export function SectionLayout({
   activeId,
   onSelect,
   label,
+  navClassName = "mb-8",
   children,
 }: {
   sections: SectionItem[];
   activeId: string;
   onSelect: (id: string) => void;
   label: string;
+  /** Room under the tabs; the default suits a settings page. */
+  navClassName?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="min-w-0">
       <nav
         aria-label={label}
-        className="mb-8 flex min-w-0 gap-6 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_var(--color-line)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={cn(
+          "flex min-w-0 gap-6 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_var(--color-line)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          navClassName
+        )}
       >
         {sections.map((section) => {
           const active = section.id === activeId;

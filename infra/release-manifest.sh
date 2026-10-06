@@ -5,7 +5,8 @@
 #   bash infra/release-manifest.sh X.Y.Z "$NOTES"
 #
 # The notes are what Settings shows before the update is installed: one line per change,
-# the same lines as RELEASE_NOTES in apps/web/src/app/settings/release-notes.ts.
+# English, one line per change; the notes that ship with the app are in the message files under
+# releaseNotes.items (order in apps/web/src/app/settings/release-notes.ts).
 #
 # The digest is read back from the registry rather than passed in, so the manifest can
 # only ever point at an image that was really published under that tag.
