@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 import { getSharePassword } from "../../shared/share-password";
 import { actorOf, placeOfRequest, recordRequestActivity } from "../activity/activity";
+import { FileBlockedError, sendFileBlocked } from "../scan/status";
 import {
   CreateReverseShareSchema,
   ReverseSharePasswordSchema,
@@ -352,6 +353,7 @@ export class ReverseShareController {
 
       return reply.send(result);
     } catch (error: any) {
+      if (error instanceof FileBlockedError) return sendFileBlocked(reply, error.file);
       if (error.message === "File not found") {
         return reply.status(404).send({ error: error.message });
       }
@@ -496,6 +498,7 @@ export class ReverseShareController {
 
       return reply.send({ file, message: "File copied to your files successfully" });
     } catch (error: any) {
+      if (error instanceof FileBlockedError) return sendFileBlocked(reply, error.file);
       console.error(`Copy to my files: Error:`, error.message);
 
       if (error.message === "File not found") {

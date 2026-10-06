@@ -67,6 +67,12 @@ model File {
   /// Set when the file is moved to the trash; null for a file in the workspace.
   deletedAt DateTime?
 
+  /// Virus scan: pending, clean, infected, error or skipped. Null: from before scanning was on, or scanning is off.
+  scanStatus String?
+  /// The name of what was found, or why the file was skipped or could not be scanned.
+  scanDetail String?
+  scannedAt  DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -74,6 +80,7 @@ model File {
 
   @@index([folderId])
   @@index([deletedAt])
+  @@index([scanStatus])
   @@map("files")
 }
 
@@ -267,7 +274,7 @@ model ReverseShare {
 }
 
 model ReverseShareFile {
-  id            String   @id @default(cuid())
+  id            String  @id @default(cuid())
   name          String
   description   String?
   extension     String
@@ -275,12 +282,19 @@ model ReverseShareFile {
   objectName    String
   uploaderEmail String?
   uploaderName  String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  /// Virus scan: pending, clean, infected, error or skipped. Null: from before scanning was on, or scanning is off.
+  scanStatus String?
+  /// The name of what was found, or why the file was skipped or could not be scanned.
+  scanDetail String?
+  scannedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   reverseShareId String
   reverseShare   ReverseShare @relation(fields: [reverseShareId], references: [id], onDelete: Cascade)
 
+  @@index([scanStatus])
   @@map("reverse_share_files")
 }
 

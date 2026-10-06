@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IconDownload, IconEye, IconFolder, IconFolderOpen } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
+import { isScanBlocked, ScanLine, type ScanStatus } from "@/components/files/scan-status";
 import { FilePreviewModal } from "@/components/modals/file-preview-modal";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,6 +14,8 @@ interface ShareFile {
   name: string;
   size: string | number;
   objectName: string;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
   createdAt: string;
 }
 
@@ -180,31 +183,38 @@ export function ShareFilesTable({
                         <TableCell className="h-12 px-4 border-0">
                           <div className="flex items-center gap-2">
                             <FileIcon className={`h-5 w-5 ${color}`} />
-                            <span className="truncate max-w-[250px] font-medium">{item.name}</span>
+                            <div className="min-w-0">
+                              <span className="block truncate max-w-[250px] font-medium">{item.name}</span>
+                              <ScanLine file={item} />
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="h-12 px-4">{formatFileSize(Number(item.size))}</TableCell>
                         <TableCell className="h-12 px-4">{formatDateTime(item.createdAt)}</TableCell>
                         <TableCell className="h-12 px-4">
                           <div className="flex items-center gap-1">
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-8 w-8 hover:bg-muted"
-                              onClick={() => handlePreview({ name: item.name, objectName: item.objectName })}
-                            >
-                              <IconEye className="h-4 w-4" />
-                              <span className="sr-only">{t("filesTable.actions.preview")}</span>
-                            </Button>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-8 w-8 hover:bg-muted"
-                              onClick={() => onDownload(item.objectName, item.name)}
-                            >
-                              <IconDownload className="h-4 w-4" />
-                              <span className="sr-only">{t("filesTable.actions.download")}</span>
-                            </Button>
+                            {!isScanBlocked(item) && (
+                              <>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 hover:bg-muted"
+                                  onClick={() => handlePreview({ name: item.name, objectName: item.objectName })}
+                                >
+                                  <IconEye className="h-4 w-4" />
+                                  <span className="sr-only">{t("filesTable.actions.preview")}</span>
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 hover:bg-muted"
+                                  onClick={() => onDownload(item.objectName, item.name)}
+                                >
+                                  <IconDownload className="h-4 w-4" />
+                                  <span className="sr-only">{t("filesTable.actions.download")}</span>
+                                </Button>
+                              </>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>

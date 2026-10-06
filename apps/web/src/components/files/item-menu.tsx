@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { isScanBlocked, type ScanInfo } from "./scan-status";
 
 export interface MenuEntry {
   key: string;
@@ -35,7 +36,7 @@ export interface MenuEntry {
   mobileOnly?: boolean;
 }
 
-interface FileLike {
+interface FileLike extends ScanInfo {
   id: string;
   name: string;
   objectName: string;
@@ -69,8 +70,13 @@ const entry = (
   extra: Partial<MenuEntry> = {}
 ): MenuEntry[] => (handler ? [{ key, label, icon, onSelect: handler, ...extra }] : []);
 
-/** Preview, edit, move, (download, share on mobile), delete. */
+/** Preview, edit, move, (download, share on mobile), delete. A file the virus scan holds back can only be deleted. */
 export function fileMenuEntries<F extends FileLike>(file: F, h: FileMenuHandlers<F>, t: Translate): MenuEntry[] {
+  if (isScanBlocked(file)) {
+    return entry("delete", t("common.delete"), IconTrash, h.onDelete && (() => h.onDelete!(file)), {
+      destructive: true,
+    });
+  }
   return [
     ...entry("preview", t("filesTable.actions.preview"), IconEye, h.onPreview && (() => h.onPreview!(file))),
     ...entry("download", t("common.download"), IconDownload, () => h.onDownload(file.objectName, file.name), {

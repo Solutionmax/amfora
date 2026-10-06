@@ -126,6 +126,7 @@ two factor authentication when it is enabled for the account.
 | **Secrets** | Passwords and keys behind a link that destroys itself. Encrypted in the browser, opened a set number of times, optional passphrase. Optionally open to visitors without an account. See [docs/SECRETS.md](docs/SECRETS.md). |
 | **Activity** | A log per user of what happened to links and accounts, with the place of a visitor, a CSV export, emails to the maker and signed webhooks. See [docs/ACTIVITY.md](docs/ACTIVITY.md). |
 | **API** | API keys with read or full access for other tools. See [docs/API.md](docs/API.md). |
+| **Monitoring** | Figures in the Prometheus format for Prometheus and Zabbix, readable with the API key of an administrator. See [docs/MONITORING.md](docs/MONITORING.md). |
 | **Storage** | Bundled MinIO or an external S3 compatible provider, on infrastructure you control. |
 | **Branding** | Application name, description, logo, accent colour, font, corner radius and default language, all stored on the server. A [brandpack](https://amfora.solutionmax.net/brandpack/) removes the "Powered by Amfora" credit and unlocks a background image and custom CSS. |
 | **Access** | User invitations, roles, deactivation, trusted devices and TOTP two factor authentication with backup codes. Optional OAuth2/OIDC sign in. |

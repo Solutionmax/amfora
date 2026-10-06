@@ -24,6 +24,9 @@ export type ShareReadVerdict =
 export const GROUP_SIGN_IN_CODE = "GROUP_SIGN_IN_REQUIRED";
 export const GROUP_NOT_MEMBER_CODE = "GROUP_NOT_MEMBER";
 
+/** A download address for a group share dies fast, so a removed member keeps it for minutes, not an hour. */
+export const GROUP_DOWNLOAD_SECONDS = 300;
+
 /** The 403 body of a refused reader, for the response schema of every route that can send it. */
 export const GroupRefusalBodySchema = z.object({
   error: z.string(),
@@ -64,14 +67,17 @@ export async function callerOf(request: FastifyRequest): Promise<Caller | null> 
   } catch {
     return null;
   }
-  const userId = (request.user as { userId?: unknown } | null)?.userId;
+  const claims = request.user as { userId?: unknown; viaApiKey?: boolean } | null;
+  const userId = claims?.userId;
   if (typeof userId !== "string" || !userId) return null;
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { isActive: true, isAdmin: true, groups: { select: { groupId: true } } },
   });
   if (!user?.isActive) return null;
-  return { userId, isAdmin: user.isAdmin, groupIds: new Set(user.groups.map((m) => m.groupId)) };
+  // A key never carries administrator rights: its user is judged as a member or a maker.
+  const isAdmin = user.isAdmin && claims?.viaApiKey !== true;
+  return { userId, isAdmin, groupIds: new Set(user.groups.map((m) => m.groupId)) };
 }
 
 /** Same as callerOf, for a caller that is already known by id (an API key's user). */
@@ -101,17 +107,6 @@ export class GroupRefusal extends Error {
   constructor(readonly verdict: Exclude<ShareReadVerdict, { allowed: true }>) {
     super("Group share refused");
   }
-}
-
-/** Judges one share by id for the caller of this request. Throws GroupRefusal. A missing share passes: the caller reports it. */
-export async function assertMayReadShareById(request: FastifyRequest, shareId: string): Promise<Caller | null> {
-  const caller = await callerOf(request);
-  const share = await prisma.share.findUnique({ where: { id: shareId }, select: GATE_SELECT });
-  if (share) {
-    const verdict = mayReadShare(share, caller);
-    if (!verdict.allowed) throw new GroupRefusal(verdict);
-  }
-  return caller;
 }
 
 /**

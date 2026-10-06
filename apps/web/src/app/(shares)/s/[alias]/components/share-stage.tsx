@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { canPreviewOnDownloadPage } from "@/components/brand/cover-pick";
 import { kindFromName } from "@/components/brand/file-kind";
 import { FileManifest, type ManifestItem } from "@/components/brand/file-manifest";
+import { isScanBlocked, ScanLine, type ScanStatus } from "@/components/files/scan-status";
 import { Button } from "@/components/ui/button";
 import { formatFileSize } from "@/utils/format-file-size";
 
@@ -15,6 +16,8 @@ interface ShareFile {
   name: string;
   size: number | string;
   objectName: string;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
 }
 
 interface ShareFolder {
@@ -50,6 +53,8 @@ export function ShareStage({
   const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
   const single = itemCount === 1 && files.length === 1;
   const first = files[0];
+  // A file the virus scan holds back is listed with its status and cannot be opened by anybody.
+  const hasOnlyBlocked = folders.length === 0 && files.length > 0 && files.every(isScanBlocked);
 
   const runDownload = async (action: () => Promise<void>) => {
     if (isDownloading) return;
@@ -68,7 +73,10 @@ export function ShareStage({
     });
 
   // Video and audio are never played here; the API refuses that preview too.
-  const openPreview = onPreview && first && canPreviewOnDownloadPage(first.name) ? () => onPreview(first) : undefined;
+  const openPreview =
+    onPreview && first && !isScanBlocked(first) && canPreviewOnDownloadPage(first.name)
+      ? () => onPreview(first)
+      : undefined;
 
   const rowIcon = <IconDownload className="size-[18px] text-ink-3" aria-hidden="true" />;
   const items: ManifestItem[] = [
@@ -84,9 +92,14 @@ export function ShareStage({
       id: file.id,
       name: file.name,
       kind: kindFromName(file.name),
-      subline: `${t(`public.kind.${kindFromName(file.name)}`)} · ${formatFileSize(Number(file.size || 0))}`,
-      trailing: rowIcon,
-      onClick: () => runDownload(() => onDownload(file.objectName, file.name)),
+      subline: (
+        <>
+          {`${t(`public.kind.${kindFromName(file.name)}`)} · ${formatFileSize(Number(file.size || 0))}`}
+          <ScanLine file={file} />
+        </>
+      ),
+      trailing: isScanBlocked(file) ? <span /> : rowIcon,
+      onClick: isScanBlocked(file) ? undefined : () => runDownload(() => onDownload(file.objectName, file.name)),
     })),
   ];
 
@@ -103,6 +116,7 @@ export function ShareStage({
         {single ? `${t(`public.kind.${kindFromName(first.name)}`)} · ` : ""}
         {formatFileSize(totalBytes)}
       </p>
+      {single && <ScanLine file={first} className="mt-1" />}
 
       {!single && itemCount > 0 && <FileManifest items={items} accentTiles className="mt-4" />}
 
@@ -112,7 +126,7 @@ export function ShareStage({
           size="lg"
           className="h-12 flex-1 text-base shadow-[0_10px_24px_-12px_color-mix(in_oklab,var(--primary)_70%,transparent)]"
           onClick={downloadAll}
-          disabled={isDownloading || itemCount === 0}
+          disabled={isDownloading || itemCount === 0 || hasOnlyBlocked}
         >
           {isDownloading ? <IconLoader2 className="size-5 animate-spin" /> : <IconDownload className="size-5" />}
           {single ? t("share.download") : t("share.downloadAll")}

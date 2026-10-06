@@ -49,6 +49,7 @@ export const READ_ROUTES: ReadonlySet<string> = new Set([
   "GET /reverse-shares/files/:fileId/download",
   "GET /secrets",
   "GET /secrets/limits",
+  "GET /metrics", // the route itself lets in only the key of an administrator
 ]);
 
 /**

@@ -31,8 +31,8 @@ export interface IShareRepository {
   removeFilesFromShare(shareId: string, fileIds: string[]): Promise<void>;
   addFoldersToShare(shareId: string, folderIds: string[]): Promise<void>;
   removeFoldersFromShare(shareId: string, folderIds: string[]): Promise<void>;
-  findFilesByIds(fileIds: string[]): Promise<any[]>;
-  findFoldersByIds(folderIds: string[]): Promise<any[]>;
+  findFilesByIds(fileIds: string[], userId: string): Promise<any[]>;
+  findFoldersByIds(folderIds: string[], userId: string): Promise<any[]>;
   addRecipients(shareId: string, emails: string[]): Promise<void>;
   removeRecipients(shareId: string, emails: string[]): Promise<void>;
   findSharesByUserId(
@@ -236,23 +236,25 @@ export class PrismaShareRepository implements IShareRepository {
     });
   }
 
-  async findFilesByIds(fileIds: string[]): Promise<any[]> {
+  async findFilesByIds(fileIds: string[], userId: string): Promise<any[]> {
     return prisma.file.findMany({
       where: {
         id: {
           in: fileIds,
         },
+        userId,
         ...notDeleted,
       },
     });
   }
 
-  async findFoldersByIds(folderIds: string[]): Promise<any[]> {
+  async findFoldersByIds(folderIds: string[], userId: string): Promise<any[]> {
     return prisma.folder.findMany({
       where: {
         id: {
           in: folderIds,
         },
+        userId,
         ...notDeleted,
       },
     });

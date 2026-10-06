@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { useLocale, useTranslations } from "next-intl";
 
+import { isScanBlocked, ScanLine } from "@/components/files/scan-status";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -58,6 +59,7 @@ export function ReceivedFileManageRow({
   const locale = useLocale();
   const sender = senderName(file) ?? t("reverseShares.components.fileRow.anonymous");
   const fullSender = [file.uploaderName, file.uploaderEmail].filter(Boolean).join(" · ");
+  const isBlocked = isScanBlocked(file);
 
   return (
     <div className="group flex items-center gap-3 py-3">
@@ -74,17 +76,20 @@ export function ReceivedFileManageRow({
         <p className="truncate text-[12.5px] text-ink-3" title={fullSender || undefined}>
           {formatFileSize(Number(file.size || 0))} · {sender} · {formatDayTime(file.createdAt, locale)}
         </p>
+        <ScanLine file={file} />
         {file.description && <p className="mt-0.5 truncate text-[12.5px] text-ink-2">{file.description}</p>}
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="max-sm:hidden sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
-        onClick={onDownload}
-        aria-label={t("reverseShares.components.fileActions.download")}
-      >
-        <IconDownload />
-      </Button>
+      {!isBlocked && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="max-sm:hidden sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
+          onClick={onDownload}
+          aria-label={t("reverseShares.components.fileActions.download")}
+        >
+          <IconDownload />
+        </Button>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" aria-label={t("reverseShares.calm.moreActionsFor", { name: file.name })}>
@@ -92,27 +97,31 @@ export function ReceivedFileManageRow({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[210px]">
-          <DropdownMenuItem onClick={onPreview}>
-            <IconEye />
-            {t("reverseShares.components.fileActions.preview")}
-          </DropdownMenuItem>
-          <DropdownMenuItem className="sm:hidden" onClick={onDownload}>
-            <IconDownload />
-            {t("reverseShares.components.fileActions.download")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={onCopy}>
-            <IconFolderShare />
-            {t("reverseShares.calm.copyToMyFiles")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={onRename}>
-            <IconPencil />
-            {t("common.rename")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={onEditDescription}>
-            <IconNote />
-            {t("reverseShares.calm.editDescription")}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {!isBlocked && (
+            <>
+              <DropdownMenuItem onClick={onPreview}>
+                <IconEye />
+                {t("reverseShares.components.fileActions.preview")}
+              </DropdownMenuItem>
+              <DropdownMenuItem className="sm:hidden" onClick={onDownload}>
+                <IconDownload />
+                {t("reverseShares.components.fileActions.download")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onCopy}>
+                <IconFolderShare />
+                {t("reverseShares.calm.copyToMyFiles")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onRename}>
+                <IconPencil />
+                {t("common.rename")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onEditDescription}>
+                <IconNote />
+                {t("reverseShares.calm.editDescription")}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem variant="destructive" onClick={onDelete}>
             <IconTrash />
             {t("reverseShares.components.fileActions.delete")}

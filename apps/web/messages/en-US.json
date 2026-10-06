@@ -54,7 +54,8 @@
       "accountGroupAdded": "Added to a group",
       "accountGroupRemoved": "Removed from a group",
       "accountStorageAlmostFull": "Storage almost full",
-      "other": "Something else happened"
+      "other": "Something else happened",
+      "fileInfected": "A file was blocked"
     },
     "details": {
       "opening": "{opening} of {max}",
@@ -1036,7 +1037,8 @@
       "shareExpiring": "Your share {subject} ends {when}",
       "receiveExpiring": "Your receive link {subject} ends {when}",
       "accountStorageAlmostFull": "Your storage is {percent}% full",
-      "other": "Something happened"
+      "other": "Something happened",
+      "fileInfected": "{subject} was blocked by the virus scan"
     }
   },
   "notifications": {
@@ -1198,7 +1200,9 @@
       "removed": "API key removed",
       "loadFailed": "Failed to load API keys",
       "createFailed": "Failed to create the API key",
-      "removeFailed": "Failed to remove the API key"
+      "removeFailed": "Failed to remove the API key",
+      "monitoring": "The key of an administrator also opens the figures for monitoring at /api/v1/metrics.",
+      "monitoringLink": "How to set it up"
     }
   },
   "public": {
@@ -2041,6 +2045,12 @@
         "error": "Could not save. Try again."
       }
     }
+  },
+  "scan": {
+    "pending": "Being checked",
+    "blockedBy": "Blocked: {name}",
+    "blocked": "Blocked",
+    "notChecked": "Not checked"
   },
   "searchBar": {
     "placeholder": "Search files and folders...",

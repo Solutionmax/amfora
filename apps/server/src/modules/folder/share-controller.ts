@@ -8,7 +8,8 @@ import { notDeleted } from "../../shared/trash";
 import { canDownloadFromShares } from "../file/download-access";
 import { FileService } from "../file/service";
 import { shareGrantSubject } from "../file/share-download-grant";
-import { callerOf, GroupRefusal, mayReadShare, sendGroupRefusal } from "../group/access";
+import { callerOf, GROUP_DOWNLOAD_SECONDS, GroupRefusal, mayReadShare, sendGroupRefusal } from "../group/access";
+import { isBlockedByScan, scanFieldsOf, sendFileBlocked } from "../scan/status";
 import { isFolderIncludedInShare } from "./share-access";
 
 type SharedFolder = {
@@ -118,6 +119,7 @@ export class FolderShareController {
       size: file.size.toString(),
       objectName: file.objectName,
       folderId: file.folderId,
+      ...scanFieldsOf(file),
       createdAt: file.createdAt,
       updatedAt: file.updatedAt,
       ...(url ? { url } : {}),
@@ -175,7 +177,10 @@ export class FolderShareController {
         where: { userId: share.creatorId!, folderId: { in: descendantIds }, ...notDeleted },
         orderBy: { name: "asc" },
       });
-      const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
+      const blocked = files.find(isBlockedByScan);
+      if (blocked) return sendFileBlocked(reply, blocked);
+      const full = parseInt(env.PRESIGNED_URL_EXPIRATION);
+      const expires = share.groupId ? Math.min(full, GROUP_DOWNLOAD_SECONDS) : full;
       const filesWithUrls = await Promise.all(
         files.map(async (file) => ({
           ...this.serializeFile(file),

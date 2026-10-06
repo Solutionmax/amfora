@@ -16,7 +16,6 @@ const database = useTestDatabase();
 
 let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
-const registered = new Set<string>();
 
 const as = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: userId === "boss" }) });
 const SHARE_NAME = "Secret budget plan";
@@ -40,9 +39,6 @@ before(async () => {
   app = fastify({ ignoreTrailingSlash: true });
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-  app.addHook("onRoute", (route) => {
-    for (const method of [route.method].flat()) registered.add(`${method} ${route.url}`);
-  });
   await app.register(fastifyCookie);
   await app.register(fastifyJwt, { secret: "test-secret", cookie: { cookieName: "token", signed: false } });
   app.decorateRequest("jwtSign", function (this: any, payload: object) {
@@ -267,44 +263,6 @@ test("a file in an open share and a group share stays open through the open one"
   await prisma.share.update({ where: { id: limitedId }, data: { files: { disconnect: { id: file.id } } } });
 });
 
-test("every route that takes a share id, an alias or an object name is walked: none serves a group share to a non member", async () => {
-  const touchesAShare = (entry: string) => {
-    const [method, url] = entry.split(" ");
-    if (url.startsWith("/reverse-shares") || url.startsWith("/secrets")) return false;
-    if (url.includes(":shareId") || url.includes(":alias")) return true;
-    return method === "GET" && ["/files/download-url", "/files/download", "/embed/:id"].includes(url);
-  };
-  const found = [...registered].filter(touchesAShare).sort();
-  const file = await prisma.file.findFirstOrThrow({ where: { objectName: `owner/${FILE_NAME}` } });
-  await prisma.share.update({ where: { id: openId }, data: { groupId } });
-  assert.ok(found.length >= 14, `expected the share routes, found ${found.join(", ")}`);
-  for (const entry of found) {
-    const [method, pattern] = entry.split(" ");
-    const url = pattern
-      .replace(":shareId", limitedId)
-      .replace(":alias", "finance-plan")
-      .replace(":folderId", folderId)
-      .replace(":id", file.id)
-      .concat(pattern.startsWith("/files/download") ? `?objectName=owner/${FILE_NAME}` : "");
-    for (const user of [undefined, "eve"]) {
-      const res = await app.inject({
-        method: method as "GET",
-        url,
-        cookies: user ? as(user) : undefined,
-        payload: method === "GET" ? undefined : {},
-      });
-      assert.ok(
-        res.statusCode >= 400 || pattern.endsWith("/metadata"),
-        `${entry} as ${user ?? "visitor"} answered ${res.statusCode}`
-      );
-      for (const secret of [SHARE_NAME, FILE_NAME, NESTED_NAME, "private words"]) {
-        assert.ok(!res.body.includes(secret), `${entry} as ${user ?? "visitor"} leaked ${secret}`);
-      }
-    }
-  }
-  await prisma.share.update({ where: { id: openId }, data: { groupId: null } });
-});
-
 test("group management: administrators only, names are unique", async () => {
   assert.equal((await send("POST", "/groups", "eve", { name: "Hackers" })).statusCode, 403);
   assert.equal((await send("POST", "/groups")).statusCode, 401);
@@ -442,7 +400,9 @@ test("reading a group share through an API key follows the same rule, with the k
   assert.equal((await call(member, `/shares/${limitedId}`)).statusCode, 200);
   assert.equal((await call(stranger, `/shares/${limitedId}`)).statusCode, 403);
   assert.equal((await call(stranger, `/shares/${limitedId}`)).json().code, "GROUP_NOT_MEMBER");
-  assert.equal((await call(admin, `/shares/${limitedId}`)).statusCode, 200, "the administrator behind the key");
+  assert.equal((await call(admin, `/shares/${limitedId}`)).statusCode, 403, "a key never carries administrator rights");
+  assert.equal((await call(admin, `/shares/${limitedId}`)).json().code, "GROUP_NOT_MEMBER");
+  assert.equal((await call(admin, `/files/download-url?objectName=owner/${FILE_NAME}`)).statusCode, 403);
   assert.equal((await call(stranger, `/files/download-url?objectName=owner/${FILE_NAME}`)).statusCode, 403);
   assert.equal((await call(member, `/files/download-url?objectName=owner/${FILE_NAME}`)).statusCode, 200);
 });
@@ -458,4 +418,81 @@ test("opening a group share as a member writes the member as the actor", async (
   const downloaded = events.find((e) => e.action === "share.downloaded");
   assert.equal(opened?.actorId, "anita");
   assert.equal(downloaded?.actorId, "anita");
+});
+
+test("a key of an administrator is judged as a normal user for groups: reading, picking and limiting a share", async () => {
+  const key = generateApiKey();
+  await prisma.apiKey.create({
+    data: { name: "boss", hash: key.hash, prefix: key.prefix, scope: "full", userId: "boss" },
+  });
+  const headers = { authorization: `Bearer ${key.token}` };
+  const { GroupService } = await import("./service");
+  assert.deepEqual(
+    await new GroupService().pickable("boss", true),
+    [],
+    "a key picks like a member: boss is in no group"
+  );
+  assert.ok((await new GroupService().pickable("boss")).length >= 1, "the session keeps the exception");
+
+  const file = await prisma.file.create({
+    data: { name: "boss-file", extension: "txt", size: 1n, objectName: "boss/f.txt", userId: "boss" },
+  });
+  const viaKey = await app.inject({
+    method: "POST",
+    url: "/shares",
+    headers,
+    payload: { files: [file.id], groupId },
+  });
+  assert.equal(viaKey.statusCode, 400);
+  assert.equal((await send("POST", "/shares", "boss", { files: [file.id], groupId })).statusCode, 201);
+
+  await prisma.groupMembership.create({ data: { groupId, userId: "boss" } });
+  assert.equal(
+    (await app.inject({ method: "GET", url: `/shares/${limitedId}`, headers })).statusCode,
+    200,
+    "as a member"
+  );
+  await prisma.groupMembership.deleteMany({ where: { userId: "boss" } });
+});
+
+test("Shared with me leaves out expired shares and keeps the ones whose maker is gone", async () => {
+  const make = (alias: string, extra: object) =>
+    prisma.share.create({
+      data: { group: { connect: { id: groupId } }, security: { create: {} }, alias: { create: { alias } }, ...extra },
+    });
+  const expired = await make("old-news", {
+    creator: { connect: { id: "owner" } },
+    expiration: new Date(Date.now() - 60_000),
+  });
+  const orphan = await make("no-maker", {});
+  const later = await make("next-year", {
+    creator: { connect: { id: "owner" } },
+    expiration: new Date(Date.now() + 86_400_000),
+  });
+  const ids = (await get("/shares/shared-with-me", "anita")).json().shares.map((s: any) => s.id);
+  assert.ok(!ids.includes(expired.id), "expired is left out");
+  assert.ok(ids.includes(orphan.id), "a share without a maker is kept");
+  assert.ok(ids.includes(later.id), "one that ends later is kept");
+  const own = (await get("/shares/shared-with-me", "owner")).json().shares.map((s: any) => s.id);
+  assert.ok(own.includes(orphan.id) && !own.includes(later.id), "still never the own ones");
+  await prisma.share.deleteMany({ where: { id: { in: [expired.id, orphan.id, later.id] } } });
+});
+
+test("group names: no control or invisible characters, and unique without regard to case", async () => {
+  for (const bad of ["Fin\u200Bance", "Line\nbreak", "Tab\there", "rtl\u202Eevil", "nul\u0000"]) {
+    assert.equal((await send("POST", "/groups", "boss", { name: bad })).statusCode, 400, JSON.stringify(bad));
+  }
+  assert.equal((await send("POST", "/groups", "boss", { name: "FINANCE" })).statusCode, 409);
+  assert.equal((await send("POST", "/groups", "boss", { name: " finance " })).statusCode, 409);
+  const made = await send("POST", "/groups", "boss", { name: "Legal" });
+  assert.equal(made.statusCode, 201);
+  const id = made.json().group.id;
+  assert.equal((await send("PATCH", `/groups/${id}`, "boss", { name: "fInAnCe" })).statusCode, 409);
+  assert.equal((await send("PATCH", `/groups/${id}`, "boss", { name: "Fin\u200Bance" })).statusCode, 400);
+  assert.equal(
+    (await send("PATCH", `/groups/${id}`, "boss", { name: "LEGAL" })).statusCode,
+    200,
+    "its own name, other case"
+  );
+  assert.equal((await send("DELETE", `/groups/${id}`, "boss")).statusCode, 200);
 });

@@ -12,6 +12,7 @@ import { folderRoutes } from "./modules/folder/routes";
 import { groupRoutes } from "./modules/group/routes";
 import { healthRoutes } from "./modules/health/routes";
 import { inviteRoutes } from "./modules/invite/routes";
+import { metricsRoutes } from "./modules/metrics/routes";
 import { passkeyRoutes } from "./modules/passkey/routes";
 import { reverseShareRoutes } from "./modules/reverse-share/routes";
 import { secretRoutes } from "./modules/secret/routes";
@@ -49,4 +50,5 @@ export function registerRoutes(app: FastifyInstance) {
   app.register(activityRoutes);
   app.register(notificationRoutes);
   app.register(trashRoutes);
+  app.register(metricsRoutes);
 }

@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { isScanBlocked } from "@/components/files/scan-status";
 import { getShareByAlias } from "@/http/endpoints/index";
 import type { Share } from "@/http/endpoints/shares/types";
 import { getCachedDownloadUrl } from "@/lib/download-url-cache";
@@ -244,7 +245,7 @@ export function usePublicShare() {
         const filesWithPath: Array<{ file: any; path: string }> = [];
 
         // Get direct files in this folder
-        const directFiles = share.files?.filter((f) => f.folderId === targetFolderId) || [];
+        const directFiles = share.files?.filter((f) => f.folderId === targetFolderId && !isScanBlocked(f)) || [];
         directFiles.forEach((file) => {
           filesWithPath.push({ file, path: currentPath });
         });
@@ -357,7 +358,7 @@ export function usePublicShare() {
           const filesWithPath: Array<{ file: any; path: string }> = [];
 
           // Get direct files in this folder
-          const directFiles = share.files?.filter((f) => f.folderId === targetFolderId) || [];
+          const directFiles = share.files?.filter((f) => f.folderId === targetFolderId && !isScanBlocked(f)) || [];
           directFiles.forEach((file) => {
             filesWithPath.push({ file, path: currentPath });
           });
@@ -375,7 +376,7 @@ export function usePublicShare() {
         const allFilesToDownload: Array<{ url: string; name: string }> = [];
 
         // Get presigned URLs for root level files (not in any folder)
-        const rootFiles = share.files?.filter((f) => !f.folderId) || [];
+        const rootFiles = share.files?.filter((f) => !f.folderId && !isScanBlocked(f)) || [];
         const rootFileItems = await Promise.all(
           rootFiles.map(async (file) => {
             const url = await getCachedDownloadUrl(
@@ -433,7 +434,8 @@ export function usePublicShare() {
     }
   };
 
-  const handleSelectedItemsBulkDownload = async (files: any[], folders: any[]) => {
+  const handleSelectedItemsBulkDownload = async (selectedFiles: any[], folders: any[]) => {
+    const files = selectedFiles.filter((file) => !isScanBlocked(file));
     if (files.length === 0 && folders.length === 0) {
       toast.error(t("shareManager.noFilesToDownload"));
       return;
@@ -456,7 +458,7 @@ export function usePublicShare() {
           const filesWithPath: Array<{ file: any; path: string }> = [];
 
           // Get direct files in this folder
-          const directFiles = share.files?.filter((f) => f.folderId === targetFolderId) || [];
+          const directFiles = share.files?.filter((f) => f.folderId === targetFolderId && !isScanBlocked(f)) || [];
           directFiles.forEach((file) => {
             filesWithPath.push({ file, path: currentPath });
           });

@@ -5,6 +5,7 @@ import { IconDotsVertical, IconDownload, IconEye, IconFolderShare, IconInbox, Ic
 import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { isScanBlocked, ScanLine } from "@/components/files/scan-status";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -87,37 +88,45 @@ export function ReceivedFilesSection({ files, onFileDeleted }: ReceivedFilesSect
           const size = formatFileSize(Number(file.size || 0));
           const sender = senderName(file) ?? t("reverseShares.components.fileRow.anonymous");
           const fullSender = [file.uploaderName, file.uploaderEmail].filter(Boolean).join(" · ");
+          const isBlocked = isScanBlocked(file);
           return (
             <LineRow
               key={file.id}
               icon={<FileKindIcon name={file.name} />}
               title={<span title={file.name}>{file.name}</span>}
               sub={
-                <span className="block truncate" title={fullSender || undefined}>
-                  <span className="sm:hidden">{size} · </span>
-                  {sender} · {formatDayTime(file.createdAt, locale)}
-                </span>
+                <>
+                  <span className="block truncate" title={fullSender || undefined}>
+                    <span className="sm:hidden">{size} · </span>
+                    {sender} · {formatDayTime(file.createdAt, locale)}
+                  </span>
+                  <ScanLine file={file} />
+                </>
               }
             >
               <span className="mr-1.5 hidden text-[13px] tabular-nums text-ink-2 sm:inline">{size}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="max-sm:hidden"
-                onClick={() => setPreviewFile(file)}
-                aria-label={t("reverseShares.components.fileActions.preview")}
-              >
-                <IconEye />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="max-sm:hidden"
-                onClick={() => handleDownload(file)}
-                aria-label={t("reverseShares.components.fileActions.download")}
-              >
-                <IconDownload />
-              </Button>
+              {!isBlocked && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="max-sm:hidden"
+                    onClick={() => setPreviewFile(file)}
+                    aria-label={t("reverseShares.components.fileActions.preview")}
+                  >
+                    <IconEye />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="max-sm:hidden"
+                    onClick={() => handleDownload(file)}
+                    aria-label={t("reverseShares.components.fileActions.download")}
+                  >
+                    <IconDownload />
+                  </Button>
+                </>
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -129,19 +138,23 @@ export function ReceivedFilesSection({ files, onFileDeleted }: ReceivedFilesSect
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[210px]">
-                  <DropdownMenuItem className="sm:hidden" onClick={() => setPreviewFile(file)}>
-                    <IconEye />
-                    {t("reverseShares.components.fileActions.preview")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="sm:hidden" onClick={() => handleDownload(file)}>
-                    <IconDownload />
-                    {t("reverseShares.components.fileActions.download")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleCopy(file)}>
-                    <IconFolderShare />
-                    {t("reverseShares.calm.copyToMyFiles")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
+                  {!isBlocked && (
+                    <>
+                      <DropdownMenuItem className="sm:hidden" onClick={() => setPreviewFile(file)}>
+                        <IconEye />
+                        {t("reverseShares.components.fileActions.preview")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="sm:hidden" onClick={() => handleDownload(file)}>
+                        <IconDownload />
+                        {t("reverseShares.components.fileActions.download")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleCopy(file)}>
+                        <IconFolderShare />
+                        {t("reverseShares.calm.copyToMyFiles")}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   <DropdownMenuItem variant="destructive" onClick={() => setFileToDelete(file)}>
                     <IconTrash />
                     {t("reverseShares.components.fileActions.delete")}

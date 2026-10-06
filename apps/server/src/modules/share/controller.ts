@@ -44,7 +44,7 @@ export class ShareController {
       }
 
       const input = CreateShareSchema.parse(request.body);
-      const share = await this.shareService.createShare(input, userId);
+      const share = await this.shareService.createShare(input, userId, (request as any).user?.viaApiKey === true);
       await recordRequestActivity(request, {
         action: "share.created",
         ownerId: userId,
@@ -124,7 +124,12 @@ export class ShareController {
       }
 
       const { id, ...updateData } = UpdateShareSchema.parse(request.body);
-      const share = await this.shareService.updateShare(id, updateData, userId);
+      const share = await this.shareService.updateShare(
+        id,
+        updateData,
+        userId,
+        (request as any).user?.viaApiKey === true
+      );
       return reply.send({ share });
     } catch (error: any) {
       console.error("Update Share Error:", error);

@@ -314,6 +314,15 @@ export class StorageService {
     return null;
   }
 
+  /** Total and free bytes of the data disk, or null when the host does not tell. */
+  async getDiskBytes(): Promise<{ total: number; available: number } | null> {
+    try {
+      return await this._getDiskSpaceMultiplePaths();
+    } catch {
+      return null;
+    }
+  }
+
   async getDiskSpace(
     userId?: string,
     isAdmin?: boolean

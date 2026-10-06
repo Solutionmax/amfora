@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { FileTypeIcon } from "@/components/files/file-type-icon";
+import { isScanBlocked, ScanLine } from "@/components/files/scan-status";
 import { useAddedLabel } from "@/components/files/use-added-label";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -71,20 +72,25 @@ export function JustReceived({ links }: { links: ReverseShareWithAlias[] | null 
                 icon={<FileTypeIcon name={file.name} />}
                 title={file.name}
                 sub={
-                  <span className="block truncate">
-                    {t("dashboard.calm.receivedMeta", { sender, link: file.linkName, when: added(file.createdAt) })}
-                  </span>
+                  <>
+                    <span className="block truncate">
+                      {t("dashboard.calm.receivedMeta", { sender, link: file.linkName, when: added(file.createdAt) })}
+                    </span>
+                    <ScanLine file={file} />
+                  </>
                 }
               >
                 <span className="text-[13px] text-ink-2 max-sm:hidden">{formatFileSize(Number(file.size))}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label={t("files.calm.downloadItem", { name: file.name })}
-                  onClick={() => download(file)}
-                >
-                  <IconDownload />
-                </Button>
+                {!isScanBlocked(file) && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t("files.calm.downloadItem", { name: file.name })}
+                    onClick={() => download(file)}
+                  >
+                    <IconDownload />
+                  </Button>
+                )}
               </LineRow>
             );
           })}

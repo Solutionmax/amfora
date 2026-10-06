@@ -34,6 +34,8 @@ function present(group: GroupRow) {
   };
 }
 
+const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
 const taken = (error: unknown) => error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
 
 export class GroupService {
@@ -48,7 +50,16 @@ export class GroupService {
     return group;
   }
 
+  /** SQLite's unique index is case sensitive, so "Finance" and "finance" are told apart here. */
+  private async assertNameFree(name: string, exceptId?: string) {
+    const groups = await prisma.group.findMany({ select: { id: true, name: true } });
+    if (groups.some((g) => g.id !== exceptId && sameName(g.name, name))) {
+      throw new GroupError("A group with this name already exists", 409, "GROUP_NAME_TAKEN");
+    }
+  }
+
   async create(input: CreateGroupInput) {
+    await this.assertNameFree(input.name);
     try {
       const group = await prisma.group.create({
         data: { name: input.name, description: input.description || null },
@@ -63,6 +74,7 @@ export class GroupService {
 
   async update(id: string, input: UpdateGroupInput) {
     await this.get(id);
+    if (input.name !== undefined) await this.assertNameFree(input.name, id);
     try {
       const group = await prisma.group.update({
         where: { id },
@@ -125,10 +137,11 @@ export class GroupService {
   }
 
   /** The groups a share may be limited to: those the user is in, or all of them for an administrator. */
-  async pickable(userId: string) {
+  async pickable(userId: string, viaApiKey = false) {
     const user = await prisma.user.findUnique({ where: { id: userId }, select: { isAdmin: true } });
+    // A key never carries administrator rights, so it picks like a member.
     const groups = await prisma.group.findMany({
-      where: user?.isAdmin ? {} : { members: { some: { userId } } },
+      where: user?.isAdmin && !viaApiKey ? {} : { members: { some: { userId } } },
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     });
@@ -136,8 +149,8 @@ export class GroupService {
   }
 
   /** Throws when the user may not limit a share to this group. */
-  async assertMayPick(userId: string, groupId: string) {
-    const allowed = await this.pickable(userId);
+  async assertMayPick(userId: string, groupId: string, viaApiKey = false) {
+    const allowed = await this.pickable(userId, viaApiKey);
     if (!allowed.some((group) => group.id === groupId)) {
       throw new GroupError("You can only limit a share to a group you are a member of", 403, "GROUP_NOT_ALLOWED");
     }
@@ -149,8 +162,12 @@ export class GroupService {
       where: {
         groupId: { not: null },
         group: { members: { some: { userId } } },
-        creatorId: { not: userId },
         alias: { isNot: null },
+        // Not the own ones, but a share whose maker was deleted (no creator) stays.
+        AND: [
+          { OR: [{ creatorId: null }, { creatorId: { not: userId } }] },
+          { OR: [{ expiration: null }, { expiration: { gt: new Date() } }] },
+        ],
       },
       select: {
         id: true,

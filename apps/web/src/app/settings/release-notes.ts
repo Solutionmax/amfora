@@ -34,6 +34,8 @@ export const RELEASE_NOTES: { version: string; items: readonly string[] } = {
     "You can sign in with a passkey: a fingerprint, a face or a security key, without typing a password. Add and remove passkeys on your profile page. A passkey counts as two step sign in.",
     "A bell in the menu shows what is new: your share was downloaded, files came in on a receive link, a secret was opened, a link ends within three days, or your storage is almost full. Opening it marks everything as seen.",
     "Administrators can make groups on the Users page. A share can be limited to the members of a group: they sign in to open it, and it shows under Shared with me on the Shares page. Removing a member takes the access away at once.",
+    "Monitoring: the API key of an administrator opens figures in the Prometheus format at /api/v1/metrics, for Prometheus and Zabbix.",
+    "An optional virus scan: set CLAMAV_HOST and Amfora checks every uploaded file with ClamAV. A file that is being checked or is infected cannot be downloaded and shows its status in the lists. Off unless you set it.",
   ],
 };
 

@@ -32,6 +32,8 @@ export function useEventText() {
         const opening = parseOpening(event.detail);
         return opening ? t("details.opening", opening) : null;
       }
+      case "file.infected":
+        return event.detail;
       case "secret.destroyed":
         return t("details.destroyed");
       case "account.signed_in":

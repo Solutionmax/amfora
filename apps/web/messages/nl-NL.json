@@ -54,7 +54,8 @@
       "accountGroupAdded": "Aan een groep toegevoegd",
       "accountGroupRemoved": "Uit een groep gehaald",
       "accountStorageAlmostFull": "Opslag bijna vol",
-      "other": "Er gebeurde iets anders"
+      "other": "Er gebeurde iets anders",
+      "fileInfected": "Een bestand is geblokkeerd"
     },
     "details": {
       "opening": "{opening} van {max}",
@@ -1036,7 +1037,8 @@
       "shareExpiring": "Je deling {subject} loopt af {when}",
       "receiveExpiring": "Je ontvangstlink {subject} loopt af {when}",
       "accountStorageAlmostFull": "Je opslag is voor {percent}% vol",
-      "other": "Er is iets gebeurd"
+      "other": "Er is iets gebeurd",
+      "fileInfected": "{subject} is geblokkeerd door de virusscan"
     }
   },
   "notifications": {
@@ -1198,7 +1200,9 @@
       "removed": "API sleutel verwijderd",
       "loadFailed": "API sleutels laden mislukt",
       "createFailed": "API sleutel maken mislukt",
-      "removeFailed": "API sleutel verwijderen mislukt"
+      "removeFailed": "API sleutel verwijderen mislukt",
+      "monitoring": "De sleutel van een beheerder opent ook de cijfers voor monitoring op /api/v1/metrics.",
+      "monitoringLink": "Zo stel je het in"
     }
   },
   "public": {
@@ -2041,6 +2045,12 @@
         "error": "Opslaan lukte niet. Probeer het opnieuw."
       }
     }
+  },
+  "scan": {
+    "pending": "Wordt gecontroleerd",
+    "blockedBy": "Geblokkeerd: {name}",
+    "blocked": "Geblokkeerd",
+    "notChecked": "Niet gecontroleerd"
   },
   "searchBar": {
     "placeholder": "Bestanden zoeken...",

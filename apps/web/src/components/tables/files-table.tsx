@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { FileTypeIcon, FolderIcon } from "@/components/files/file-type-icon";
 import { fileMenuEntries, folderMenuEntries, ItemMenu } from "@/components/files/item-menu";
+import { isScanBlocked, ScanLine, type ScanStatus } from "@/components/files/scan-status";
 import { SelectionBar } from "@/components/files/selection-bar";
 import { useAddedLabel } from "@/components/files/use-added-label";
 import { useItemSelection } from "@/components/files/use-item-selection";
@@ -24,6 +25,8 @@ interface File {
   size: number;
   objectName: string;
   downloads?: number;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
   userId: string;
   folderId?: string;
   createdAt: string;
@@ -137,8 +140,16 @@ export function FilesTable({
     ? { onNavigateToFolder, onDownloadFolder }
     : { onNavigateToFolder, onRenameFolder, onMoveFolder, onDownloadFolder, onShareFolder, onDeleteFolder };
 
-  const bulk = (action?: (files: File[], folders: Folder[]) => void) =>
-    action ? () => action(selection.selected.files, selection.selected.folders) : undefined;
+  const bulk = (action?: (files: File[], folders: Folder[]) => void, opts: { skipBlocked?: boolean } = {}) =>
+    action
+      ? () =>
+          action(
+            opts.skipBlocked
+              ? selection.selected.files.filter((file) => !isScanBlocked(file))
+              : selection.selected.files,
+            selection.selected.folders
+          )
+      : undefined;
 
   const itemsMeta = (folder: Folder) =>
     t("files.calm.folderItems", { count: (folder._count?.files ?? 0) + (folder._count?.children ?? 0) });
@@ -239,13 +250,18 @@ export function FilesTable({
             const isSelected = selection.selectedFiles.has(file.id);
             const item = { id: file.id, type: "file" as const, name: file.name };
             const size = formatFileSize(Number(file.size));
+            const isBlocked = isScanBlocked(file);
 
             return (
               <TableRow
                 key={file.id}
                 data-state={isSelected ? "selected" : undefined}
-                className={cn("group", onPreview && "cursor-pointer", draggedIds.has(file.id) && "opacity-50")}
-                onClick={(e) => !isFromControl(e.target) && onPreview?.(file)}
+                className={cn(
+                  "group",
+                  onPreview && !isBlocked && "cursor-pointer",
+                  draggedIds.has(file.id) && "opacity-50"
+                )}
+                onClick={(e) => !isBlocked && !isFromControl(e.target) && onPreview?.(file)}
                 draggable={canDrag}
                 onDragStart={canDrag ? (e) => dnd.handleDragStart(e, item) : undefined}
                 onDragEnd={canDrag ? dnd.handleDragEnd : undefined}
@@ -263,7 +279,7 @@ export function FilesTable({
                   <div className="flex min-w-0 items-center gap-3.5">
                     <FileTypeIcon name={file.name} />
                     <div className="min-w-0">
-                      {onPreview ? (
+                      {onPreview && !isBlocked ? (
                         <button type="button" className={NAME_BUTTON} onClick={() => onPreview(file)} title={file.name}>
                           {file.name}
                         </button>
@@ -280,6 +296,7 @@ export function FilesTable({
                       <p className="truncate text-[12.5px] text-ink-3 sm:hidden">
                         {size} · {added(file.createdAt)}
                       </p>
+                      <ScanLine file={file} />
                     </div>
                   </div>
                 </TableCell>
@@ -290,16 +307,18 @@ export function FilesTable({
                 </TableCell>
                 <TableCell className="w-[112px] pr-2 max-sm:w-12 max-sm:px-0">
                   <div className={ROW_ACTIONS}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="max-sm:hidden"
-                      aria-label={t("files.calm.downloadItem", { name: file.name })}
-                      onClick={() => onDownload(file.objectName, file.name)}
-                    >
-                      <IconDownload />
-                    </Button>
-                    {!isShareMode && onShare && (
+                    {!isBlocked && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="max-sm:hidden"
+                        aria-label={t("files.calm.downloadItem", { name: file.name })}
+                        onClick={() => onDownload(file.objectName, file.name)}
+                      >
+                        <IconDownload />
+                      </Button>
+                    )}
+                    {!isBlocked && !isShareMode && onShare && (
                       <Button
                         variant="ghost"
                         size="icon"
@@ -325,8 +344,8 @@ export function FilesTable({
       {showBulkActions && (
         <SelectionBar
           count={selection.count}
-          onShare={isShareMode ? undefined : bulk(onBulkShare)}
-          onDownload={bulk(onBulkDownload)}
+          onShare={isShareMode ? undefined : bulk(onBulkShare, { skipBlocked: true })}
+          onDownload={bulk(onBulkDownload, { skipBlocked: true })}
           onMove={isShareMode ? undefined : bulk(onBulkMove)}
           onDelete={isShareMode ? undefined : bulk(onBulkDelete)}
           onClear={selection.clear}

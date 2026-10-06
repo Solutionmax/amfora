@@ -54,7 +54,8 @@
       "accountGroupAdded": "Zu einer Gruppe hinzugefügt",
       "accountGroupRemoved": "Aus einer Gruppe entfernt",
       "accountStorageAlmostFull": "Speicher fast voll",
-      "other": "Etwas anderes ist passiert"
+      "other": "Etwas anderes ist passiert",
+      "fileInfected": "Eine Datei wurde blockiert"
     },
     "details": {
       "opening": "{opening} von {max}",
@@ -1036,7 +1037,8 @@
       "shareExpiring": "Deine Freigabe {subject} endet {when}",
       "receiveExpiring": "Dein Empfangslink {subject} endet {when}",
       "accountStorageAlmostFull": "Dein Speicher ist zu {percent}% voll",
-      "other": "Etwas ist passiert"
+      "other": "Etwas ist passiert",
+      "fileInfected": "{subject} wurde vom Virenscan blockiert"
     }
   },
   "notifications": {
@@ -1198,7 +1200,9 @@
       "removed": "API-Schlüssel entfernt",
       "loadFailed": "API-Schlüssel konnten nicht geladen werden",
       "createFailed": "API-Schlüssel konnte nicht erstellt werden",
-      "removeFailed": "API-Schlüssel konnte nicht entfernt werden"
+      "removeFailed": "API-Schlüssel konnte nicht entfernt werden",
+      "monitoring": "Der Schlüssel eines Administrators öffnet auch die Kennzahlen für das Monitoring unter /api/v1/metrics.",
+      "monitoringLink": "So richten Sie es ein"
     }
   },
   "public": {
@@ -2041,6 +2045,12 @@
         "error": "Speichern fehlgeschlagen. Versuche es erneut."
       }
     }
+  },
+  "scan": {
+    "pending": "Wird geprüft",
+    "blockedBy": "Blockiert: {name}",
+    "blocked": "Blockiert",
+    "notChecked": "Nicht geprüft"
   },
   "searchBar": {
     "placeholder": "Dateien suchen...",

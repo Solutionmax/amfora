@@ -1,5 +1,7 @@
 import type { AxiosResponse } from "axios";
 
+import type { ScanStatus } from "@/components/files/scan-status";
+
 export type FieldRequirement = "HIDDEN" | "OPTIONAL" | "REQUIRED";
 export type PageLayout = "VESSEL" | "DEFAULT";
 
@@ -12,6 +14,8 @@ export interface ReverseShareFile {
   objectName: string;
   uploaderEmail: string | null;
   uploaderName: string | null;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
   createdAt: string;
   updatedAt: string;
 }

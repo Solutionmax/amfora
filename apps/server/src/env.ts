@@ -28,6 +28,12 @@ const envSchema = z.object({
   // The way out of a lockout: off, admins or all wins over the setting in the database. Any other value is ignored.
   TWO_FACTOR_REQUIRED: z.string().optional(),
 
+  // Virus scan, off unless CLAMAV_HOST is set: the address of a clamd that Amfora reaches over TCP.
+  CLAMAV_HOST: z.string().optional(),
+  CLAMAV_PORT: z.string().optional().default("3310"),
+  // Files above this size are not scanned (status skipped).
+  CLAMAV_MAX_SIZE_MB: z.string().optional().default("100"),
+
   // Update checking. An empty AMFORA_UPDATE_URL switches the check off entirely, which is
   // the escape hatch for an installation that must not talk to the outside world.
   AMFORA_UPDATE_URL: z.string().optional().default("https://amfora.solutionmax.net/releases/latest.json"),

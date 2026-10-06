@@ -54,7 +54,8 @@
       "accountGroupAdded": "Ajouté à un groupe",
       "accountGroupRemoved": "Retiré d'un groupe",
       "accountStorageAlmostFull": "Stockage presque plein",
-      "other": "Autre chose s'est produit"
+      "other": "Autre chose s'est produit",
+      "fileInfected": "Un fichier a été bloqué"
     },
     "details": {
       "opening": "{opening} sur {max}",
@@ -1036,7 +1037,8 @@
       "shareExpiring": "Votre partage {subject} se termine {when}",
       "receiveExpiring": "Votre lien de réception {subject} se termine {when}",
       "accountStorageAlmostFull": "Votre stockage est plein à {percent}%",
-      "other": "Il s'est passé quelque chose"
+      "other": "Il s'est passé quelque chose",
+      "fileInfected": "{subject} a été bloqué par l'analyse antivirus"
     }
   },
   "notifications": {
@@ -1198,7 +1200,9 @@
       "removed": "Clé API supprimée",
       "loadFailed": "Impossible de charger les clés API",
       "createFailed": "Impossible de créer la clé API",
-      "removeFailed": "Impossible de supprimer la clé API"
+      "removeFailed": "Impossible de supprimer la clé API",
+      "monitoring": "La clé d'un administrateur ouvre aussi les chiffres de supervision sur /api/v1/metrics.",
+      "monitoringLink": "Comment le configurer"
     }
   },
   "public": {
@@ -2041,6 +2045,12 @@
         "error": "Enregistrement impossible. Réessayez."
       }
     }
+  },
+  "scan": {
+    "pending": "Vérification en cours",
+    "blockedBy": "Bloqué : {name}",
+    "blocked": "Bloqué",
+    "notChecked": "Non vérifié"
   },
   "searchBar": {
     "placeholder": "Rechercher des fichiers...",

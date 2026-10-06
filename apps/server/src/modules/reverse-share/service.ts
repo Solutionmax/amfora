@@ -9,6 +9,8 @@ import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
 import { copiedObjectName } from "../file/object-name";
 import { FileService } from "../file/service";
+import { kickScanQueue } from "../scan/queue";
+import { FileBlockedError, initialScanFields, isBlockedByScan, scanFieldsOf } from "../scan/status";
 import { storageLimitOf } from "../storage/limit";
 import { UserService } from "../user/service";
 import {
@@ -436,10 +438,17 @@ export class ReverseShareService {
         )
           throw new Error("Maximum number of files reached");
         return tx.reverseShareFile.create({
-          data: { ...fileData, objectName: finalKey, size: BigInt(committedSize), reverseShareId: reverseShare.id },
+          data: {
+            ...fileData,
+            objectName: finalKey,
+            size: BigInt(committedSize),
+            reverseShareId: reverseShare.id,
+            ...initialScanFields(BigInt(committedSize)),
+          },
         });
       });
       await this.fileService.deleteObject(fileData.objectName).catch(() => undefined);
+      if (file.scanStatus === "pending") kickScanQueue();
       this.addFileToUploadSession(reverseShare, fileData, place);
       return this.formatFileResponse(file);
     } catch (error) {
@@ -480,6 +489,7 @@ export class ReverseShareService {
     if (file.reverseShare.creatorId !== creatorId) {
       throw new Error("Unauthorized to download this file");
     }
+    if (isBlockedByScan(file)) throw new FileBlockedError(file);
 
     const fileName = file.name;
     const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
@@ -662,6 +672,8 @@ export class ReverseShareService {
       throw new Error(`Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`);
     }
 
+    if (isBlockedByScan(file)) throw new FileBlockedError(file);
+
     const newObjectName = copiedObjectName(creatorId, file.name);
 
     // Copy file using S3 presigned URLs
@@ -728,6 +740,10 @@ export class ReverseShareService {
         size: file.size,
         objectName: newObjectName,
         userId: creatorId,
+        // The copy is the same bytes: what the scan found stays true.
+        scanStatus: file.scanStatus,
+        scanDetail: file.scanDetail,
+        scannedAt: file.scannedAt,
       },
     });
 
@@ -843,6 +859,7 @@ export class ReverseShareService {
         uploaderEmail: file.uploaderEmail,
         uploaderName: file.uploaderName,
         reverseShareId: file.reverseShareId,
+        ...scanFieldsOf(file),
         createdAt: file.createdAt.toISOString(),
         updatedAt: file.updatedAt.toISOString(),
       })),
@@ -983,6 +1000,7 @@ export class ReverseShareService {
       uploaderEmail: file.uploaderEmail,
       uploaderName: file.uploaderName,
       reverseShareId: file.reverseShareId,
+      ...scanFieldsOf(file),
       createdAt: file.createdAt.toISOString(),
       updatedAt: file.updatedAt.toISOString(),
     };

@@ -8,9 +8,15 @@ import { EmailService } from "../email/service";
 import { FolderService } from "../folder/service";
 import { GroupRefusal, mayReadShare, type Caller } from "../group/access";
 import { GroupService } from "../group/service";
+import { isBlockedByScan, scanFieldsOf } from "../scan/status";
 import { UserService } from "../user/service";
 import { CreateShareInput, ShareResponseSchema, UpdateShareInput } from "./dto";
 import { IShareRepository, PrismaShareRepository } from "./repository";
+
+/** A file that is being checked or is blocked by the virus scan is not put in a share. */
+function assertShareable(files: Array<{ scanStatus?: string | null }>) {
+  if (files.some(isBlockedByScan)) throw new Error("A file that is being checked or is blocked cannot be shared.");
+}
 
 export class ShareService {
   constructor(private readonly shareRepository: IShareRepository = new PrismaShareRepository()) {}
@@ -40,6 +46,7 @@ export class ShareService {
       files:
         share.files?.map((file: any) => ({
           ...file,
+          ...scanFieldsOf(file),
           size: file.size.toString(),
           createdAt: file.createdAt.toISOString(),
           updatedAt: file.updatedAt.toISOString(),
@@ -67,11 +74,11 @@ export class ShareService {
     };
   }
 
-  async createShare(data: CreateShareInput, userId: string) {
+  async createShare(data: CreateShareInput, userId: string, viaApiKey = false) {
     const { password, maxViews, files, folders, groupId, ...shareData } = data;
 
     await assertLinkLifetime(shareData.expiration ? new Date(shareData.expiration) : null);
-    if (groupId) await this.groupService.assertMayPick(userId, groupId);
+    if (groupId) await this.groupService.assertMayPick(userId, groupId, viaApiKey);
 
     if (files && files.length > 0) {
       const existingFiles = await prisma.file.findMany({
@@ -85,6 +92,7 @@ export class ShareService {
       if (notFoundFiles.length > 0) {
         throw new Error(`Files not found or access denied: ${notFoundFiles.join(", ")}`);
       }
+      assertShareable(existingFiles);
     }
 
     if (folders && folders.length > 0) {
@@ -178,7 +186,7 @@ export class ShareService {
     return ShareResponseSchema.parse(await this.formatShareResponse(updatedShare));
   }
 
-  async updateShare(shareId: string, data: Omit<UpdateShareInput, "id">, userId: string) {
+  async updateShare(shareId: string, data: Omit<UpdateShareInput, "id">, userId: string, viaApiKey = false) {
     const { password, maxViews, recipients, groupId, ...shareData } = data;
 
     const share = await this.shareRepository.findShareById(shareId);
@@ -191,7 +199,7 @@ export class ShareService {
     }
 
     // Only a changed group is judged: a maker who left the group keeps the share they already limited to it.
-    if (groupId && groupId !== share.groupId) await this.groupService.assertMayPick(userId, groupId);
+    if (groupId && groupId !== share.groupId) await this.groupService.assertMayPick(userId, groupId, viaApiKey);
 
     // Missing leaves the end date alone, null clears it. Judged before anything is written, so a
     // refused update changes nothing.
@@ -275,27 +283,22 @@ export class ShareService {
       throw new Error("Unauthorized to update this share");
     }
 
-    if (fileIds.length > 0) {
-      const existingFiles = await this.shareRepository.findFilesByIds(fileIds);
-      const notFoundFiles = fileIds.filter((id) => !existingFiles.some((file) => file.id === id));
+    // Only the caller's own, judged before anything is connected. Somebody else's id answers like an id that does not exist.
+    const existingFiles = fileIds.length > 0 ? await this.shareRepository.findFilesByIds(fileIds, userId) : [];
+    const notFoundFiles = fileIds.filter((id) => !existingFiles.some((file) => file.id === id));
+    if (notFoundFiles.length > 0) {
+      throw new Error(`Files not found: ${notFoundFiles.join(", ")}`);
+    }
+    assertShareable(existingFiles);
 
-      if (notFoundFiles.length > 0) {
-        throw new Error(`Files not found: ${notFoundFiles.join(", ")}`);
-      }
-
-      await this.shareRepository.addFilesToShare(shareId, fileIds);
+    const existingFolders = folderIds.length > 0 ? await this.shareRepository.findFoldersByIds(folderIds, userId) : [];
+    const notFoundFolders = folderIds.filter((id) => !existingFolders.some((folder) => folder.id === id));
+    if (notFoundFolders.length > 0) {
+      throw new Error(`Folders not found: ${notFoundFolders.join(", ")}`);
     }
 
-    if (folderIds.length > 0) {
-      const existingFolders = await this.shareRepository.findFoldersByIds(folderIds);
-      const notFoundFolders = folderIds.filter((id) => !existingFolders.some((folder) => folder.id === id));
-
-      if (notFoundFolders.length > 0) {
-        throw new Error(`Folders not found: ${notFoundFolders.join(", ")}`);
-      }
-
-      await this.shareRepository.addFoldersToShare(shareId, folderIds);
-    }
+    if (fileIds.length > 0) await this.shareRepository.addFilesToShare(shareId, fileIds);
+    if (folderIds.length > 0) await this.shareRepository.addFoldersToShare(shareId, folderIds);
 
     const updated = await this.shareRepository.findShareById(shareId);
     return ShareResponseSchema.parse(await this.formatShareResponse(updated));
@@ -473,26 +476,22 @@ export class ShareService {
       throw new Error("Share not found");
     }
 
-    // Check if share is expired
-    const isExpired = share.expiration ? new Date(share.expiration) < new Date() : false;
-
-    // Check if max views reached
-    const isMaxViewsReached = share.security.maxViews !== null ? share.views >= share.security.maxViews : false;
-
-    // Link previews are read by anybody, signed in or not: a group share shows nothing of itself.
+    // Link previews are read by anybody, signed in or not: a group share shows nothing of itself, not even its state.
     if (share.groupId) {
       return {
         name: null,
         description: null,
         totalFiles: 0,
         totalFolders: 0,
-        hasPassword: !!share.security.password,
-        isExpired,
-        isMaxViewsReached,
+        hasPassword: false,
+        isExpired: false,
+        isMaxViewsReached: false,
         groupOnly: true,
       };
     }
 
+    const isExpired = share.expiration ? new Date(share.expiration) < new Date() : false;
+    const isMaxViewsReached = share.security.maxViews !== null ? share.views >= share.security.maxViews : false;
     const totalFiles = share.files?.length || 0;
     const totalFolders = share.folders?.length || 0;
     const hasPassword = !!share.security.password;

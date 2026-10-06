@@ -44,6 +44,10 @@ services:
       # Remove it again once you are back in. See "Locked out of two step sign in" in the README.
       # TWO_FACTOR_REQUIRED: "off"
       #
+      # Virus scan, off unless CLAMAV_HOST is set. Add the clamav service below, then see docs/VIRUS-SCAN.md.
+      # CLAMAV_HOST: "clamav"
+      # CLAMAV_MAX_SIZE_MB: "100"
+      #
       # Required for internal storage: the URL the browser uses to reach storage.
       APP_URL: "http://localhost:5487" # replace with your actual HTTPS app origin in production
       STORAGE_URL: "http://127.0.0.1:9379"
@@ -71,5 +75,17 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  # Optional virus scan. Needs about 1.2 GB of memory and downloads its signatures at first start.
+  # clamav:
+  #   image: clamav/clamav:stable
+  #   container_name: amfora-clamav
+  #   environment:
+  #     CLAMD_CONF_StreamMaxLength: "100M"   # at least CLAMAV_MAX_SIZE_MB
+  #   volumes:
+  #     - clamav_data:/var/lib/clamav
+  #   restart: unless-stopped
+  #   mem_limit: 2g
+
 volumes:
   amfora_data:
+  # clamav_data:

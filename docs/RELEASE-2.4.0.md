@@ -109,6 +109,19 @@ providers.
   removing a member writes a line in that person's activity log; a member who opens or downloads
   from a group share shows by name. Mails to recipients are unchanged, but the page asks them to
   sign in first.
+- **Figures for monitoring.** `GET /api/v1/metrics` answers in the Prometheus text format: version,
+  database and storage up, users, files and bytes, received files, trash, shares, receive links,
+  secrets and the data disk. Only the API key of an administrator opens it (a browser session or a
+  member's key is refused), also while two step sign in is required. The answer is cached for 30
+  seconds. See [MONITORING.md](MONITORING.md), with a Prometheus and a Zabbix example.
+- **Optional virus scan.** Set `CLAMAV_HOST` and Amfora sends every uploaded file, also the ones
+  received on a receive link, to a ClamAV scanner (clamd) over TCP, one at a time, after the upload.
+  While a file is being checked or is infected, nobody can download, preview or share it, not even
+  its owner, who can only delete it. The lists show "Being checked", "Blocked: name of the finding"
+  or a quiet "Not checked" (too large, or the scanner could not be reached). An infected file writes
+  a line in the activity log of the owner, shows in the bell and is mailed to the owner and the
+  administrators. Files over `CLAMAV_MAX_SIZE_MB` (default 100) are skipped. Without `CLAMAV_HOST`
+  nothing changes at all. See [VIRUS-SCAN.md](VIRUS-SCAN.md).
 
 ## Changed
 

@@ -1,5 +1,7 @@
 import type { AxiosResponse } from "axios";
 
+import type { ScanStatus } from "@/components/files/scan-status";
+
 export interface FileItem {
   id: string;
   name: string;
@@ -10,6 +12,8 @@ export interface FileItem {
   userId: string;
   folderId: string | null;
   downloads?: number;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
   createdAt: string;
   updatedAt: string;
 }

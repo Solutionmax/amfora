@@ -28,6 +28,7 @@ export const ACTIVITY_ACTIONS = [
   "account.group_added",
   "account.group_removed",
   "account.storage_almost_full",
+  "file.infected",
   "activity.cleared",
 ] as const;
 export type ActivityAction = (typeof ACTIVITY_ACTIONS)[number];
@@ -43,6 +44,7 @@ export const NOTIFICATION_ACTIONS: readonly ActivityAction[] = [
   "share.expiring",
   "receive.expiring",
   "account.storage_almost_full",
+  "file.infected",
 ];
 
 export interface ActivityInput {

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { scanSchema } from "../scan/schema";
+
 export const FieldRequirementSchema = z.enum(["HIDDEN", "OPTIONAL", "REQUIRED"]);
 
 export const CreateReverseShareSchema = z.object({
@@ -45,6 +47,7 @@ export const ReverseShareFileSchema = z.object({
   objectName: z.string().describe("The file object name"),
   uploaderEmail: z.string().nullable().describe("The uploader email"),
   uploaderName: z.string().nullable().describe("The uploader name"),
+  ...scanSchema,
   createdAt: z.string().describe("The file creation date"),
   updatedAt: z.string().describe("The file update date"),
 });

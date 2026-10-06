@@ -14,7 +14,9 @@ import { actorOf, recordVisitorActivity } from "../activity/activity";
 import { noteStorageUsage } from "../activity/notifications";
 import { afterShareDownload } from "../activity/notify";
 import { ConfigService } from "../config/service";
-import { callerOf, readableShares, sendGroupRefusal, type Caller } from "../group/access";
+import { callerOf, GROUP_DOWNLOAD_SECONDS, readableShares, sendGroupRefusal, type Caller } from "../group/access";
+import { kickScanQueue } from "../scan/queue";
+import { initialScanFields, isBlockedByScan, scanFieldsOf, sendFileBlocked } from "../scan/status";
 import { storageLimitOf } from "../storage/limit";
 import { moveFileToTrash } from "../trash/service";
 import { dispositionFor } from "./disposition";
@@ -197,8 +199,10 @@ export class FileController {
           objectName: input.objectName,
           userId,
           folderId: input.folderId,
+          ...initialScanFields(BigInt(input.size)),
         },
       });
+      if (fileRecord.scanStatus === "pending") kickScanQueue();
 
       await noteStorageUsage(userId);
 
@@ -211,6 +215,7 @@ export class FileController {
         objectName: fileRecord.objectName,
         userId: fileRecord.userId,
         folderId: fileRecord.folderId,
+        ...scanFieldsOf(fileRecord),
         createdAt: fileRecord.createdAt,
         updatedAt: fileRecord.updatedAt,
       };
@@ -334,12 +339,16 @@ export class FileController {
         return reply.status(401).send({ error: "Unauthorized access to file." });
       }
 
+      if (isBlockedByScan(fileRecord)) return sendFileBlocked(reply, fileRecord);
+
       if (this.refusesPreview(fileRecord, preview, requesterId)) {
         return reply.status(403).send({ error: MEDIA_PREVIEW_REFUSED });
       }
 
       const fileName = fileRecord.name;
-      const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
+      const full = parseInt(env.PRESIGNED_URL_EXPIRATION);
+      const expires =
+        shares.length > 0 && shares.every((share) => share.groupId) ? Math.min(full, GROUP_DOWNLOAD_SECONDS) : full;
 
       // Always use presigned URLs (works for both internal and external storage)
       const url = await this.fileService.getPresignedGetUrl(objectName, expires, fileName);
@@ -404,6 +413,8 @@ export class FileController {
             return reply.status(401).send({ error: "Unauthorized access to file." });
           }
 
+          if (isBlockedByScan(reverseShareFile)) return sendFileBlocked(reply, reverseShareFile);
+
           // Stream from S3/storage system
           const stream = await this.fileService.getObjectStream(objectName);
           const contentType = getContentType(reverseShareFile.name);
@@ -452,6 +463,8 @@ export class FileController {
       if (!hasAccess) {
         return reply.status(401).send({ error: "Unauthorized access to file." });
       }
+
+      if (isBlockedByScan(fileRecord)) return sendFileBlocked(reply, fileRecord);
 
       if (this.refusesPreview(fileRecord, preview, requesterId)) {
         return reply.status(403).send({ error: MEDIA_PREVIEW_REFUSED });
@@ -534,6 +547,7 @@ export class FileController {
         folderId: file.folderId,
         relativePath: file.relativePath || null,
         downloads: file.downloads ?? 0,
+        ...scanFieldsOf(file),
         createdAt: file.createdAt,
         updatedAt: file.updatedAt,
       }));
@@ -713,6 +727,8 @@ export class FileController {
       if (!isPubliclyEmbeddable(fileRecord.shares)) {
         return reply.status(404).send({ error: "File not found." });
       }
+
+      if (isBlockedByScan(fileRecord)) return sendFileBlocked(reply, fileRecord);
 
       const extension = fileRecord.extension.toLowerCase();
       const imageExts = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "ico", "avif"];

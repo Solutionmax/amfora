@@ -14,7 +14,8 @@ Open **Profile**, section **API keys**, and choose **New key**.
 
 A key acts as the user who created it and sees what that user sees. No key can reach
 accounts, users, settings, two factor authentication or other keys, also not the key of an
-administrator. The key is shown once. Amfora stores only a hash of it, so a lost key cannot
+administrator. The one exception is `GET /api/v1/metrics`, which only the key of an administrator
+opens: see [MONITORING.md](MONITORING.md). The key is shown once. Amfora stores only a hash of it, so a lost key cannot
 be recovered: remove it and create a new one. You can give a key an end date.
 
 ## Call the API

@@ -106,5 +106,6 @@ test("a notification leads to its share, receive link or secret, and the storage
   );
   assert.equal(notificationLink({ kind: "secret", action: "secret.opened", subjectId: "s1" }), "/secrets?id=s1");
   assert.equal(notificationLink({ kind: "account", action: "account.storage_almost_full", subjectId: null }), "/files");
+  assert.equal(notificationLink({ kind: "file", action: "file.infected", subjectId: "f1" }), "/files");
   assert.equal(notificationLink({ kind: "share", action: "share.downloaded", subjectId: null }), null);
 });

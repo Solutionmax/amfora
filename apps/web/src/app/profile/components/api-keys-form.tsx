@@ -19,7 +19,9 @@ import { Input } from "@/components/ui/input";
 import { LineList, LineRow } from "@/components/ui/line-list";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/auth-context";
 import type { ApiKey, ApiKeyScope, CreateApiKeyRequest } from "@/http/endpoints/api-keys/types";
+import { DEFAULT_BRAND } from "@/lib/brand";
 import { copyText } from "@/lib/clipboard";
 import { useApiKeys } from "../hooks/use-api-keys";
 import { quietLink } from "./trusted-devices";
@@ -171,6 +173,7 @@ export function ApiKeysForm() {
   const format = useFormatter();
   const now = useNow();
   const apiKeys = useApiKeys();
+  const { isAdmin } = useAuth();
   const { keys } = apiKeys;
 
   const shortDate = (value: string) =>
@@ -250,6 +253,19 @@ export function ApiKeysForm() {
             {t("profile.apiKeys.create")}
           </Button>
         </div>
+        {isAdmin === true && (
+          <p className="text-[13px] text-ink-3" data-testid="metrics-hint">
+            {t("profile.apiKeys.monitoring")}{" "}
+            <a
+              href={`${DEFAULT_BRAND.url}docs/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ink-2 underline underline-offset-2 hover:text-ink"
+            >
+              {t("profile.apiKeys.monitoringLink")}
+            </a>
+          </p>
+        )}
       </>
     );
   })();

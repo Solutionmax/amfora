@@ -1,5 +1,7 @@
 import type { AxiosResponse } from "axios";
 
+import type { ScanStatus } from "@/components/files/scan-status";
+
 export type ShareAlias = {
   id: string;
   alias: string;
@@ -17,6 +19,8 @@ export interface ShareFile {
   objectName: string;
   userId: string;
   folderId: string | null;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
   createdAt: string;
   updatedAt: string;
 }

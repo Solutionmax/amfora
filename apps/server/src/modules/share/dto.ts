@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { scanSchema } from "../scan/schema";
+
 export const CreateShareSchema = z
   .object({
     name: z.string().optional().describe("The share name"),
@@ -76,6 +78,7 @@ export const ShareResponseSchema = z.object({
       objectName: z.string().describe("The file object name"),
       userId: z.string().describe("The user ID"),
       folderId: z.string().nullable().describe("The folder ID containing this file"),
+      ...scanSchema,
       createdAt: z.string().describe("The file creation date"),
       updatedAt: z.string().describe("The file update date"),
     })

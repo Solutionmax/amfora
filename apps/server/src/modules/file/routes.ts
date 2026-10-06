@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { GroupRefusalBodySchema } from "../group/access";
+import { scanSchema } from "../scan/schema";
 import { FileController } from "./controller";
 import { CheckFileSchema, ListFilesSchema, MoveFileSchema, RegisterFileSchema, UpdateFileSchema } from "./dto";
 
@@ -64,6 +65,7 @@ export async function fileRoutes(app: FastifyInstance) {
               objectName: z.string().describe("The object name of the file"),
               userId: z.string().describe("The user ID"),
               folderId: z.string().nullable().describe("The folder ID"),
+              ...scanSchema,
               createdAt: z.date().describe("The file creation date"),
               updatedAt: z.date().describe("The file last update date"),
             }),
@@ -202,6 +204,7 @@ export async function fileRoutes(app: FastifyInstance) {
                 folderId: z.string().nullable().describe("The folder ID"),
                 relativePath: z.string().nullable().describe("The relative path (only for recursive listing)"),
                 downloads: z.number().describe("How often the file has been downloaded by someone else"),
+                ...scanSchema,
                 createdAt: z.date().describe("The file creation date"),
                 updatedAt: z.date().describe("The file last update date"),
               })

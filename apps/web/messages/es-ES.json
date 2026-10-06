@@ -54,7 +54,8 @@
       "accountGroupAdded": "Añadido a un grupo",
       "accountGroupRemoved": "Quitado de un grupo",
       "accountStorageAlmostFull": "Almacenamiento casi lleno",
-      "other": "Pasó otra cosa"
+      "other": "Pasó otra cosa",
+      "fileInfected": "Se bloqueó un archivo"
     },
     "details": {
       "opening": "{opening} de {max}",
@@ -1036,7 +1037,8 @@
       "shareExpiring": "Tu compartición {subject} termina {when}",
       "receiveExpiring": "Tu enlace de recepción {subject} termina {when}",
       "accountStorageAlmostFull": "Tu almacenamiento está lleno al {percent}%",
-      "other": "Ha pasado algo"
+      "other": "Ha pasado algo",
+      "fileInfected": "{subject} fue bloqueado por el análisis antivirus"
     }
   },
   "notifications": {
@@ -1198,7 +1200,9 @@
       "removed": "Clave API eliminada",
       "loadFailed": "No se pudieron cargar las claves API",
       "createFailed": "No se pudo crear la clave API",
-      "removeFailed": "No se pudo eliminar la clave API"
+      "removeFailed": "No se pudo eliminar la clave API",
+      "monitoring": "La clave de un administrador también abre las cifras de monitorización en /api/v1/metrics.",
+      "monitoringLink": "Cómo configurarlo"
     }
   },
   "public": {
@@ -2041,6 +2045,12 @@
         "error": "No se pudo guardar. Inténtalo de nuevo."
       }
     }
+  },
+  "scan": {
+    "pending": "En comprobación",
+    "blockedBy": "Bloqueado: {name}",
+    "blocked": "Bloqueado",
+    "notChecked": "Sin comprobar"
   },
   "searchBar": {
     "placeholder": "Buscar archivos...",

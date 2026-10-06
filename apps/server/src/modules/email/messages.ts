@@ -45,3 +45,24 @@ export function filesReceivedNotice(
     footer: "You can open and manage these files in your dashboard.",
   };
 }
+
+export function infectedFileNotice(
+  rawFileName: string,
+  rawFinding: string,
+  where: "your files" | "a receive link",
+  filesUrl: string
+): Notice {
+  const fileName = clip(rawFileName);
+  const finding = clip(rawFinding);
+  return {
+    subject: `File blocked: ${fileName}`,
+    title: "A file was blocked",
+    text: `The virus scan found something in "${fileName}" in ${where}. Nobody can download it. You can delete it.`,
+    rows: [
+      ["File", fileName],
+      ["Found", finding],
+    ],
+    button: { label: "Open your files", url: filesUrl },
+    footer: "Do not open the file on a computer you care about. Delete it from your files.",
+  };
+}

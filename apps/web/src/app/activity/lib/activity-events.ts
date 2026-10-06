@@ -17,6 +17,7 @@ const TONES: Record<string, EventTone> = {
   "receive.expiring": "warn",
   "account.storage_almost_full": "warn",
   "account.sign_in_failed": "bad",
+  "file.infected": "bad",
   "account.two_factor_reset": "warn",
   "secret.destroyed": "bad",
   "share.created": "accent",
@@ -49,7 +50,9 @@ export function eventLink(event: Pick<ActivityEvent, "kind" | "action" | "subjec
 
 /** Where a notification leads: the thing it is about, or the files page for the storage. */
 export function notificationLink(event: Pick<ActivityEvent, "kind" | "action" | "subjectId">): string | null {
-  return event.action === "account.storage_almost_full" ? "/files" : eventLink(event);
+  return event.action === "account.storage_almost_full" || event.action === "file.infected"
+    ? "/files"
+    : eventLink(event);
 }
 
 export function initials(name: string): string {

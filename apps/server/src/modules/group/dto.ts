@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-const name = z.string().trim().min(1, "A group needs a name").max(60, "At most 60 characters");
+const name = z
+  .string()
+  .trim()
+  .min(1, "A group needs a name")
+  .max(60, "At most 60 characters")
+  .refine((value) => !/\p{C}/u.test(value), "Use letters, numbers and normal punctuation only");
 const description = z.string().trim().max(200, "At most 200 characters");
 
 export const CreateGroupSchema = z.object({

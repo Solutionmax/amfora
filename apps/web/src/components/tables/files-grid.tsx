@@ -12,6 +12,7 @@ import {
   ItemMenu,
   type MenuEntry,
 } from "@/components/files/item-menu";
+import { isScanBlocked, ScanLine, type ScanStatus } from "@/components/files/scan-status";
 import { SelectionBar } from "@/components/files/selection-bar";
 import { useAddedLabel } from "@/components/files/use-added-label";
 import { useItemSelection } from "@/components/files/use-item-selection";
@@ -30,6 +31,8 @@ interface File {
   size: number;
   objectName: string;
   downloads?: number;
+  scanStatus?: ScanStatus | null;
+  scanDetail?: string | null;
   userId: string;
   folderId?: string;
   createdAt: string;
@@ -90,7 +93,9 @@ function useImageThumbnails(files: File[]) {
 
   useEffect(() => {
     let isMounted = true;
-    const pending = files.filter((file) => isImageFile(file.name) && !requested.current.has(file.id));
+    const pending = files.filter(
+      (file) => isImageFile(file.name) && !isScanBlocked(file) && !requested.current.has(file.id)
+    );
 
     pending.forEach((file) => {
       requested.current.add(file.id);
@@ -166,8 +171,16 @@ export function FilesGrid({
     ? { onNavigateToFolder, onDownloadFolder }
     : { onNavigateToFolder, onRenameFolder, onMoveFolder, onDownloadFolder, onShareFolder, onDeleteFolder };
 
-  const bulk = (action?: (files: File[], folders: Folder[]) => void) =>
-    action ? () => action(selection.selected.files, selection.selected.folders) : undefined;
+  const bulk = (action?: (files: File[], folders: Folder[]) => void, opts: { skipBlocked?: boolean } = {}) =>
+    action
+      ? () =>
+          action(
+            opts.skipBlocked
+              ? selection.selected.files.filter((file) => !isScanBlocked(file))
+              : selection.selected.files,
+            selection.selected.folders
+          )
+      : undefined;
 
   const onKeyOpen = (action: () => void) => (e: React.KeyboardEvent) => {
     if (e.target !== e.currentTarget) return;
@@ -288,7 +301,7 @@ export function FilesGrid({
 
             {files.map((file) => {
               const thumbnail = thumbnails[file.id];
-              const open = () => onPreview?.(file);
+              const open = () => !isScanBlocked(file) && onPreview?.(file);
 
               return renderCard({
                 key: file.id,
@@ -320,6 +333,7 @@ export function FilesGrid({
                       <p className="truncate text-[12.5px] text-ink-3">
                         {formatFileSize(Number(file.size))} · {added(file.createdAt)}
                       </p>
+                      <ScanLine file={file} />
                     </div>
                   </>
                 ),
@@ -348,8 +362,8 @@ export function FilesGrid({
       {showBulkActions && (
         <SelectionBar
           count={selection.count}
-          onShare={isShareMode ? undefined : bulk(onBulkShare)}
-          onDownload={bulk(onBulkDownload)}
+          onShare={isShareMode ? undefined : bulk(onBulkShare, { skipBlocked: true })}
+          onDownload={bulk(onBulkDownload, { skipBlocked: true })}
           onMove={isShareMode ? undefined : bulk(onBulkMove)}
           onDelete={isShareMode ? undefined : bulk(onBulkDelete)}
           onClear={selection.clear}
