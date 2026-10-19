@@ -2,7 +2,7 @@
 
 Updating shows its progress, step by step.
 
-- **Update now** opens a progress dialog, the same one Pharos and Ostia show: update requested,
+- **Update now** opens a progress dialog, the same one Pharos shows: update requested,
   handing over to the server, checking the signed release, backing up your data, downloading
   the new version, restarting Amfora, checking that it is healthy. A spinner marks the current
   step, finished steps get a green check, the elapsed time runs in the corner. It ends with
