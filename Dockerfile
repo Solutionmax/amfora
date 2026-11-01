@@ -2,7 +2,7 @@
 # quay.io/minio stopped serving anonymous pulls, so they are copied out of the published
 # Amfora 2.2.0 image, which carries the exact same binaries (minio RELEASE.2024-10-13T13-34-11Z,
 # mc RELEASE.2025-08-13T08-35-41Z). Pinned by the multi-arch index digest.
-FROM ghcr.io/solutionmax/amfora:2.2.0@sha256:f0dc8a02b3a32234ca9f764c3959f3c66cc2f46d34349116338c3ff7a80be0f9 AS storage-binaries
+FROM ghcr.io/solutionmax/amfora:2.4.0@sha256:2a6e9b1143bb7861f7f7670e4a6d71197bd259d0d3e5731fa65d75d8125c4716 AS storage-binaries
 
 FROM node:24-alpine AS base
 
