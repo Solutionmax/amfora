@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -9,12 +9,8 @@ test("FS-03 startup schema preparation preserves legacy duplicates without accep
   const tmp = mkdtempSync(path.join(tmpdir(), "amfora-legacy-"));
   const env = { ...process.env, DATABASE_URL: `file:${tmp}/legacy.db` };
   try {
-    const schema = execFileSync(
-      "git",
-      ["show", "6972c8691831dc28077bf8098318e9734a3b58fe:apps/server/prisma/schema.prisma"],
-      { encoding: "utf8" }
-    );
-    writeFileSync(`${tmp}/schema.prisma`, schema);
+    // The schema of 2.4.0 as released, kept as a file so the test does not need the git history.
+    copyFileSync("src/modules/storage/fixtures/schema-2.4.0.prisma", `${tmp}/schema.prisma`);
     execFileSync("node_modules/.bin/prisma", ["db", "push", "--schema", `${tmp}/schema.prisma`, "--skip-generate"], {
       env,
       stdio: "pipe",
