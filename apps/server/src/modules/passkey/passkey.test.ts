@@ -19,18 +19,21 @@ let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
 const routeConfigs = new Map<string, any>();
 
-const as = (userId: string) => ({ cookies: { token: app.jwt.sign({ userId, isAdmin: false }) } });
+const as = async (userId: string) => {
+  const { sessionClaims } = await import("../auth/session");
+  return { cookies: { token: app.jwt.sign(await sessionClaims(userId)) } };
+};
 const post = (url: string, payload: object, auth?: object, headers: Record<string, string> = {}) =>
   app.inject({ method: "POST", url, payload, headers, ...(auth ?? {}) });
 
 async function register(userId: string, authenticator: VirtualAuthenticator, name?: string) {
-  const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, as(userId));
+  const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as(userId));
   assert.equal(options.statusCode, 200, options.body);
   const challenge = options.json().challenge as string;
   const res = await post(
     "/auth/passkeys/register/verify",
     { response: authenticator.register(challenge), name },
-    as(userId)
+    await as(userId)
   );
   return { res, challenge, options: options.json() };
 }
@@ -86,16 +89,16 @@ after(async () => {
 
 test("adding a passkey needs the password, a wrong one makes no challenge", async () => {
   const before = await prisma.passkeyChallenge.count();
-  const wrong = await post("/auth/passkeys/register/options", { password: "nope nope nope" }, as("ann"));
+  const wrong = await post("/auth/passkeys/register/options", { password: "nope nope nope" }, await as("ann"));
   assert.equal(wrong.statusCode, 400);
   assert.equal(await prisma.passkeyChallenge.count(), before);
-  const none = await post("/auth/passkeys/register/options", {}, as("ann"));
+  const none = await post("/auth/passkeys/register/options", {}, await as("ann"));
   assert.equal(none.statusCode, 400);
   assert.equal((await post("/auth/passkeys/register/options", { password: PASSWORD })).statusCode, 401);
 });
 
 test("the registration options come from the configuration, whatever the request headers say", async () => {
-  const res = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"), {
+  const res = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"), {
     host: "evil.example",
     origin: "https://evil.example",
     "x-forwarded-host": "evil.example",
@@ -110,7 +113,7 @@ test("a passkey is added, listed without its key, and removed again with the pas
   const phone = new VirtualAuthenticator("localhost", ORIGIN, "ann");
   const { res } = await register("ann", phone, "My phone");
   assert.equal(res.statusCode, 200, res.body);
-  const list = await app.inject({ method: "GET", url: "/auth/passkeys", ...as("ann") });
+  const list = await app.inject({ method: "GET", url: "/auth/passkeys", ...(await as("ann")) });
   const [entry] = list.json().passkeys;
   assert.equal(entry.name, "My phone");
   assert.equal(entry.lastUsedAt, null);
@@ -119,13 +122,16 @@ test("a passkey is added, listed without its key, and removed again with the pas
   assert.equal(stored.credentialId, phone.id);
   assert.equal(typeof stored.counter, "bigint");
 
-  assert.equal((await post(`/auth/passkeys/${entry.id}/remove`, {}, as("ann"))).statusCode, 400);
+  assert.equal((await post(`/auth/passkeys/${entry.id}/remove`, {}, await as("ann"))).statusCode, 400);
   assert.equal(
-    (await post(`/auth/passkeys/${entry.id}/remove`, { password: "nope nope nope" }, as("ann"))).statusCode,
+    (await post(`/auth/passkeys/${entry.id}/remove`, { password: "nope nope nope" }, await as("ann"))).statusCode,
     400
   );
   assert.equal(await prisma.passkey.count({ where: { userId: "ann" } }), 1);
-  assert.equal((await post(`/auth/passkeys/${entry.id}/remove`, { password: PASSWORD }, as("ann"))).statusCode, 200);
+  assert.equal(
+    (await post(`/auth/passkeys/${entry.id}/remove`, { password: PASSWORD }, await as("ann"))).statusCode,
+    200
+  );
   assert.equal(await prisma.passkey.count({ where: { userId: "ann" } }), 0);
 });
 
@@ -141,24 +147,24 @@ test("a registration challenge works once, and not after it expired", async () =
   const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
   const { res, challenge } = await register("ann", key);
   assert.equal(res.statusCode, 200);
-  const again = await post("/auth/passkeys/register/verify", { response: key.register(challenge) }, as("ann"));
+  const again = await post("/auth/passkeys/register/verify", { response: key.register(challenge) }, await as("ann"));
   assert.equal(again.statusCode, 400);
 
-  const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"));
+  const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"));
   const late = options.json().challenge as string;
   await prisma.passkeyChallenge.update({ where: { id: late }, data: { expiresAt: new Date(Date.now() - 1000) } });
   const other = new VirtualAuthenticator("localhost", ORIGIN, "ann");
-  const expired = await post("/auth/passkeys/register/verify", { response: other.register(late) }, as("ann"));
+  const expired = await post("/auth/passkeys/register/verify", { response: other.register(late) }, await as("ann"));
   assert.equal(expired.statusCode, 400);
   assert.equal(await prisma.passkey.count({ where: { credentialId: other.id } }), 0);
   await prisma.passkey.deleteMany({ where: { userId: "ann" } });
 });
 
 test("a challenge made for one user cannot register a key for another", async () => {
-  const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"));
+  const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"));
   const challenge = options.json().challenge as string;
   const key = new VirtualAuthenticator("localhost", ORIGIN, "ben");
-  const res = await post("/auth/passkeys/register/verify", { response: key.register(challenge) }, as("ben"));
+  const res = await post("/auth/passkeys/register/verify", { response: key.register(challenge) }, await as("ben"));
   assert.equal(res.statusCode, 400);
   assert.equal(await prisma.passkey.count({ where: { credentialId: key.id } }), 0);
 });
@@ -168,12 +174,12 @@ test("a registration answer made for another origin or relying party is refused"
     ["https://evil.example", "localhost"],
     [ORIGIN, "evil.example"],
   ]) {
-    const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"));
+    const options = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"));
     const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
     const res = await post(
       "/auth/passkeys/register/verify",
       { response: key.register(options.json().challenge, origin, rpID) },
-      as("ann")
+      await as("ann")
     );
     assert.equal(res.statusCode, 400, `${origin} ${rpID}`);
   }
@@ -206,7 +212,7 @@ test("a login challenge is single use, and a registration challenge does not sig
   assert.equal((await login(answer)).statusCode, 200);
   assert.equal((await login(answer)).statusCode, 400);
 
-  const registration = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"));
+  const registration = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"));
   const wrongPurpose = await login(key.assert(registration.json().challenge));
   assert.equal(wrongPurpose.statusCode, 400);
   assert.equal(wrongPurpose.cookies.length, 0);
@@ -215,7 +221,7 @@ test("a login challenge is single use, and a registration challenge does not sig
 test("a login challenge cannot register a key", async () => {
   const challenge = await loginChallenge();
   const key = new VirtualAuthenticator("localhost", ORIGIN, "ben");
-  const res = await post("/auth/passkeys/register/verify", { response: key.register(challenge) }, as("ben"));
+  const res = await post("/auth/passkeys/register/verify", { response: key.register(challenge) }, await as("ben"));
   assert.equal(res.statusCode, 400);
   assert.equal(await prisma.passkey.count({ where: { credentialId: key.id } }), 0);
 });
@@ -256,7 +262,10 @@ test("a deactivated user cannot sign in with a passkey, and neither after the pa
   const removed = new VirtualAuthenticator("localhost", ORIGIN, "ann");
   await register("ann", removed);
   const stored = await prisma.passkey.findFirstOrThrow({ where: { credentialId: removed.id } });
-  assert.equal((await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, as("ann"))).statusCode, 200);
+  assert.equal(
+    (await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, await as("ann"))).statusCode,
+    200
+  );
   assert.equal((await login(removed.assert(await loginChallenge()))).statusCode, 400);
 });
 
@@ -329,10 +338,10 @@ test("nobody can remove the passkey of somebody else", async () => {
   const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
   await register("ann", key);
   const stored = await prisma.passkey.findFirstOrThrow({ where: { credentialId: key.id } });
-  const res = await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, as("ben"));
+  const res = await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, await as("ben"));
   assert.equal(res.statusCode, 404);
   assert.equal(await prisma.passkey.count({ where: { id: stored.id } }), 1);
-  const list = await app.inject({ method: "GET", url: "/auth/passkeys", ...as("ben") });
+  const list = await app.inject({ method: "GET", url: "/auth/passkeys", ...(await as("ben")) });
   assert.ok(!list.json().passkeys.some((p: { id: string }) => p.id === stored.id));
 });
 
@@ -354,16 +363,22 @@ test("a user who must set up a second step can do it with a passkey, and it sati
   await prisma.appConfig.update({ where: { key: "twoFactorRequired" }, data: { value: "all" } });
   try {
     await prisma.passkey.deleteMany({ where: { userId: "ben" } });
-    assert.equal((await app.inject({ method: "GET", url: "/files", ...as("ben") })).statusCode, 403);
+    assert.equal((await app.inject({ method: "GET", url: "/files", ...(await as("ben")) })).statusCode, 403);
     const key = new VirtualAuthenticator("localhost", ORIGIN, "ben");
     const { res } = await register("ben", key);
     assert.equal(res.statusCode, 200, res.body);
-    assert.notEqual((await app.inject({ method: "GET", url: "/files", ...as("ben") })).statusCode, 403);
-    assert.equal((await post("/auth/passkeys/login/options", {}, as("ben"))).statusCode, 200);
+    assert.notEqual((await app.inject({ method: "GET", url: "/files", ...(await as("ben")) })).statusCode, 403);
+    assert.equal((await post("/auth/passkeys/login/options", {}, await as("ben"))).statusCode, 200);
     // Removing is not on the set up path.
     const stored = await prisma.passkey.findFirstOrThrow({ where: { credentialId: key.id } });
-    assert.equal((await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, as("ben"))).statusCode, 200);
-    assert.equal((await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, as("ben"))).statusCode, 403);
+    assert.equal(
+      (await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, await as("ben"))).statusCode,
+      200
+    );
+    assert.equal(
+      (await post(`/auth/passkeys/${stored.id}/remove`, { password: PASSWORD }, await as("ben"))).statusCode,
+      403
+    );
   } finally {
     await prisma.appConfig.update({ where: { key: "twoFactorRequired" }, data: { value: "off" } });
   }
@@ -387,7 +402,10 @@ test("when passkeys cannot work (no https, not localhost) the routes say why and
     const options = await post("/auth/passkeys/login/options", {});
     assert.equal(options.statusCode, 400);
     assert.match(options.json().error, /https/);
-    assert.equal((await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"))).statusCode, 400);
+    assert.equal(
+      (await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"))).statusCode,
+      400
+    );
     assert.equal((await app.inject({ method: "GET", url: "/auth/config" })).json().passkeysAvailable, false);
     process.env.APP_URL = "https://files.example.com";
     assert.equal((await app.inject({ method: "GET", url: "/auth/config" })).json().passkeysAvailable, true);
@@ -412,13 +430,13 @@ const maxAttempts = async () =>
 
 test("a wrong password for adding or removing a passkey counts as a failed sign in", async () => {
   await prisma.loginAttempt.deleteMany({});
-  const wrong = await post("/auth/passkeys/register/options", { password: "nope nope nope" }, as("ann"));
+  const wrong = await post("/auth/passkeys/register/options", { password: "nope nope nope" }, await as("ann"));
   assert.equal(wrong.statusCode, 400);
   assert.equal(await attemptsOf("ann"), 1);
   const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
   await register("ann", key);
   const stored = await prisma.passkey.findFirstOrThrow({ where: { credentialId: key.id } });
-  await post(`/auth/passkeys/${stored.id}/remove`, { password: "nope nope nope" }, as("ann"));
+  await post(`/auth/passkeys/${stored.id}/remove`, { password: "nope nope nope" }, await as("ann"));
   assert.equal(await attemptsOf("ann"), 2);
   await prisma.passkey.deleteMany({ where: { userId: "ann" } });
 });
@@ -427,11 +445,11 @@ test("a stolen session cannot guess the password past the lockout, and the right
   await prisma.loginAttempt.deleteMany({});
   const max = await maxAttempts();
   for (let i = 0; i < max; i++) {
-    await post("/auth/passkeys/register/options", { password: "nope nope nope" }, as("ann"));
+    await post("/auth/passkeys/register/options", { password: "nope nope nope" }, await as("ann"));
   }
   assert.equal(await attemptsOf("ann"), max);
   const before = await prisma.passkeyChallenge.count();
-  const blocked = await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"));
+  const blocked = await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"));
   assert.equal(blocked.statusCode, 400);
   assert.equal(await prisma.passkeyChallenge.count(), before);
   // A refused attempt while blocked neither counts nor renews the block.
@@ -442,7 +460,10 @@ test("a stolen session cannot guess the password past the lockout, and the right
 test("a right password does not wipe the failures: only a real sign in does", async () => {
   await prisma.loginAttempt.deleteMany({});
   await prisma.loginAttempt.create({ data: { userId: "ann", attempts: 2, lastAttempt: new Date() } });
-  assert.equal((await post("/auth/passkeys/register/options", { password: PASSWORD }, as("ann"))).statusCode, 200);
+  assert.equal(
+    (await post("/auth/passkeys/register/options", { password: PASSWORD }, await as("ann"))).statusCode,
+    200
+  );
   assert.equal(await attemptsOf("ann"), 2);
   await prisma.loginAttempt.deleteMany({});
 });
@@ -480,4 +501,36 @@ test("with password sign in switched off passkeys are refused with the generic a
   assert.equal((await app.inject({ method: "GET", url: "/auth/config" })).json().passkeysAvailable, true);
   assert.equal((await login(key.assert(await loginChallenge()))).statusCode, 200);
   await prisma.passkey.deleteMany({ where: { userId: "ann" } });
+});
+
+test("SEC-10: separate passkey ceremony grants one sensitive update and rejects another user", async () => {
+  const key = new VirtualAuthenticator("localhost", ORIGIN, "ann");
+  assert.equal((await register("ann", key)).res.statusCode, 200);
+  const auth = await as("ann");
+  const options = await post("/auth/passkeys/reauthenticate/options", {}, auth);
+  assert.equal(options.statusCode, 200, options.body);
+  const verified = await post(
+    "/auth/passkeys/reauthenticate/verify",
+    { response: key.assert(options.json().challenge) },
+    auth
+  );
+  assert.equal(verified.statusCode, 200, verified.body);
+  const proof = verified.cookies.find((c) => c.name === "credential-proof")?.value;
+  assert.ok(proof);
+  const cookie = { token: auth.cookies.token, "credential-proof": proof };
+  const update = await app.inject({
+    method: "PUT",
+    url: "/users",
+    cookies: cookie,
+    payload: { id: "ann", email: "ann-proof@example.test" },
+  });
+  assert.equal(update.statusCode, 200, update.body);
+  const options2 = await post("/auth/passkeys/reauthenticate/options", {}, await as("ben"));
+  assert.equal(options2.statusCode, 200, options2.body);
+  const other = await post(
+    "/auth/passkeys/reauthenticate/verify",
+    { response: key.assert(options2.json().challenge) },
+    await as("ben")
+  );
+  assert.equal(other.statusCode, 400);
 });

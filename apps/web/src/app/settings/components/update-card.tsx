@@ -24,15 +24,17 @@ function ReleaseNotes({ lines, version }: { lines: readonly string[]; version: s
           <li key={`${index}:${line}`}>{line}</li>
         ))}
       </ul>
-      <a
-        href={releaseNotesUrl(version)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-3 inline-flex items-center gap-1 text-[12.5px] font-medium text-primary hover:underline"
-      >
-        {t("updates.calm.fullNotes")}
-        <IconExternalLink className="size-3.5" aria-hidden="true" />
-      </a>
+      {!version?.includes("-") && (
+        <a
+          href={releaseNotesUrl(version)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex items-center gap-1 text-[12.5px] font-medium text-primary hover:underline"
+        >
+          {t("updates.calm.fullNotes")}
+          <IconExternalLink className="size-3.5" aria-hidden="true" />
+        </a>
+      )}
     </>
   );
 }

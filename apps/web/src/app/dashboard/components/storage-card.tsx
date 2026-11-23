@@ -59,6 +59,10 @@ export function StorageCard({ usage }: { usage: StorageUsage }) {
         >
           <i className={cn("block h-full rounded-[2px]", OWN_COLOR)} style={{ width: `${parts.ownPercent}%` }} />
           <i className={cn("block h-full rounded-[2px]", SHARED_COLOR)} style={{ width: `${parts.sharedPercent}%` }} />
+          <i
+            className={cn("block h-full rounded-[2px]", RECEIVED_COLOR)}
+            style={{ width: `${parts.receivedPercent}%` }}
+          />
         </div>
       )}
 

@@ -7,11 +7,18 @@ import { recordActivity } from "../activity/activity";
 import { noteStorageUsage } from "../activity/notifications";
 import { afterFilesReceived } from "../activity/notify";
 import { EmailService } from "../email/service";
-import { copiedObjectName } from "../file/object-name";
 import { FileService } from "../file/service";
 import { kickScanQueue } from "../scan/queue";
 import { FileBlockedError, initialScanFields, isBlockedByScan, scanFieldsOf } from "../scan/status";
-import { storageLimitOf } from "../storage/limit";
+import { checkOwnerQuota, reserveUpload } from "../storage/accounting";
+import {
+  abandonCopy,
+  commitCopy,
+  prepareCopy,
+  queueDeletion,
+  queueReceiveDeletion,
+  sweepStorageCleanup,
+} from "../storage/cleanup";
 import { UserService } from "../user/service";
 import {
   CreateReverseShareInput,
@@ -206,15 +213,11 @@ export class ReverseShareService {
       throw new Error("Unauthorized to delete this reverse share");
     }
 
-    for (const file of reverseShare.files) {
-      try {
-        await this.fileService.deleteObject(file.objectName);
-      } catch (error) {
-        console.error(`Failed to delete file ${file.objectName}:`, error);
-      }
-    }
-
-    const deletedReverseShare = await this.reverseShareRepository.delete(id);
+    const deletedReverseShare = await prisma.$transaction(async (tx) => {
+      await queueReceiveDeletion(tx, id);
+      return tx.reverseShare.delete({ where: { id }, include: { files: true, alias: true } });
+    });
+    await sweepStorageCleanup(new Date());
     return ReverseShareResponseSchema.parse(this.formatReverseShareResponse(deletedReverseShare));
   }
 
@@ -287,6 +290,12 @@ export class ReverseShareService {
     await this.validateUploadMetadata(reverseShare, metadata);
     const objectName = `pending-reverse/${reverseShare.id}/${randomUUID()}`;
     const expires = 900;
+    await reserveUpload(
+      reverseShare.creatorId,
+      objectName,
+      BigInt(metadata.size),
+      new Date(Date.now() + expires * 1000)
+    );
     await prisma.reverseUpload.create({
       data: {
         objectName,
@@ -296,7 +305,16 @@ export class ReverseShareService {
         expiresAt: new Date(Date.now() + expires * 1000),
       },
     });
-    const url = await this.fileService.getPresignedPutUrl(objectName, expires, metadata.size);
+    let url;
+    try {
+      url = await this.fileService.getPresignedPutUrl(objectName, expires, metadata.size);
+    } catch (error) {
+      await prisma.$transaction(async (tx) => {
+        await tx.reverseUpload.deleteMany({ where: { objectName } });
+        await tx.uploadReservation.deleteMany({ where: { objectName } });
+      });
+      throw error;
+    }
     return { url, expiresIn: expires, objectName };
   }
 
@@ -314,21 +332,6 @@ export class ReverseShareService {
       (await prisma.reverseShareFile.count({ where: { reverseShareId: share.id } })) >= share.maxFiles
     )
       throw new Error("Maximum number of files reached");
-    // Clean a bounded batch of abandoned uploads when this receive link is used again.
-    const expired = await prisma.reverseUpload.findMany({
-      where: { reverseShareId: share.id, expiresAt: { lte: new Date() } },
-      take: 20,
-    });
-    for (const grant of expired) {
-      try {
-        if (grant.uploadId)
-          await this.fileService.abortMultipartUpload(grant.objectName, grant.uploadId).catch(() => undefined);
-        await this.fileService.deleteObject(grant.objectName);
-        await prisma.reverseUpload.delete({ where: { objectName: grant.objectName } });
-      } catch {
-        /* Retry cleanup on the next upload; never delete unrelated objects. */
-      }
-    }
   }
 
   async registerFileUpload(
@@ -408,11 +411,14 @@ export class ReverseShareService {
     assertUploadedFile(reverseShare, fileData, actualSize);
     // A signed PUT can be replayed until expiry. Commit a private copy so replays never overwrite accepted files.
     const finalKey = `reverse-shares/${reverseShare.id}/${randomUUID()}`;
-    await this.fileService.copyObject(fileData.objectName, finalKey);
+    await prisma.$transaction((tx) => prepareCopy(tx, finalKey));
     try {
+      await this.fileService.copyObject(fileData.objectName, finalKey);
       const committedSize = await this.fileService.getObjectSize(finalKey);
       assertUploadedFile(reverseShare, fileData, committedSize);
       const file = await prisma.$transaction(async (tx) => {
+        await checkOwnerQuota(tx, reverseShare.creatorId, BigInt(committedSize), fileData.objectName);
+        await commitCopy(tx, finalKey);
         const consumed = await tx.reverseUpload.updateMany({
           where: {
             objectName: fileData.objectName,
@@ -437,6 +443,8 @@ export class ReverseShareService {
           (await tx.reverseShareFile.count({ where: { reverseShareId: reverseShare.id } })) >= current.maxFiles
         )
           throw new Error("Maximum number of files reached");
+        await tx.uploadReservation.deleteMany({ where: { objectName: fileData.objectName } });
+        await queueDeletion(tx, fileData.objectName, grant!.uploadId, grant!.expiresAt);
         return tx.reverseShareFile.create({
           data: {
             ...fileData,
@@ -447,12 +455,13 @@ export class ReverseShareService {
           },
         });
       });
-      await this.fileService.deleteObject(fileData.objectName).catch(() => undefined);
+      await sweepStorageCleanup(new Date());
       if (file.scanStatus === "pending") kickScanQueue();
       this.addFileToUploadSession(reverseShare, fileData, place);
       return this.formatFileResponse(file);
     } catch (error) {
-      await this.fileService.deleteObject(finalKey).catch(() => undefined);
+      await abandonCopy(finalKey);
+      await sweepStorageCleanup(new Date());
       throw error;
     }
   }
@@ -658,95 +667,46 @@ export class ReverseShareService {
       throw new Error(`File size exceeds the maximum allowed size of ${maxSizeMB}MB`);
     }
 
-    const maxTotalStorage = await storageLimitOf(creatorId);
-
-    const userFiles = await prisma.file.findMany({
-      where: { userId: creatorId },
-      select: { size: true },
-    });
-
-    const currentStorage = userFiles.reduce((acc: bigint, userFile: any) => acc + userFile.size, BigInt(0));
-
-    if (currentStorage + file.size > maxTotalStorage) {
-      const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
-      throw new Error(`Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`);
-    }
-
     if (isBlockedByScan(file)) throw new FileBlockedError(file);
-
-    const newObjectName = copiedObjectName(creatorId, file.name);
-
-    // Copy file using S3 presigned URLs
-    const fileSizeMB = Number(file.size) / (1024 * 1024);
-    const needsStreaming = fileSizeMB > 100;
-
-    const downloadUrl = await this.fileService.getPresignedGetUrl(file.objectName, 300);
-    const uploadUrl = await this.fileService.getPresignedPutUrl(newObjectName, 300);
-
-    let retries = 0;
-    const maxRetries = 3;
-    let success = false;
-
-    while (retries < maxRetries && !success) {
-      try {
-        const response = await fetch(downloadUrl, {
-          signal: AbortSignal.timeout(600000), // 10 minutes timeout
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to download file: ${response.statusText}`);
-        }
-
-        if (!response.body) {
-          throw new Error("No response body received");
-        }
-
-        const uploadOptions: any = {
-          method: "PUT",
-          body: response.body,
-          duplex: "half",
-          headers: {
-            "Content-Type": "application/octet-stream",
-            "Content-Length": file.size.toString(),
-          },
-          signal: AbortSignal.timeout(9600000), // 160 minutes timeout
-        };
-
-        const uploadResponse = await fetch(uploadUrl, uploadOptions);
-
-        if (!uploadResponse.ok) {
-          const errorText = await uploadResponse.text();
-          throw new Error(`Failed to upload file: ${uploadResponse.statusText} - ${errorText}`);
-        }
-
-        success = true;
-      } catch (error: any) {
-        retries++;
-
-        if (retries >= maxRetries) {
-          throw new Error(`Failed to copy file after ${maxRetries} attempts: ${error.message}`);
-        }
-
-        const delay = Math.min(1000 * Math.pow(2, retries - 1), 10000);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
+    const newObjectName = `committed/${creatorId}/${randomUUID()}`;
+    await reserveUpload(creatorId, newObjectName, file.size, new Date(Date.now() + 3600000));
+    await prisma.$transaction((tx) => prepareCopy(tx, newObjectName));
+    let newFileRecord;
+    try {
+      await this.fileService.copyObject(file.objectName, newObjectName);
+      const actualSize = BigInt(await this.fileService.getObjectSize(newObjectName));
+      if (actualSize !== file.size) throw new Error("Received object size changed; scan again before copying");
+      newFileRecord = await prisma.$transaction(
+        async (tx) => {
+          await checkOwnerQuota(tx, creatorId, actualSize, newObjectName);
+          await commitCopy(tx, newObjectName);
+          await tx.uploadReservation.deleteMany({ where: { objectName: newObjectName } });
+          return tx.file.create({
+            data: {
+              name: file.name,
+              description: file.description || `Copied from: ${file.reverseShare.name || "Unnamed"}`,
+              extension: file.extension,
+              size: actualSize,
+              objectName: newObjectName,
+              userId: creatorId,
+              // The copy is the same bytes: what the scan found stays true.
+              scanStatus: file.scanStatus,
+              scanDetail: file.scanDetail,
+              scannedAt: file.scannedAt,
+            },
+          });
+        },
+        { timeout: 30000 }
+      );
+    } catch (error) {
+      await abandonCopy(newObjectName);
+      await prisma.$transaction(async (tx) => {
+        await queueDeletion(tx, newObjectName);
+        await tx.uploadReservation.deleteMany({ where: { objectName: newObjectName } });
+      });
+      await sweepStorageCleanup(new Date());
+      throw error;
     }
-
-    const newFileRecord = await prisma.file.create({
-      data: {
-        name: file.name,
-        description: file.description || `Copied from: ${file.reverseShare.name || "Unnamed"}`,
-        extension: file.extension,
-        size: file.size,
-        objectName: newObjectName,
-        userId: creatorId,
-        // The copy is the same bytes: what the scan found stays true.
-        scanStatus: file.scanStatus,
-        scanDetail: file.scanDetail,
-        scannedAt: file.scannedAt,
-      },
-    });
-
     await noteStorageUsage(creatorId);
 
     return {
@@ -920,7 +880,18 @@ export class ReverseShareService {
     if (size === undefined) throw new Error("File size is required");
     await this.validateUploadMetadata(share, { filename: fullName, extension, size });
     const objectName = `pending-reverse/${share.id}/${randomUUID()}`;
-    const uploadId = await this.fileService.createMultipartUpload(objectName);
+    await reserveUpload(share.creatorId, objectName, BigInt(size), new Date(Date.now() + 3600000), "pending");
+    let uploadId;
+    try {
+      uploadId = await this.fileService.createMultipartUpload(objectName);
+    } catch (error) {
+      await prisma.$transaction(async (tx) => {
+        await queueDeletion(tx, objectName, "pending");
+        await tx.uploadReservation.deleteMany({ where: { objectName } });
+      });
+      throw error;
+    }
+    await prisma.uploadReservation.update({ where: { objectName }, data: { uploadId } });
     await prisma.reverseUpload.create({
       data: {
         objectName,
@@ -981,8 +952,13 @@ export class ReverseShareService {
     const share = await this.validateReverseShareAccessByAlias(alias, password);
     assertUploadGrant(await prisma.reverseUpload.findUnique({ where: { objectName } }), share.id, uploadId);
 
-    await this.fileService.abortMultipartUpload(objectName, uploadId);
-    await prisma.reverseUpload.update({ where: { objectName }, data: { consumed: true } });
+    await prisma.$transaction(async (tx) => {
+      const grant = await tx.reverseUpload.findUniqueOrThrow({ where: { objectName } });
+      await queueDeletion(tx, objectName, uploadId, grant.expiresAt);
+      await tx.reverseUpload.delete({ where: { objectName } });
+      await tx.uploadReservation.deleteMany({ where: { objectName } });
+    });
+    await sweepStorageCleanup(new Date());
 
     return {
       message: "Multipart upload aborted successfully",

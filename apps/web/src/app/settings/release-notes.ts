@@ -8,23 +8,8 @@ import { DEFAULT_BRAND } from "@/lib/brand";
  * (infra/release-manifest.sh) and stay English.
  */
 export const RELEASE_NOTES = {
-  version: "2.4.0",
-  order: [
-    "security",
-    "trash",
-    "twoFactor",
-    "groups",
-    "notifications",
-    "virusScan",
-    "monitoring",
-    "settingsNotes",
-    "storage",
-    "emails",
-    "activity",
-    "customization",
-    "externalSignIn",
-    "repairs",
-  ],
+  version: "2.4.1",
+  order: ["security", "storage", "externalSignIn", "repairs"],
 } as const;
 
 /** The release a version belongs to: a beta of 2.4.0 belongs to 2.4.0. */

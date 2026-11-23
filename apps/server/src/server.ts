@@ -6,6 +6,8 @@ import { buildApp } from "./app";
 import { directoriesConfig } from "./config/directories.config";
 import { startActivityJobs } from "./modules/activity/jobs";
 import { flushScanAnnouncements, startScanning } from "./modules/scan/queue";
+import { startStorageCleanupJobs } from "./modules/storage/cleanup";
+import { sealLegacyWorkspaceObjects } from "./modules/storage/seal-legacy";
 import { startTrashJobs } from "./modules/trash/jobs";
 import { requirementFromServer } from "./modules/two-factor/second-step";
 import { registerRoutes } from "./routes";
@@ -42,6 +44,7 @@ async function startServer() {
   const { isInternalStorage, isExternalS3 } = await import("./config/storage.config.js");
   const { runAutoMigration } = await import("./scripts/migrate-filesystem-to-s3.js");
   await runAutoMigration();
+  await sealLegacyWorkspaceObjects();
 
   await app.register(fastifyMultipart, {
     limits: {
@@ -75,6 +78,7 @@ async function startServer() {
   console.log(`Amfora server running on port 3333`);
   startActivityJobs();
   startTrashJobs();
+  startStorageCleanupJobs();
   await startScanning(); // picks up what was still pending; does nothing without CLAMAV_HOST
 
   // Cleanup on shutdown

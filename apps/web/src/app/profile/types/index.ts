@@ -3,6 +3,7 @@ import { UseFormReturn } from "react-hook-form";
 import { PasswordFormData, ProfileFormData } from "../hooks/use-profile";
 
 export interface PasswordFormProps {
+  providers?: { name: string; displayName: string }[];
   form: UseFormReturn<PasswordFormData>;
   isNewPasswordVisible: boolean;
   isConfirmPasswordVisible: boolean;
@@ -12,6 +13,7 @@ export interface PasswordFormProps {
 }
 
 export interface ProfileFormProps {
+  providers?: { name: string; displayName: string }[];
   form: UseFormReturn<ProfileFormData>;
   onSubmit: (data: ProfileFormData) => Promise<void>;
 }

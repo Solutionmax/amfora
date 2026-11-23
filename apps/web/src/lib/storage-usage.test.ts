@@ -63,3 +63,10 @@ test("shared can never be more than what is used", () => {
   assert.equal(parts.sharedBytes, 1 * GB);
   assert.equal(parts.ownBytes, 0);
 });
+test("received bytes count toward quota without being shown as own files", () => {
+  const parts = storageParts({ limitBytes: 10 * GB, usedBytes: 6 * GB, sharedBytes: GB, receivedBytes: 2 * GB });
+  assert.equal(parts.ownBytes, 3 * GB);
+  assert.equal(parts.receivedPercent, 20);
+  assert.equal(parts.freeBytes, 4 * GB);
+  assert.equal(parts.usedPercent, 60);
+});

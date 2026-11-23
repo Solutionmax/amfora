@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -15,11 +16,11 @@ const PASSWORD = "correct horse battery";
 let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
 
-const disable = (password: string) =>
+const disable = async (password: string) =>
   app.inject({
     method: "POST",
     url: "/auth/2fa/disable",
-    cookies: { token: app.jwt.sign({ userId: "dana", isAdmin: false }) },
+    cookies: { token: await testSession(app, { userId: "dana", isAdmin: false }) },
     payload: { password },
   });
 const attempts = async () => (await prisma.loginAttempt.findUnique({ where: { userId: "dana" } }))?.attempts ?? 0;

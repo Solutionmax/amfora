@@ -1,8 +1,46 @@
-import axios from "axios";
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 import { isPublicPath } from "@/components/auth/paths/public-paths";
 import { SHARE_PASSWORD_HEADER } from "@/lib/share-password";
 import { isSetupRequiredError, SETUP_PAGE, setupUrl } from "@/lib/two-factor-setup";
+
+// Axios 1.20's private response sentinel blocks contextual R inference in generated
+// endpoints. Keep the established Promise<R> contract on this full-response client.
+// Defaults come from Axios itself; only the conditional response-method return changes.
+type ReadMethod = <
+  T = AxiosResponse["data"],
+  R = AxiosResponse<T>,
+  D = AxiosRequestConfig["data"],
+  P = AxiosRequestConfig["params"],
+>(
+  url: string,
+  config?: AxiosRequestConfig<D, P>
+) => Promise<R>;
+type BodyMethod = <
+  T = AxiosResponse["data"],
+  R = AxiosResponse<T>,
+  D = AxiosRequestConfig["data"],
+  P = AxiosRequestConfig["params"],
+>(
+  url: string,
+  data?: D,
+  config?: AxiosRequestConfig<D, P>
+) => Promise<R>;
+type RequestMethod = <
+  T = AxiosResponse["data"],
+  R = AxiosResponse<T>,
+  D = AxiosRequestConfig["data"],
+  P = AxiosRequestConfig["params"],
+>(
+  config: AxiosRequestConfig<D, P>
+) => Promise<R>;
+type ReadVerbs = "get" | "delete" | "head" | "options";
+type BodyVerbs = "post" | "put" | "patch" | "postForm" | "putForm" | "patchForm" | "query";
+type ApiClient = Omit<AxiosInstance, ReadVerbs | BodyVerbs | "request"> &
+  Record<ReadVerbs, ReadMethod> &
+  Record<BodyVerbs, BodyMethod> &
+  ReadMethod &
+  RequestMethod & { request: RequestMethod };
 
 const apiInstance = axios.create({
   headers: {
@@ -10,7 +48,7 @@ const apiInstance = axios.create({
   },
   withCredentials: true,
   timeout: 120000, // 2 minutes timeout for API calls
-});
+}) as ApiClient;
 
 // Call sites pass the share password as a normal request param. Lift it into a header
 // before the request is serialised so that it never becomes part of the query string.

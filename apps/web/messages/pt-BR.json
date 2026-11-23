@@ -531,7 +531,7 @@
         "myFiles": "Meus arquivos",
         "inShares": "Em compartilhamentos",
         "received": "Recebidos",
-        "receivedNote": "Não conta para o seu limite."
+        "receivedNote": "Conta para o seu limite."
       }
     }
   },
@@ -1029,7 +1029,8 @@
     "storageUsed": "<b>{size}</b> usados",
     "storageFree": "{size} livres",
     "storageOnlyFree": "Só {size} livres",
-    "storageNoLimit": "Sem limite"
+    "storageNoLimit": "Sem limite",
+    "logoutFailed": "Sign out failed. Your session is still active. Try again."
   },
   "navigation": {
     "dashboard": "Painel"
@@ -1153,7 +1154,7 @@
       "accountHint": "Como você aparece para as pessoas com quem compartilha.",
       "usernameHint": "Usado para entrar, junto com o seu email.",
       "password": "Senha",
-      "passwordHint": "Pelo menos 8 caracteres. As outras sessões continuam abertas.",
+      "passwordHint": "Pelo menos 8 caracteres. As outras sessões são encerradas.",
       "passwordTooShort": "Use pelo menos {count} caracteres.",
       "passwordMismatch": "As senhas não coincidem.",
       "changePassword": "Alterar senha",
@@ -1217,6 +1218,14 @@
       "removeFailed": "Falha ao remover a chave de API",
       "monitoring": "A chave de um administrador também abre os números de monitoramento em /api/v1/metrics.",
       "monitoringLink": "Como configurar"
+    },
+    "verification": {
+      "password": "Current password",
+      "hint": "Changing your password or email requires your current password, or a new verification below. Provider verification returns here; enter your change after returning. Verification expires after five minutes and works once.",
+      "ready": "Verified. Save your password or email change within five minutes.",
+      "failed": "Verification failed. Try again.",
+      "passkey": "Verify with a passkey",
+      "provider": "Verify with {name}"
     }
   },
   "public": {
@@ -1465,20 +1474,10 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Três correções de segurança: registrar um envio agora exige um nome de objeto seu, só os seus próprios arquivos e pastas podem ser adicionados a um compartilhamento, e o servidor mede sozinho o tamanho de um envio. As três falhas existiam em versões anteriores, então atualize logo.",
-      "trash": "Excluir um arquivo ou pasta agora o move para a nova página Lixeira, onde fica por 30 dias (alterável em Configurações). Restaure ou exclua definitivamente. As Configurações também podem remover sozinhas compartilhamentos expirados e links de recebimento vazios; arquivos nunca são removidos assim.",
-      "twoFactor": "As Configurações podem pedir a administradores ou a todos que ativem o login em duas etapas, e um administrador pode redefini-lo para quem perdeu o celular. Você também pode entrar com uma passkey (impressão digital, rosto ou chave de segurança) sem senha.",
-      "groups": "Administradores podem criar grupos na página Usuários. Um compartilhamento pode ser limitado aos membros de um grupo e aparece em Compartilhados comigo, na página Compartilhamentos.",
-      "notifications": "Um sino no menu mostra o que há de novo: um download, arquivos num link de recebimento, um segredo aberto, um link que expira em breve ou armazenamento quase cheio.",
-      "virusScan": "Uma verificação de vírus opcional com ClamAV, desligada a menos que você defina CLAMAV_HOST. Um arquivo em verificação ou infectado não pode ser baixado.",
-      "monitoring": "Números de monitoramento no formato Prometheus em /api/v1/metrics, para a chave de API de um administrador.",
-      "settingsNotes": "As Configurações mostram o que a versão em uso trouxe, no seu idioma, e os administradores recebem um aviso no menu quando há uma atualização esperando.",
-      "storage": "O medidor de armazenamento no menu agora é um anel. Administradores podem dar a um usuário um limite de armazenamento próprio, e as Configurações têm uma validade padrão e uma máxima para compartilhamentos e links de recebimento.",
-      "emails": "Os emails levam o logo da instalação e usam um só layout calmo, com versão em texto simples.",
-      "activity": "Administradores podem limpar o registro de atividade, e criar ou excluir um link de recebimento agora aparece nele. Os números dos filtros acompanham a pesquisa.",
-      "customization": "A prévia em Personalização mostra as páginas reais de Download, Login e Recebimento no tema escolhido. Uma fonte escolhida ali volta a ser aplicada.",
-      "externalSignIn": "O login externo começa com Authentik, GitHub e Google, e qualquer outro serviço ainda é adicionado com Adicionar provedor. O formulário do provedor abre bem mais rápido.",
-      "repairs": "Pequenos reparos: as páginas de download não tocam mais vídeo e áudio, excluir muitos itens de uma vez não para mais no meio, a barra de seleção em Compartilhamentos só age nos compartilhamentos visíveis, e as chaves de email desativadas pelo administrador aparecem como desativadas."
+      "security": "Sair, recuperar a senha e desativar a conta revogam os acessos antigos. Convites e códigos de recuperação são usados uma vez. Alterar senha ou email exige nova verificação.",
+      "storage": "Os envios são finalizados com conteúdo fixo. Arquivos recebidos e envios pendentes contam no limite do proprietário, inclusive em operações simultâneas. Exclusões que falham continuam recuperáveis.",
+      "externalSignIn": "O acesso externo verifica o navegador e o provedor iniciais. Um email igual não vincula mais contas. OIDC exige emissor com descoberta e o callback seguro configurado.",
+      "repairs": "O medidor usa o armazenamento real. Backups de atualização criam uma cópia consistente do banco. Patches de segurança estão incluídos; passkeys são oferecidas apenas em contexto seguro."
     }
   },
   "resetPassword": {

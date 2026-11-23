@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createAdminGuard, loadAccount } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
 import { notDeleted } from "../../shared/trash";
+import { ownerUsage } from "../storage/accounting";
 import { storageLimitOf } from "../storage/limit";
 import { activityData, actorOf, placeOfRequest } from "./activity";
 import { placeSource } from "./place";
@@ -262,9 +263,11 @@ export async function activityRoutes(app: FastifyInstance) {
         response: {
           200: z.object({
             limitBytes: z.number().nullable().describe("Null: no limit"),
-            usedBytes: z.number().describe("Your files, the trash included. This is what counts towards the limit."),
+            usedBytes: z
+              .number()
+              .describe("Your files, received files and pending reservations. This counts towards the limit."),
             sharedBytes: z.number().describe("The part of your files that sits in at least one share"),
-            receivedBytes: z.number().describe("Files others sent you. They do not count towards the limit."),
+            receivedBytes: z.number().describe("Files others sent you. Included in usedBytes."),
           }),
           401: ErrorSchema,
         },
@@ -281,7 +284,7 @@ export async function activityRoutes(app: FastifyInstance) {
       const limit = Number(await storageLimitOf(userId));
       return reply.send({
         limitBytes: Number.isFinite(limit) && limit > 0 ? limit : null,
-        usedBytes: await sum({ userId }),
+        usedBytes: Number(await ownerUsage(userId)),
         sharedBytes: await sum({ userId, shares: { some: {} }, ...notDeleted }),
         receivedBytes: Number(received._sum.size ?? 0),
       });

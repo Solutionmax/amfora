@@ -9,6 +9,7 @@ import type { z } from "zod";
 
 import { prisma } from "../../shared/prisma";
 import { BLOCKED_MESSAGE, countFailure, isBlocked } from "../auth/login-attempts";
+import type { SessionClaims } from "../auth/session";
 import { ConfigService } from "../config/service";
 import { UserResponseSchema } from "../user/dto";
 import { challengeOf, consumeChallenge, createChallenge } from "./challenge";
@@ -140,10 +141,13 @@ export async function removePasskey(userId: string, id: string, password: string
 }
 
 /** Options for a sign in without a user name: the authenticator offers the keys it holds for this site. */
-export async function loginOptions() {
+export async function loginOptions(reauthentication?: SessionClaims) {
   const party = requireRelyingParty();
   await requirePasswordSignIn();
-  const challenge = await createChallenge("login", null);
+  const challenge = await createChallenge(
+    reauthentication ? `reauthenticate:${reauthentication.sid}:${reauthentication.version}` : "login",
+    reauthentication?.userId ?? null
+  );
   return generateAuthenticationOptions({
     rpID: party.rpID,
     challenge: new Uint8Array(Buffer.from(challenge, "base64url")),
@@ -152,18 +156,29 @@ export async function loginOptions() {
 }
 
 /** Signs in with a passkey. Every refusal is the same sentence; the caller counts and logs it. */
-export async function verifyLogin(response: z.infer<typeof AuthenticationResponseSchema>) {
+export async function verifyLogin(
+  response: z.infer<typeof AuthenticationResponseSchema>,
+  reauthentication?: SessionClaims
+) {
   const party = requireRelyingParty();
   await requirePasswordSignIn();
   const challenge = challengeOf(response.response.clientDataJSON);
-  if (!challenge || !(await consumeChallenge(challenge, "login", null))) throw new PasskeyError(400, SIGN_IN_FAILED);
+  if (
+    !challenge ||
+    !(await consumeChallenge(
+      challenge,
+      reauthentication ? `reauthenticate:${reauthentication.sid}:${reauthentication.version}` : "login",
+      reauthentication?.userId ?? null
+    ))
+  )
+    throw new PasskeyError(400, SIGN_IN_FAILED);
 
   const passkey = await prisma.passkey.findUnique({ where: { credentialId: response.id }, include: { user: true } });
   if (!passkey) throw new PasskeyError(400, SIGN_IN_FAILED);
   const { user } = passkey;
   const fail = () => new PasskeyError(400, SIGN_IN_FAILED, user.id);
 
-  if (!user.isActive) throw fail();
+  if (!user.isActive || (reauthentication && reauthentication.userId !== user.id)) throw fail();
   if (await isBlocked(user.id)) throw new PasskeyError(400, SIGN_IN_FAILED, user.id, false);
   const handle = response.response.userHandle;
   if (handle && Buffer.from(handle, "base64url").toString("utf8") !== user.id) throw fail();
@@ -191,5 +206,5 @@ export async function verifyLogin(response: z.infer<typeof AuthenticationRespons
   if (moved.count !== 1) throw fail();
 
   await prisma.loginAttempt.deleteMany({ where: { userId: user.id } });
-  return UserResponseSchema.parse(user);
+  return { ...UserResponseSchema.parse(user), sessionVersion: user.sessionVersion };
 }

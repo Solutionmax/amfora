@@ -531,7 +531,7 @@
         "myFiles": "Moje pliki",
         "inShares": "W udostępnieniach",
         "received": "Odebrane",
-        "receivedNote": "Nie liczy się do Twojego limitu."
+        "receivedNote": "Liczy się do Twojego limitu."
       }
     }
   },
@@ -1029,7 +1029,8 @@
     "storageUsed": "Użyto <b>{size}</b>",
     "storageFree": "Wolne {size}",
     "storageOnlyFree": "Wolne tylko {size}",
-    "storageNoLimit": "Bez limitu"
+    "storageNoLimit": "Bez limitu",
+    "logoutFailed": "Sign out failed. Your session is still active. Try again."
   },
   "navigation": {
     "dashboard": "Panel główny"
@@ -1153,7 +1154,7 @@
       "accountHint": "Tak widzą Cię osoby, którym udostępniasz pliki.",
       "usernameHint": "Służy do logowania, obok adresu e-mail.",
       "password": "Hasło",
-      "passwordHint": "Co najmniej 8 znaków. Inne sesje pozostają zalogowane.",
+      "passwordHint": "Co najmniej 8 znaków. Inne sesje zostaną wylogowane.",
       "passwordTooShort": "Użyj co najmniej {count, plural, one {# znaku} few {# znaków} many {# znaków} other {# znaku}}.",
       "passwordMismatch": "Hasła nie są takie same.",
       "changePassword": "Zmień hasło",
@@ -1217,6 +1218,14 @@
       "removeFailed": "Nie udało się usunąć klucza API",
       "monitoring": "Klucz administratora otwiera też dane do monitoringu pod /api/v1/metrics.",
       "monitoringLink": "Jak to skonfigurować"
+    },
+    "verification": {
+      "password": "Current password",
+      "hint": "Changing your password or email requires your current password, or a new verification below. Provider verification returns here; enter your change after returning. Verification expires after five minutes and works once.",
+      "ready": "Verified. Save your password or email change within five minutes.",
+      "failed": "Verification failed. Try again.",
+      "passkey": "Verify with a passkey",
+      "provider": "Verify with {name}"
     }
   },
   "public": {
@@ -1465,20 +1474,10 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Trzy poprawki bezpieczeństwa: rejestracja przesyłania wymaga teraz nazwy obiektu, która należy do Ciebie, do udostępnienia można dodać tylko własne pliki i foldery, a serwer sam mierzy rozmiar przesyłanego pliku. Wszystkie trzy luki istniały we wcześniejszych wersjach, więc zaktualizuj wkrótce.",
-      "trash": "Usunięty plik lub folder trafia na nową stronę Kosz i zostaje tam przez 30 dni (można to zmienić w Ustawieniach). Przywróć go albo usuń na stałe. Ustawienia mogą też same usuwać wygasłe udostępnienia i puste linki do odbierania. Pliki nigdy nie są w ten sposób usuwane.",
-      "twoFactor": "Ustawienia mogą wymagać od administratorów lub wszystkich skonfigurowania logowania dwuetapowego, a administrator może je zresetować komuś, kto zgubił telefon. Możesz też logować się kluczem dostępu (odcisk palca, twarz lub klucz bezpieczeństwa) bez hasła.",
-      "groups": "Administratorzy mogą tworzyć grupy na stronie Użytkownicy. Udostępnienie można ograniczyć do członków grupy, a pojawi się ono w Udostępnione mi na stronie Udostępnienia.",
-      "notifications": "Dzwonek w menu pokazuje, co nowego: pobranie, pliki na linku do odbierania, otwarty sekret, link, który wkrótce wygasa, lub prawie wyczerpane miejsce.",
-      "virusScan": "Opcjonalne skanowanie antywirusowe z ClamAV, wyłączone, dopóki nie ustawisz CLAMAV_HOST. Pliku, który jest sprawdzany lub zainfekowany, nie można pobrać.",
-      "monitoring": "Dane monitoringu w formacie Prometheus pod /api/v1/metrics, dla klucza API administratora.",
-      "settingsNotes": "Ustawienia pokazują, co przyniosła używana wersja, w Twoim języku, a administratorzy dostają w menu powiadomienie, gdy czeka aktualizacja.",
-      "storage": "Wskaźnik miejsca w menu jest pierścieniem. Administratorzy mogą nadać użytkownikowi własny limit miejsca, a Ustawienia mają domyślny i maksymalny czas ważności udostępnień i linków do odbierania.",
-      "emails": "E-maile zawierają logo instalacji i mają jeden spokojny układ, także w wersji tekstowej.",
-      "activity": "Administratorzy mogą wyczyścić dziennik aktywności, a tworzenie i usuwanie linku do odbierania jest teraz w nim widoczne. Liczby na filtrach uwzględniają wyszukiwanie.",
-      "customization": "Podgląd w Personalizacji pokazuje prawdziwe strony Pobieranie, Logowanie i Odbieranie w wybranym motywie. Wybrana tam czcionka jest znów stosowana.",
-      "externalSignIn": "Logowanie zewnętrzne zaczyna się od Authentik, GitHub i Google, a każdą inną usługę nadal dodasz przez Dodaj dostawcę. Formularz dostawcy otwiera się dużo szybciej.",
-      "repairs": "Drobne poprawki: strony pobierania nie odtwarzają już wideo i dźwięku, usuwanie wielu elementów naraz nie zatrzymuje się w połowie, pasek zaznaczenia w Udostępnieniach działa tylko na widoczne udostępnienia, a przełączniki e-mail wyłączone przez administratora są pokazane jako wyłączone."
+      "security": "Wylogowanie, odzyskanie hasła i dezaktywacja unieważniają stary dostęp. Zaproszenia i kody odzyskiwania są jednorazowe. Zmiana hasła lub emaila wymaga nowej weryfikacji.",
+      "storage": "Przesłane pliki otrzymują niezmienną zawartość. Pliki odebrane i trwające wysyłanie wliczają się do limitu właściciela, również równocześnie. Nieudane usuwanie pozostaje możliwe do naprawienia.",
+      "externalSignIn": "Logowanie zewnętrzne sprawdza pierwotną przeglądarkę i dostawcę. Taki sam email nie łączy już kont. OIDC wymaga wykrywalnego wystawcy i skonfigurowanego bezpiecznego callbacku.",
+      "repairs": "Wskaźnik pojemności używa rzeczywistego magazynu. Kopie aktualizacji tworzą spójny obraz bazy danych. Dodano poprawki bezpieczeństwa; passkeys są dostępne tylko w bezpiecznym kontekście przeglądarki."
     }
   },
   "resetPassword": {

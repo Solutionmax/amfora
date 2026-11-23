@@ -115,6 +115,7 @@ RUN chmod +x ./reset-password.sh
 # Copy seed file to the shared location for bind mounts
 RUN mkdir -p /app/server/prisma
 COPY --from=server-builder --chown=amfora:nodejs /app/server/prisma/seed.js /app/server/prisma/seed.js
+COPY --from=server-builder --chown=amfora:nodejs /app/server/prisma/storage-schema.js /app/server/prisma/storage-schema.js
 
 # === Copy Web Files ===
 WORKDIR /app/web

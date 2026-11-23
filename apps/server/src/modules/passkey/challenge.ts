@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 
 import { prisma } from "../../shared/prisma";
 
-export type ChallengePurpose = "register" | "login";
+export type ChallengePurpose = "register" | "login" | `reauthenticate:${string}`;
 
 /** How long a challenge may be answered. */
 const CHALLENGE_LIFETIME_MS = 5 * 60 * 1000;

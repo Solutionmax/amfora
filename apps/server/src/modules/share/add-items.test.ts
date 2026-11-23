@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 // Adding items to a share: only the maker's own files and folders, never somebody else's.
@@ -14,9 +15,9 @@ const database = useTestDatabase();
 let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
 
-const as = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: false }) });
-const addItems = (user: string, shareId: string, payload: object) =>
-  app.inject({ method: "POST", url: `/shares/${shareId}/items`, cookies: as(user), payload });
+const as = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: false }) });
+const addItems = async (user: string, shareId: string, payload: object) =>
+  app.inject({ method: "POST", url: `/shares/${shareId}/items`, cookies: await as(user), payload });
 
 let shareId = "";
 const ids = { mine: "", theirs: "", myFolder: "", theirFolder: "", trashed: "" };

@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { extractApiKey, generateApiKey, hashApiKey, isRouteAllowed, READ_ROUTES } from "./key";
 
@@ -57,14 +58,14 @@ after(async () => {
   database.cleanup();
 });
 
-const session = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: userId === "alice" }) });
+const session = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: userId === "alice" }) });
 const bearer = (token: string) => ({ authorization: `Bearer ${token}` });
 
 async function createKey(userId: string, scope: "read" | "full", expiresInDays?: number) {
   const response = await app.inject({
     method: "POST",
     url: "/api-keys",
-    cookies: session(userId),
+    cookies: await session(userId),
     payload: { name: `${userId} ${scope}`, scope, expiresInDays },
   });
   assert.equal(response.statusCode, 201, response.body);
@@ -108,7 +109,7 @@ test("only the hash of a key is stored, and the key is shown once", async () => 
   assert.equal(row.hash, hashApiKey(token));
   assert.ok(!JSON.stringify(row).includes(token));
 
-  const list = await app.inject({ method: "GET", url: "/api-keys", cookies: session("alice") });
+  const list = await app.inject({ method: "GET", url: "/api-keys", cookies: await session("alice") });
   assert.equal(list.statusCode, 200);
   assert.ok(!list.body.includes(token));
   assert.ok(!list.body.includes(row.hash));
@@ -188,15 +189,20 @@ test("an administrator's full key gets no host figures and no trailing slash tri
 });
 
 test("a session token in the Authorization header still works as before", async () => {
-  const me = await app.inject({ method: "GET", url: "/auth/me", headers: bearer(session("bob").token) });
+  const me = await app.inject({ method: "GET", url: "/auth/me", headers: bearer((await session("bob")).token) });
   assert.equal(me.json().user.id, "bob");
-  const keys = await app.inject({ method: "GET", url: "/api-keys", headers: bearer(session("bob").token) });
+  const keys = await app.inject({ method: "GET", url: "/api-keys", headers: bearer((await session("bob")).token) });
   assert.equal(keys.statusCode, 200);
 });
 
 test("the key decides who the caller is, not a cookie sent along", async () => {
   const { token } = await createKey("bob", "read");
-  const me = await app.inject({ method: "GET", url: "/auth/me", headers: bearer(token), cookies: session("alice") });
+  const me = await app.inject({
+    method: "GET",
+    url: "/auth/me",
+    headers: bearer(token),
+    cookies: await session("alice"),
+  });
   assert.equal(me.json().user.id, "bob");
 });
 
@@ -213,10 +219,14 @@ test("unknown, expired, deleted and deactivated keys are refused", async () => {
   const notYours = await app.inject({
     method: "DELETE",
     url: `/api-keys/${removed.apiKey.id}`,
-    cookies: session("alice"),
+    cookies: await session("alice"),
   });
   assert.equal(notYours.statusCode, 404);
-  const yours = await app.inject({ method: "DELETE", url: `/api-keys/${removed.apiKey.id}`, cookies: session("bob") });
+  const yours = await app.inject({
+    method: "DELETE",
+    url: `/api-keys/${removed.apiKey.id}`,
+    cookies: await session("bob"),
+  });
   assert.equal(yours.statusCode, 200);
   const afterRemoval = await app.inject({ method: "GET", url: "/reverse-shares", headers: bearer(removed.token) });
   assert.equal(afterRemoval.statusCode, 401);
@@ -234,14 +244,14 @@ test("managing keys needs a session, and bad input is rejected", async () => {
   const badScope = await app.inject({
     method: "POST",
     url: "/api-keys",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: { name: "x", scope: "admin" },
   });
   assert.equal(badScope.statusCode, 400);
   const noName = await app.inject({
     method: "POST",
     url: "/api-keys",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: { name: "   ", scope: "read" },
   });
   assert.equal(noName.statusCode, 400);

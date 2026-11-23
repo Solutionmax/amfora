@@ -7,6 +7,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { generateApiKey } from "../api-key/key";
 import { FileService } from "../file/service";
@@ -17,7 +18,7 @@ const database = useTestDatabase();
 let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
 
-const as = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: userId === "boss" }) });
+const as = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: userId === "boss" }) });
 const SHARE_NAME = "Secret budget plan";
 const FILE_NAME = "budget-2026.xlsx";
 const NESTED_NAME = "q1-numbers.pdf";
@@ -124,9 +125,10 @@ after(async () => {
   database.cleanup();
 });
 
-const get = (url: string, user?: string) => app.inject({ method: "GET", url, cookies: user ? as(user) : undefined });
-const send = (method: "POST" | "PATCH" | "PUT" | "DELETE", url: string, user?: string, payload?: object) =>
-  app.inject({ method, url, cookies: user ? as(user) : undefined, payload });
+const get = async (url: string, user?: string) =>
+  app.inject({ method: "GET", url, cookies: user ? await as(user) : undefined });
+const send = async (method: "POST" | "PATCH" | "PUT" | "DELETE", url: string, user?: string, payload?: object) =>
+  app.inject({ method, url, cookies: user ? await as(user) : undefined, payload });
 
 /** Every way a visitor can read the limited share or one of its files. */
 const readers = () => [
@@ -237,7 +239,7 @@ test("a member who is removed loses access at once, even with a download cookie 
     const res = await app.inject({
       method: "GET",
       url,
-      cookies: { ...as("anita"), [grant!.name]: grant!.value },
+      cookies: { ...(await as("anita")), [grant!.name]: grant!.value },
     });
     assert.equal(res.statusCode, 403, `${url} answered ${res.statusCode}`);
   }
@@ -410,7 +412,8 @@ test("reading a group share through an API key follows the same rule, with the k
 test("opening a group share as a member writes the member as the actor", async () => {
   await prisma.activityEvent.deleteMany({});
   // A fresh address: repeats from one address within the hour are left out of the log.
-  const fresh = (url: string) => app.inject({ method: "GET", url, cookies: as("anita"), remoteAddress: "10.9.9.9" });
+  const fresh = async (url: string) =>
+    app.inject({ method: "GET", url, cookies: await as("anita"), remoteAddress: "10.9.9.9" });
   await fresh(`/shares/alias/finance-plan`);
   await fresh(`/files/download-url?objectName=owner/${FILE_NAME}`);
   const events = await prisma.activityEvent.findMany({ where: { subjectId: limitedId } });

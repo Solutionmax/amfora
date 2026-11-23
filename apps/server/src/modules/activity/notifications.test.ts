@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -51,16 +52,16 @@ after(async () => {
   database.cleanup();
 });
 
-const session = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: userId === "root" }) });
-const get = (userId: string, url: string) => app.inject({ method: "GET", url, cookies: session(userId) });
+const session = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: userId === "root" }) });
+const get = async (userId: string, url: string) => app.inject({ method: "GET", url, cookies: await session(userId) });
 const listOf = async (userId: string) =>
   (await get(userId, "/notifications")).json() as { notifications: Array<Record<string, any>>; unseen: number };
 const countOf = async (userId: string) => (await get(userId, "/notifications/count")).json().count as number;
-const markSeen = (userId: string, upTo?: string) =>
+const markSeen = async (userId: string, upTo?: string) =>
   app.inject({
     method: "POST",
     url: "/notifications/seen",
-    cookies: session(userId),
+    cookies: await session(userId),
     payload: upTo === undefined ? {} : { upTo },
   });
 const line = (ownerId: string, action: string, extra: object = {}) =>
@@ -289,7 +290,7 @@ test("an API key is refused on the notification routes", async () => {
     const created = await app.inject({
       method: "POST",
       url: "/api-keys",
-      cookies: session("alice"),
+      cookies: await session("alice"),
       payload: { name: `k-${scope}`, scope },
     });
     assert.equal(created.statusCode, 201, created.body);

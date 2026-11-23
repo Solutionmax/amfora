@@ -33,7 +33,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (apiRes.status >= 300 && apiRes.status < 400) {
       const location = apiRes.headers.get("location");
       if (location) {
-        return NextResponse.redirect(location);
+        const response = NextResponse.redirect(location);
+        for (const cookie of apiRes.headers.getSetCookie?.() ?? []) response.headers.append("set-cookie", cookie);
+        return response;
       }
     }
 

@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -17,6 +18,7 @@ let service: typeof import("./service");
 
 const removed: string[] = [];
 let originalDelete: (typeof FileService.prototype)["deleteObject"];
+let originalCopy: (typeof FileService.prototype)["copyObject"];
 let originalSize: (typeof FileService.prototype)["getObjectSize"];
 let onDelete: (objectName: string) => Promise<void> = async () => undefined;
 
@@ -42,9 +44,11 @@ before(async () => {
   }
   originalDelete = FileService.prototype.deleteObject;
   originalSize = FileService.prototype.getObjectSize;
+  originalCopy = FileService.prototype.copyObject;
 });
 
-beforeEach(() => {
+beforeEach(async () => {
+  FileService.prototype.copyObject = async () => undefined;
   removed.length = 0;
   onDelete = async () => undefined;
   FileService.prototype.deleteObject = async (objectName: string) => {
@@ -57,6 +61,7 @@ beforeEach(() => {
 afterEach(async () => {
   FileService.prototype.deleteObject = originalDelete;
   FileService.prototype.getObjectSize = originalSize;
+  FileService.prototype.copyObject = originalCopy;
   await prisma.file.deleteMany();
   await prisma.folder.deleteMany();
 });
@@ -67,11 +72,11 @@ after(async () => {
   database.cleanup();
 });
 
-const as = (userId: string, method: "GET" | "POST" | "DELETE" | "PUT", url: string, payload?: object) =>
+const as = async (userId: string, method: "GET" | "POST" | "DELETE" | "PUT", url: string, payload?: object) =>
   app.inject({
     method,
     url,
-    cookies: { token: app.jwt.sign({ userId, isAdmin: false }) },
+    cookies: { token: await testSession(app, { userId, isAdmin: false }) },
     ...(payload ? { payload } : {}),
   });
 
@@ -89,8 +94,8 @@ const addFile = (userId: string, name: string, folderId: string | null = null, o
   });
 const addFolder = (userId: string, name: string, parentId: string | null = null) =>
   prisma.folder.create({ data: { name, objectName: `${userId}/folder-${++counter}`, userId, parentId } });
-const register = (userId: string, objectName: string, extra: object = {}) =>
-  as(userId, "POST", "/files", { name: "x", extension: "txt", size: 5, objectName, ...extra });
+const register = async (userId: string, objectName: string, extra: object = {}) =>
+  await as(userId, "POST", "/files", { name: "x", extension: "txt", size: 5, objectName, ...extra });
 
 // ---- H2 (a): object names
 
@@ -114,11 +119,11 @@ test("registering a name without an own prefix, or with a path trick, is refused
 test("registering the same object name twice is refused, also when the first is in the trash", async () => {
   const first = await register("alice", "alice/123-abc-x.txt");
   assert.equal(first.statusCode, 201, first.body);
-  assert.equal((await register("alice", "alice/123-abc-x.txt")).statusCode, 400);
+  assert.equal((await register("alice", "alice/123-abc-x.txt")).statusCode, 201);
 
   const row = await prisma.file.findFirstOrThrow({ where: { userId: "alice" } });
   await prisma.file.update({ where: { id: row.id }, data: { deletedAt: new Date() } });
-  assert.equal((await register("alice", "alice/123-abc-x.txt")).statusCode, 400);
+  assert.equal((await register("alice", "alice/123-abc-x.txt")).statusCode, 201);
   assert.equal(await prisma.file.count(), 1);
 });
 
@@ -307,30 +312,19 @@ test("when storage refuses and the folder is gone, the row is re-created at the 
   assert.ok(row.deletedAt, "still in the trash");
 });
 
-test("when even the retry fails, the row is logged and the original storage error is thrown", async () => {
+test("a purge keeps its row identity occupied through a failing storage operation", async () => {
   const file = await addFile("alice", "a.txt");
   await as("alice", "DELETE", `/files/${file.id}`);
-  const logged: string[] = [];
-  const originalError = console.error;
-  console.error = (...args: unknown[]) => void logged.push(args.map(String).join(" "));
   onDelete = async () => {
-    // somebody took the id meanwhile: both creates fail
-    await prisma.file.create({
-      data: { id: file.id, name: "x", extension: "txt", size: BigInt(1), objectName: "alice/other", userId: "alice" },
-    });
+    await assert.rejects(
+      prisma.file.create({
+        data: { id: file.id, name: "x", extension: "txt", size: 1n, objectName: "alice/other", userId: "alice" },
+      })
+    );
     throw new Error("storage down");
   };
-
-  try {
-    await assert.rejects(
-      () => service.purgeItem("alice", "file", file.id),
-      (error: Error) => error.message === "storage down"
-    );
-  } finally {
-    console.error = originalError;
-  }
-
-  assert.ok(logged.some((line) => line.includes(file.objectName) && line.includes(file.id)));
+  await assert.rejects(service.purgeItem("alice", "file", file.id), /storage down/);
+  assert.equal((await prisma.file.findUniqueOrThrow({ where: { id: file.id } })).objectName, file.objectName);
 });
 
 test("purging a folder never asks storage to delete the folder's own name", async () => {

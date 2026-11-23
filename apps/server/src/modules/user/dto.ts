@@ -35,6 +35,7 @@ export const UpdateUserSchema = z.object({
   email: z.string().email().optional(),
   image: z.string().optional(),
   password: z.string().optional(),
+  currentPassword: z.string().optional(),
   isAdmin: z.boolean().optional(),
   storageLimitBytes: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).nullable().optional(),
 });

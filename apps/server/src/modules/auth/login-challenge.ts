@@ -2,9 +2,13 @@ import { createHash, randomBytes } from "node:crypto";
 
 import { prisma } from "../../shared/prisma";
 
-export function credentialFingerprint(user: { password: string | null; twoFactorSecret: string | null }) {
+export function credentialFingerprint(user: {
+  password: string | null;
+  twoFactorSecret: string | null;
+  sessionVersion?: number;
+}) {
   return createHash("sha256")
-    .update(JSON.stringify([user.password, user.twoFactorSecret]))
+    .update(JSON.stringify([user.password, user.twoFactorSecret, user.sessionVersion ?? 0]))
     .digest("hex");
 }
 export const challengeHash = (token: string) => createHash("sha256").update(token).digest("hex");
@@ -25,6 +29,7 @@ export async function createLoginChallenge(user: {
   id: string;
   password: string | null;
   twoFactorSecret: string | null;
+  sessionVersion?: number;
 }) {
   const token = randomBytes(32).toString("hex");
   await prisma.loginChallenge.deleteMany({ where: { OR: [{ userId: user.id }, { expiresAt: { lte: new Date() } }] } });

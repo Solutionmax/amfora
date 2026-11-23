@@ -32,6 +32,7 @@ export interface RegisterUserBody {
 }
 
 export interface UpdateUserBody {
+  currentPassword?: string;
   id: string;
   firstName?: string;
   lastName?: string;

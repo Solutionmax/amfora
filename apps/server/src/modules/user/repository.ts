@@ -77,7 +77,7 @@ export class PrismaUserRepository implements IUserRepository {
   async deactivateUser(id: string): Promise<User> {
     return prisma.user.update({
       where: { id },
-      data: { isActive: false },
+      data: { isActive: false, sessionVersion: { increment: 1 } },
     });
   }
 }

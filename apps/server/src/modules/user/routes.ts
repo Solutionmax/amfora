@@ -63,6 +63,7 @@ export async function userRoutes(app: FastifyInstance) {
     const passwordSchema = await createPasswordSchema();
     return UpdateUserSchema.extend({
       password: passwordSchema.optional(),
+      currentPassword: z.string().optional(),
     });
   };
 
@@ -183,6 +184,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.put(
     "/users",
     {
+      config: { rateLimit: { max: 10, timeWindow: "1 minute" } },
       preValidation: updateUserPreValidation,
       schema: {
         tags: ["User"],

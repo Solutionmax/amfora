@@ -531,7 +531,7 @@
         "myFiles": "Mijn bestanden",
         "inShares": "In delingen",
         "received": "Ontvangen",
-        "receivedNote": "Telt niet mee voor je limiet."
+        "receivedNote": "Telt mee voor je limiet."
       }
     }
   },
@@ -1029,7 +1029,8 @@
     "storageUsed": "<b>{size}</b> gebruikt",
     "storageFree": "{size} vrij",
     "storageOnlyFree": "Nog maar {size} vrij",
-    "storageNoLimit": "Geen limiet"
+    "storageNoLimit": "Geen limiet",
+    "logoutFailed": "Sign out failed. Your session is still active. Try again."
   },
   "navigation": {
     "dashboard": "Controlepaneel"
@@ -1153,7 +1154,7 @@
       "accountHint": "Zo zien mensen met wie je deelt je.",
       "usernameHint": "Wordt gebruikt om aan te melden, naast je e-mailadres.",
       "password": "Wachtwoord",
-      "passwordHint": "Minimaal 8 tekens. Andere sessies blijven aangemeld.",
+      "passwordHint": "Minimaal 8 tekens. Andere sessies worden afgemeld.",
       "passwordTooShort": "Gebruik minimaal {count} tekens.",
       "passwordMismatch": "Wachtwoorden komen niet overeen.",
       "changePassword": "Wachtwoord wijzigen",
@@ -1217,6 +1218,14 @@
       "removeFailed": "API sleutel verwijderen mislukt",
       "monitoring": "De sleutel van een beheerder opent ook de cijfers voor monitoring op /api/v1/metrics.",
       "monitoringLink": "Zo stel je het in"
+    },
+    "verification": {
+      "password": "Current password",
+      "hint": "Changing your password or email requires your current password, or a new verification below. Provider verification returns here; enter your change after returning. Verification expires after five minutes and works once.",
+      "ready": "Verified. Save your password or email change within five minutes.",
+      "failed": "Verification failed. Try again.",
+      "passkey": "Verify with a passkey",
+      "provider": "Verify with {name}"
     }
   },
   "public": {
@@ -1465,20 +1474,10 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Drie beveiligingsreparaties: een upload registreren vraagt nu een objectnaam die van jou is, alleen je eigen bestanden en mappen kunnen aan een deling worden toegevoegd, en de server meet zelf hoe groot een upload is. Alle drie de gaten zaten ook in eerdere versies, dus werk snel bij.",
-      "trash": "Een bestand of map verwijderen zet het op de nieuwe pagina Prullenbak, waar het 30 dagen blijft staan (aan te passen in Instellingen). Zet het terug of verwijder het definitief. Instellingen kan ook verlopen delingen en lege ontvangstlinks zelf opruimen; bestanden worden zo nooit verwijderd.",
-      "twoFactor": "Instellingen kan beheerders of iedereen vragen inloggen in twee stappen in te stellen, en een beheerder kan het resetten voor iemand die de telefoon kwijt is. Je kunt ook inloggen met een passkey (vingerafdruk, gezicht of beveiligingssleutel) zonder wachtwoord.",
-      "groups": "Beheerders kunnen groepen maken op de pagina Gebruikers. Een deling kan beperkt worden tot de leden van een groep en staat dan onder Met mij gedeeld op de pagina Delingen.",
-      "notifications": "Een bel in het menu laat zien wat er nieuw is: een download, bestanden op een ontvangstlink, een geopend geheim, een link die bijna afloopt of opslag die bijna vol is.",
-      "virusScan": "Een optionele virusscan met ClamAV, uit tenzij je CLAMAV_HOST instelt. Een bestand dat wordt gecontroleerd of besmet is, kan niet worden gedownload.",
-      "monitoring": "Cijfers voor monitoring in het Prometheus formaat op /api/v1/metrics, voor de API sleutel van een beheerder.",
-      "settingsNotes": "Instellingen laat zien wat de versie die je draait bracht, in jouw taal, en beheerders krijgen een melding in het menu als er een update klaarstaat.",
-      "storage": "De opslagmeter in het menu is een ring. Beheerders kunnen een gebruiker een eigen opslaglimiet geven, en Instellingen heeft een standaard en een maximale looptijd voor delingen en ontvangstlinks.",
-      "emails": "E-mails dragen het logo van de installatie en hebben één rustige opmaak, met ook een versie in platte tekst.",
-      "activity": "Beheerders kunnen het activiteitenlogboek wissen, en een ontvangstlink maken of verwijderen staat nu in het logboek. De aantallen bij de filters volgen de zoekopdracht.",
-      "customization": "De voorvertoning onder Aanpassing toont de echte pagina's Downloaden, Inloggen en Ontvangen in het thema dat je kiest. Een daar gekozen lettertype wordt weer toegepast.",
-      "externalSignIn": "Extern inloggen begint met Authentik, GitHub en Google, en elke andere dienst voeg je nog steeds toe met Provider toevoegen. Het formulier van een provider opent veel sneller.",
-      "repairs": "Kleine reparaties: downloadpagina's spelen geen video en audio meer af, veel items tegelijk verwijderen stopt niet meer halverwege, de selectiebalk bij Delingen werkt alleen op de delingen die je ziet, en e-mailschakelaars die de beheerder heeft uitgezet staan uit."
+      "security": "Uitloggen, wachtwoordherstel en deactiveren trekken oude toegang in. Uitnodigingen en herstelcodes worden één keer gebruikt. Wachtwoord of e-mailadres wijzigen vraagt nieuwe verificatie.",
+      "storage": "Uploads worden vastgelegd met vaste bestandsinhoud. Ontvangen bestanden en lopende uploads tellen mee voor de limiet van de eigenaar, ook bij gelijktijdige acties. Mislukte verwijderingen blijven herstelbaar.",
+      "externalSignIn": "Extern inloggen controleert de oorspronkelijke browser en provider. Alleen hetzelfde e-mailadres koppelt accounts niet meer. OIDC vereist een vindbare issuer en de ingestelde veilige callback.",
+      "repairs": "De capaciteitsmeter gebruikt de echte opslag. Updateback-ups maken een consistente databasekopie. Beveiligingspatches zijn meegenomen; passkeys worden alleen aangeboden in een veilige browsercontext."
     }
   },
   "resetPassword": {

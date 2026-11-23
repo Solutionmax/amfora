@@ -7,6 +7,7 @@ import { apiKeyRoutes } from "./modules/api-key/routes";
 import { appRoutes } from "./modules/app/routes";
 import { authProvidersRoutes } from "./modules/auth-providers/routes";
 import { authRoutes } from "./modules/auth/routes";
+import { registerSessionGuard } from "./modules/auth/session";
 import { fileRoutes } from "./modules/file/routes";
 import { folderRoutes } from "./modules/folder/routes";
 import { groupRoutes } from "./modules/group/routes";
@@ -27,6 +28,7 @@ import { userRoutes } from "./modules/user/routes";
 /** Every HTTP route the server exposes, in one place so a test can see the whole surface. */
 export function registerRoutes(app: FastifyInstance) {
   // Before the routes: a hook only reaches the route plugins registered after it.
+  registerSessionGuard(app);
   registerApiKeyAuth(app);
   registerSecondStepGate(app);
 

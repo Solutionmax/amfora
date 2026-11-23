@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -13,9 +14,11 @@ const database = useTestDatabase();
 let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
 
-const as = (userId: string) => ({ cookies: { token: app.jwt.sign({ userId, isAdmin: userId.startsWith("admin") }) } });
-const reset = (actor: string, target: string) =>
-  app.inject({ method: "POST", url: `/users/${target}/two-factor/reset`, ...as(actor), payload: {} });
+const as = async (userId: string) => ({
+  cookies: { token: await testSession(app, { userId, isAdmin: userId.startsWith("admin") }) },
+});
+const reset = async (actor: string, target: string) =>
+  app.inject({ method: "POST", url: `/users/${target}/two-factor/reset`, ...(await as(actor)), payload: {} });
 
 before(async () => {
   ({ prisma } = await import("../../shared/prisma"));
@@ -112,7 +115,7 @@ test("an unknown user is a 404, one without two step sign in a 400, and neither 
 });
 
 test("the user list says who has two step sign in on", async () => {
-  const res = await app.inject({ method: "GET", url: "/users", ...as("admin1") });
+  const res = await app.inject({ method: "GET", url: "/users", ...(await as("admin1")) });
   const byId = new Map(res.json().map((u: { id: string; twoFactorEnabled: boolean }) => [u.id, u.twoFactorEnabled]));
   assert.equal(byId.get("member2"), true);
   assert.equal(byId.get("plain"), false);

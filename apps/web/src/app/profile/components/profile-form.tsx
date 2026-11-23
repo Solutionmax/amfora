@@ -4,11 +4,12 @@ import { Field, FormSection } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { SaveBar } from "@/components/ui/save-bar";
 import { ProfileFormProps } from "../types";
+import { CredentialVerification } from "./credential-verification";
 
 const FORM_ID = "profile-account";
 
 /** Account: names, username and email. Saved through the floating bar, which shows only while edited. */
-export function ProfileForm({ form, onSubmit }: ProfileFormProps) {
+export function ProfileForm({ form, onSubmit, providers }: ProfileFormProps) {
   const t = useTranslations();
   const {
     register,
@@ -60,6 +61,7 @@ export function ProfileForm({ form, onSubmit }: ProfileFormProps) {
             {...register("email")}
           />
         </Field>
+        <CredentialVerification register={register} providers={providers} />
       </form>
       <SaveBar visible={isDirty} saving={isSubmitting} onDiscard={() => reset()} form={FORM_ID} />
     </FormSection>

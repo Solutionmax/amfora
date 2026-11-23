@@ -143,13 +143,14 @@ export class TwoFactorService {
       if (backupCodeIndex !== -1) {
         backupCodes[backupCodeIndex].used = true;
 
-        await prisma.user.update({
-          where: { id: userId },
+        const consumed = await prisma.user.updateMany({
+          where: { id: userId, twoFactorBackupCodes: user.twoFactorBackupCodes, twoFactorEnabled: true },
           data: {
             twoFactorBackupCodes: JSON.stringify(backupCodes),
           },
         });
 
+        if (consumed.count !== 1) throw new Error("Invalid verification code");
         return { success: true, method: "backup" };
       }
     }

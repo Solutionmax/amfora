@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -52,7 +53,7 @@ test("deleting many shares at the same moment removes every one of them", async 
     ids.push(share.id);
   }
 
-  const cookies = { token: app.jwt.sign({ userId: "alice", isAdmin: false }) };
+  const cookies = { token: await testSession(app, { userId: "alice", isAdmin: false }) };
   const replies = await Promise.all(ids.map((id) => app.inject({ method: "DELETE", url: `/shares/${id}`, cookies })));
 
   assert.deepEqual(

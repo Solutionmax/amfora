@@ -7,6 +7,7 @@ import fastifyRateLimit from "@fastify/rate-limit";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -45,16 +46,16 @@ after(async () => {
   database.cleanup();
 });
 
-const session = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: userId === "root" }) });
+const session = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: userId === "root" }) });
 const setDefault = (bytes: number) =>
   prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: String(bytes) } });
 const setLimit = (id: string, bytes: number | null) =>
   prisma.user.update({ where: { id }, data: { storageLimitBytes: bytes === null ? null : BigInt(bytes) } });
-const check = (userId: string, size: number) =>
+const check = async (userId: string, size: number) =>
   app.inject({
     method: "POST",
     url: "/files/check",
-    cookies: session(userId),
+    cookies: await session(userId),
     payload: { name: "big", extension: "bin", size, objectName: "o" },
   });
 
@@ -91,25 +92,26 @@ test("a file taken from a receive link counts against the owner's own limit", as
     () => new ReverseShareService().copyReverseShareFileToUserFiles(file.id, "alice"),
     /Insufficient storage/
   );
+  await prisma.reverseShare.delete({ where: { id: link.id } });
   await setLimit("alice", null);
 });
 
 test("the storage figures of a member use the own limit", async () => {
   await setLimit("alice", 5 * MB);
-  const usage = await app.inject({ method: "GET", url: "/storage/usage", cookies: session("alice") });
+  const usage = await app.inject({ method: "GET", url: "/storage/usage", cookies: await session("alice") });
   assert.equal(usage.json().limitBytes, 5 * MB);
   const { StorageService } = await import("./service");
   const space = await new StorageService().getDiskSpace("alice", false);
   assert.equal(space.diskSizeGB, 0);
   assert.equal(space.uploadAllowed, true);
-  const bob = await app.inject({ method: "GET", url: "/storage/usage", cookies: session("bob") });
+  const bob = await app.inject({ method: "GET", url: "/storage/usage", cookies: await session("bob") });
   assert.equal(bob.json().limitBytes, 100 * MB);
   await setLimit("alice", null);
 });
 
 test("an administrator sets the limit of a user, a member cannot, not even the own", async () => {
-  const set = (userId: string, id: string, storageLimitBytes: number | null) =>
-    app.inject({ method: "PUT", url: "/users", cookies: session(userId), payload: { id, storageLimitBytes } });
+  const set = async (userId: string, id: string, storageLimitBytes: number | null) =>
+    app.inject({ method: "PUT", url: "/users", cookies: await session(userId), payload: { id, storageLimitBytes } });
 
   const own = await set("alice", "alice", 999 * MB);
   assert.equal(own.statusCode, 403);
@@ -130,7 +132,7 @@ test("an administrator sets the limit of a user, a member cannot, not even the o
   const profile = await app.inject({
     method: "PUT",
     url: "/users",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: { id: "alice", firstName: "Alice" },
   });
   assert.equal(profile.statusCode, 200, "a member can still change the own profile");
@@ -145,14 +147,20 @@ test("the message never shows a negative amount when the limit is below the usag
   const payload = { name: "more", extension: "bin", size: MB, objectName: "alice/o2" };
   const { FileService } = await import("../file/service");
   const sizeOf = FileService.prototype.getObjectSize;
+  const copyOf = FileService.prototype.copyObject;
+  const deleteOf = FileService.prototype.deleteObject;
+  FileService.prototype.copyObject = async () => undefined;
+  FileService.prototype.deleteObject = async () => undefined;
   FileService.prototype.getObjectSize = async () => MB;
 
-  const checked = await app.inject({ method: "POST", url: "/files/check", cookies: session("alice"), payload });
+  const checked = await app.inject({ method: "POST", url: "/files/check", cookies: await session("alice"), payload });
   assert.equal(checked.statusCode, 400);
   assert.match(checked.json().error, /You have 0\.00MB available/);
 
-  const registered = await app.inject({ method: "POST", url: "/files", cookies: session("alice"), payload });
+  const registered = await app.inject({ method: "POST", url: "/files", cookies: await session("alice"), payload });
   FileService.prototype.getObjectSize = sizeOf;
+  FileService.prototype.copyObject = copyOf;
+  FileService.prototype.deleteObject = deleteOf;
   assert.equal(registered.statusCode, 400);
   assert.match(registered.json().error, /You have 0\.00MB available/);
 

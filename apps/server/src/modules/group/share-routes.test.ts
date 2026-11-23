@@ -7,6 +7,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { FileService } from "../file/service";
 
@@ -144,7 +145,7 @@ after(async () => {
   database.cleanup();
 });
 
-const as = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: false }) });
+const as = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: false }) });
 const fill = (pattern: string, shareId = ids.limited) =>
   pattern
     .replace(":shareId", shareId)
@@ -152,12 +153,12 @@ const fill = (pattern: string, shareId = ids.limited) =>
     .replace(":folderId", ids.folder)
     .replace(":id", ids.file)
     .concat(pattern.includes("/files/download") ? `?objectName=owner/${FILE_NAME}` : "");
-const call = (entry: string, user?: string, shareId = ids.limited) => {
+const call = async (entry: string, user?: string, shareId = ids.limited) => {
   const [method, pattern] = entry.split(" ");
   return app.inject({
     method: method as "GET",
     url: fill(pattern, shareId),
-    cookies: user ? as(user) : undefined,
+    cookies: user ? await as(user) : undefined,
     payload: method === "GET" ? undefined : {},
   });
 };

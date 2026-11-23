@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { loadAccount } from "../../shared/admin-guard";
 import { prisma } from "../../shared/prisma";
+import { ownerUsage } from "../storage/accounting";
 import { storageLimitOf } from "../storage/limit";
 import { NOTIFICATION_ACTIONS, recordActivity } from "./activity";
 
@@ -94,7 +95,7 @@ export async function noteExpiringLinks(now = new Date()): Promise<void> {
 export async function noteStorageUsage(userId: string): Promise<void> {
   try {
     const limit = await storageLimitOf(userId);
-    const used = (await prisma.file.aggregate({ where: { userId }, _sum: { size: true } }))._sum.size ?? 0n;
+    const used = await ownerUsage(userId);
     if (limit <= 0n || used < (limit * FULL_PERCENT) / 100n) {
       await prisma.user.updateMany({
         where: { id: userId, storageAlertAt: { not: null } },

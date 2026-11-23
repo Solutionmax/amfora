@@ -77,6 +77,11 @@ export class InviteService {
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const result = await prisma.$transaction(async (tx) => {
+      const consumed = await tx.inviteToken.updateMany({
+        where: { token: data.token, usedAt: null, expiresAt: { gt: new Date() } },
+        data: { usedAt: new Date() },
+      });
+      if (consumed.count !== 1) throw new Error("Invalid, expired or already used invite link");
       const user = await tx.user.create({
         data: {
           firstName: data.firstName,
@@ -92,11 +97,6 @@ export class InviteService {
           username: true,
           email: true,
         },
-      });
-
-      await tx.inviteToken.update({
-        where: { token: data.token },
-        data: { usedAt: new Date() },
       });
 
       return user;

@@ -19,6 +19,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { formatStorageSize } from "@/app/dashboard/utils/format-storage-size";
 import { BrandMark } from "@/components/brand/brand-mark";
@@ -82,11 +83,11 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const handleLogout = async () => {
     try {
       await logoutAPI();
-    } catch (err) {
-      console.error("Error logging out:", err);
-    } finally {
       logout();
       router.push("/login");
+    } catch (err) {
+      console.error("Error logging out:", err);
+      toast.error(t("navbar.logoutFailed"));
     }
   };
 

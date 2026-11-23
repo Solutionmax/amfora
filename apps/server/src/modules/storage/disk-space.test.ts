@@ -4,6 +4,7 @@ import { after, before, test } from "node:test";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
+process.env.MINIO_DATA_DIR = "/tmp";
 const GB = BigInt(1024 * 1024 * 1024);
 
 let prisma: typeof import("../../shared/prisma").prisma;

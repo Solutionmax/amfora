@@ -30,6 +30,7 @@ export interface StorageParts {
   /** Widths of the bar segments and the figure next to it, 0 to 100. Null when there is no limit. */
   ownPercent: number | null;
   sharedPercent: number | null;
+  receivedPercent: number | null;
   usedPercent: number | null;
 }
 
@@ -40,13 +41,23 @@ export function storageParts(usage: {
   limitBytes: number | null;
   usedBytes: number;
   sharedBytes: number;
+  receivedBytes?: number;
 }): StorageParts {
   const sharedBytes = Math.min(Math.max(usage.sharedBytes, 0), usage.usedBytes);
-  const ownBytes = Math.max(usage.usedBytes - sharedBytes, 0);
+  const receivedBytes = Math.min(Math.max(usage.receivedBytes ?? 0, 0), Math.max(usage.usedBytes - sharedBytes, 0));
+  const ownBytes = Math.max(usage.usedBytes - sharedBytes - receivedBytes, 0);
   const limit = usage.limitBytes && usage.limitBytes > 0 ? usage.limitBytes : null;
 
   if (limit === null) {
-    return { ownBytes, sharedBytes, freeBytes: null, ownPercent: null, sharedPercent: null, usedPercent: null };
+    return {
+      ownBytes,
+      sharedBytes,
+      freeBytes: null,
+      ownPercent: null,
+      sharedPercent: null,
+      receivedPercent: null,
+      usedPercent: null,
+    };
   }
 
   const usedPercent = clampPercent((usage.usedBytes / limit) * 100);
@@ -59,6 +70,7 @@ export function storageParts(usage: {
     freeBytes: Math.max(limit - usage.usedBytes, 0),
     ownPercent: clampPercent((ownBytes / limit) * 100 * scale),
     sharedPercent: clampPercent((sharedBytes / limit) * 100 * scale),
+    receivedPercent: clampPercent((receivedBytes / limit) * 100 * scale),
     usedPercent,
   };
 }

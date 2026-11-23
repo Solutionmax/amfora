@@ -5,6 +5,7 @@ import fastifyJwt from "@fastify/jwt";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 // The real admin routes against a throwaway database: the point is that the database,
@@ -63,8 +64,8 @@ async function resetUsers(
   await prisma.appConfig.update({ where: { key: "firstUserAccess" }, data: { value: firstUserAccess } });
 }
 
-function get(url: string, claims?: object) {
-  return app.inject({ method: "GET", url, cookies: claims ? { token: app.jwt.sign(claims) } : undefined });
+async function get(url: string, claims?: object) {
+  return app.inject({ method: "GET", url, cookies: claims ? { token: await testSession(app, claims) } : undefined });
 }
 
 const adminToken = { userId: "admin", isAdmin: true };
@@ -87,7 +88,7 @@ test("app, update, invite and user admin routes: 401 without a session, 403 for 
   const invite = await app.inject({
     method: "POST",
     url: "/invite-tokens",
-    cookies: { token: app.jwt.sign(adminToken) },
+    cookies: { token: await testSession(app, adminToken) },
   });
   assert.equal(invite.statusCode, 200);
 });
@@ -97,7 +98,7 @@ test("an admin demoted or deactivated in the database is refused with the old to
     { id: "admin", isAdmin: true },
     { id: "member", isAdmin: false },
   ]);
-  const token = app.jwt.sign(adminToken);
+  const token = await testSession(app, adminToken);
   assert.equal((await app.inject({ method: "GET", url: "/app/configs", cookies: { token } })).statusCode, 200);
 
   await prisma.user.update({ where: { id: "admin" }, data: { isAdmin: false } });

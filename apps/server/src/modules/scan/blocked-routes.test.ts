@@ -8,6 +8,7 @@ import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 import { startFakeClamd, type FakeClamd } from "../../../test-support/fake-clamd";
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { FileService } from "../file/service";
 import { FILE_BLOCKED_CODE } from "./status";
@@ -29,12 +30,14 @@ let blockedFolderId = "";
 const originalPresign = FileService.prototype.getPresignedGetUrl;
 const originalStream = FileService.prototype.getObjectStream;
 const originalPut = FileService.prototype.getPresignedPutUrl;
+const originalCopy = FileService.prototype.copyObject;
+const originalDelete = FileService.prototype.deleteObject;
 const originalSize = FileService.prototype.getObjectSize;
 const originalEtag = FileService.prototype.getObjectEtag;
-const as = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: false }) });
+const as = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: false }) });
 const registered = new Set<string>();
-const get = (url: string, userId?: string) =>
-  app.inject({ method: "GET", url, cookies: userId ? as(userId) : undefined });
+const get = async (url: string, userId?: string) =>
+  app.inject({ method: "GET", url, cookies: userId ? await as(userId) : undefined });
 
 async function addFile(key: string, scanStatus: string | null, folderId?: string) {
   const file = await prisma.file.create({
@@ -54,6 +57,8 @@ async function addFile(key: string, scanStatus: string | null, folderId?: string
 }
 
 before(async () => {
+  FileService.prototype.copyObject = async () => undefined;
+  FileService.prototype.deleteObject = async () => undefined;
   FileService.prototype.getPresignedGetUrl = async (objectName: string) => `https://storage.test/${objectName}`;
   FileService.prototype.getObjectStream = async () => Readable.from([Buffer.from("bytes")]);
   FileService.prototype.getPresignedPutUrl = async (objectName: string) => `https://storage.test/put/${objectName}`;
@@ -150,6 +155,8 @@ after(async () => {
   FileService.prototype.getObjectStream = originalStream;
   FileService.prototype.getPresignedPutUrl = originalPut;
   FileService.prototype.getObjectSize = originalSize;
+  FileService.prototype.copyObject = originalCopy;
+  FileService.prototype.deleteObject = originalDelete;
   FileService.prototype.getObjectEtag = originalEtag;
   delete env.CLAMAV_HOST;
   await app?.close();
@@ -180,7 +187,7 @@ const HANDS_OUT_CONTENT: Record<string, () => Promise<void>> = {
       await app.inject({
         method: "POST",
         url: `/reverse-shares/files/${received.rInfected}/copy`,
-        cookies: as("owner"),
+        cookies: await as("owner"),
       }),
       "received copy"
     ),
@@ -371,7 +378,7 @@ test("received files: download and copy are refused while pending or infected, f
     const copy = await app.inject({
       method: "POST",
       url: `/reverse-shares/files/${received[key]}/copy`,
-      cookies: as("owner"),
+      cookies: await as("owner"),
     });
     assertBlocked(copy, `${key} copy`);
   }
@@ -394,17 +401,17 @@ test("a blocked file cannot be put in a share, and the owner can still delete it
   const create = await app.inject({
     method: "POST",
     url: "/shares",
-    cookies: as("owner"),
+    cookies: await as("owner"),
     payload: { name: "No", files: [ids.infected] },
   });
   assert.equal(create.statusCode, 400);
   assert.match(create.body, /cannot be shared/);
-  const removed = await app.inject({ method: "DELETE", url: `/files/${ids.infected}`, cookies: as("owner") });
+  const removed = await app.inject({ method: "DELETE", url: `/files/${ids.infected}`, cookies: await as("owner") });
   assert.equal(removed.statusCode, 200);
   const restored = await app.inject({
     method: "POST",
     url: `/trash/file/${ids.infected}/restore`,
-    cookies: as("owner"),
+    cookies: await as("owner"),
   });
   assert.equal(restored.statusCode, 200);
   assert.equal((await prisma.file.findUniqueOrThrow({ where: { id: ids.infected } })).scanStatus, "infected");
@@ -417,7 +424,7 @@ test("a copy of a clean received file keeps its status", async () => {
     const copy = await app.inject({
       method: "POST",
       url: `/reverse-shares/files/${received.rClean}/copy`,
-      cookies: as("owner"),
+      cookies: await as("owner"),
     });
     assert.equal(copy.statusCode, 200, copy.body);
     const row = await prisma.file.findFirstOrThrow({ where: { name: "rClean" } });
@@ -442,11 +449,11 @@ test("with scanning off nothing is blocked, nothing shows, a file left pending d
 });
 
 test("a file registered with scanning off has no status, with scanning on it is pending and then scanned", async () => {
-  const register = (name: string) =>
+  const register = async (name: string) =>
     app.inject({
       method: "POST",
       url: "/files",
-      cookies: as("owner"),
+      cookies: await as("owner"),
       payload: { name, extension: "txt", size: 5, objectName: `owner/${name}-${Date.now()}` },
     });
 

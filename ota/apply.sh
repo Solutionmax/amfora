@@ -88,7 +88,12 @@ stamp=$(date +%Y%m%d-%H%M%S)
 previous=$(docker compose -f "$COMPOSE_DIR/docker-compose.yaml" images -q "$SERVICE" 2>/dev/null || true)
 backup="$BACKUP_DIR/amfora-$stamp-before-$version.tgz"
 
-tar czf "$backup" -C "$DATA_DIR" prisma 2>/dev/null || fail "could not back up $DATA_DIR/prisma"
+# Metadata rollback only: minio-data/external S3 and branding need a separate full backup.
+# This helper runs on the host, including when the currently running image predates it.
+python3 "$(dirname "$0")/snapshot-prisma.py" "$DATA_DIR/prisma" "$work/prisma" \
+  || fail "could not create a consistent SQLite metadata snapshot"
+tar czf "$work/metadata.tgz" -C "$work" prisma || fail "could not archive the metadata snapshot"
+mv "$work/metadata.tgz" "$backup" || fail "could not save the metadata snapshot"
 printf 'previous_image_id=%s\nnew_image=%s@%s\nversion=%s\n' "$previous" "$image" "$digest" "$version" \
   > "$BACKUP_DIR/amfora-$stamp-before-$version.txt"
 echo "backed up to $backup ($(du -h "$backup" | cut -f1))"

@@ -1,8 +1,11 @@
+import { randomUUID } from "node:crypto";
+
 import { prisma } from "../../shared/prisma";
 import { chunked, liveFolderOf, notDeleted } from "../../shared/trash";
 import { generateUniqueFileName, generateUniqueFolderName, parseFileName } from "../../utils/file-name-generator";
 import { noteStorageUsage } from "../activity/notifications";
 import { FileService } from "../file/service";
+import { queueDeletion } from "../storage/cleanup";
 import { MS_PER_DAY, trashRetentionDays } from "./settings";
 
 export type TrashKind = "file" | "folder";
@@ -152,13 +155,16 @@ async function placeToRestore(userId: string, parentId: string | null): Promise<
 }
 
 async function restoreFile(userId: string, id: string): Promise<boolean> {
-  const file = await prisma.file.findFirst({ where: { id, userId, deletedAt: { not: null } } });
+  const file = await prisma.file.findFirst({ where: { id, userId, deletedAt: { not: null }, purgeToken: null } });
   if (!file) return false;
   const folderId = await placeToRestore(userId, file.folderId);
   const { baseName, extension } = parseFileName(file.name);
   const name = await generateUniqueFileName(baseName, extension, userId, folderId);
-  await prisma.file.update({ where: { id }, data: { deletedAt: null, folderId, name } });
-  return true;
+  const restored = await prisma.file.updateMany({
+    where: { id, userId, deletedAt: file.deletedAt, purgeToken: null },
+    data: { deletedAt: null, folderId, name },
+  });
+  return restored.count === 1;
 }
 
 async function restoreFolder(userId: string, id: string): Promise<boolean> {
@@ -177,7 +183,7 @@ async function restoreFolder(userId: string, id: string): Promise<boolean> {
   await prisma.$transaction([
     ...chunked(together).flatMap((ids) => [
       prisma.file.updateMany({
-        where: { userId, folderId: { in: ids }, deletedAt: folder.deletedAt },
+        where: { userId, folderId: { in: ids }, deletedAt: folder.deletedAt, purgeToken: null },
         data: { deletedAt: null },
       }),
       prisma.folder.updateMany({ where: { userId, id: { in: ids } }, data: { deletedAt: null } }),
@@ -196,53 +202,47 @@ type PurgeFile = { id: string; userId: string };
 
 /** Whether another row, a file or a folder, still points to the object. */
 async function isObjectInUse(objectName: string, exceptFileId: string | null, exceptFolderIds: string[]) {
-  const [files, folders] = await Promise.all([
+  const [files, folders, received] = await Promise.all([
     prisma.file.count({ where: { objectName, ...(exceptFileId ? { id: { not: exceptFileId } } : {}) } }),
     prisma.folder.count({ where: { objectName, id: { notIn: exceptFolderIds } } }),
+    prisma.reverseShareFile.count({ where: { objectName } }),
   ]);
-  return files + folders > 0;
+  return files + folders + received > 0;
 }
 
-/** Puts a claimed row back as it was, shares included; at the top level when its folder is gone. */
-async function restoreClaimedRow(row: FileWithShares, storageError: unknown): Promise<never> {
-  const { shares, ...data } = row;
-  const connect = shares.map((share) => ({ id: share.id }));
-  try {
-    await prisma.file.create({ data: { ...data, shares: { connect } } });
-  } catch {
-    try {
-      await prisma.file.create({ data: { ...data, folderId: null, shares: { connect } } });
-    } catch (error) {
-      console.error(`Could not put back ${row.id} (${row.objectName}) after storage refused:`, error, row);
-    }
-  }
-  throw storageError;
-}
-
-type FileWithShares = NonNullable<Awaited<ReturnType<typeof findTrashedRow>>>;
-
-const findTrashedRow = (file: PurgeFile) =>
-  prisma.file.findFirst({
-    where: { id: file.id, userId: file.userId, deletedAt: { not: null } },
-    include: { shares: { select: { id: true } } },
-  });
-
-/**
- * Removes one file that is in the trash. The row goes first, with one conditional delete: only
- * when it removed the row is the file still in the trash, so a restore that came in between can
- * never lose its object. When storage refuses, the row is put back as it was (still in the
- * trash, in its shares), so what is left can be tried again. A crash between the two leaves an
- * unused object and no lost file. An object that another row still uses stays.
- */
+/** Claim without deleting metadata: optional shares can disappear without affecting recovery. */
 async function purgeFileRow(file: PurgeFile): Promise<boolean> {
-  const row = await findTrashedRow(file);
+  const row = await prisma.file.findFirst({ where: { id: file.id, userId: file.userId, deletedAt: { not: null } } });
   if (!row) return false;
-  const claimed = await prisma.file.deleteMany({ where: { id: row.id, userId: row.userId, deletedAt: { not: null } } });
-  if (claimed.count === 0) return false;
+  const token = `${new Date(Date.now() + 3600000).toISOString()}/${randomUUID()}`;
+  const claimed = await prisma.file.updateMany({
+    where: {
+      id: row.id,
+      deletedAt: { not: null },
+      OR: [{ purgeToken: null }, { purgeToken: { lt: new Date().toISOString() } }],
+    },
+    data: { purgeToken: token, folderId: null },
+  });
+  if (!claimed.count) return false;
   try {
-    if (!(await isObjectInUse(row.objectName, null, []))) await removeObject(row.objectName);
+    const shared = await isObjectInUse(row.objectName, row.id, []);
+    if (!shared) await removeObject(row.objectName);
+    await prisma.$transaction(async (tx) => {
+      const retired = await tx.file.deleteMany({ where: { id: row.id, purgeToken: token } });
+      // Different rows can both observe another reference. Keep the key atomically with
+      // each retirement so the last disappearing reference cannot forget its bytes.
+      if (shared && retired.count) await queueDeletion(tx, row.objectName);
+    });
   } catch (error) {
-    return restoreClaimedRow(row, error);
+    await prisma.file.updateMany({
+      where: { id: row.id, purgeToken: token },
+      data: {
+        purgeToken: null,
+        folderId:
+          row.folderId && (await prisma.folder.findUnique({ where: { id: row.folderId } })) ? row.folderId : null,
+      },
+    });
+    throw error;
   }
   return true;
 }

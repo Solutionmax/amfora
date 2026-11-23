@@ -30,6 +30,7 @@ export async function fileRoutes(app: FastifyInstance) {
         querystring: z.object({
           filename: z.string().min(1, "The filename is required").describe("The filename of the file"),
           extension: z.string().min(1, "The extension is required").describe("The extension of the file"),
+          size: z.coerce.number().int().nonnegative().optional(),
         }),
         response: {
           200: z.object({
@@ -335,6 +336,7 @@ export async function fileRoutes(app: FastifyInstance) {
         body: z.object({
           filename: z.string().min(1).describe("The filename without extension"),
           extension: z.string().min(1).describe("The file extension"),
+          size: z.number().int().nonnegative().optional(),
         }),
         response: {
           200: z.object({

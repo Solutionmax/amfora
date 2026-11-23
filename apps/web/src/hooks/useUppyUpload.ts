@@ -220,6 +220,7 @@ export function useUppyUpload(options: UseUppyUploadOptions) {
               await createMultipartUpload({
                 filename,
                 extension,
+                size: file.size || 0,
               })
             ).data;
           }

@@ -1,7 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { actorOf, recordRequestActivity } from "../activity/activity";
+import { issueSession, SessionClaims } from "../auth/session";
 import { TwoFactorResetError, TwoFactorService } from "../two-factor/service";
 import { AvatarService } from "./avatar.service";
 import { createRegisterUserSchema, UpdateUserSchema } from "./dto";
@@ -45,7 +47,24 @@ export class UserController {
     try {
       const input = UpdateUserSchema.parse(request.body);
       const { id, ...updateData } = input;
-      const updatedUser = await this.userService.updateUser(id, updateData);
+      const claims = request.user as SessionClaims;
+      const before = await prisma.user.findUniqueOrThrow({ where: { id } });
+      const sensitive = !!updateData.password || (updateData.email !== undefined && updateData.email !== before.email);
+      const updatedUser = await this.userService.updateUser(
+        id,
+        updateData,
+        claims,
+        request.cookies["credential-proof"]
+      );
+      if (sensitive && claims.userId === id) {
+        reply.clearCookie("credential-proof", { path: "/" });
+        reply.setCookie("token", await issueSession(request, id, updatedUser.sessionVersion, claims.viaProvider), {
+          httpOnly: true,
+          path: "/",
+          sameSite: env.SECURE_SITE === "true" ? "lax" : "strict",
+          secure: env.SECURE_SITE === "true",
+        });
+      }
       return reply.send(updatedUser);
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });
@@ -108,7 +127,24 @@ export class UserController {
     try {
       const input = UpdateUserSchema.parse(request.body);
       const { id, ...updateData } = input;
-      const updatedUser = await this.userService.updateUser(id, updateData);
+      const claims = request.user as SessionClaims;
+      const before = await prisma.user.findUniqueOrThrow({ where: { id } });
+      const sensitive = !!updateData.password || (updateData.email !== undefined && updateData.email !== before.email);
+      const updatedUser = await this.userService.updateUser(
+        id,
+        updateData,
+        claims,
+        request.cookies["credential-proof"]
+      );
+      if (sensitive && claims.userId === id) {
+        reply.clearCookie("credential-proof", { path: "/" });
+        reply.setCookie("token", await issueSession(request, id, updatedUser.sessionVersion, claims.viaProvider), {
+          httpOnly: true,
+          path: "/",
+          sameSite: env.SECURE_SITE === "true" ? "lax" : "strict",
+          secure: env.SECURE_SITE === "true",
+        });
+      }
       return reply.send(updatedUser);
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });

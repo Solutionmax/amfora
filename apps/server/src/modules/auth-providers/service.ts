@@ -1,6 +1,7 @@
 import crypto from "crypto";
 
 import { prisma } from "../../shared/prisma";
+import { createCredentialProof, newSecret, secretHash, SessionClaims } from "../auth/session";
 import {
   detectProviderType,
   DISCOVERY_PATHS,
@@ -9,18 +10,13 @@ import {
   providersConfig,
   shouldSupportDiscovery,
 } from "./providers.config";
-import {
-  PendingState,
-  ProviderConfig,
-  ProviderEndpoints,
-  ProviderUserInfo,
-  RequestContextService,
-  TokenResponse,
-} from "./types";
+import { ProviderConfig, ProviderEndpoints, ProviderUserInfo, RequestContextService, TokenResponse } from "./types";
 
-const DEFAULT_BASE_URL = "http://localhost:3000";
+export function authBaseUrl(): string {
+  if (!process.env.APP_URL) throw new Error("APP_URL must be configured for external authentication");
+  return new URL(process.env.APP_URL).origin;
+}
 const STATE_EXPIRY_TIME = 600000; // 10 minutes
-const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 const DEFAULT_PROVIDER_TYPE = "oidc";
 
 export function redactAuthProvider(provider: Record<string, any>) {
@@ -44,15 +40,8 @@ const ERROR_MESSAGES = {
 } as const;
 
 export class AuthProvidersService {
-  private pendingStates = new Map<string, PendingState>();
-
-  constructor() {
-    // unref: a cleanup timer must never be what keeps the process (or a test run) alive.
-    setInterval(() => this.cleanupExpiredStates(), CLEANUP_INTERVAL).unref();
-  }
-
-  private buildBaseUrl(requestContext?: RequestContextService): string {
-    return requestContext ? `${requestContext.protocol}://${requestContext.host}` : DEFAULT_BASE_URL;
+  private buildBaseUrl(_requestContext?: RequestContextService): string {
+    return authBaseUrl();
   }
 
   private generateState(): string {
@@ -65,15 +54,6 @@ export class AuthProvidersService {
 
   private generateCodeChallenge(codeVerifier: string): string {
     return crypto.createHash("sha256").update(codeVerifier).digest("base64url");
-  }
-
-  private createPendingState(providerId: string, codeVerifier: string, redirectUrl: string): PendingState {
-    return {
-      codeVerifier,
-      redirectUrl,
-      expiresAt: Date.now() + STATE_EXPIRY_TIME,
-      providerId,
-    };
   }
 
   private validateProvider(provider: any, providerName: string): void {
@@ -101,7 +81,7 @@ export class AuthProvidersService {
   private getProviderConfig(provider: any): ProviderConfig {
     const officialConfig = providersConfig.officialProviders[provider.name];
     if (officialConfig) {
-      return officialConfig;
+      return { ...officialConfig, name: provider.name };
     }
 
     const detectedType = detectProviderType(provider.issuerUrl || "");
@@ -199,6 +179,8 @@ export class AuthProvidersService {
 
     userInfo.id = this.extractField(rawUserInfo, mappings.id) || "";
     userInfo.email = this.extractField(rawUserInfo, mappings.email) || "";
+    userInfo.emailVerified =
+      rawUserInfo.email_verified === true || (config.name === "discord" && rawUserInfo.verified === true);
     userInfo.name = this.extractField(rawUserInfo, mappings.name);
     userInfo.firstName = this.extractField(rawUserInfo, mappings.firstName);
     userInfo.lastName = this.extractField(rawUserInfo, mappings.lastName);
@@ -227,18 +209,6 @@ export class AuthProvidersService {
     return config.specialHandling?.emailEndpoint || null;
   }
 
-  private setupPkceIfNeeded(provider: any): { codeVerifier?: string; codeChallenge?: string } {
-    const needsPkce = provider.type === DEFAULT_PROVIDER_TYPE;
-
-    if (needsPkce) {
-      const codeVerifier = this.generateCodeVerifier();
-      const codeChallenge = this.generateCodeChallenge(codeVerifier);
-      return { codeVerifier, codeChallenge };
-    }
-
-    return {};
-  }
-
   private async buildAuthorizationUrl(
     provider: any,
     endpoints: any,
@@ -263,41 +233,6 @@ export class AuthProvidersService {
     }
 
     return authUrl.toString();
-  }
-
-  private validateAndGetPendingState(state: string): PendingState {
-    const pendingState = this.pendingStates.get(state);
-
-    if (!pendingState) {
-      throw new Error(ERROR_MESSAGES.INVALID_STATE);
-    }
-
-    return pendingState;
-  }
-
-  private async executeAuthenticationFlow(
-    provider: any,
-    config: ProviderConfig,
-    code: string,
-    pendingState: PendingState,
-    requestContext?: RequestContextService
-  ) {
-    const authResult = await this.performTokenExchange(
-      provider,
-      config,
-      code,
-      pendingState.codeVerifier,
-      requestContext
-    );
-
-    const userInfo = await this.processUserInfo(authResult.userInfo, authResult.tokens, config);
-    const user = await this.findOrCreateUser(userInfo, provider);
-
-    return {
-      user,
-      isNewUser: false,
-      redirectUrl: pendingState.redirectUrl,
-    };
   }
 
   async getEnabledProviders(requestContext?: RequestContextService) {
@@ -402,88 +337,170 @@ export class AuthProvidersService {
     providerName: string,
     state?: string,
     redirectUri?: string,
-    requestContext?: RequestContextService
+    _requestContext?: RequestContextService,
+    browserBinding?: string,
+    reauthentication?: SessionClaims
+  ) {
+    if (state || redirectUri) throw new Error("Caller-supplied state or redirect URI is not allowed");
+    if (!browserBinding) throw new Error("Browser binding required");
+    const provider = await this.getProviderByName(providerName);
+    this.validateProvider(provider, providerName);
+    const config = this.getProviderConfig(provider);
+    const baseUrl = authBaseUrl();
+    const callbackUrl = `${baseUrl}/api/auth/providers/${providerName}/callback`;
+    if (provider!.redirectUri && provider!.redirectUri !== callbackUrl)
+      throw new Error("Provider redirect URI must match APP_URL callback");
+    if (
+      reauthentication &&
+      !(await prisma.userAuthProvider.findFirst({
+        where: { userId: reauthentication.userId, providerId: provider!.id },
+      }))
+    )
+      throw new Error("Provider is not linked to this account");
+    const finalState = this.generateState();
+    const codeVerifier = this.generateCodeVerifier();
+    const nonce = newSecret();
+    await prisma.oAuthTransaction.deleteMany({ where: { expiresAt: { lte: new Date() } } });
+    await prisma.oAuthTransaction.create({
+      data: {
+        id: secretHash(finalState),
+        bindingHash: secretHash(browserBinding),
+        providerId: provider!.id,
+        codeVerifier,
+        callbackUrl,
+        nonce,
+        expiresAt: new Date(Date.now() + STATE_EXPIRY_TIME),
+        sessionId: reauthentication?.sid,
+        userId: reauthentication?.userId,
+        sessionVersion: reauthentication?.version,
+      },
+    });
+    const endpoints = await this.resolveEndpoints(provider, config);
+    const url = new URL(
+      await this.buildAuthorizationUrl(
+        provider,
+        endpoints,
+        callbackUrl,
+        finalState,
+        this.generateCodeChallenge(codeVerifier),
+        providerName
+      )
+    );
+    if (provider!.type === "oidc" || getProviderScopes(provider).includes("openid"))
+      url.searchParams.set("nonce", nonce);
+    if (reauthentication) {
+      url.searchParams.set("prompt", "login");
+      url.searchParams.set("max_age", "0");
+    }
+    return url.toString();
+  }
+
+  async handleCallback(
+    providerName: string,
+    code: string,
+    state: string,
+    _requestContext?: RequestContextService,
+    browserBinding?: string,
+    currentSession?: SessionClaims
   ) {
     const provider = await this.getProviderByName(providerName);
     this.validateProvider(provider, providerName);
-    const validatedProvider = provider!;
-
-    const config = this.getProviderConfig(validatedProvider);
-    this.validateConfig(config, providerName);
-    const validatedConfig = config!;
-
-    const finalState = state || this.generateState();
-    const baseUrl = this.buildBaseUrl(requestContext);
-    const callbackUrl = redirectUri || `${baseUrl}/api/auth/providers/${providerName}/callback`;
-
-    const { codeVerifier, codeChallenge } = this.setupPkceIfNeeded(validatedProvider);
-
-    const pendingState = this.createPendingState(
-      validatedProvider.id,
-      codeVerifier || "",
-      redirectUri || `${baseUrl}/dashboard`
-    );
-    this.pendingStates.set(finalState, pendingState);
-
-    const endpoints = await this.resolveEndpoints(validatedProvider, validatedConfig);
-
-    const finalAuthUrl = await this.buildAuthorizationUrl(
-      validatedProvider,
-      endpoints,
-      callbackUrl,
-      finalState,
-      codeChallenge,
-      providerName
-    );
-
-    return finalAuthUrl;
-  }
-
-  async handleCallback(providerName: string, code: string, state: string, requestContext?: RequestContextService) {
-    try {
-      const pendingState = this.validateAndGetPendingState(state);
-
-      const provider = await this.getProviderByName(providerName);
-      this.validateProvider(provider, providerName);
-      const validatedProvider = provider!;
-
-      const config = this.getProviderConfig(validatedProvider);
-      this.validateConfig(config, providerName);
-      const validatedConfig = config!;
-
-      return await this.executeAuthenticationFlow(
-        validatedProvider,
-        validatedConfig,
-        code,
-        pendingState,
-        requestContext
+    if (!browserBinding) throw new Error(ERROR_MESSAGES.INVALID_STATE);
+    const transaction = await prisma.oAuthTransaction.findUnique({ where: { id: secretHash(state) } });
+    if (
+      !transaction ||
+      transaction.bindingHash !== secretHash(browserBinding) ||
+      transaction.providerId !== provider!.id ||
+      transaction.expiresAt.getTime() <= Date.now()
+    )
+      throw new Error(ERROR_MESSAGES.INVALID_STATE);
+    const consumed = await prisma.oAuthTransaction.deleteMany({
+      where: {
+        id: transaction.id,
+        bindingHash: secretHash(browserBinding),
+        providerId: provider!.id,
+        expiresAt: { gt: new Date(Date.now()) },
+      },
+    });
+    if (consumed.count !== 1) throw new Error(ERROR_MESSAGES.INVALID_STATE);
+    const config = this.getProviderConfig(provider);
+    let tokens: TokenResponse;
+    let rawUserInfo: any;
+    if (provider!.type === "oidc" || getProviderScopes(provider).includes("openid")) {
+      if (!provider!.issuerUrl) throw new Error("OIDC issuer URL is required");
+      const oidc = await import("openid-client");
+      const configuration = await oidc.discovery(
+        new URL(provider!.issuerUrl),
+        provider!.clientId!,
+        provider!.clientSecret ?? undefined,
+        !provider!.clientSecret
+          ? oidc.None()
+          : this.getAuthMethod(config) === "basic"
+            ? oidc.ClientSecretBasic(provider!.clientSecret)
+            : oidc.ClientSecretPost(provider!.clientSecret)
       );
-    } catch (error) {
-      console.error("Error in handleCallback:", error);
-      throw error;
+      oidc.enableNonRepudiationChecks(configuration);
+      const callback = new URL(transaction.callbackUrl);
+      callback.searchParams.set("code", code);
+      callback.searchParams.set("state", state);
+      const verified = await oidc.authorizationCodeGrant(configuration, callback, {
+        expectedState: state,
+        pkceCodeVerifier: transaction.codeVerifier,
+        expectedNonce: transaction.nonce,
+        idTokenExpected: true,
+        ...(transaction.sessionId ? { maxAge: 0 } : {}),
+      });
+      const claims = verified.claims();
+      if (!claims?.sub) throw new Error("OIDC subject is required");
+      tokens = verified as TokenResponse;
+      rawUserInfo = await oidc.fetchUserInfo(configuration, verified.access_token, claims.sub);
+      rawUserInfo.sub = claims.sub;
+    } else {
+      const endpoints = await this.resolveEndpoints(provider, config);
+      tokens = await this.executeTokenRequest(
+        provider,
+        code,
+        transaction.callbackUrl,
+        transaction.codeVerifier,
+        this.getAuthMethod(config),
+        endpoints
+      );
+      rawUserInfo = await this.fetchUserInfo(tokens, endpoints);
     }
-  }
-
-  private async performTokenExchange(
-    provider: any,
-    config: ProviderConfig,
-    code: string,
-    codeVerifier: string,
-    requestContext?: RequestContextService
-  ) {
-    const endpoints = await this.resolveEndpoints(provider, config);
-    const authMethod = this.getAuthMethod(config);
-
-    const baseUrl = this.buildBaseUrl(requestContext);
-    const callbackUrl = provider.redirectUri || `${baseUrl}/api/auth/providers/${provider.name}/callback`;
-
-    const tokens = await this.executeTokenRequest(provider, code, callbackUrl, codeVerifier, authMethod, endpoints);
-    const rawUserInfo = await this.fetchUserInfo(tokens, endpoints);
-
-    return {
-      userInfo: rawUserInfo,
-      tokens,
-    };
+    const userInfo = await this.processUserInfo(rawUserInfo, tokens, config);
+    if (provider!.type === "oidc" || getProviderScopes(provider).includes("openid")) userInfo.id = rawUserInfo.sub;
+    if (transaction.sessionId) {
+      const session = await prisma.session.findUnique({
+        where: { id: transaction.sessionId },
+        include: { user: true },
+      });
+      const association = await this.findExistingAuthProvider(provider!.id, userInfo.id);
+      if (
+        !currentSession ||
+        currentSession.sid !== transaction.sessionId ||
+        currentSession.version !== transaction.sessionVersion ||
+        !session ||
+        session.userId !== transaction.userId ||
+        !session.user.isActive ||
+        session.expiresAt.getTime() <= Date.now() ||
+        session.version !== transaction.sessionVersion ||
+        session.user.sessionVersion !== transaction.sessionVersion ||
+        association?.userId !== session.userId
+      )
+        throw new Error("Credential verification failed");
+      await this.findOrCreateUser(userInfo, provider);
+      return {
+        user: session.user,
+        redirectUrl: `${authBaseUrl()}/profile`,
+        credentialProof: await createCredentialProof({
+          userId: session.userId,
+          sid: session.id,
+          version: session.version,
+          isAdmin: session.user.isAdmin,
+        }),
+      };
+    }
+    return { user: await this.findOrCreateUser(userInfo, provider), redirectUrl: `${authBaseUrl()}/dashboard` };
   }
 
   private async executeTokenRequest(
@@ -561,12 +578,13 @@ export class AuthProvidersService {
   ): Promise<ProviderUserInfo> {
     const userInfo = this.extractUserInfo(rawUserInfo, config);
 
-    if (!userInfo.email && this.requiresEmailFetch(config)) {
+    if (this.requiresEmailFetch(config)) {
       const emailEndpoint = this.getEmailEndpoint(config);
       if (emailEndpoint) {
         const email = await this.fetchEmailFromEndpoint(emailEndpoint, tokens.access_token);
         if (email) {
           userInfo.email = email;
+          userInfo.emailVerified = true;
         }
       }
     }
@@ -596,11 +614,9 @@ export class AuthProvidersService {
 
           const verifiedEmail = data.find((e: any) => e.verified);
           if (verifiedEmail) return verifiedEmail.email;
-
-          if (data.length > 0 && data[0].email) return data[0].email;
         }
 
-        if (data.email) return data.email;
+        if (data.email && data.email_verified === true) return data.email;
       }
     } catch (error) {
       console.error("Error fetching email from endpoint:", error);
@@ -616,33 +632,33 @@ export class AuthProvidersService {
       throw new Error(ERROR_MESSAGES.MISSING_USER_INFO);
     }
 
+    const issuer = provider.issuerUrl || new URL(provider.tokenEndpoint).origin;
     const existingAuthProvider = await this.findExistingAuthProvider(provider.id, String(externalId));
     if (existingAuthProvider) {
+      let pinnedIssuer: unknown;
+      try {
+        pinnedIssuer = JSON.parse(existingAuthProvider.metadata || "{}").issuer;
+      } catch {
+        /* Legacy malformed metadata fails closed. */
+      }
+      if (pinnedIssuer !== issuer)
+        throw new Error("Provider issuer does not match the linked account; check the migrated provider configuration");
       return await this.updateExistingUserFromProvider(existingAuthProvider.user, userInfo);
     }
 
     const existingUser = await this.findExistingUserByEmail(userInfo.email);
-    if (existingUser) {
-      const existingUserProvider = await prisma.userAuthProvider.findFirst({
-        where: {
-          userId: existingUser.id,
-          providerId: provider.id,
-        },
-      });
-
-      if (existingUserProvider) {
-        return await this.updateExistingUserFromProvider(existingUser, userInfo);
-      }
-
-      return await this.linkProviderToExistingUser(existingUser, provider.id, String(externalId), userInfo);
-    }
+    if (existingUser)
+      throw new Error(
+        "An account with this email already exists. Sign in with its existing method; implicit provider linking is disabled."
+      );
 
     // Check if auto-registration is disabled
     if (provider.autoRegister === false) {
       throw new Error(`User registration via ${provider.displayName || provider.name} is disabled`);
     }
 
-    return await this.createNewUserWithProvider(userInfo, provider.id, String(externalId));
+    if (!userInfo.emailVerified) throw new Error("A verified email is required for registration");
+    return await this.createNewUserWithProvider(userInfo, provider.id, String(externalId), issuer);
   }
 
   private async findExistingAuthProvider(providerId: string, externalId: string) {
@@ -684,33 +700,15 @@ export class AuthProvidersService {
   }
 
   private async updateExistingUserFromProvider(existingUser: any, userInfo: ProviderUserInfo) {
+    if (!existingUser.isActive) throw new Error("Account is inactive");
     const updateData = this.buildUserUpdateData(existingUser, userInfo);
 
     if (Object.keys(updateData).length > 0) {
-      return await prisma.user.update({
-        where: { id: existingUser.id },
-        data: updateData,
-      });
+      const updated = await prisma.user.update({ where: { id: existingUser.id }, data: updateData });
+      return { ...updated, sessionVersion: existingUser.sessionVersion };
     }
 
     return existingUser;
-  }
-
-  private async linkProviderToExistingUser(
-    existingUser: any,
-    providerId: string,
-    externalId: string,
-    userInfo: ProviderUserInfo
-  ) {
-    await prisma.userAuthProvider.create({
-      data: {
-        userId: existingUser.id,
-        providerId,
-        externalId,
-      },
-    });
-
-    return await this.updateExistingUserFromProvider(existingUser, userInfo);
   }
 
   private generateUserNames(userInfo: ProviderUserInfo) {
@@ -722,7 +720,12 @@ export class AuthProvidersService {
     return { firstName, lastName };
   }
 
-  private async createNewUserWithProvider(userInfo: ProviderUserInfo, providerId: string, externalId: string) {
+  private async createNewUserWithProvider(
+    userInfo: ProviderUserInfo,
+    providerId: string,
+    externalId: string,
+    issuer: string
+  ) {
     const { firstName, lastName } = this.generateUserNames(userInfo);
 
     return await prisma.user.create({
@@ -737,19 +740,11 @@ export class AuthProvidersService {
           create: {
             providerId,
             externalId,
+            metadata: JSON.stringify({ issuer }),
           },
         },
       },
     });
-  }
-
-  private cleanupExpiredStates() {
-    const now = Date.now();
-    for (const [state, data] of this.pendingStates.entries()) {
-      if (data.expiresAt < now) {
-        this.pendingStates.delete(state);
-      }
-    }
   }
 
   async updateProvidersOrder(providersOrder: { id: string; sortOrder: number }[]) {

@@ -48,6 +48,10 @@ export class FileService {
   }
 
   // Multipart upload methods
+  async abortMultipartUploads(objectName: string): Promise<void> {
+    await this.storageProvider.abortMultipartUploads(objectName);
+  }
+
   async createMultipartUpload(objectName: string): Promise<string> {
     return await this.storageProvider.createMultipartUpload(objectName);
   }

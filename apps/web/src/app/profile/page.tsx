@@ -88,8 +88,13 @@ export default function ProfilePage() {
           />
         </div>
         <div className="[&>section:first-child]:border-t [&>section:first-child]:pt-7 md:[&>section:first-child]:pt-8">
-          <ProfileForm form={profile.profileForm} onSubmit={profile.onProfileSubmit} />
+          <ProfileForm
+            providers={profile.userData.reauthenticationProviders}
+            form={profile.profileForm}
+            onSubmit={profile.onProfileSubmit}
+          />
           <PasswordForm
+            providers={profile.userData.reauthenticationProviders}
             form={profile.passwordForm}
             isConfirmPasswordVisible={profile.isConfirmPasswordVisible}
             isNewPasswordVisible={profile.isNewPasswordVisible}

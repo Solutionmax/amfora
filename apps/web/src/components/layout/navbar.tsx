@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IconLogout, IconPalette, IconSettings, IconUser, IconUsers } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { LanguageSwitcher } from "@/components/general/language-switcher";
 import { ModeToggle } from "@/components/general/mode-toggle";
@@ -46,6 +47,7 @@ export function Navbar() {
       router.push("/login");
     } catch (err) {
       console.error("Error logging out:", err);
+      toast.error(t("navbar.logoutFailed"));
     }
   };
 

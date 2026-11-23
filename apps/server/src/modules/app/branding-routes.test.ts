@@ -10,6 +10,7 @@ import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import sharp from "sharp";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { directoriesConfig } from "../../config/directories.config";
 
@@ -55,7 +56,7 @@ after(async () => {
   database.cleanup();
 });
 
-const cookie = (userId: string, isAdmin: boolean) => ({ token: app.jwt.sign({ userId, isAdmin }) });
+const cookie = async (userId: string, isAdmin: boolean) => ({ token: await testSession(app, { userId, isAdmin }) });
 
 function multipart(buffer: Buffer, filename = "cover.png", contentType = "image/png") {
   const boundary = "----amforatest";
@@ -74,8 +75,8 @@ const png = (width: number, height: number) =>
     .png()
     .toBuffer();
 
-async function upload(url: string, buffer: Buffer, as = cookie("admin", true)) {
-  return app.inject({ method: "POST", url, cookies: as, ...multipart(buffer) });
+async function upload(url: string, buffer: Buffer, as?: { token: string }) {
+  return app.inject({ method: "POST", url, cookies: as ?? (await cookie("admin", true)), ...multipart(buffer) });
 }
 
 async function appInfo() {
@@ -89,7 +90,7 @@ for (const url of ["/app/share-cover", "/app/link-preview"]) {
 
     const image = await png(1400, 700);
     assert.equal((await app.inject({ method: "POST", url, ...multipart(image) })).statusCode, 401);
-    assert.equal((await upload(url, image, cookie("member", false))).statusCode, 403);
+    assert.equal((await upload(url, image, await cookie("member", false))).statusCode, 403);
     assert.equal((await upload(url, await png(300, 300))).statusCode, 400, "too narrow");
     assert.equal((await upload(url, Buffer.from("<svg/>"))).statusCode, 400, "not a raster image");
 
@@ -110,11 +111,11 @@ for (const url of ["/app/share-cover", "/app/link-preview"]) {
     assert.equal(metadata.height, 600);
 
     assert.equal(
-      (await app.inject({ method: "DELETE", url, cookies: cookie("member", false) })).statusCode,
+      (await app.inject({ method: "DELETE", url, cookies: await cookie("member", false) })).statusCode,
       403,
       "a member cannot remove it"
     );
-    assert.equal((await app.inject({ method: "DELETE", url, cookies: cookie("admin", true) })).statusCode, 200);
+    assert.equal((await app.inject({ method: "DELETE", url, cookies: await cookie("admin", true) })).statusCode, 200);
     assert.equal((await app.inject({ method: "GET", url })).statusCode, 404);
   });
 }

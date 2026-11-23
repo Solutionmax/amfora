@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { env } from "../../env";
 import { PUBLIC_PATH, SETUP_PATH } from "./second-step";
@@ -17,8 +18,8 @@ let prisma: typeof import("../../shared/prisma").prisma;
 
 const setRequirement = (value: string) =>
   prisma.appConfig.update({ where: { key: "twoFactorRequired" }, data: { value } });
-const as = (userId: string, extra: object = {}) => ({
-  cookies: { token: app.jwt.sign({ userId, isAdmin: userId === "admin", ...extra }) },
+const as = async (userId: string, extra: object = {}) => ({
+  cookies: { token: await testSession(app, { userId, isAdmin: userId === "admin", ...extra }) },
 });
 
 const registered = new Set<string>();
@@ -100,7 +101,7 @@ const call = (method: string, url: string, auth: object) =>
 test("with the requirement off nobody is held back", async () => {
   await setRequirement("off");
   for (const [method, url] of BLOCKED) {
-    const res = await call(method, url, as("member"));
+    const res = await call(method, url, await as("member"));
     assert.notEqual(res.json()?.code, "TWO_FACTOR_SETUP_REQUIRED", `${method} ${url}`);
   }
 });
@@ -108,12 +109,12 @@ test("with the requirement off nobody is held back", async () => {
 test("for everyone: a user without a second step is refused everywhere but the set up path", async () => {
   await setRequirement("all");
   for (const [method, url] of BLOCKED) {
-    const res = await call(method, url, as("member"));
+    const res = await call(method, url, await as("member"));
     assert.equal(res.statusCode, 403, `${method} ${url} answered ${res.statusCode}`);
     assert.equal(res.json().code, "TWO_FACTOR_SETUP_REQUIRED", `${method} ${url}`);
   }
   for (const [method, url] of ALLOWED) {
-    const res = await call(method, url, as("member"));
+    const res = await call(method, url, await as("member"));
     assert.notEqual(res.json()?.code, "TWO_FACTOR_SETUP_REQUIRED", `${method} ${url}`);
     assert.ok(res.statusCode < 400, `${method} ${url} answered ${res.statusCode}`);
   }
@@ -121,25 +122,25 @@ test("for everyone: a user without a second step is refused everywhere but the s
 
 test("the administrator is held to it too, and the set up path stays open for them", async () => {
   await setRequirement("all");
-  assert.equal((await call("GET", "/users", as("admin"))).json().code, "TWO_FACTOR_SETUP_REQUIRED");
-  assert.equal((await call("POST", "/auth/2fa/setup", as("admin"))).statusCode, 200);
+  assert.equal((await call("GET", "/users", await as("admin"))).json().code, "TWO_FACTOR_SETUP_REQUIRED");
+  assert.equal((await call("POST", "/auth/2fa/setup", await as("admin"))).statusCode, 200);
 });
 
 test("for administrators only: members carry on, administrators are held", async () => {
   await setRequirement("admins");
-  assert.notEqual((await call("GET", "/files", as("member"))).json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
-  assert.equal((await call("GET", "/files", as("admin"))).json().code, "TWO_FACTOR_SETUP_REQUIRED");
+  assert.notEqual((await call("GET", "/files", await as("member"))).json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
+  assert.equal((await call("GET", "/files", await as("admin"))).json().code, "TWO_FACTOR_SETUP_REQUIRED");
 });
 
 test("two step sign in or a passkey satisfies it", async () => {
   await setRequirement("all");
-  assert.notEqual((await call("GET", "/files", as("totp"))).json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
-  assert.notEqual((await call("GET", "/files", as("passkeyuser"))).json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
+  assert.notEqual((await call("GET", "/files", await as("totp"))).json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
+  assert.notEqual((await call("GET", "/files", await as("passkeyuser"))).json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
 });
 
 test("a session that came through an external provider is exempt", async () => {
   await setRequirement("all");
-  const res = await call("GET", "/files", as("member", { viaProvider: true }));
+  const res = await call("GET", "/files", await as("member", { viaProvider: true }));
   assert.notEqual(res.json()?.code, "TWO_FACTOR_SETUP_REQUIRED");
 });
 
@@ -148,7 +149,7 @@ test("an API key keeps working, a session token sent as bearer does not", async 
   const created = await app.inject({
     method: "POST",
     url: "/api-keys",
-    ...as("keyholder"),
+    ...(await as("keyholder")),
     payload: { name: "k", scope: "full" },
   });
   assert.equal(created.statusCode, 201, created.body);
@@ -159,7 +160,7 @@ test("an API key keeps working, a session token sent as bearer does not", async 
   assert.equal(viaKey.statusCode, 200, viaKey.body);
   const viaXKey = await app.inject({ method: "GET", url: "/files", headers: { "x-api-key": token } });
   assert.equal(viaXKey.statusCode, 200, viaXKey.body);
-  const session = app.jwt.sign({ userId: "keyholder", isAdmin: false });
+  const session = await testSession(app, { userId: "keyholder", isAdmin: false });
   const asBearer = await app.inject({ method: "GET", url: "/files", headers: { authorization: `Bearer ${session}` } });
   assert.equal(asBearer.statusCode, 403);
   assert.equal(asBearer.json().code, "TWO_FACTOR_SETUP_REQUIRED");
@@ -167,14 +168,14 @@ test("an API key keeps working, a session token sent as bearer does not", async 
 
 test("a forged viaApiKey claim cannot be signed without the secret", async () => {
   await setRequirement("all");
-  const forged = `${app.jwt.sign({ userId: "member" })}x`;
+  const forged = `${await testSession(app, { userId: "member" })}x`;
   const res = await app.inject({ method: "GET", url: "/files", cookies: { token: forged } });
   assert.equal(res.statusCode, 401);
 });
 
 test("turning it on signs nobody out: the old session still reads its profile, the admin can set up", async () => {
   await setRequirement("off");
-  const admin = as("admin");
+  const admin = await as("admin");
   const put = await app.inject({
     method: "PATCH",
     url: "/app/configs",
@@ -190,9 +191,9 @@ test("turning it on signs nobody out: the old session still reads its profile, t
 
 test("/auth/me tells only the caller whether they must set up, and others are never told", async () => {
   await setRequirement("all");
-  assert.equal((await call("GET", "/auth/me", as("totp"))).json().user.twoFactorSetupRequired, false);
+  assert.equal((await call("GET", "/auth/me", await as("totp"))).json().user.twoFactorSetupRequired, false);
   await setRequirement("off");
-  assert.equal((await call("GET", "/auth/me", as("member"))).json().user.twoFactorSetupRequired, false);
+  assert.equal((await call("GET", "/auth/me", await as("member"))).json().user.twoFactorSetupRequired, false);
 });
 
 test("the public configuration does not carry the requirement", async () => {
@@ -208,14 +209,14 @@ test("only off, admins and all are accepted as a value", async () => {
   const res = await app.inject({
     method: "PATCH",
     url: "/app/configs",
-    ...as("admin"),
+    ...(await as("admin")),
     payload: [{ key: "twoFactorRequired", value: "sometimes" }],
   });
   assert.equal(res.statusCode, 400, res.body);
   const single = await app.inject({
     method: "PATCH",
     url: "/app/configs/twoFactorRequired",
-    ...as("admin"),
+    ...(await as("admin")),
     payload: { value: "sometimes" },
   });
   assert.ok(single.statusCode >= 400, single.body);
@@ -254,7 +255,7 @@ test("every registered route is gated for a session that must set up, unless it 
     if (SETUP_PATH.has(entry) || PUBLIC_PATH.has(entry)) continue;
     const [method, pattern] = entry.split(" ");
     if (method === "HEAD" || method === "OPTIONS") continue;
-    const res = await call(method, urlOf(pattern), as("member"));
+    const res = await call(method, urlOf(pattern), await as("member"));
     if (res.statusCode !== 403 || codeOf(res) !== "TWO_FACTOR_SETUP_REQUIRED")
       open.push(`${entry} answered ${res.statusCode}`);
   }
@@ -268,7 +269,7 @@ test("every entry on the public list is a real route, not on the set up path, an
     assert.ok(registered.has(entry), `${entry} is not a registered route`);
     assert.ok(!SETUP_PATH.has(entry), `${entry} is on both lists`);
     const [method, pattern] = entry.split(" ");
-    const res = await call(method, urlOf(pattern), as("member"));
+    const res = await call(method, urlOf(pattern), await as("member"));
     assert.notEqual(codeOf(res), "TWO_FACTOR_SETUP_REQUIRED", `${entry} answered ${res.statusCode}`);
   }
 });
@@ -290,18 +291,20 @@ test("a public route with optional sign in does not see a gated session as signe
     },
   });
   // Not gated: the owner is let in without the password.
-  const owner = await app.inject({ method: "GET", url: `/shares/${share.id}`, ...as("member") });
+  const owner = await app.inject({ method: "GET", url: `/shares/${share.id}`, ...(await as("member")) });
   assert.equal(owner.statusCode, 200, owner.body);
   // Gated: the same cookie is a stranger to this route, so the password is asked for.
   await setRequirement("all");
-  const gated = await app.inject({ method: "GET", url: `/shares/${share.id}`, ...as("member") });
+  const gated = await app.inject({ method: "GET", url: `/shares/${share.id}`, ...(await as("member")) });
   assert.equal(gated.statusCode, 400, gated.body);
   assert.match(gated.json().error, /Password required/);
 });
 
 test("a gated bearer session token is no owner on a public route either", async () => {
   await setRequirement("off");
-  const bearer = { headers: { authorization: `Bearer ${app.jwt.sign({ userId: "member", isAdmin: false })}` } };
+  const bearer = {
+    headers: { authorization: `Bearer ${await testSession(app, { userId: "member", isAdmin: false })}` },
+  };
   const open = await app.inject({ method: "GET", url: "/shares/locked-share", ...bearer });
   assert.equal(open.statusCode, 200, open.body);
   await setRequirement("all");
@@ -317,18 +320,18 @@ test("a gated owner gets what a visitor gets on the file download routes, not th
   });
   const urls = ["/files/download-url?objectName=member%2Fgate-file", "/files/download?objectName=member%2Fgate-file"];
   for (const url of urls) {
-    const owner = await app.inject({ method: "GET", url, ...as("member") });
+    const owner = await app.inject({ method: "GET", url, ...(await as("member")) });
     assert.notEqual(owner.statusCode, 401, `${url} the owner is let in: ${owner.body}`);
     assert.notEqual(owner.statusCode, 403, owner.body);
   }
   await setRequirement("all");
   for (const url of urls) {
-    const gated = await app.inject({ method: "GET", url, ...as("member") });
+    const gated = await app.inject({ method: "GET", url, ...(await as("member")) });
     assert.equal(gated.statusCode, 401, `${url} ${gated.body}`);
     const viaBearer = await app.inject({
       method: "GET",
       url,
-      headers: { authorization: `Bearer ${app.jwt.sign({ userId: "member", isAdmin: false })}` },
+      headers: { authorization: `Bearer ${await testSession(app, { userId: "member", isAdmin: false })}` },
     });
     assert.equal(viaBearer.statusCode, 401, `${url} bearer ${viaBearer.body}`);
   }
@@ -344,7 +347,7 @@ async function withServerSetting(value: string | undefined, work: () => Promise<
   }
 }
 const isGated = async (userId: string) =>
-  (await call("GET", "/files", as(userId))).json()?.code === "TWO_FACTOR_SETUP_REQUIRED";
+  (await call("GET", "/files", await as(userId))).json()?.code === "TWO_FACTOR_SETUP_REQUIRED";
 
 test("TWO_FACTOR_REQUIRED from the server wins over the stored setting, in both directions", async () => {
   await setRequirement("all");
@@ -393,14 +396,14 @@ test("a single and a bulk update answer with the value the server forces, the sa
     const single = await app.inject({
       method: "PATCH",
       url: "/app/configs/twoFactorRequired",
-      ...as("admin"),
+      ...(await as("admin")),
       payload: { value: "admins" },
     });
     assert.equal(single.statusCode, 200, single.body);
     const bulk = await app.inject({
       method: "PATCH",
       url: "/app/configs",
-      ...as("admin"),
+      ...(await as("admin")),
       payload: [{ key: "twoFactorRequired", value: "admins" }],
     });
     assert.equal(bulk.statusCode, 200, bulk.body);
@@ -417,14 +420,14 @@ test("the administrator sees which value the server forces, and /auth/me follows
   await setRequirement("off");
   await prisma.user.update({ where: { id: "admin" }, data: { twoFactorEnabled: true } });
   await withServerSetting("all", async () => {
-    const list = await app.inject({ method: "GET", url: "/app/configs", ...as("admin") });
+    const list = await app.inject({ method: "GET", url: "/app/configs", ...(await as("admin")) });
     assert.equal(list.statusCode, 200, list.body);
     const row = list.json().configs.find((c: { key: string }) => c.key === "twoFactorRequired");
     assert.equal(row.value, "all");
     assert.equal(row.lockedByServer, true);
-    assert.equal((await call("GET", "/auth/me", as("member"))).json().user.twoFactorSetupRequired, true);
+    assert.equal((await call("GET", "/auth/me", await as("member"))).json().user.twoFactorSetupRequired, true);
   });
-  const list = await app.inject({ method: "GET", url: "/app/configs", ...as("admin") });
+  const list = await app.inject({ method: "GET", url: "/app/configs", ...(await as("admin")) });
   await prisma.user.update({ where: { id: "admin" }, data: { twoFactorEnabled: false } });
   const row = list.json().configs.find((c: { key: string }) => c.key === "twoFactorRequired");
   assert.equal(row.value, "off");

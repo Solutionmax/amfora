@@ -1,317 +1,28 @@
-import { exec } from "child_process";
 import fs from "node:fs";
-import { promisify } from "util";
 
 import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
-import { IS_RUNNING_IN_CONTAINER } from "../../utils/container-detection";
-import { ConfigService } from "../config/service";
+import { ownerUsage } from "./accounting";
 import { ownStorageLimitOf, storageLimitOf } from "./limit";
 
-const execAsync = promisify(exec);
-
 export class StorageService {
-  private configService = new ConfigService();
-
   private _ensureNumber(value: number, fallback: number = 0): number {
     return Number.isNaN(value) || !Number.isFinite(value) || value < 0 ? fallback : value;
   }
 
-  private _safeParseInt(value: string): number {
-    const parsed = parseInt(value, 10);
-    return Number.isNaN(parsed) ? 0 : parsed;
-  }
-
-  private _parseSize(value: string): number {
-    if (!value) return 0;
-
-    const cleanValue = value.trim().toLowerCase();
-
-    const numericMatch = cleanValue.match(/^(\d+(?:\.\d+)?)/);
-    if (!numericMatch) return 0;
-
-    const numericValue = parseFloat(numericMatch[1]);
-    if (Number.isNaN(numericValue)) return 0;
-
-    if (cleanValue.includes("t")) {
-      return Math.round(numericValue * 1024 * 1024 * 1024 * 1024);
-    } else if (cleanValue.includes("g")) {
-      return Math.round(numericValue * 1024 * 1024 * 1024);
-    } else if (cleanValue.includes("m")) {
-      return Math.round(numericValue * 1024 * 1024);
-    } else if (cleanValue.includes("k")) {
-      return Math.round(numericValue * 1024);
-    } else {
-      return Math.round(numericValue);
-    }
-  }
-
-  private async _tryDiskSpaceCommand(command: string): Promise<{ total: number; available: number } | null> {
-    try {
-      const { stdout, stderr } = await execAsync(command);
-
-      if (stderr) {
-        console.warn(`Command stderr: ${stderr}`);
-      }
-
-      let total = 0;
-      let available = 0;
-
-      if (process.platform === "win32") {
-        const lines = stdout.trim().split("\n").slice(1);
-        for (const line of lines) {
-          const parts = line.trim().split(/\s+/);
-          if (parts.length >= 3) {
-            const [, size, freespace] = parts;
-            total += this._safeParseInt(size);
-            available += this._safeParseInt(freespace);
-          }
-        }
-      } else if (process.platform === "darwin") {
-        const lines = stdout.trim().split("\n");
-        if (lines.length >= 2) {
-          const parts = lines[1].trim().split(/\s+/);
-          if (parts.length >= 4) {
-            const [, size, , avail] = parts;
-            total = this._safeParseInt(size) * 1024;
-            available = this._safeParseInt(avail) * 1024;
-          }
-        }
-      } else {
-        const lines = stdout.trim().split("\n");
-
-        if (command.includes("findmnt")) {
-          if (lines.length >= 1) {
-            const parts = lines[0].trim().split(/\s+/);
-            if (parts.length >= 2) {
-              const [availStr, sizeStr] = parts;
-              available = this._parseSize(availStr);
-              total = this._parseSize(sizeStr);
-            }
-          }
-        } else if (command.includes("stat -f")) {
-          let blockSize = 0;
-          let totalBlocks = 0;
-          let freeBlocks = 0;
-
-          for (const line of lines) {
-            if (line.includes("Block size:")) {
-              blockSize = this._safeParseInt(line.split(":")[1].trim());
-            } else if (line.includes("Total blocks:")) {
-              totalBlocks = this._safeParseInt(line.split(":")[1].trim());
-            } else if (line.includes("Free blocks:")) {
-              freeBlocks = this._safeParseInt(line.split(":")[1].trim());
-            }
-          }
-
-          if (blockSize > 0 && totalBlocks > 0) {
-            total = totalBlocks * blockSize;
-            available = freeBlocks * blockSize;
-          } else {
-            return null;
-          }
-        } else if (command.includes("--output=")) {
-          if (lines.length >= 2) {
-            const parts = lines[1].trim().split(/\s+/);
-            if (parts.length >= 2) {
-              const [availStr, sizeStr] = parts;
-              available = this._safeParseInt(availStr) * 1024;
-              total = this._safeParseInt(sizeStr) * 1024;
-            }
-          }
-        } else {
-          if (lines.length >= 2) {
-            const parts = lines[1].trim().split(/\s+/);
-            if (parts.length >= 4) {
-              const [, size, , avail] = parts;
-              if (command.includes("-B1")) {
-                total = this._safeParseInt(size);
-                available = this._safeParseInt(avail);
-              } else if (command.includes("-h")) {
-                total = this._parseSize(size);
-                available = this._parseSize(avail);
-              } else {
-                total = this._safeParseInt(size) * 1024;
-                available = this._safeParseInt(avail) * 1024;
-              }
-            }
-          }
-        }
-      }
-
-      if (total > 0 && available >= 0) {
-        return { total, available };
-      } else {
-        return null;
-      }
-    } catch {
-      return null;
-    }
-  }
-
-  private async _getMountInfo(path: string): Promise<{ filesystem: string; mountPoint: string; type: string } | null> {
-    try {
-      if (!fs.existsSync("/proc/mounts")) {
-        return null;
-      }
-
-      const mountsContent = await fs.promises.readFile("/proc/mounts", "utf8");
-      const lines = mountsContent.split("\n").filter((line) => line.trim());
-
-      let bestMatch = null;
-      let bestMatchLength = 0;
-
-      for (const line of lines) {
-        const parts = line.split(/\s+/);
-        if (parts.length >= 3) {
-          const [filesystem, mountPoint, type] = parts;
-
-          if (path.startsWith(mountPoint) && mountPoint.length > bestMatchLength) {
-            bestMatch = { filesystem, mountPoint, type };
-            bestMatchLength = mountPoint.length;
-          }
-        }
-      }
-
-      return bestMatch;
-    } catch {
-      return null;
-    }
-  }
-
-  private async _detectMountPoint(path: string): Promise<string | null> {
-    try {
-      if (!fs.existsSync("/proc/mounts")) {
-        return null;
-      }
-
-      const mountsContent = await fs.promises.readFile("/proc/mounts", "utf8");
-      const lines = mountsContent.split("\n").filter((line) => line.trim());
-
-      let bestMatch = null;
-      let bestMatchLength = 0;
-
-      for (const line of lines) {
-        const parts = line.split(/\s+/);
-        if (parts.length >= 3) {
-          const [device, mountPoint, filesystem] = parts;
-          if (path.startsWith(mountPoint) && mountPoint.length > bestMatchLength) {
-            bestMatch = mountPoint;
-            bestMatchLength = mountPoint.length;
-          }
-        }
-      }
-
-      if (bestMatch && bestMatch !== "/") {
-        return bestMatch;
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-  private async _getFileSystemInfo(
-    path: string
-  ): Promise<{ total: number; available: number; mountPoint?: string } | null> {
-    try {
-      const mountInfo = await this._getMountInfo(path);
-      const mountPoint = await this._detectMountPoint(path);
-      const targetPath = mountPoint || path;
-
-      const commandsToTry =
-        process.platform === "win32"
-          ? ["wmic logicaldisk get size,freespace,caption"]
-          : process.platform === "darwin"
-            ? [`df -k "${targetPath}"`, `df "${targetPath}"`]
-            : [
-                `df -B1 "${targetPath}"`,
-                `df -k "${targetPath}"`,
-                `df "${targetPath}"`,
-                `df -h "${targetPath}"`,
-                `df -T "${targetPath}"`,
-                `stat -f "${targetPath}"`,
-                `findmnt -n -o AVAIL,SIZE "${targetPath}"`,
-                `findmnt -n -o AVAIL,SIZE,TARGET "${targetPath}"`,
-                `df -P "${targetPath}"`,
-                `df --output=avail,size "${targetPath}"`,
-              ];
-
-      for (const command of commandsToTry) {
-        const result = await this._tryDiskSpaceCommand(command);
-        if (result) {
-          return {
-            ...result,
-            mountPoint: mountPoint || undefined,
-          };
-        }
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-  private async _detectSynologyVolumes(): Promise<string[]> {
-    try {
-      if (!fs.existsSync("/proc/mounts")) {
-        return [];
-      }
-
-      const mountsContent = await fs.promises.readFile("/proc/mounts", "utf8");
-      const lines = mountsContent.split("\n").filter((line) => line.trim());
-      const synologyPaths: string[] = [];
-
-      for (const line of lines) {
-        const parts = line.split(/\s+/);
-        if (parts.length >= 2) {
-          const [, mountPoint] = parts;
-
-          if (mountPoint.match(/^\/volume\d+$/)) {
-            synologyPaths.push(mountPoint);
-          }
-        }
-      }
-
-      return synologyPaths;
-    } catch {
-      return [];
-    }
-  }
-
   private async _getDiskSpaceMultiplePaths(): Promise<{ total: number; available: number } | null> {
-    const basePaths = IS_RUNNING_IN_CONTAINER
-      ? ["/app/server/uploads", "/app/server/temp-uploads", "/app/server/temp-chunks", "/app/server", "/app", "/"]
-      : [env.CUSTOM_PATH || ".", "./uploads", process.cwd()];
-
-    const synologyPaths = await this._detectSynologyVolumes();
-
-    const pathsToTry = [...basePaths, ...synologyPaths];
-
-    for (const pathToCheck of pathsToTry) {
-      if (pathToCheck.includes("uploads") || pathToCheck.includes("temp-")) {
-        try {
-          if (!fs.existsSync(pathToCheck)) {
-            fs.mkdirSync(pathToCheck, { recursive: true });
-          }
-        } catch {
-          continue;
-        }
-      }
-
-      if (!fs.existsSync(pathToCheck)) {
-        continue;
-      }
-
-      const result = await this._getFileSystemInfo(pathToCheck);
-      if (result) {
-        return { total: result.total, available: result.available };
-      }
+    if (env.ENABLE_S3 === "true") return null;
+    // Internal byte storage is the minio-data mount, never the metadata/uploads filesystem.
+    const storePath = process.env.MINIO_DATA_DIR || "/app/server/minio-data";
+    try {
+      const stats = await fs.promises.statfs(storePath);
+      return {
+        total: Number(stats.blocks) * Number(stats.bsize),
+        available: Number(stats.bavail) * Number(stats.bsize),
+      };
+    } catch {
+      return null;
     }
-
-    return null;
   }
 
   /** Total and free bytes of the data disk, or null when the host does not tell. */
@@ -334,7 +45,10 @@ export class StorageService {
   }> {
     try {
       if (isAdmin) {
-        const diskInfo = await this._getDiskSpaceMultiplePaths();
+        const localDisk = await this._getDiskSpaceMultiplePaths();
+        const diskInfo =
+          localDisk ??
+          (env.ENABLE_S3 === "true" && userId ? { available: Number(await storageLimitOf(userId)), total: 0 } : null);
 
         if (!diskInfo) {
           throw new Error("Unable to determine actual disk space - system configuration issue");
@@ -352,10 +66,12 @@ export class StorageService {
         const ownLimit = userId ? await ownStorageLimitOf(userId) : null;
         let shownUsed = used;
         let available = diskInfo.available;
-        if (userId && ownLimit !== null) {
-          const own = await prisma.file.aggregate({ where: { userId }, _sum: { size: true } });
-          shownUsed = Number(own._sum.size ?? BigInt(0));
-          available = Math.max(Math.min(Number(ownLimit) - shownUsed, diskInfo.available), 0);
+        if (userId && (ownLimit !== null || env.ENABLE_S3 === "true")) {
+          shownUsed = Number(await ownerUsage(userId));
+          available = Math.max(
+            Math.min(Number(ownLimit ?? (await storageLimitOf(userId))) - shownUsed, diskInfo.available),
+            0
+          );
         }
         const total = shownUsed + available;
 
@@ -373,12 +89,7 @@ export class StorageService {
         const maxTotalStorage = await storageLimitOf(userId);
         const maxStorageGB = this._ensureNumber(Number(maxTotalStorage) / (1024 * 1024 * 1024), 10);
 
-        const userFiles = await prisma.file.findMany({
-          where: { userId },
-          select: { size: true },
-        });
-
-        const totalUsedStorage = userFiles.reduce((acc, file) => acc + file.size, BigInt(0));
+        const totalUsedStorage = await ownerUsage(userId);
         const usedStorageGB = this._ensureNumber(Number(totalUsedStorage) / (1024 * 1024 * 1024), 0);
         const availableStorageGB = this._ensureNumber(maxStorageGB - usedStorageGB, 0);
 

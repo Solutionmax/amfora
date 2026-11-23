@@ -6,6 +6,7 @@ import fastifyJwt from "@fastify/jwt";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { isPlayableMedia, refusesMediaPreview } from "./media-preview";
 import { FileService } from "./service";
@@ -77,12 +78,12 @@ after(async () => {
   database.cleanup();
 });
 
-function request(route: "download-url" | "download", objectName: string, preview: boolean, owner = false) {
+async function request(route: "download-url" | "download", objectName: string, preview: boolean, owner = false) {
   const query = `objectName=${encodeURIComponent(objectName)}${preview ? "&preview=1" : ""}`;
   return app.inject({
     method: "GET",
     url: `/files/${route}?${query}`,
-    cookies: owner ? { token: app.jwt.sign({ userId: "owner", isAdmin: false }) } : undefined,
+    cookies: owner ? { token: await testSession(app, { userId: "owner", isAdmin: false }) } : undefined,
   });
 }
 

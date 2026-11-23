@@ -96,6 +96,7 @@ export interface AuthorizeRequest {
   Querystring: {
     state?: string;
     redirect_uri?: string;
+    reauthenticate?: string;
   };
 }
 

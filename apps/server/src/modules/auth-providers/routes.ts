@@ -278,6 +278,7 @@ export async function authProvidersRoutes(fastify: FastifyInstance) {
           .object({
             state: z.string().optional(),
             redirect_uri: z.string().optional(),
+            reauthenticate: z.string().optional(),
           })
           .optional(),
         response: {

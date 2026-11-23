@@ -91,7 +91,7 @@ export class AuthService {
 
     if (has2FA) {
       if (trustedToken && (await this.trustedDeviceService.isDeviceTrusted(user.id, trustedToken))) {
-        return UserResponseSchema.parse(user);
+        return { ...UserResponseSchema.parse(user), sessionVersion: user.sessionVersion };
       }
 
       return {
@@ -102,7 +102,7 @@ export class AuthService {
       };
     }
 
-    return UserResponseSchema.parse(user);
+    return { ...UserResponseSchema.parse(user), sessionVersion: user.sessionVersion };
   }
 
   async completeTwoFactorLogin(
@@ -149,7 +149,7 @@ export class AuthService {
     const consumed = await prisma.loginChallenge.deleteMany({ where: { id, expiresAt: { gt: new Date() } } });
     if (consumed.count !== 1) throw new Error("Login challenge has already been used");
 
-    return UserResponseSchema.parse(user);
+    return { ...UserResponseSchema.parse(user), sessionVersion: user.sessionVersion };
   }
 
   async requestPasswordReset(email: string) {
@@ -207,16 +207,22 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: resetRequest.userId },
-        data: { password: hashedPassword },
-      }),
-      prisma.passwordReset.update({
-        where: { id: resetRequest.id },
+    await prisma.$transaction(async (tx) => {
+      const consumed = await tx.passwordReset.updateMany({
+        where: { id: resetRequest.id, used: false, expiresAt: { gt: new Date() } },
         data: { used: true },
-      }),
-    ]);
+      });
+      if (consumed.count !== 1) throw new Error("Invalid or expired reset token");
+      await tx.user.update({
+        where: { id: resetRequest.userId },
+        data: { password: hashedPassword, sessionVersion: { increment: 1 } },
+      });
+      await tx.session.deleteMany({ where: { userId: resetRequest.userId } });
+      await tx.trustedDevice.deleteMany({ where: { userId: resetRequest.userId } });
+      await tx.loginChallenge.deleteMany({ where: { userId: resetRequest.userId } });
+      await tx.credentialProof.deleteMany({ where: { userId: resetRequest.userId } });
+      await tx.passwordReset.updateMany({ where: { userId: resetRequest.userId, used: false }, data: { used: true } });
+    });
   }
 
   async getUserById(userId: string) {

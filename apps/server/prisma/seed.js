@@ -523,6 +523,31 @@ async function main() {
     providersCreatedCount++;
   }
 
+  // Pin legacy associations once during the schema upgrade. Never overwrite an existing issuer.
+  for (const association of await prisma.userAuthProvider.findMany({ include: { authProvider: true } })) {
+    let metadata;
+    try {
+      metadata = JSON.parse(association.metadata || "{}");
+    } catch {
+      continue;
+    }
+    if (!metadata || typeof metadata !== "object" || Array.isArray(metadata) || metadata.issuer) continue;
+    const provider = association.authProvider;
+    let issuer = provider.issuerUrl;
+    if (!issuer && provider.tokenEndpoint) {
+      try {
+        issuer = new URL(provider.tokenEndpoint).origin;
+      } catch {
+        continue;
+      }
+    }
+    if (issuer)
+      await prisma.userAuthProvider.update({
+        where: { id: association.id },
+        data: { metadata: JSON.stringify({ ...metadata, issuer }) },
+      });
+  }
+
   console.log("\n📊 Auth Providers Summary:");
   console.log(`   ✅ Created: ${providersCreatedCount} providers`);
   console.log(`   ⏭️  Skipped: ${providersSkippedCount} providers`);

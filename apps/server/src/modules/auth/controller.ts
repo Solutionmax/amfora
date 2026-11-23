@@ -13,6 +13,7 @@ import {
   RequestPasswordResetSchema,
 } from "./dto";
 import { AuthService } from "./service";
+import { isInvalidSessionError, issueSession } from "./session";
 import { TrustedDeviceService } from "./trusted-device.service";
 
 export class AuthController {
@@ -24,7 +25,11 @@ export class AuthController {
     const realUserAgent = request.headers["x-user-agent"] as string;
 
     const userAgent = realUserAgent || request.headers["user-agent"] || "";
-    const ipAddress = realIP || request.ip || request.socket.remoteAddress || "";
+    const ipAddress =
+      (process.env.TRUST_CLIENT_IP_HEADERS === "true" ? realIP : "") ||
+      request.ip ||
+      request.socket.remoteAddress ||
+      "";
 
     return { userAgent, ipAddress };
   }
@@ -68,10 +73,7 @@ export class AuthController {
       }
 
       const user = result;
-      const token = await request.jwtSign({
-        userId: user.id,
-        isAdmin: user.isAdmin,
-      });
+      const token = await issueSession(request, user.id, user.sessionVersion);
 
       reply.setCookie("token", token, {
         httpOnly: true,
@@ -101,8 +103,11 @@ export class AuthController {
         input.challengeId
       );
 
-      if (input.rememberDevice) {
-        const deviceToken = await new TrustedDeviceService().addTrustedDevice(user.id, userAgent, ipAddress);
+      const deviceToken = input.rememberDevice
+        ? await new TrustedDeviceService().addTrustedDevice(user.id, userAgent, ipAddress, user.sessionVersion)
+        : null;
+      const token = await issueSession(request, user.id, user.sessionVersion);
+      if (deviceToken) {
         reply.setCookie("trusted-device", deviceToken, {
           httpOnly: true,
           secure: env.SECURE_SITE === "true",
@@ -111,10 +116,6 @@ export class AuthController {
           maxAge: 30 * 86400,
         });
       }
-      const token = await request.jwtSign({
-        userId: user.id,
-        isAdmin: user.isAdmin,
-      });
 
       reply.setCookie("token", token, {
         httpOnly: true,
@@ -131,7 +132,30 @@ export class AuthController {
   }
 
   async logout(request: FastifyRequest, reply: FastifyReply) {
+    let sid: string | undefined;
+    try {
+      await request.jwtVerify();
+      sid = (request.user as any).sid;
+    } catch (error) {
+      if (!isInvalidSessionError(error)) {
+        request.log.error({ err: error }, "Session lookup failed during logout");
+        return reply.status(503).send({ error: "Session revocation failed. Try again." });
+      }
+      /* An absent/invalid/already revoked credential needs only cookie clearing. */
+    }
+    if (sid) {
+      try {
+        await prisma.$transaction([
+          prisma.session.deleteMany({ where: { id: sid } }),
+          prisma.credentialProof.deleteMany({ where: { sessionId: sid } }),
+        ]);
+      } catch (error) {
+        request.log.error({ err: error }, "Session revocation failed");
+        return reply.status(503).send({ error: "Session revocation failed. Try again." });
+      }
+    }
     reply.clearCookie("token", { path: "/" });
+    reply.clearCookie("credential-proof", { path: "/" });
     return reply.send({ message: "Logout successful" });
   }
 
@@ -181,7 +205,24 @@ export class AuthController {
       const exempt = claims.viaProvider === true || claims.viaApiKey === true;
       // Only the caller's own answer: the setting itself is not public.
       const twoFactorSetupRequired = !exempt && (await mustSetUpSecondStep(userId));
-      return reply.send({ user: { ...user, twoFactorSetupRequired } });
+      const account = await prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: {
+          password: true,
+          authProviders: {
+            where: { authProvider: { enabled: true } },
+            select: { authProvider: { select: { name: true, displayName: true } } },
+          },
+        },
+      });
+      return reply.send({
+        user: {
+          ...user,
+          twoFactorSetupRequired,
+          hasPassword: !!account.password,
+          reauthenticationProviders: account.authProviders.map((link) => link.authProvider),
+        },
+      });
     } catch (error: any) {
       return reply.status(400).send({ error: error.message });
     }

@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -65,9 +66,9 @@ after(async () => {
   database.cleanup();
 });
 
-const session = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: false }) });
-const as = (userId: string, method: "GET" | "POST" | "DELETE" | "PUT", url: string, payload?: object) =>
-  app.inject({ method, url, cookies: session(userId), ...(payload ? { payload } : {}) });
+const session = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: false }) });
+const as = async (userId: string, method: "GET" | "POST" | "DELETE" | "PUT", url: string, payload?: object) =>
+  app.inject({ method, url, cookies: await session(userId), ...(payload ? { payload } : {}) });
 
 let counter = 0;
 const addFile = (userId: string, name: string, size = 100, folderId: string | null = null) =>

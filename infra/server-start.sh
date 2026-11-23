@@ -114,6 +114,9 @@ else
         echo "   ⚠️ Data migration skipped (nothing to migrate, or the table does not exist yet)"
     fi
 
+    echo "🔧 Preparing non-destructive storage schema..."
+    run_as_user node ./prisma/storage-schema.js
+
     echo "🔧 Checking for schema updates..."
     run_as_user npx prisma db push --schema=./prisma/schema.prisma --skip-generate
     

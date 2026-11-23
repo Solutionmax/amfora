@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 
 import { prisma } from "../../shared/prisma";
+import { apiKeyRequests } from "../auth/session";
 import { extractApiKey, hashApiKey, isRouteAllowed } from "./key";
 
 /** How often the "last used" time of a key is written, at most. */
@@ -39,6 +40,7 @@ export function registerApiKeyAuth(app: FastifyInstance) {
         .catch((err) => console.error("API key: could not record last use:", err));
     }
 
+    apiKeyRequests.add(request);
     // The key decides who the caller is. A session cookie sent along must not.
     delete request.headers.cookie;
     request.cookies = {};

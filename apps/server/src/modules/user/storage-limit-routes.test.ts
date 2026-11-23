@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -57,11 +58,11 @@ after(async () => {
   database.cleanup();
 });
 
-const asLimited = () => ({ cookies: { token: app.jwt.sign({ userId: "limited", isAdmin: false }) } });
-const asAdmin = () => ({ cookies: { token: app.jwt.sign({ userId: "admin", isAdmin: true }) } });
+const asLimited = async () => ({ cookies: { token: await testSession(app, { userId: "limited", isAdmin: false }) } });
+const asAdmin = async () => ({ cookies: { token: await testSession(app, { userId: "admin", isAdmin: true }) } });
 
 test("removing the avatar of a user with an own storage limit answers 200", async () => {
-  const res = await app.inject({ method: "DELETE", url: "/users/avatar", ...asLimited() });
+  const res = await app.inject({ method: "DELETE", url: "/users/avatar", ...(await asLimited()) });
   assert.equal(res.statusCode, 200, res.body);
   assert.equal(res.json().storageLimitBytes, 5_000_000);
 });
@@ -82,7 +83,7 @@ test("uploading an avatar for a user with an own storage limit answers 200", asy
   const res = await app.inject({
     method: "POST",
     url: "/users/avatar",
-    ...asLimited(),
+    ...(await asLimited()),
     headers: { "content-type": `multipart/form-data; boundary=${boundary}` },
     payload,
   });
@@ -91,25 +92,25 @@ test("uploading an avatar for a user with an own storage limit answers 200", asy
 });
 
 test("GET /auth/me answers 200 for a user with an own storage limit", async () => {
-  const res = await app.inject({ method: "GET", url: "/auth/me", ...asLimited() });
+  const res = await app.inject({ method: "GET", url: "/auth/me", ...(await asLimited()) });
   assert.equal(res.statusCode, 200, res.body);
 });
 
 test("the user routes answer 200 for a user with an own storage limit", async () => {
-  const get = await app.inject({ method: "GET", url: "/users/limited", ...asAdmin() });
+  const get = await app.inject({ method: "GET", url: "/users/limited", ...(await asAdmin()) });
   assert.equal(get.statusCode, 200, get.body);
-  const list = await app.inject({ method: "GET", url: "/users", ...asAdmin() });
+  const list = await app.inject({ method: "GET", url: "/users", ...(await asAdmin()) });
   assert.equal(list.statusCode, 200, list.body);
   const profile = await app.inject({
     method: "PUT",
     url: "/users",
-    ...asAdmin(),
+    ...(await asAdmin()),
     payload: { id: "limited", firstName: "Lim" },
   });
   assert.equal(profile.statusCode, 200, profile.body);
-  const off = await app.inject({ method: "PATCH", url: "/users/limited/deactivate", ...asAdmin() });
+  const off = await app.inject({ method: "PATCH", url: "/users/limited/deactivate", ...(await asAdmin()) });
   assert.equal(off.statusCode, 200, off.body);
-  const on = await app.inject({ method: "PATCH", url: "/users/limited/activate", ...asAdmin() });
+  const on = await app.inject({ method: "PATCH", url: "/users/limited/activate", ...(await asAdmin()) });
   assert.equal(on.statusCode, 200, on.body);
   assert.equal(on.json().storageLimitBytes, 5_000_000);
 });

@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { issueSession, newSecret, SessionClaims } from "../auth/session";
 import { ConfigService } from "../config/service";
 import { UpdateAuthProviderSchema } from "./dto";
-import { AuthProvidersService } from "./service";
+import { authBaseUrl, AuthProvidersService } from "./service";
 import {
   AuthorizeRequest,
   CallbackRequest,
@@ -47,36 +48,13 @@ export class AuthProvidersController {
     this.configService = new ConfigService();
   }
 
-  /**
-   * A chain of reverse proxies can each append their own value to x-forwarded-* headers,
-   * turning "https" into "https, http" (RFC 7239 leaves this to convention; different
-   * proxies handle it differently). Only the first hop set these, so take its value.
-   */
-  private firstForwardedValue(headerValue: string | undefined): string | undefined {
-    if (!headerValue) {
-      return undefined;
-    }
-
-    const first = headerValue.split(",")[0]?.trim();
-    return first && first.length > 0 ? first : undefined;
-  }
-
   private buildRequestContext(request: FastifyRequest): RequestContext {
-    const forwardedProto = this.firstForwardedValue(request.headers["x-forwarded-proto"] as string | undefined);
-    const protocol = forwardedProto === "http" || forwardedProto === "https" ? forwardedProto : request.protocol;
-
-    const forwardedHost = this.firstForwardedValue(request.headers["x-forwarded-host"] as string | undefined);
-    const host = forwardedHost || (request.headers.host as string);
-
-    return {
-      protocol,
-      host,
-      headers: request.headers,
-    };
+    const url = new URL(authBaseUrl());
+    return { protocol: url.protocol.slice(0, -1), host: url.host, headers: request.headers };
   }
 
-  private buildBaseUrl(requestContext: RequestContext): string {
-    return `${requestContext.protocol}://${requestContext.host}`;
+  private buildBaseUrl(_requestContext: RequestContext): string {
+    return authBaseUrl();
   }
 
   private sendSuccessResponse(reply: FastifyReply, data?: any, message?: string) {
@@ -355,16 +333,30 @@ export class AuthProvidersController {
   async authorize(request: FastifyRequest<AuthorizeRequest>, reply: FastifyReply) {
     try {
       const { provider: providerName } = request.params;
-      const { state, redirect_uri } = request.query;
+      const { state, redirect_uri, reauthenticate } = request.query;
+      const binding = newSecret();
+      let claims: SessionClaims | undefined;
+      if (reauthenticate === "true") {
+        await request.jwtVerify();
+        claims = request.user as SessionClaims;
+      }
 
       const requestContext = this.buildRequestContext(request);
       const authUrl = await this.authProvidersService.getAuthorizationUrl(
         providerName,
         state,
         redirect_uri,
-        requestContext
+        requestContext,
+        binding,
+        claims
       );
-
+      reply.setCookie("oauth-binding", binding, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: new URL(authBaseUrl()).protocol === "https:",
+        path: "/",
+        maxAge: 600,
+      });
       return reply.redirect(authUrl);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.AUTHORIZATION_FAILED;
@@ -392,16 +384,35 @@ export class AuthProvidersController {
         return reply.redirect(`${baseUrl}/login?error=missing_parameters&provider=${providerName}`);
       }
 
-      const result = await this.authProvidersService.handleCallback(providerName, code, state, requestContext);
+      let currentSession: SessionClaims | undefined;
+      try {
+        await request.jwtVerify();
+        currentSession = request.user as SessionClaims;
+      } catch {
+        /* Normal sign in needs no existing session. */
+      }
+      const result = await this.authProvidersService.handleCallback(
+        providerName,
+        code,
+        state,
+        requestContext,
+        request.cookies["oauth-binding"],
+        currentSession
+      );
 
-      const jwt = await request.jwtSign({
-        userId: result.user.id,
-        isAdmin: result.user.isAdmin,
-        // The provider is responsible for the second step, so the requirement does not apply.
-        viaProvider: true,
-      });
-
-      this.setAuthCookie(reply, jwt, request.protocol === "https");
+      reply.clearCookie("oauth-binding", { path: "/" });
+      if ("credentialProof" in result) {
+        reply.setCookie("credential-proof", result.credentialProof!, {
+          httpOnly: true,
+          sameSite: "strict",
+          secure: new URL(authBaseUrl()).protocol === "https:",
+          path: "/",
+          maxAge: 300,
+        });
+      } else {
+        const jwt = await issueSession(request, result.user.id, result.user.sessionVersion, true);
+        this.setAuthCookie(reply, jwt, new URL(authBaseUrl()).protocol === "https:");
+      }
 
       const redirectUrl = result.redirectUrl || "/dashboard";
       const fullRedirectUrl = redirectUrl.startsWith("http") ? redirectUrl : `${baseUrl}${redirectUrl}`;

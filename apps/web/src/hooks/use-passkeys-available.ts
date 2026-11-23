@@ -15,7 +15,12 @@ export function usePasskeysAvailable(): boolean {
     let cancelled = false;
     getAuthConfig()
       .then((response) => {
-        if (!cancelled) setAvailable((response as any).data.passkeysAvailable === true);
+        if (!cancelled)
+          setAvailable(
+            window.isSecureContext === true &&
+              typeof window.PublicKeyCredential !== "undefined" &&
+              (response as any).data.passkeysAvailable === true
+          );
       })
       .catch(() => {});
     return () => {

@@ -116,13 +116,14 @@ export function UploadFileModal({
         const safeObjectName = generateSafeFileName(file.name);
         return safeObjectName;
       },
-      getPresignedUrl: async (objectName, extension) => {
+      getPresignedUrl: async (objectName, extension, file) => {
         // Extract filename without extension (backend will add it)
         const filenameWithoutExt = objectName.replace(`.${extension}`, "");
 
         const response = await getFilePresignedUrl({
           filename: filenameWithoutExt,
           extension,
+          size: file.size,
         });
 
         // IMPORTANT: Use the objectName returned by backend, not the one we generated!

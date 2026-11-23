@@ -1,5 +1,6 @@
 import { prisma } from "../../shared/prisma";
 import { recordActivity } from "../activity/activity";
+import { queueReceiveDeletion, sweepStorageCleanup } from "../storage/cleanup";
 import { purgeExpiredTrash } from "./service";
 import { expiredLinkRetentionDays, MS_PER_DAY } from "./settings";
 
@@ -42,7 +43,11 @@ export async function removeExpiredLinks(now: Date): Promise<{ shares: number; r
     select: { id: true, name: true, creatorId: true },
   });
   for (const link of links) {
-    await prisma.reverseShare.delete({ where: { id: link.id } });
+    await prisma.$transaction(async (tx) => {
+      await queueReceiveDeletion(tx, link.id);
+      await tx.reverseShare.delete({ where: { id: link.id } });
+    });
+    await sweepStorageCleanup(now);
     await recordActivity({
       action: "receive.deleted",
       ownerId: link.creatorId,

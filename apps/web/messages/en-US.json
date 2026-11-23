@@ -531,7 +531,7 @@
         "myFiles": "My files",
         "inShares": "In shares",
         "received": "Received",
-        "receivedNote": "Does not count towards your limit."
+        "receivedNote": "Counts towards your limit."
       }
     }
   },
@@ -1029,7 +1029,8 @@
     "storageUsed": "<b>{size}</b> used",
     "storageFree": "{size} free",
     "storageOnlyFree": "Only {size} free",
-    "storageNoLimit": "No limit"
+    "storageNoLimit": "No limit",
+    "logoutFailed": "Sign out failed. Your session is still active. Try again."
   },
   "navigation": {
     "dashboard": "Dashboard"
@@ -1153,7 +1154,7 @@
       "accountHint": "How you appear to people you share with.",
       "usernameHint": "Used to sign in, next to your email.",
       "password": "Password",
-      "passwordHint": "At least 8 characters. Other sessions stay signed in.",
+      "passwordHint": "At least 8 characters. Other sessions are signed out.",
       "passwordTooShort": "Use at least {count} characters.",
       "passwordMismatch": "Passwords do not match.",
       "changePassword": "Change password",
@@ -1217,6 +1218,14 @@
       "removeFailed": "Failed to remove the API key",
       "monitoring": "The key of an administrator also opens the figures for monitoring at /api/v1/metrics.",
       "monitoringLink": "How to set it up"
+    },
+    "verification": {
+      "password": "Current password",
+      "hint": "Changing your password or email requires your current password, or a new verification below. Provider verification returns here; enter your change after returning. Verification expires after five minutes and works once.",
+      "ready": "Verified. Save your password or email change within five minutes.",
+      "failed": "Verification failed. Try again.",
+      "passkey": "Verify with a passkey",
+      "provider": "Verify with {name}"
     }
   },
   "public": {
@@ -1465,20 +1474,10 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Three security repairs: registering an upload now needs an object name that is yours, only your own files and folders can be added to a share, and the server measures the size of an upload itself. All three gaps existed in earlier versions, so update soon.",
-      "trash": "Deleting a file or folder moves it to the new Trash page, where it stays for 30 days (changeable in Settings). Restore it or delete it for good. Settings can also remove ended shares and empty receive links by themselves; files are never removed that way.",
-      "twoFactor": "Settings can ask administrators or everyone to set up two step sign in, and an administrator can reset it for someone who lost their phone. You can also sign in with a passkey (fingerprint, face or security key) without a password.",
-      "groups": "Administrators can make groups on the Users page. A share can be limited to the members of a group, and it shows under Shared with me on the Shares page.",
-      "notifications": "A bell in the menu shows what is new: a download, files on a receive link, an opened secret, a link that ends soon, or storage that is almost full.",
-      "virusScan": "An optional virus scan with ClamAV, off unless you set CLAMAV_HOST. A file that is being checked or is infected cannot be downloaded.",
-      "monitoring": "Monitoring figures in the Prometheus format at /api/v1/metrics, for the API key of an administrator.",
-      "settingsNotes": "Settings shows what the version you run brought, in your language, and administrators get a notice in the menu when an update is waiting.",
-      "storage": "The storage meter in the menu is a ring. Administrators can give a user their own storage limit, and Settings has a default and a maximum lifetime for shares and receive links.",
-      "emails": "Emails carry the logo of the installation and share one calm layout, with a plain text version.",
-      "activity": "Administrators can clear the activity log, and making or deleting a receive link now shows in it. The numbers on the filters follow the search.",
-      "customization": "The preview under Customization shows the real Download, Sign in and Receive pages in the theme you pick. A font chosen there is applied again.",
-      "externalSignIn": "External sign-in starts with Authentik, GitHub and Google, and any other service is still added with Add provider. The provider form opens much faster.",
-      "repairs": "Small repairs: download pages no longer play video and audio, deleting many items at once no longer stops halfway, the selection bar on Shares only acts on the shares you can see, and email switches turned off by the administrator show as off."
+      "security": "Signing out, password recovery and account deactivation now revoke old access. Invitations and recovery codes are used once. Changing a password or email asks for fresh verification.",
+      "storage": "Uploads are finalized to fixed file content. Received files and pending uploads count towards the owner limit, including simultaneous operations. Failed removals remain recoverable.",
+      "externalSignIn": "External sign-in checks the initiating browser and provider. An email match alone no longer links accounts. OIDC needs a discoverable issuer and the configured secure callback.",
+      "repairs": "The capacity meter uses the actual storage. Update backups take a consistent database snapshot. Software security patches are included; passkeys are offered only in a secure browser context."
     }
   },
   "resetPassword": {

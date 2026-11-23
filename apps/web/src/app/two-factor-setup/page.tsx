@@ -54,11 +54,11 @@ function SetupContent() {
   const handleSignOut = async () => {
     try {
       await logoutRequest();
-    } catch (error) {
-      console.error("Error logging out:", error);
-    } finally {
       logout();
       router.push("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+      toast.error(t("navbar.logoutFailed"));
     }
   };
 

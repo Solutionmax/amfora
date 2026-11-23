@@ -531,7 +531,7 @@
         "myFiles": "Mis archivos",
         "inShares": "En comparticiones",
         "received": "Recibidos",
-        "receivedNote": "No cuenta para tu límite."
+        "receivedNote": "Cuenta para tu límite."
       }
     }
   },
@@ -1029,7 +1029,8 @@
     "storageUsed": "<b>{size}</b> usados",
     "storageFree": "{size} libres",
     "storageOnlyFree": "Solo {size} libres",
-    "storageNoLimit": "Sin límite"
+    "storageNoLimit": "Sin límite",
+    "logoutFailed": "Sign out failed. Your session is still active. Try again."
   },
   "navigation": {
     "dashboard": "Panel de control"
@@ -1153,7 +1154,7 @@
       "accountHint": "Cómo te ven las personas con las que compartes.",
       "usernameHint": "Se usa para iniciar sesión, junto con tu correo electrónico.",
       "password": "Contraseña",
-      "passwordHint": "Al menos 8 caracteres. Las demás sesiones siguen iniciadas.",
+      "passwordHint": "Al menos 8 caracteres. Las demás sesiones se cierran.",
       "passwordTooShort": "Usa al menos {count} caracteres.",
       "passwordMismatch": "Las contraseñas no coinciden.",
       "changePassword": "Cambiar contraseña",
@@ -1217,6 +1218,14 @@
       "removeFailed": "No se pudo eliminar la clave API",
       "monitoring": "La clave de un administrador también abre las cifras de monitorización en /api/v1/metrics.",
       "monitoringLink": "Cómo configurarlo"
+    },
+    "verification": {
+      "password": "Current password",
+      "hint": "Changing your password or email requires your current password, or a new verification below. Provider verification returns here; enter your change after returning. Verification expires after five minutes and works once.",
+      "ready": "Verified. Save your password or email change within five minutes.",
+      "failed": "Verification failed. Try again.",
+      "passkey": "Verify with a passkey",
+      "provider": "Verify with {name}"
     }
   },
   "public": {
@@ -1465,20 +1474,10 @@
   },
   "releaseNotes": {
     "items": {
-      "security": "Tres correcciones de seguridad: registrar una subida ahora exige un nombre de objeto que sea tuyo, solo tus propios archivos y carpetas se pueden añadir a una compartición, y el servidor mide por sí mismo el tamaño de una subida. Los tres fallos existían en versiones anteriores, así que actualiza pronto.",
-      "trash": "Eliminar un archivo o una carpeta lo mueve a la nueva página Papelera, donde se queda 30 días (se puede cambiar en Configuración). Restáuralo o elimínalo definitivamente. La Configuración también puede quitar por sí sola las comparticiones terminadas y los enlaces de recepción vacíos; los archivos nunca se quitan así.",
-      "twoFactor": "La Configuración puede pedir a los administradores o a todos que configuren el inicio de sesión en dos pasos, y un administrador puede restablecerlo para quien perdió el teléfono. También puedes iniciar sesión con una clave de acceso (huella, cara o llave de seguridad) sin contraseña.",
-      "groups": "Los administradores pueden crear grupos en la página Usuarios. Una compartición puede limitarse a los miembros de un grupo y aparece en Compartido conmigo en la página Comparticiones.",
-      "notifications": "Una campana en el menú muestra lo nuevo: una descarga, archivos en un enlace de recepción, un secreto abierto, un enlace que termina pronto o un almacenamiento casi lleno.",
-      "virusScan": "Un análisis antivirus opcional con ClamAV, desactivado mientras no definas CLAMAV_HOST. Un archivo que se está comprobando o está infectado no se puede descargar.",
-      "monitoring": "Cifras de monitorización en formato Prometheus en /api/v1/metrics, para la clave API de un administrador.",
-      "settingsNotes": "La Configuración muestra lo que trajo la versión que usas, en tu idioma, y los administradores ven un aviso en el menú cuando hay una actualización esperando.",
-      "storage": "El indicador de almacenamiento del menú es un anillo. Los administradores pueden dar a un usuario su propio límite de almacenamiento, y la Configuración tiene una duración predeterminada y una máxima para las comparticiones y los enlaces de recepción.",
-      "emails": "Los correos llevan el logotipo de la instalación y comparten un mismo diseño sereno, con también una versión en texto plano.",
-      "activity": "Los administradores pueden vaciar el registro de actividad, y crear o eliminar un enlace de recepción ahora aparece en él. Los números de los filtros siguen la búsqueda.",
-      "customization": "La vista previa en Personalización muestra las páginas reales de Descarga, Inicio de sesión y Recepción en el tema elegido. Una fuente elegida allí vuelve a aplicarse.",
-      "externalSignIn": "El inicio de sesión externo empieza con Authentik, GitHub y Google, y cualquier otro servicio se sigue añadiendo con Añadir proveedor. El formulario de un proveedor se abre mucho más rápido.",
-      "repairs": "Pequeñas correcciones: las páginas de descarga ya no reproducen vídeo ni audio, eliminar muchos elementos a la vez ya no se detiene a medias, la barra de selección de Comparticiones solo actúa sobre las comparticiones que ves, y los interruptores de correo que el administrador desactivó aparecen desactivados."
+      "security": "Cerrar sesión, recuperar la contraseña y desactivar una cuenta revocan el acceso anterior. Las invitaciones y los códigos de recuperación son de un solo uso. Cambiar contraseña o correo exige nueva verificación.",
+      "storage": "Las cargas se finalizan con contenido fijo. Los archivos recibidos y las cargas pendientes cuentan para el límite del propietario, incluso con operaciones simultáneas. Los borrados fallidos siguen siendo recuperables.",
+      "externalSignIn": "El acceso externo comprueba el navegador y el proveedor iniciales. Una coincidencia de correo ya no vincula cuentas. OIDC requiere un emisor con descubrimiento y el callback seguro configurado.",
+      "repairs": "El indicador de capacidad usa el almacenamiento real. Las copias de actualización crean una instantánea coherente de la base de datos. Incluye parches de seguridad; las passkeys solo se ofrecen en un contexto seguro."
     }
   },
   "resetPassword": {

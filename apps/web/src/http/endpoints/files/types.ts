@@ -66,6 +66,7 @@ export interface MoveFileBody {
 
 // Multipart upload types
 export interface CreateMultipartUploadBody {
+  size?: number;
   filename: string;
   extension: string;
 }
@@ -110,6 +111,7 @@ export interface AbortMultipartUploadResponse {
 }
 
 export interface GetPresignedUrlParams {
+  size?: number;
   filename: string;
   extension: string;
 }

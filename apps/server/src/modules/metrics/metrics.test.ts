@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -50,7 +51,7 @@ before(async () => {
     const response = await app.inject({
       method: "POST",
       url: "/api-keys",
-      cookies: { token: app.jwt.sign({ userId: id, isAdmin: id !== "member" }) },
+      cookies: { token: await testSession(app, { userId: id, isAdmin: id !== "member" }) },
       payload: { name: `${id} ${scope}`, scope },
     });
     assert.equal(response.statusCode, 201, response.body);
@@ -78,7 +79,7 @@ test("a browser session of an administrator is refused", async () => {
   const response = await app.inject({
     method: "GET",
     url: "/metrics",
-    cookies: { token: app.jwt.sign({ userId: "boss", isAdmin: true }) },
+    cookies: { token: await testSession(app, { userId: "boss", isAdmin: true }) },
   });
   assert.equal(response.statusCode, 403);
 });

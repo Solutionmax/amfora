@@ -19,10 +19,12 @@ const createSchemas = (t: (key: string) => string) => ({
       .min(3, t("validation.usernameLength"))
       .regex(/^[^\s]+$/, t("validation.usernameSpaces")),
     email: z.string().email(t("validation.invalidEmail")),
+    currentPassword: z.string().optional(),
   }),
 
   passwordSchema: z
     .object({
+      currentPassword: z.string().optional(),
       newPassword: z.string().min(8, t("validation.passwordLength")),
       confirmPassword: z.string().min(8, t("validation.passwordLength")),
     })
@@ -62,6 +64,7 @@ export function useProfile() {
       setUserData(response.data.user);
       setUser(response.data.user);
       profileForm.reset({
+        currentPassword: "",
         firstName: response.data.user.firstName,
         lastName: response.data.user.lastName,
         username: response.data.user.username,
@@ -76,7 +79,9 @@ export function useProfile() {
   }, [t, profileForm, setUser]);
 
   const onProfileSubmit = async (data: z.infer<typeof profileSchema>) => {
-    const hasChanges = Object.keys(data).some((key) => data[key as keyof typeof data] !== userData[key]);
+    const hasChanges = Object.keys(data)
+      .filter((key) => key !== "currentPassword")
+      .some((key) => data[key as keyof typeof data] !== userData[key]);
 
     if (!hasChanges) {
       toast.info(t("profile.messages.noChanges"));
@@ -107,6 +112,7 @@ export function useProfile() {
       await updateUser({
         id: userData.id,
         password: data.newPassword,
+        currentPassword: data.currentPassword,
       });
       toast.success(t("profile.messages.passwordSuccess"));
       passwordForm.reset();

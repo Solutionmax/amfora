@@ -4,12 +4,14 @@ import { PasswordField } from "@/components/auth/password-field";
 import { Button } from "@/components/ui/button";
 import { Field, FormSection } from "@/components/ui/form-section";
 import { PasswordFormProps } from "../types";
+import { CredentialVerification } from "./credential-verification";
 
 const MIN_LENGTH = 8;
 
 /** New password twice; the button unlocks only when both match and are long enough. */
 export function PasswordForm({
   form,
+  providers,
   isNewPasswordVisible,
   isConfirmPasswordVisible,
   onToggleNewPassword,
@@ -57,6 +59,7 @@ export function PasswordForm({
             {...register("confirmPassword")}
           />
         </Field>
+        <CredentialVerification register={register} providers={providers} />
         <div>
           <Button type="submit" variant="outline" disabled={!isValid || isSubmitting}>
             {isSubmitting ? t("common.saving") : t("profile.calm.changePassword")}

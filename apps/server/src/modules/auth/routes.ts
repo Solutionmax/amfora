@@ -103,6 +103,7 @@ export async function authRoutes(app: FastifyInstance) {
         description: "Performs logout by clearing the token cookie",
         response: {
           200: z.object({ message: z.string().describe("Logout message") }),
+          503: z.object({ error: z.string() }),
         },
       },
     },
@@ -172,6 +173,8 @@ export async function authRoutes(app: FastifyInstance) {
                 image: z.string().nullable().describe("User profile image URL"),
                 isAdmin: z.boolean().describe("User is admin"),
                 isActive: z.boolean().describe("User is active"),
+                hasPassword: z.boolean(),
+                reauthenticationProviders: z.array(z.object({ name: z.string(), displayName: z.string() })),
                 twoFactorSetupRequired: z.boolean().describe("The user must set up a second step before anything else"),
                 createdAt: z.date().describe("User creation date"),
                 updatedAt: z.date().describe("User last update date"),

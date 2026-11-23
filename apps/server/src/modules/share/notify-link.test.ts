@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 
 const database = useTestDatabase();
@@ -62,11 +63,11 @@ after(async () => {
   database.cleanup();
 });
 
-const notify = (shareLink: string) =>
+const notify = async (shareLink: string) =>
   app.inject({
     method: "POST",
     url: "/shares/s1/notify",
-    cookies: { token: app.jwt.sign({ userId: "alice", isAdmin: false }) },
+    cookies: { token: await testSession(app, { userId: "alice", isAdmin: false }) },
     payload: { shareLink },
   });
 

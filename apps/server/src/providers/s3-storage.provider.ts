@@ -6,6 +6,7 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
+  ListMultipartUploadsCommand,
   PutObjectCommand,
   UploadPartCommand,
   UploadPartCopyCommand,
@@ -246,6 +247,27 @@ export class S3StorageProvider implements StorageProvider {
    * Initialize a multipart upload
    * Returns uploadId for subsequent part uploads
    */
+  // Covers a crash/outage after CreateMultipartUpload but before its id reached SQLite.
+  async abortMultipartUploads(objectName: string): Promise<void> {
+    let keyMarker: string | undefined;
+    let uploadMarker: string | undefined;
+    do {
+      const page = await this.ensureClient().send(
+        new ListMultipartUploadsCommand({
+          Bucket: bucketName,
+          Prefix: objectName,
+          KeyMarker: keyMarker,
+          UploadIdMarker: uploadMarker,
+        })
+      );
+      for (const upload of page.Uploads ?? [])
+        if (upload.Key === objectName && upload.UploadId) await this.abortMultipartUpload(objectName, upload.UploadId);
+      if (!page.IsTruncated) break;
+      keyMarker = page.NextKeyMarker;
+      uploadMarker = page.NextUploadIdMarker;
+    } while (keyMarker);
+  }
+
   async createMultipartUpload(objectName: string): Promise<string> {
     const client = this.ensureClient();
 

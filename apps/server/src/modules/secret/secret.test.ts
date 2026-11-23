@@ -7,6 +7,7 @@ import fastifyRateLimit from "@fastify/rate-limit";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { hashVerifier, limitError, maxCiphertextLength, secretSettings, secretStatus, verifierMatches } from "./secret";
 
@@ -42,7 +43,7 @@ after(async () => {
   database.cleanup();
 });
 
-const session = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: false }) });
+const session = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: false }) });
 const PROOF = "p".repeat(43);
 const VERIFIER = "v".repeat(43);
 const body = (extra: object = {}) => ({
@@ -59,7 +60,7 @@ async function create(extra: object = {}, userId = "alice") {
   const response = await app.inject({
     method: "POST",
     url: "/secrets",
-    cookies: session(userId),
+    cookies: await session(userId),
     payload: body(extra),
   });
   assert.equal(response.statusCode, 201, response.body);
@@ -129,7 +130,7 @@ test("a secret opens once and is then gone, also for its maker", async () => {
   const row = await prisma.secret.findUnique({ where: { id } });
   assert.equal(row?.ciphertext, null, "the sealed text is deleted, the record stays");
 
-  const list = await app.inject({ method: "GET", url: "/secrets", cookies: session("alice") });
+  const list = await app.inject({ method: "GET", url: "/secrets", cookies: await session("alice") });
   const mine = (list.json() as { secrets: Array<Record<string, unknown>> }).secrets.find((s) => s.id === id);
   assert.equal(mine?.status, "used");
   assert.equal(mine?.opens, 1);
@@ -223,12 +224,12 @@ test("only the maker lists and deletes, and a session is required", async () => 
   assert.equal((await app.inject({ method: "GET", url: "/secrets" })).statusCode, 401);
   assert.equal((await app.inject({ method: "POST", url: "/secrets", payload: body() })).statusCode, 401);
 
-  const bobs = await app.inject({ method: "GET", url: "/secrets", cookies: session("bob") });
+  const bobs = await app.inject({ method: "GET", url: "/secrets", cookies: await session("bob") });
   assert.equal((bobs.json() as { secrets: unknown[] }).secrets.length, 0);
-  const stolen = await app.inject({ method: "DELETE", url: `/secrets/${id}`, cookies: session("bob") });
+  const stolen = await app.inject({ method: "DELETE", url: `/secrets/${id}`, cookies: await session("bob") });
   assert.equal(stolen.statusCode, 404);
 
-  const removed = await app.inject({ method: "DELETE", url: `/secrets/${id}`, cookies: session("alice") });
+  const removed = await app.inject({ method: "DELETE", url: `/secrets/${id}`, cookies: await session("alice") });
   assert.equal(removed.statusCode, 200);
   assert.equal((await open(id)).statusCode, 404);
 });
@@ -237,21 +238,21 @@ test("limits for signed-in users are enforced", async () => {
   const tooLong = await app.inject({
     method: "POST",
     url: "/secrets",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: body({ expiresInHours: 31 * 24 }),
   });
   assert.equal(tooLong.statusCode, 400);
   const tooMany = await app.inject({
     method: "POST",
     url: "/secrets",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: body({ maxOpens: 11 }),
   });
   assert.equal(tooMany.statusCode, 400);
   const badText = await app.inject({
     method: "POST",
     url: "/secrets",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: body({ ciphertext: "not base64url!" }),
   });
   assert.equal(badText.statusCode, 400);
@@ -288,8 +289,8 @@ test("anonymous secrets: off by default, tighter limits, rate limited, no record
 });
 
 test("the count of ownerless secrets is for administrators, and is only a number", async () => {
-  const stats = (userId?: string) =>
-    app.inject({ method: "GET", url: "/secrets/stats", cookies: userId ? session(userId) : undefined });
+  const stats = async (userId?: string) =>
+    app.inject({ method: "GET", url: "/secrets/stats", cookies: userId ? await session(userId) : undefined });
   assert.equal((await stats()).statusCode, 401);
   assert.equal((await stats("alice")).statusCode, 403);
 
@@ -311,7 +312,7 @@ test("an API key lists and makes secrets with full access, reads with read acces
     const made = await app.inject({
       method: "POST",
       url: "/api-keys",
-      cookies: session(userId),
+      cookies: await session(userId),
       payload: { name: scope, scope },
     });
     return { authorization: `Bearer ${made.json().token}` };

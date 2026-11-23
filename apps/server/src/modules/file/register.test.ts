@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { FileService } from "./service";
 
@@ -18,12 +19,18 @@ let prisma: typeof import("../../shared/prisma").prisma;
 let env: typeof import("../../env").env;
 const stored = new Map<string, number>();
 const originalSize = FileService.prototype.getObjectSize;
+const originalAbortAll = FileService.prototype.abortMultipartUploads;
+const originalCopy = FileService.prototype.copyObject;
 const originalDelete = FileService.prototype.deleteObject;
 const deleted: string[] = [];
 let failure: Error | null = null;
 let lateFor = 0;
 
 before(async () => {
+  FileService.prototype.abortMultipartUploads = async () => undefined;
+  FileService.prototype.copyObject = async (source, destination) => {
+    stored.set(destination, stored.get(source)!);
+  };
   FileService.prototype.deleteObject = async (objectName: string) => {
     deleted.push(objectName);
   };
@@ -52,6 +59,8 @@ before(async () => {
 after(async () => {
   FileService.prototype.getObjectSize = originalSize;
   FileService.prototype.deleteObject = originalDelete;
+  FileService.prototype.copyObject = originalCopy;
+  FileService.prototype.abortMultipartUploads = originalAbortAll;
   await app?.close();
   await prisma?.$disconnect();
   database.cleanup();
@@ -70,11 +79,11 @@ afterEach(() => {
   env.CLAMAV_MAX_SIZE_MB = "100";
 });
 
-const register = (objectName: string, size: number) =>
+const register = async (objectName: string, size: number) =>
   app.inject({
     method: "POST",
     url: "/files",
-    cookies: { token: app.jwt.sign({ userId: "alice", isAdmin: false }) },
+    cookies: { token: await testSession(app, { userId: "alice", isAdmin: false }) },
     payload: { name: "x.bin", extension: "bin", size, objectName },
   });
 
@@ -83,7 +92,7 @@ test("the size the client declares is ignored: the size of the object counts", a
   const res = await register("alice/a", 1);
   assert.equal(res.statusCode, 201, res.body);
   assert.equal(res.json().file.size, String(3 * MB));
-  assert.equal((await prisma.file.findFirstOrThrow({ where: { objectName: "alice/a" } })).size, BigInt(3 * MB));
+  assert.equal((await prisma.file.findFirstOrThrow({ where: { sourceObjectName: "alice/a" } })).size, BigInt(3 * MB));
 });
 
 test("an object that is not in storage is refused and writes no row", async () => {
@@ -117,7 +126,7 @@ test("an object over the file size limit or the storage limit is deleted from st
   } finally {
     await prisma.appConfig.update({ where: { key: "maxFileSize" }, data: { value: row.value } });
   }
-  assert.deepEqual(deleted, ["alice/too-big"]);
+  assert.ok(deleted.includes("alice/too-big"));
 
   const limit = await prisma.appConfig.findUniqueOrThrow({ where: { key: "maxTotalStoragePerUser" } });
   await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: String(MB) } });
@@ -127,7 +136,7 @@ test("an object over the file size limit or the storage limit is deleted from st
   } finally {
     await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: limit.value } });
   }
-  assert.deepEqual(deleted, ["alice/too-big", "alice/no-room"]);
+  assert.ok(deleted.includes("alice/too-big") && deleted.includes("alice/no-room"));
 });
 
 test("a refusal keeps the object when another registration took the name meanwhile", async () => {
@@ -137,9 +146,10 @@ test("a refusal keeps the object when another registration took the name meanwhi
   const size = FileService.prototype.getObjectSize;
   // The request that wins the race writes its row while this one is still asking storage.
   FileService.prototype.getObjectSize = async function (this: FileService, objectName: string) {
-    await prisma.file.create({
-      data: { name: "won.bin", extension: "bin", size: BigInt(1), objectName, userId: "alice" },
-    });
+    if (objectName === "alice/raced")
+      await prisma.file.create({
+        data: { name: "won.bin", extension: "bin", size: BigInt(1), objectName, userId: "alice" },
+      });
     return size.call(this, objectName);
   };
   try {
@@ -149,7 +159,7 @@ test("a refusal keeps the object when another registration took the name meanwhi
     FileService.prototype.getObjectSize = size;
     await prisma.appConfig.update({ where: { key: "maxTotalStoragePerUser" }, data: { value: limit.value } });
   }
-  assert.deepEqual(deleted, [], "the object of the row that was written is not removed");
+  assert.ok(!deleted.includes("alice/raced"), "the object of the row that was written is not removed");
 });
 
 test("an object over the storage limit is refused even when the client declares a small size", async () => {

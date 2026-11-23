@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { env } from "../../env";
@@ -17,6 +18,8 @@ import { ConfigService } from "../config/service";
 import { callerOf, GROUP_DOWNLOAD_SECONDS, readableShares, sendGroupRefusal, type Caller } from "../group/access";
 import { kickScanQueue } from "../scan/queue";
 import { initialScanFields, isBlockedByScan, isBlockedByScanNow, scanFieldsOf, sendFileBlocked } from "../scan/status";
+import { checkOwnerQuota, ownerUsage, reserveUpload } from "../storage/accounting";
+import { abandonCopy, commitCopy, prepareCopy, queueDeletion, sweepStorageCleanup } from "../storage/cleanup";
 import { storageLimitOf } from "../storage/limit";
 import { moveFileToTrash } from "../trash/service";
 import { dispositionFor } from "./disposition";
@@ -37,11 +40,12 @@ import {
 import { isPubliclyEmbeddable } from "./embed-access";
 import { MEDIA_PREVIEW_REFUSED, refusesMediaPreview } from "./media-preview";
 import { isOwnedMultipartObject } from "./multipart-access";
-import { isObjectRegistered, isOwnObjectName } from "./object-name";
+import { isOwnObjectName } from "./object-name";
 import { FileService } from "./service";
 import { folderAndAncestorIds } from "./share-access";
 import { shareGrantSubject } from "./share-download-grant";
 import { storedSizeOf } from "./stored-size";
+import { uploadRefusal } from "./upload-refusal";
 
 export class FileController {
   private fileService = new FileService();
@@ -119,7 +123,11 @@ export class FileController {
   }
 
   async getPresignedUrl(request: FastifyRequest, reply: FastifyReply): Promise<void> {
-    const { filename, extension } = request.query as { filename: string; extension: string };
+    const {
+      filename,
+      extension,
+      size: declaredSize,
+    } = request.query as { filename: string; extension: string; size?: number };
 
     if (!filename || !extension) {
       return reply.status(400).send({ error: "filename and extension are required" });
@@ -136,26 +144,29 @@ export class FileController {
       const objectName = `${userId}/${Date.now()}-${Math.random().toString(36).substring(7)}-${filename}.${extension}`;
       const expires = parseInt(env.PRESIGNED_URL_EXPIRATION);
 
-      const url = await this.fileService.getPresignedPutUrl(objectName, expires);
+      const size =
+        declaredSize === undefined ? BigInt(await this.configService.getValue("maxFileSize")) : BigInt(declaredSize);
+      await reserveUpload(userId, objectName, size, new Date(Date.now() + expires * 1000));
+      let url;
+      try {
+        url = await this.fileService.getPresignedPutUrl(objectName, expires, declaredSize);
+      } catch (error) {
+        await prisma.uploadReservation.deleteMany({ where: { objectName } });
+        throw error;
+      }
 
       return reply.status(200).send({ url, objectName });
     } catch (error) {
+      const refusal = uploadRefusal(error);
+      if (refusal) return reply.status(refusal.status).send(refusal.body);
       console.error("Error in getPresignedUrl:", error);
       return reply.status(500).send({ error: "Internal server error" });
     }
   }
 
-  /**
-   * A refused registration leaves an object with no row behind: remove it, unless a row took the
-   * name meanwhile. Not awaited: a storage that hangs must not hold the refusal back.
-   */
-  private dropRefusedObject(objectName: string) {
-    void isObjectRegistered(objectName)
-      .then((taken) => (taken ? undefined : this.fileService.deleteObject(objectName)))
-      .catch(() => undefined);
-  }
-
   async registerFile(request: FastifyRequest, reply: FastifyReply) {
+    let failedFinalKey: string | undefined;
+    let stagingKey: string | undefined;
     try {
       await request.jwtVerify();
       const userId = (request as any).user?.userId;
@@ -165,66 +176,70 @@ export class FileController {
 
       const input: RegisterFileInput = RegisterFileSchema.parse(request.body);
 
-      if (!isOwnObjectName(userId, input.objectName) || (await isObjectRegistered(input.objectName))) {
+      if (!isOwnObjectName(userId, input.objectName)) {
         return reply.status(400).send({ error: "That object name cannot be used." });
       }
 
-      // Storage knows the size, the client only says. A missing object is not a file.
-      const stored = await storedSizeOf(this.fileService, input.objectName);
-      if (stored.state === "unavailable") {
-        return reply.status(503).send({ error: "Storage did not answer. Please try again in a moment." });
-      }
-      if (stored.state === "missing") {
-        return reply.status(400).send({ error: "The file was not found in storage. Upload it first." });
-      }
-      const size = stored.size;
-
-      const maxFileSize = BigInt(await this.configService.getValue("maxFileSize"));
-      if (size > maxFileSize) {
-        const maxSizeMB = Number(maxFileSize) / (1024 * 1024);
-        this.dropRefusedObject(input.objectName);
-        return reply.status(400).send({
-          error: `File size exceeds the maximum allowed size of ${maxSizeMB}MB`,
-        });
-      }
-
-      const maxTotalStorage = await storageLimitOf(userId);
-
-      const userFiles = await prisma.file.findMany({
-        where: { userId },
-        select: { size: true },
+      stagingKey = input.objectName;
+      let fileRecord = await prisma.file.findFirst({
+        where: { userId, OR: [{ sourceObjectName: input.objectName }, { objectName: input.objectName }] },
       });
-
-      const currentStorage = userFiles.reduce((acc, file) => acc + file.size, BigInt(0));
-
-      if (currentStorage + size > maxTotalStorage) {
-        const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
-        this.dropRefusedObject(input.objectName);
-        return reply.status(400).send({
-          error: `Insufficient storage space. You have ${availableSpace.toFixed(2)}MB available`,
-        });
+      if (!fileRecord) {
+        const stored = await storedSizeOf(this.fileService, input.objectName);
+        if (stored.state === "unavailable")
+          return reply.status(503).send({ error: "Storage did not answer. Please try again in a moment." });
+        if (stored.state === "missing")
+          return reply.status(400).send({ error: "The file was not found in storage. Upload it first." });
+        if (input.folderId && !(await liveFolderOf(userId, input.folderId)))
+          return reply.status(400).send({ error: "Folder not found or access denied." });
+        const finalKey = `committed/${userId}/${randomUUID()}`;
+        failedFinalKey = finalKey;
+        await prisma.$transaction((tx) => prepareCopy(tx, finalKey));
+        await this.fileService.copyObject(input.objectName, finalKey);
+        const size = BigInt(await this.fileService.getObjectSize(finalKey));
+        const max = BigInt(await this.configService.getValue("maxFileSize"));
+        if (size > max) throw new Error("File size exceeds the maximum allowed size");
+        const { baseName, extension } = parseFileName(input.name);
+        const uniqueName = await generateUniqueFileName(baseName, extension, userId, input.folderId);
+        fileRecord = await prisma.$transaction(
+          async (tx) => {
+            await tx.user.update({ where: { id: userId }, data: { id: userId } });
+            const replay = await tx.file.findUnique({ where: { sourceObjectName: input.objectName } });
+            if (replay) {
+              if (replay.userId !== userId) throw new Error("Object already registered");
+              return replay;
+            }
+            await checkOwnerQuota(tx, userId, size, input.objectName);
+            await commitCopy(tx, finalKey);
+            const file = await tx.file.create({
+              data: {
+                name: uniqueName,
+                description: input.description,
+                extension: input.extension,
+                size,
+                objectName: finalKey,
+                sourceObjectName: input.objectName,
+                userId,
+                folderId: input.folderId,
+                ...initialScanFields(size),
+              },
+            });
+            const grant = await tx.uploadReservation.findUnique({ where: { objectName: input.objectName } });
+            await queueDeletion(
+              tx,
+              input.objectName,
+              grant?.uploadId,
+              grant?.expiresAt ?? new Date(Date.now() + Number(env.PRESIGNED_URL_EXPIRATION) * 1000)
+            );
+            await tx.uploadReservation.deleteMany({ where: { objectName: input.objectName } });
+            return file;
+          },
+          { timeout: 30000 }
+        );
+        if (fileRecord.objectName !== finalKey) await abandonCopy(finalKey);
+        failedFinalKey = undefined;
+        await sweepStorageCleanup(new Date());
       }
-
-      if (input.folderId && !(await liveFolderOf(userId, input.folderId))) {
-        return reply.status(400).send({ error: "Folder not found or access denied." });
-      }
-
-      // Parse the filename and generate a unique name if there's a duplicate
-      const { baseName, extension } = parseFileName(input.name);
-      const uniqueName = await generateUniqueFileName(baseName, extension, userId, input.folderId);
-
-      const fileRecord = await prisma.file.create({
-        data: {
-          name: uniqueName,
-          description: input.description,
-          extension: input.extension,
-          size,
-          objectName: input.objectName,
-          userId,
-          folderId: input.folderId,
-          ...initialScanFields(size),
-        },
-      });
       if (fileRecord.scanStatus === "pending") kickScanQueue();
 
       await noteStorageUsage(userId);
@@ -248,6 +263,20 @@ export class FileController {
         message: "File registered successfully.",
       });
     } catch (error: any) {
+      if (failedFinalKey) await abandonCopy(failedFinalKey);
+      if (stagingKey && /Insufficient storage space|File size exceeds/.test(error.message)) {
+        await prisma.$transaction(async (tx) => {
+          const grant = await tx.uploadReservation.findUnique({ where: { objectName: stagingKey } });
+          await queueDeletion(
+            tx,
+            stagingKey!,
+            grant?.uploadId,
+            grant?.expiresAt ?? new Date(Date.now() + Number(env.PRESIGNED_URL_EXPIRATION) * 1000)
+          );
+          await tx.uploadReservation.deleteMany({ where: { objectName: stagingKey } });
+        });
+      }
+      await sweepStorageCleanup(new Date()).catch(console.error);
       console.error("Error in registerFile:", error);
       return reply.status(400).send({ error: error.message });
     }
@@ -278,12 +307,7 @@ export class FileController {
 
       const maxTotalStorage = await storageLimitOf(userId);
 
-      const userFiles = await prisma.file.findMany({
-        where: { userId },
-        select: { size: true },
-      });
-
-      const currentStorage = userFiles.reduce((acc, file) => acc + file.size, BigInt(0));
+      const currentStorage = await ownerUsage(userId);
 
       if (currentStorage + BigInt(input.size) > maxTotalStorage) {
         const availableSpace = Math.max(0, Number(maxTotalStorage - currentStorage)) / (1024 * 1024);
@@ -817,7 +841,7 @@ export class FileController {
         return reply.status(401).send({ error: "Unauthorized" });
       }
 
-      const { filename, extension } = request.body as { filename: string; extension: string };
+      const { filename, extension, size } = request.body as { filename: string; extension: string; size?: number };
 
       if (!filename || !extension) {
         return reply.status(400).send({ error: "filename and extension are required" });
@@ -826,7 +850,24 @@ export class FileController {
       // Generate unique object name (same pattern as simple upload)
       const objectName = `${userId}/${Date.now()}-${Math.random().toString(36).substring(7)}-${filename}.${extension}`;
 
-      const uploadId = await this.fileService.createMultipartUpload(objectName);
+      await reserveUpload(
+        userId,
+        objectName,
+        BigInt(size ?? (await this.configService.getValue("maxFileSize"))),
+        new Date(Date.now() + 3600000),
+        "pending"
+      );
+      let uploadId;
+      try {
+        uploadId = await this.fileService.createMultipartUpload(objectName);
+      } catch (error) {
+        await prisma.$transaction(async (tx) => {
+          await queueDeletion(tx, objectName, "pending");
+          await tx.uploadReservation.deleteMany({ where: { objectName } });
+        });
+        throw error;
+      }
+      await prisma.uploadReservation.update({ where: { objectName }, data: { uploadId } });
 
       return reply.status(200).send({
         uploadId,
@@ -834,6 +875,8 @@ export class FileController {
         message: "Multipart upload initialized",
       });
     } catch (error) {
+      const refusal = uploadRefusal(error);
+      if (refusal) return reply.status(refusal.status).send(refusal.body);
       console.error("[Multipart] Error creating multipart upload:", error);
       return reply.status(500).send({ error: "Failed to create multipart upload" });
     }
@@ -929,7 +972,12 @@ export class FileController {
         return reply.status(403).send({ error: "Upload does not belong to this user" });
       }
 
-      await this.fileService.abortMultipartUpload(objectName, uploadId);
+      await prisma.$transaction(async (tx) => {
+        const grant = await tx.uploadReservation.findUnique({ where: { objectName } });
+        await queueDeletion(tx, objectName, uploadId, grant?.expiresAt);
+        await tx.uploadReservation.deleteMany({ where: { objectName, ownerId: userId } });
+      });
+      await sweepStorageCleanup(new Date());
 
       return reply.status(200).send({
         message: "Multipart upload aborted successfully",

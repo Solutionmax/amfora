@@ -6,6 +6,7 @@ import { env } from "../../env";
 import { prisma } from "../../shared/prisma";
 import { actorOf, recordRequestActivity, recordVisitorActivity } from "../activity/activity";
 import { countFailure } from "../auth/login-attempts";
+import { createCredentialProof, issueSession, SessionClaims, SessionError } from "../auth/session";
 import { UserResponseSchema } from "../user/dto";
 import { LoginVerifySchema, PasswordProofSchema, RegisterVerifySchema } from "./dto";
 import * as passkeys from "./service";
@@ -137,6 +138,41 @@ export async function passkeyRoutes(app: FastifyInstance) {
   );
 
   app.post(
+    "/passkeys/reauthenticate/options",
+    {
+      config: credentialRateLimit,
+      preValidation: requireSession,
+      schema: { tags, response: { 200: OptionsSchema, 400: ErrorSchema, 401: ErrorSchema } },
+    },
+    (request, reply) => guarded(reply, () => passkeys.loginOptions(request.user as SessionClaims))
+  );
+  app.post(
+    "/passkeys/reauthenticate/verify",
+    {
+      config: credentialRateLimit,
+      preValidation: requireSession,
+      schema: {
+        tags,
+        body: LoginVerifySchema,
+        response: { 200: z.object({ success: z.boolean() }), 400: ErrorSchema, 401: ErrorSchema },
+      },
+    },
+    (request, reply) =>
+      guarded(reply, async () => {
+        const claims = request.user as SessionClaims;
+        await passkeys.verifyLogin((request.body as z.infer<typeof LoginVerifySchema>).response, claims);
+        reply.setCookie("credential-proof", await createCredentialProof(claims), {
+          httpOnly: true,
+          path: "/",
+          sameSite: "strict",
+          secure: env.SECURE_SITE === "true",
+          maxAge: 300,
+        });
+        return { success: true };
+      })
+  );
+
+  app.post(
     "/passkeys/login/options",
     {
       config: credentialRateLimit,
@@ -166,7 +202,7 @@ export async function passkeyRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const user = await passkeys.verifyLogin((request.body as z.infer<typeof LoginVerifySchema>).response);
-        const token = await request.jwtSign({ userId: user.id, isAdmin: user.isAdmin });
+        const token = await issueSession(request, user.id, user.sessionVersion);
         reply.setCookie("token", token, {
           httpOnly: true,
           path: "/",
@@ -181,6 +217,7 @@ export async function passkeyRoutes(app: FastifyInstance) {
         });
         return { user };
       } catch (error) {
+        if (error instanceof SessionError) return reply.status(400).send({ error: SIGN_IN_FAILED });
         if (!(error instanceof PasskeyError)) throw error;
         if (error.message === SIGN_IN_FAILED) await recordFailure(request, error);
         return reply.status(400).send({ error: error.message });

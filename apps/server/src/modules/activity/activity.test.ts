@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import { fastify, FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
+import { testSession } from "../../../test-support/session";
 import { useTestDatabase } from "../../../test-support/test-db";
 import { noticeHtml, safeColor } from "../email/notice";
 import { clientAddress, formatPlace, isPrivateAddress, LOCAL_NETWORK, placeOf } from "./place";
@@ -17,6 +18,7 @@ import { csvCell } from "./routes";
 import { signWebhook } from "./webhook";
 
 const database = useTestDatabase();
+process.env.TRUST_CLIENT_IP_HEADERS = "true";
 
 let app: FastifyInstance;
 let prisma: typeof import("../../shared/prisma").prisma;
@@ -65,10 +67,10 @@ after(async () => {
   database.cleanup();
 });
 
-const session = (userId: string) => ({ token: app.jwt.sign({ userId, isAdmin: userId === "root" }) });
+const session = async (userId: string) => ({ token: await testSession(app, { userId, isAdmin: userId === "root" }) });
 const setConfig = (key: string, value: string) => prisma.appConfig.update({ where: { key }, data: { value } });
 const list = async (userId: string, query = "") =>
-  (await app.inject({ method: "GET", url: `/activity${query}`, cookies: session(userId) })).json() as {
+  (await app.inject({ method: "GET", url: `/activity${query}`, cookies: await session(userId) })).json() as {
     events: Array<Record<string, any>>;
     counts: Record<string, number>;
     summary: Record<string, { thisWeek: number; lastWeek: number }>;
@@ -178,7 +180,7 @@ test("opening a share, a wrong password and deleting it all show up for the make
 
   assert.equal((await app.inject({ method: "GET", url: `/shares/alias/alias-${open.id}` })).statusCode, 200);
   assert.equal(
-    (await app.inject({ method: "GET", url: `/shares/${open.id}`, cookies: session("alice") })).statusCode,
+    (await app.inject({ method: "GET", url: `/shares/${open.id}`, cookies: await session("alice") })).statusCode,
     200,
     "the maker looks at their own share"
   );
@@ -189,7 +191,7 @@ test("opening a share, a wrong password and deleting it all show up for the make
   });
   assert.equal(wrong.statusCode, 400);
   assert.equal(
-    (await app.inject({ method: "DELETE", url: `/shares/${open.id}`, cookies: session("alice") })).statusCode,
+    (await app.inject({ method: "DELETE", url: `/shares/${open.id}`, cookies: await session("alice") })).statusCode,
     200
   );
 
@@ -275,7 +277,11 @@ test("pages follow each other without skipping events of the same moment", async
 });
 
 test("the export is the same list as a file", async () => {
-  const response = await app.inject({ method: "GET", url: "/activity/export?kind=share", cookies: session("bob") });
+  const response = await app.inject({
+    method: "GET",
+    url: "/activity/export?kind=share",
+    cookies: await session("bob"),
+  });
   assert.equal(response.statusCode, 200);
   assert.match(String(response.headers["content-type"]), /text\/csv/);
   const lines = response.body.split("\r\n");
@@ -306,8 +312,13 @@ test("old activity is removed after the configured number of days", async () => 
 
 test("only the maker switches the emails of a share or receive link", async () => {
   const share = await makeShare("alice", "Mine");
-  const patch = (userId: string, body: object) =>
-    app.inject({ method: "PATCH", url: `/shares/${share.id}/notifications`, cookies: session(userId), payload: body });
+  const patch = async (userId: string, body: object) =>
+    app.inject({
+      method: "PATCH",
+      url: `/shares/${share.id}/notifications`,
+      cookies: await session(userId),
+      payload: body,
+    });
 
   assert.equal((await patch("bob", { notifyOnDownload: true })).statusCode, 404);
   assert.deepEqual((await patch("alice", { notifyOnDownload: true })).json(), {
@@ -318,15 +329,15 @@ test("only the maker switches the emails of a share or receive link", async () =
     notifyOnDownload: true,
     remindBeforeExpiry: true,
   });
-  const loaded = await app.inject({ method: "GET", url: `/shares/${share.id}`, cookies: session("alice") });
+  const loaded = await app.inject({ method: "GET", url: `/shares/${share.id}`, cookies: await session("alice") });
   assert.equal(loaded.json().share.notifyOnDownload, true);
 
   const link = await prisma.reverseShare.create({ data: { name: "Inbox", creatorId: "alice" } });
-  const patchLink = (userId: string) =>
+  const patchLink = async (userId: string) =>
     app.inject({
       method: "PATCH",
       url: `/reverse-shares/${link.id}/notifications`,
-      cookies: session(userId),
+      cookies: await session(userId),
       payload: { remindBeforeExpiry: true },
     });
   assert.equal((await patchLink("bob")).statusCode, 404);
@@ -403,7 +414,7 @@ test("the label of a secret is for its maker, also in an administrator's view an
   assert.equal(forBob.subject, "Bob's root password");
   assert.equal(forRoot.subject, null);
   assert.equal(forRoot.action, "secret.opened");
-  const csv = await app.inject({ method: "GET", url: "/activity/export?kind=secret", cookies: session("root") });
+  const csv = await app.inject({ method: "GET", url: "/activity/export?kind=secret", cookies: await session("root") });
   assert.equal(csv.body.includes("root password"), false);
 });
 
@@ -475,8 +486,8 @@ test("storage usage splits own files, files in shares and received files", async
   });
   await setConfig("maxTotalStoragePerUser", "10000");
 
-  const usage = await app.inject({ method: "GET", url: "/storage/usage", cookies: session("bob") });
-  assert.deepEqual(usage.json(), { limitBytes: 10000, usedBytes: 1000, sharedBytes: 300, receivedBytes: 50 });
+  const usage = await app.inject({ method: "GET", url: "/storage/usage", cookies: await session("bob") });
+  assert.deepEqual(usage.json(), { limitBytes: 10000, usedBytes: 1050, sharedBytes: 300, receivedBytes: 50 });
   assert.equal((await app.inject({ method: "GET", url: "/storage/usage" })).statusCode, 401);
 });
 
@@ -490,14 +501,14 @@ test("secrets leave their trail: made, opened, deleted", async () => {
     expiresInHours: 1,
     maxOpens: 2,
   };
-  const made = await app.inject({ method: "POST", url: "/secrets", cookies: session("alice"), payload: body });
+  const made = await app.inject({ method: "POST", url: "/secrets", cookies: await session("alice"), payload: body });
   const id = made.json().id as string;
   await app.inject({
     method: "POST",
     url: `/secrets/${id}/open`,
     payload: { proof: body.proof, verifier: body.verifier },
   });
-  await app.inject({ method: "DELETE", url: `/secrets/${id}`, cookies: session("alice") });
+  await app.inject({ method: "DELETE", url: `/secrets/${id}`, cookies: await session("alice") });
 
   const trail = await list("alice", `?subjectId=${id}`);
   assert.deepEqual(
@@ -533,13 +544,13 @@ test("making and deleting a receive link writes a line each, for its maker", asy
   const made = await app.inject({
     method: "POST",
     url: "/reverse-shares",
-    cookies: session("alice"),
+    cookies: await session("alice"),
     payload: { name: "Photos for me" },
   });
   assert.equal(made.statusCode, 201);
   const id = made.json().reverseShare.id as string;
   assert.equal(
-    (await app.inject({ method: "DELETE", url: `/reverse-shares/${id}`, cookies: session("alice") })).statusCode,
+    (await app.inject({ method: "DELETE", url: `/reverse-shares/${id}`, cookies: await session("alice") })).statusCode,
     200
   );
 
@@ -559,7 +570,7 @@ test("only an administrator clears the log, and one line about it remains", asyn
   await activity.recordActivity({ action: "account.signed_in", ownerId: "bob" });
 
   for (const user of ["alice", "bob"]) {
-    const refused = await app.inject({ method: "DELETE", url: "/activity", cookies: session(user) });
+    const refused = await app.inject({ method: "DELETE", url: "/activity", cookies: await session(user) });
     assert.equal(refused.statusCode, 403, user);
   }
   assert.equal((await app.inject({ method: "DELETE", url: "/activity" })).statusCode, 401);
@@ -570,7 +581,7 @@ test("only an administrator clears the log, and one line about it remains", asyn
   const key = await app.inject({
     method: "POST",
     url: "/api-keys",
-    cookies: session("root"),
+    cookies: await session("root"),
     payload: { name: "root full", scope: "full" },
   });
   assert.equal(key.statusCode, 201, key.body);
@@ -582,7 +593,7 @@ test("only an administrator clears the log, and one line about it remains", asyn
   assert.equal(byKey.statusCode, 403);
   assert.equal(await prisma.activityEvent.count(), before, "the key removed nothing");
 
-  const cleared = await app.inject({ method: "DELETE", url: "/activity", cookies: session("root") });
+  const cleared = await app.inject({ method: "DELETE", url: "/activity", cookies: await session("root") });
   assert.equal(cleared.statusCode, 200);
 
   const rows = await prisma.activityEvent.findMany();
@@ -598,7 +609,7 @@ test("only an administrator clears the log, and one line about it remains", asyn
   const member = await list("alice");
   assert.equal(member.counts.account ?? 0, 0, "a member's counts never include it");
   assert.equal(member.counts.all, 0);
-  const csv = await app.inject({ method: "GET", url: "/activity/export", cookies: session("alice") });
+  const csv = await app.inject({ method: "GET", url: "/activity/export", cookies: await session("alice") });
   assert.doesNotMatch(csv.body, /activity\.cleared/);
 });
 
@@ -610,7 +621,7 @@ test("when the remaining line cannot be written, nothing is deleted", async () =
     `CREATE TRIGGER fail_clear BEFORE INSERT ON activity_events WHEN NEW.action = 'activity.cleared' BEGIN SELECT RAISE(ABORT, 'disk full'); END`
   );
   try {
-    const failed = await app.inject({ method: "DELETE", url: "/activity", cookies: session("root") });
+    const failed = await app.inject({ method: "DELETE", url: "/activity", cookies: await session("root") });
     assert.equal(failed.statusCode, 500);
   } finally {
     await prisma.$executeRawUnsafe("DROP TRIGGER fail_clear");

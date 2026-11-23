@@ -15,7 +15,7 @@ if [ "$ENABLE_S3" = "true" ]; then
     exec tail -f /dev/null
 fi
 
-DATA_DIR="/app/server/minio-data"
+DATA_DIR="${MINIO_DATA_DIR:-/app/server/minio-data}"
 PASSWORD_FILE="/app/server/.minio-root-password"
 MINIO_USER="amfora"
 

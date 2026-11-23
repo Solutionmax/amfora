@@ -121,18 +121,17 @@ async function resetUserPassword() {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     console.log("💾 Updating password in database...");
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password: hashedPassword },
-    });
-
-    console.log("🧹 Cleaning up existing password reset tokens...");
-    await prisma.passwordReset.deleteMany({
-      where: {
-        userId: user.id,
-        used: false,
-      },
-    });
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword, sessionVersion: { increment: 1 } },
+      }),
+      prisma.session.deleteMany({ where: { userId: user.id } }),
+      prisma.trustedDevice.deleteMany({ where: { userId: user.id } }),
+      prisma.loginChallenge.deleteMany({ where: { userId: user.id } }),
+      prisma.credentialProof.deleteMany({ where: { userId: user.id } }),
+      prisma.passwordReset.deleteMany({ where: { userId: user.id, used: false } }),
+    ]);
 
     console.log("\n✅ Password reset successful!");
     console.log(`   User: ${user.firstName} ${user.lastName} (${user.email})`);

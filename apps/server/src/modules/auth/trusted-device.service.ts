@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 
 import { prisma } from "../../shared/prisma";
+import { SessionError } from "./session";
 
 export class TrustedDeviceService {
   async isDeviceTrusted(userId: string, token: string): Promise<boolean> {
@@ -14,17 +15,27 @@ export class TrustedDeviceService {
     return true;
   }
 
-  async addTrustedDevice(userId: string, userAgent: string, ipAddress: string): Promise<string> {
+  async addTrustedDevice(
+    userId: string,
+    userAgent: string,
+    ipAddress: string,
+    verifiedVersion: number
+  ): Promise<string> {
     const token = crypto.randomBytes(32).toString("hex");
-    await prisma.trustedDevice.create({
-      data: {
-        userId,
-        deviceHash: crypto.createHash("sha256").update(token).digest("hex"),
-        userAgent,
-        ipAddress,
-        expiresAt: new Date(Date.now() + 30 * 86400000),
-        lastUsedAt: new Date(),
-      },
+    await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({ where: { id: userId } });
+      if (!user?.isActive || user.sessionVersion !== verifiedVersion)
+        throw new SessionError("Credentials changed. Sign in again.");
+      await tx.trustedDevice.create({
+        data: {
+          userId,
+          deviceHash: crypto.createHash("sha256").update(token).digest("hex"),
+          userAgent,
+          ipAddress,
+          expiresAt: new Date(Date.now() + 30 * 86400000),
+          lastUsedAt: new Date(),
+        },
+      });
     });
     return token;
   }

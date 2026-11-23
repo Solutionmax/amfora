@@ -58,7 +58,7 @@ export function isPrivateAddress(address: string): boolean {
 export function clientAddress(request: Pick<FastifyRequest, "headers" | "ip">): string {
   const header = request.headers[CLIENT_ADDRESS_HEADER];
   const forwarded = (Array.isArray(header) ? header[0] : header)?.trim();
-  return forwarded && isIP(forwarded) ? forwarded : request.ip;
+  return process.env.TRUST_CLIENT_IP_HEADERS === "true" && forwarded && isIP(forwarded) ? forwarded : request.ip;
 }
 
 export function formatPlace(found: CityResponse | null, mode: PlaceMode): string | null {
