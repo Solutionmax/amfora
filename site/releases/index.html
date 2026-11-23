@@ -58,13 +58,13 @@
             <p class="eyebrow">
               <span class="status-dot" aria-hidden="true"></span> LATEST RELEASE
             </p>
-            <h2 id="latest-title">Amfora 2.4.0</h2>
+            <h2 id="latest-title">Amfora 2.4.1</h2>
             <p class="release-date">
-              Released <time datetime="2026-10-06">6 October 2026</time>
+              Released <time datetime="2026-11-23">23 November 2026</time>
             </p>
             <p>
-              A trash, groups, passkeys, notifications and an optional virus
-              scan. It also closes three security gaps: please update soon.
+              A security release after a full review of signing in and of file
+              storage. Please update soon; everybody signs in once more.
             </p>
             <div class="release-actions">
               <a class="button primary" href="/docs/#getting-started"
@@ -72,7 +72,7 @@
               >
               <a
                 class="button release-secondary"
-                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.4.0.zip"
+                href="https://github.com/Solutionmax/amfora/archive/refs/tags/v2.4.1.zip"
                 >Download source ZIP ↓</a
               >
             </div>
@@ -110,12 +110,12 @@
             <p class="eyebrow">02 / DOCKER IMAGE</p>
             <h2>Use a published version.</h2>
             <p>
-              Pull version 2.4.0. No account and no login needed. Docker selects
+              Pull version 2.4.1. No account and no login needed. Docker selects
               the image for your processor.
             </p>
             <pre
               class="install-command"
-            ><code>docker pull ghcr.io/solutionmax/amfora:2.4.0</code></pre>
+            ><code>docker pull ghcr.io/solutionmax/amfora:2.4.1</code></pre>
             <p class="release-detail">
               Version 1.0.0 remains under <code>ghcr.io/raym0nz82/amfora</code>.
               Keep the repository's Compose settings for storage and persistent
@@ -123,7 +123,7 @@
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/blob/v2.4.0/docker-compose.yaml"
+              href="https://github.com/Solutionmax/amfora/blob/v2.4.1/docker-compose.yaml"
               >View the Compose configuration ↗</a
             >
           </article>
@@ -131,12 +131,12 @@
             <p class="eyebrow">03 / SOURCE CODE</p>
             <h2>Build a specific release.</h2>
             <p>
-              Download the version 2.4.0 source archive or check out its tag to
+              Download the version 2.4.1 source archive or check out its tag to
               build this release yourself.
             </p>
             <pre
               class="install-command"
-            ><code>git clone --branch v2.4.0 --depth 1 https://github.com/Solutionmax/amfora.git
+            ><code>git clone --branch v2.4.1 --depth 1 https://github.com/Solutionmax/amfora.git
 cd amfora
 bash infra/build-docker.sh local</code></pre>
             <p class="release-detail">
@@ -145,7 +145,7 @@ bash infra/build-docker.sh local</code></pre>
             </p>
             <a
               class="text-link"
-              href="https://github.com/Solutionmax/amfora/tree/v2.4.0"
+              href="https://github.com/Solutionmax/amfora/tree/v2.4.1"
               >Browse the release source ↗</a
             >
           </article>
@@ -156,6 +156,10 @@ bash infra/build-docker.sh local</code></pre>
           <aside class="release-index">
             <p class="eyebrow">RELEASE HISTORY</p>
             <nav aria-label="Release versions">
+              <a href="#v2-4-1"
+                ><strong>2.4.1</strong
+                ><time datetime="2026-11-23">23 Nov 2026</time></a
+              >
               <a href="#v2-4-0"
                 ><strong>2.4.0</strong
                 ><time datetime="2026-10-06">6 Oct 2026</time></a
@@ -204,10 +208,46 @@ bash infra/build-docker.sh local</code></pre>
             >
           </aside>
           <div class="release-entries">
-            <article class="release-entry" id="v2-4-0">
+            <article class="release-entry" id="v2-4-1">
               <div class="release-entry-heading">
                 <div>
                   <p class="eyebrow">LATEST RELEASE</p>
+                  <h2>Amfora 2.4.1</h2>
+                </div>
+                <time datetime="2026-11-23">23 November 2026</time>
+              </div>
+              <p>A security release after a full review of signing in and of file storage. After the update everybody signs in once more.</p>
+              <h3>Security: please update</h3>
+              <ul>
+                <li>Signing out really ends the session. A password reset, a new password or email address and switching an account off end every earlier session too.</li>
+                <li>Changing your password or email asks for your current password, a passkey or your external provider.</li>
+                <li>Invitations, password reset links and recovery codes work once, also when two requests arrive at the same moment.</li>
+                <li>External sign in must end in the browser that started it. The same email address alone no longer links to an existing account. OpenID Connect providers are checked through their discovery document.</li>
+                <li>Changes that come from another site are refused. API keys keep working as documented.</li>
+                <li>An upload is sealed when it is registered, so a still valid upload address can not change the file afterwards.</li>
+                <li>Running uploads and received files count toward the storage limit of the owner, also when several happen at once.</li>
+                <li>Updated libraries: nodemailer, sharp and axios.</li>
+              </ul>
+              <h3>Fixed</h3>
+              <ul>
+                <li>An upload that does not fit in your storage is refused with the reason, also through the API.</li>
+                <li>The hint under New password now says that other sessions are signed out.</li>
+                <li>Deleting an account or a receive link also removes its unfinished uploads.</li>
+                <li>The storage meter measures the folder the files are really in.</li>
+                <li>Passkeys are only offered on https or on localhost.</li>
+              </ul>
+              <h3>For API clients and external sign in</h3>
+              <ul>
+                <li>Give <code>size</code> when you ask for an upload address. Without it the largest allowed file size is reserved against your limit.</li>
+                <li>Set <code>APP_URL</code> to your public address; the redirect address at your provider is <code>APP_URL/api/auth/providers/&lt;provider-name&gt;/callback</code>.</li>
+              </ul>
+              <h3>Upgrading</h3>
+              <p>The first start adds tables and columns and seals existing files; your data stays in place. To go back to 2.4.0 you need the database backup from before the update.</p>
+            </article>
+            <article class="release-entry" id="v2-4-0">
+              <div class="release-entry-heading">
+                <div>
+                  <p class="eyebrow">RELEASE</p>
                   <h2>Amfora 2.4.0</h2>
                 </div>
                 <time datetime="2026-10-06">6 October 2026</time>
@@ -731,7 +771,7 @@ docker compose up -d --no-build amfora</code></pre>
         </div>
       </section>
     </main>
-    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.4.0 &middot; released 6 Oct 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
+    <footer class="ftr"><div class="wrap"><div><span class="up"><i></i>2.4.1 &middot; released 23 Nov 2026 &middot; a <a href="https://solutionmax.net/">SolutionMAX</a> product</span><div class="legal"><a href="/legal.html#imprint">Legal notice</a><a href="/legal.html#terms">Terms &amp; refunds</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#cookies">Cookies</a><a href="/sales-es.html" lang="es">Información de contratación</a><a href="/LICENSE">Apache-2.0</a><a href="/NOTICE">Notices</a></div></div><nav aria-label="Footer"><a href="/docs/">Docs</a><a href="/releases/">Releases</a><a href="/brandpack/">Brandpack</a><a href="/palmr/">From Palmr</a><a href="https://github.com/Solutionmax/amfora">GitHub</a><a href="https://pharos.solutionmax.net/">Pharos</a><a href="https://portalis.sh/">Portalis</a></nav></div></footer>
 <p class="toast" role="status" aria-live="polite"></p>
   </body>
 </html>

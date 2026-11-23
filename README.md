@@ -333,6 +333,13 @@ when you return to an older version. Whatever was done in 2.4.0 is lost with it.
 [2.4.0 release notes](docs/RELEASE-2.4.0.md), which also name three security
 repairs: install this release soon.
 
+Upgrading to 2.4.1 adds the tables for sessions and upload reservations and seals
+existing files under a private name; names, content and shares stay as they are.
+Sessions from before the update are not accepted any more, so everybody signs in
+once. An API client should give `size` when it asks for an upload address. External
+sign in needs `APP_URL` set to the public address. The full list is in the
+[2.4.1 release notes](docs/RELEASE-2.4.1.md): a security release, install it soon.
+
 Installations created under Palmr are migrated from `prisma/palmr.db` to
 `prisma/amfora.db`, while an existing internal bucket is preserved when no
 explicit bucket override is supplied. Verify a test share and download after
